@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "记录一下装修的过程"
+title: "新房装修记录"
 date: 2024-09-02
-tags: [life,装修,装修记录]
+tags: [life,装修记录]
 comments: true
 author: deathwhispers
 ---
