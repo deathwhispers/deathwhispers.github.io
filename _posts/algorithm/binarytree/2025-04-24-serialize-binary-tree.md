@@ -1,4 +1,11 @@
-
+---
+layout: post 
+title: "序列化二叉树"
+date: 2025-04-24 
+tags: [二叉树]
+comments: true 
+author: deathwhispers
+---
 
 
 
@@ -51,7 +58,7 @@ public class SerializeBinaryTree {
 
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        if (data.equals("")) return null;
+        if (data.isEmpty()) return null;
         String[] split = data.split(",");
         int n = split.length;
         TreeNode root = new TreeNode(Integer.parseInt(split[0]));
