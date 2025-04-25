@@ -5,16 +5,15 @@ date: 2025-04-25
 tags: [滑动窗口, 数组]
 comments: true 
 author: deathwhispers
+permalink: https://leetcode.cn/problems/maximum-average-subarray-i/description
 ---
-
-# [子数组最大平均数 I](https://leetcode.cn/problems/maximum-average-subarray-i/description/)
 
 ## 描述
 给你一个由 n 个元素组成的整数数组 nums 和一个整数 k 。
 请你找出平均数最大且 长度为 k 的连续子数组，并输出该最大平均数。
 任何误差小于 10-5 的答案都将被视为正确答案。
 
-### 解题思路
+## 解题思路
 1. **计算初始窗口和**
     - 首先计算数组中前 `k` 个元素的和，这是第一个长度为 `k` 的子数组的和。
 2. **滑动窗口遍历**
@@ -26,7 +25,7 @@ author: deathwhispers
 4. **计算最大平均数**
     - 最后，将最大和除以 `k`，得到长度为 `k` 的连续子数组中的最大平均数。
 
-### 代码实现
+## 代码实现
 
 ```java
     public double findMaxAverage(int[] nums, int k) {
@@ -65,9 +64,9 @@ class Solution:
 ```
 > **`nums[:k]`** 是 Python 中对数组（通常指列表）进行切片的一种操作。这里的切片操作从列表的开头（索引 0）开始，截取到索引 k 但不包含索引 k 的元素，返回一个新的列表。
 
-### Tips
+## Tips
 
-#### `range` 函数在 Python 的三种常见用法：
+### `range` 函数在 Python 的三种常见用法：
 1. **`range(stop)`**：
     - 生成一个从 `0` 开始，到 `stop` 结束（但不包含 `stop`）的整数序列。例如 `range(5)`，会生成 `0, 1, 2, 3, 4` 这个序列，常被用于 `for` 循环中迭代固定次数，比如：
 ```python
@@ -89,7 +88,7 @@ for i in range(1, 10, 2):
     print(i)
 ```
 
-#### `sum` 函数在 Python 中的几种常见用法：
+### `sum` 函数在 Python 中的几种常见用法：
 1. **`sum(iterable)`**：
     - 接受一个可迭代对象作为参数，例如列表、元组等，对其中所有元素进行求和操作。例如 `sum([2, 4, 6])`，会计算列表 `[2, 4, 6]` 中元素之和，返回 `12`。示例代码：
 ```python
