@@ -5,7 +5,6 @@ date: 2025-04-24
 tags: [滑动窗口,位运算,哈希表,字符串,滚动哈希]
 comments: true 
 author: deathwhispers
-permalink: https://leetcode.cn/problems/check-if-a-string-contains-all-binary-codes-of-size-k
 ---
 
 ## 描述
@@ -109,3 +108,5 @@ print(new_str)
 
 ## 总结
 两种思路核心都是处理和统计长度为 k 的子串，步骤类似但子串生成方式有别。
+
+https://leetcode.cn/problems/check-if-a-string-contains-all-binary-codes-of-size-k

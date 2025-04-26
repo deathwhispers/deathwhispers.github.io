@@ -5,7 +5,6 @@ date: 2025-04-25
 tags: [滑动窗口, 数组]
 comments: true 
 author: deathwhispers
-permalink: https://leetcode.cn/problems/maximum-average-subarray-i/description
 ---
 
 ## 描述
@@ -108,3 +107,6 @@ print(total)
 
 ## 总结
 通过滑动窗口方法，先初始化窗口和，接着在遍历中动态更新窗口和并比较得到最大和，最终计算最大平均数。  ^^
+
+https://leetcode.cn/problems/maximum-average-subarray-i/description
+
