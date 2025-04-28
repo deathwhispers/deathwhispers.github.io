@@ -17,6 +17,13 @@ author: deathwhispers
 子数组指的是数组中一段连续 非空 的元素序列。
 
 ## 解题思路
+由于值域很小，所以借鉴计数排序，用一个 cnt 数组维护窗口内每个数的出现次数。然后遍历 cnt 去求第 x 小的数。
+
+什么是第 x 小的数？
+
+设它是 num，那么 <num 的数有 <x 个，≤num 的数有 ≥x 个，就说明 num 是第 x 小的数。
+
+比如 [−1,−1,−1] 中，第 1,2,3 小的数都是 −1。
 
 ## 代码实现
 ```java
@@ -51,6 +58,7 @@ public int[] getSubarrayBeauty(int[] nums, int k, int x) {
 }
 ```
 
+
 ```java
 public int[] getSubarrayBeauty2(int[] nums, int k, int x) {
     final int BIAS = 50;
@@ -77,5 +85,28 @@ public int[] getSubarrayBeauty2(int[] nums, int k, int x) {
 }
 ```
 
-https://leetcode.cn/problems/sliding-subarray-beauty/description/
+```python
+class Solution:
+    def getSubarrayBeauty(self, nums: List[int], k: int, x: int) -> List[int]:
+        cnt = [0] * 101
+        # 先往窗口添加 k-1 个数
+        for num in nums[: k - 1]:
+            cnt[num] += 1
+        ans = [0] * (len(nums) - k + 1)
+        for i, (in_, out) in enumerate(zip(nums[k - 1 :], nums)):
+            # 进入窗口，保证窗口内恰好有 k 个数
+            cnt[in_] += 1
+            left = x
+            for j in range(-50, 0):
+                # 暴力枚举负数范围
+                left -= cnt[j]
+                if left <= 0:
+                    # 找到美丽值
+                    ans[i] = j
+                    break
+            # 离开窗口
+            cnt[out] -= 1
+        return ans
+```
 
+https://leetcode.cn/problems/sliding-subarray-beauty/description/
