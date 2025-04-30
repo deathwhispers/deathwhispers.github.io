@@ -1,0 +1,200 @@
+---
+layout: post
+title: "大数据"
+date: 2025-04-30
+tags: [学习资源, 大数据]
+comments: true
+author: deathwhispers
+---
+
+
+
+# 大数据
+
+[MySQL](https://www.mysql.com/) 开源的关系数据库管理系统 (RDBMS)。它的名字是“My”（联合创始人 Michael Widenius 的女儿 My 的名字）和“SQL”（结构化查询语言的缩写）的组合。它将数据组织成一个或多个数据表，其中数据可能相互关联；这些关系有助于构建数据。SQL 是程序员用来创建、修改和从关系数据库中提取数据以及控制用户对数据库的访问的语言。
+
+[MariaDB](https://mariadb.org/) MySQL的社区开发、商业支持的分支，旨在在 GNU 通用公共许可证下保持免费和开源软件。开发由 MySQL 的一些原始开发人员领导，由于担心 2009 年被甲骨文公司收购，他们将其分叉。
+
+[PostgreSQL](https://www.postgresql.org/) 一个免费的开源关系数据库管理系统 (RDBMS)，强调可扩展性和 SQL 合规性。它最初被命名为 POSTGRES，指的是它的起源是加州大学伯克利分校开发的 Ingres 数据库的继承者。一个功能强大的开源对象关系数据库系统，经过 30 多年的积极开发，在可靠性、功能稳健性和性能方面赢得了良好的声誉。
+
+[oceanbase/oceanbase](https://github.com/oceanbase/oceanbase) 一个高可用、高性能、横向扩展、兼容SQL标准的企业级分布式关系数据库。蚂蚁集团从零开始构建的分布式关系 SQL 数据库。它具有高度可扩展性、弹性，可以同时处理事务和分析工作负载，并且与 MySQL 语法和功能高度兼容。OceanBase 可以部署在任何云中的虚拟机或本地物理主机上。同时，由于是多租户集群，用户可以实现数据库资源池化，提高效率。
+
+[pingcap/tidb](https://github.com/pingcap/tidb) 开源、云原生、分布式、MySQL 兼容数据库，用于弹性扩展和实时分析。开源分布式SQL数据库，支持混合事务和分析处理（HTAP）工作负载。它与 MySQL 兼容，并具有水平可扩展性、强一致性和高可用性。
+
+[binhnguyennus/awesome-scalability](https://github.com/binhnguyennus/awesome-scalability) 一个更新和有组织的阅读列表，用于说明可扩展、可靠和高性能的大型系统的模式。概念在著名工程师的文章和可靠的参考文献中进行了解释。案例研究取自为数百万至数十亿用户提供服务的经过实战考验的系统。
+
+[heibaiying/BigData-Notes](https://github.com/heibaiying/BigData-Notes) 大数据入门指南
+
+[newTendermint/awesome-bigdata](https://github.com/newTendermint/awesome-bigdata) 令人敬畏的大数据框架、资源和其他令人敬畏的精选列表。
+
+[guangzhengli/k8s-tutorials](https://github.com/guangzhengli/k8s-tutorials) k8s 教程
+
+[seata/seata](https://github.com/seata/seata) 简单可扩展的自主事务体系结构
+
+[apache/incubator-shardingsphere](https://github.com/apache/incubator-shardingsphere) 分布式数据库中间件生态圈
+
+[Tencent/wwsearch](https://github.com/Tencent/wwsearch) 企业微信后台自研的全文检索引擎
+
+[apache/airflow](https://github.com/apache/airflow) 一个以编程方式编写，安排和监视工作流的平台
+
+[apache/shardingsphere](https://github.com/apache/shardingsphere) Distributed database middleware 分布式数据库中间件
+
+[opencurve/curve](https://github.com/opencurve/curve) 网易自主设计研发的高性能、高可用、高可靠分布式存储系统，具有良好扩展性。
+
+[ClickHouse/ClickHouse](https://github.com/ClickHouse/ClickHouse) 开源极速列式数据库系统，允许实时生成数据分析报告。
+
+[canonical/dqlite](https://github.com/canonical/dqlite) 可嵌入、复制和故障耐受性 SQL 引擎。
+
+[apache/iceberg](https://github.com/apache/iceberg) 新兴的数据湖框架之一，开创性的抽象出”表格式“（table format）这一中间层，既独立于上层的计算引擎（如Spark和Flink）和查询引擎（如Hive和Presto），也和下层的文件格式（如Parquet，ORC和Avro）相互解耦。同时，还提供了许多额外的能力：ACID事务；时间旅行（time travel），以访问之前版本的数据；完备的自定义类型、分区方式和操作的抽象；列和分区方式可以进化，而且进化对用户无感，即无需重新组织或变更数据文件；隐式分区，使SQL不用针对分区方式特殊优化；面向云存储的优化
+
+[apache/hudi](https://github.com/apache/hudi) 基于Hadoop兼容的存储，提供了Update/Delete Record、Change Streams 将HDFS和Hudi结合起来，提供对流处理的支持能力。如：支持记录级别的更新、删除，以及获取基于HDFS之上的Change Streams。
+
+[greenplum-db/gpdb](https://github.com/greenplum-db/gpdb) 基于 PostgreSQL 的高级、功能齐全的开源数据仓库。 它提供对 PB 级数据量的强大而快速的分析。 Greenplum Database 专门针对大数据分析，由世界上最先进的基于成本的查询优化器提供支持，可在大数据量上提供高分析查询性能。
+
+[TurboWay/bigdata_analyse](https://github.com/TurboWay/bigdata_analyse)  大数据分析项目，包括1 亿条淘宝用户行为分析 、1000 万条淘宝用户行为 、300 万条《野蛮时代》的玩家 、130 万条深圳通刷卡、10 万条厦门招聘、7000 条租房、6000 条倒闭企业、COVID-19 疫情、7 万条天猫订单数据
+
+[avinassh/fast-sqlite3-inserts](https://github.com/avinassh/fast-sqlite3-inserts) 1分钟插入10亿行数据,写脚本请使用Rust
+
+[baidu/BaikalDB](https://github.com/baidu/BaikalDB) 分布式HTAP数据库 支持PB级结构数据的顺序和随机实时读取/写入。 B与MySQL协议兼容，并且支持MySQL样式SQL方言，通过该方言，用户可以将其数据存储从MySQL无缝迁移到BaikalDB。
+
+[ApsaraDB/PolarDB-for-PostgreSQL](https://github.com/ApsaraDB/PolarDB-for-PostgreSQL) 阿里云自主研发的云原生数据库服务。PolarDB-X 是一款面向超高并发、海量存储、复杂查询场景设计的云原生分布式数据库系统。其采用 Shared-nothing  与存储计算分离架构，支持水平扩展、分布式事务、混合负载等能力，具备企业级、云原生、高可用、高度兼容 MySQL 系统及生态等特点。
+
+[ApsaraDB/galaxysql](https://github.com/ApsaraDB/galaxysql) GalaxySQL 是 PolarDB-X 的计算节点（CN, Compute Node）。
+
+[ApsaraDB/galaxyengine](https://github.com/ApsaraDB/galaxyengine) GalaxyEngine 是源自阿里巴巴集团的 MySQL 分支，特别支持大型分布式数据库系统。
+
+[qiurunze123/miaosha](https://github.com/qiurunze123/miaosha) 秒杀系统设计与实现.互联网工程师进阶与分析
+
+[timescale/tsbs](https://github.com/timescale/tsbs) 时间序列基准套件，用于比较和评估时间序列数据数据库工具
+
+[byzer-org/byzer-lang](https://github.com/byzer-org/byzer-lang) Byzer（前 MLSQL）：一种用于数据管道、分析和 AI 的低代码开源编程语言。
+
+[xephonhq/awesome-time-series-database](https://github.com/xephonhq/awesome-time-series-database) 精选的时间序列数据库、基准和论文列表
+
+[XiaoMi/soar](https://github.com/XiaoMi/soar) SQL Optimizer And Rewriter是对 SQL进行优化改写的自动化工具。
+
+[Meituan-Dianping/SQLAdvisor](https://github.com/Meituan-Dianping/SQLAdvisor) 输入SQL，输出索引优化建议
+
+[cookieY/Yearning:](https://github.com/cookieY/Yearning) 一个最流行的mysql审计平台
+
+[hhyo/Archery](https://github.com/hhyo/Archery)  [archer](https://github.com/jly8866/archer)的分支项目，定位于SQL审核查询平台，旨在提升DBA的工作效率，支持多数据库的SQL上线和查询，同时支持丰富的MySQL运维功能，所有功能都兼容手机端操作
+
+[MyCATApache/Mycat-Server](https://github.com/MyCATApache/Mycat-Server) Java语言编写的MySQL数据库网络协议的开源中间件, 它支持分布式SQL查询，兼容MySQL通信协议，以Java生态支持多种后端数据库，通过数据分片提高数据查询处理能力。
+
+[Qihoo360/Quicksql](https://github.com/Qihoo360/Quicksql) 体系结构图可帮助您更轻松地访问 Quicksql
+
+[Qihoo360/Atlas](https://github.com/Qihoo360/Atlas) MySQL的高性能稳定代理，由奇虎DBA和基础架构团队开发
+
+[akopytov/sysbench](https://github.com/akopytov/sysbench) 可编写脚本的数据库和系统性能基准
+
+[github/gh-ost](https://github.com/github/gh-ost) MySQL 的无触发在线模式迁移解决方案。它是可测试的，并提供可暂停性、动态控制/重新配置、审计和许多操作特权。
+
+[openark/orchestrator](https://github.com/openark/orchestrator) MySQL 复制拓扑管理和 HA
+
+[alchemystar/Freedom](https://github.com/alchemystar/Freedom) 自己DIY一个具有ACID的数据库
+
+[alibaba/otter](https://github.com/alibaba/otter) 阿里巴巴分布式数据库同步系统(解决中美异地机房)
+
+[m3o/m3o](https://github.com/m3o/m3o) 一个云平台，它将现有的公共 API 变成更小更易于使用的微服务，您可以在一个地方探索、发现和使用更简单的可编程构建块。该平台生成统一的 API 文档、客户端和示例，这使得使用所有 API 变得更加容易。
+
+[meta-soul/LakeSoul](https://github.com/meta-soul/LakeSoul) 基于数据湖的表结构存储，统一批处理和流式数据处理
+
+[PrefectHQ/prefect](https://github.com/PrefectHQ/prefect)  工作流引擎。设计初衷是为了处理现代数据堆栈所需的动态、可扩展的工作负载。它由全新的异步规则引擎 Prefect Orion 提供支持。
+
+[facebookincubator/velox](https://github.com/facebookincubator/velox) 旨在优化查询引擎和数据处理系统的 C++ 矢量化数据库加速库。
+
+[alibaba/havenask](https://github.com/alibaba/havenask) 阿里巴巴自研的大规模分布式检索系统。支持千亿级数据实时检索，百万QPS查询，百万TPS写入，毫秒级查询延迟与秒级数据更新。
+
+[grafana/grafana](https://github.com/grafana/grafana) 开放、可组合的可观测性和数据可视化平台。可视化来自多个来源的指标、日志和跟踪，如 Prometheus、Loki、Elasticsearch、InfluxDB、Postgres 等等。
+
+[ctripcorp/x-pipe](https://github.com/ctripcorp/x-pipe) 携程框架部门研发的Redis多数据中心复制管理系统。基于Redis的Master-Slave复制协议，实现低延时、高可用的Redis多中心、跨公网数据复制，并且提供一键机房切换，复制监控、异常报警等功能。
+
+[ctripcorp/drc](https://github.com/ctripcorp/drc) 携程框架架构研发部数据中心组推出的用于数据双向或多向复制的数据库中间件，服务于异地多活项目，同时赋予了业务全球化的部署能力。为了做到真正的数据异地多活，实现MySQL同机房就近读写，机房故障时无需进行数据库DR操作，只进行流量切换，就需要引入数据实时双向(多向)复制组件。
+
+[digoal/blog](https://github.com/digoal/blog) 关于数据库，业务的一切。（大多数用于PostgreSQL）。
+
+[zhisheng17/flink-learning](https://github.com/zhisheng17/flink-learning) Flink 入门、概念、原理、实战、性能调优、源码解析等内容。涉及 Flink Connector、Metrics、Library、DataStream API、Table API &amp; SQL 等内容的学习案例，还有 Flink 落地应用的大型项目案例（PVUV、日志存储、百亿数据实时去重、监控告警）分享。
+
+[donnemartin/awesome-aws](https://github.com/donnemartin/awesome-aws) 精选的亚马逊云科技 （AWS） 库、开源存储库、指南、博客和其他资源列表。以 AWSome 的火热仪表为特色。
+
+[spotify/luigi](https://github.com/spotify/luigi) Luigi 是一个 Python 模块，可帮助您构建复杂的批处理作业管道。它处理依赖关系解析、工作流管理、可视化等。它还内置了Hadoop支持。
+
+[cockroachdb/cockroach](https://github.com/cockroachdb/cockroach) 开源的云原生分布式SQL数据库。
+
+[wangzhiwubigdata/God-Of-BigData](https://github.com/wangzhiwubigdata/God-Of-BigData) 专注大数据学习面试，大数据成神之路开启。Flink/Spark/Hadoop/Hbase/Hive...
+
+[apache/spark](https://github.com/apache/spark) 用于大规模数据处理的统一分析引擎。它提供了 Scala、Java、Python 和 R 中的高级 API，以及支持用于数据分析的一般计算图的优化引擎。它还支持一组丰富的高级工具，包括用于SQL和数据帧的Spark SQL，用于pandas工作负载的Spark上的pandas API，用于机器学习的MLlib，用于图形处理的GraphX和用于流处理的结构化流。
+
+[google/leveldb](https://github.com/google/leveldb) 一个在Google编写的快速键值存储库，它提供了从字符串键到字符串值的有序映射。
+
+## 数据搜索引擎
+
+[searx/searx](https://github.com/searx/searx) 尊重隐私的元搜索引擎
+
+[benbusby/whoogle-search](https://github.com/benbusby/whoogle-search) 一个自托管、无广告、尊重隐私的元搜索引擎
+
+[elastic/elasticsearch](https://github.com/elastic/elasticsearch) 免费开放、分布式、RESTful 搜索引擎
+
+[typesense/typesense](https://github.com/typesense/typesense) Algolia + Pinecone 的开源替代品和 ElasticSearch 的更易于使用的替代品。 快速、容错、内存模糊搜索引擎，用于构建令人愉悦的搜索体验
+
+[zincsearch/zincsearch](https://github.com/zincsearch/zincsearch) 轻量级elasticsearch 替代方案，需要最少的资源，用 Go 编写。
+
+[apache/lucene-solr](https://github.com/apache/lucene-solr) Apache Lucene和Solr开源搜索软件
+
+[valeriansaliou/sonic](https://github.com/valeriansaliou/sonic) 快速、轻量级和无模式的搜索后端。Elasticsearch的替代方案，运行在几MB的RAM上。
+
+[opensearch-project/OpenSearch](https://github.com/opensearch-project/OpenSearch) 开源分布式和 RESTful 搜索引擎。Elasticsearch 和 Kibana 的社区驱动的开源分支
+
+[quickwit-oss/tantivy](https://github.com/quickwit-oss/tantivy) 一个全文搜索引擎库，灵感来自Apache Lucene，用Rust编写。
+
+[medcl/elasticsearch-analysis-ik](https://github.com/medcl/elasticsearch-analysis-ik) IK 分析插件将 Lucene IK 分析器集成到 elasticsearch 中，支持自定义词典。
+
+[deviantony/docker-elk](https://github.com/deviantony/docker-elk) 由Docker和Compose提供支持的Elastic stack（ELK）。使用 Elasticsearch 的搜索/聚合功能和 Kibana 的可视化功能来分析任何数据集。
+
+[chrismattmann/tika-python](https://github.com/chrismattmann/tika-python) Tika-Python 是与 Apache Tika REST 服务的 Python 绑定，允许在 Python 社区中本地调用 Tika™。Apache Tika 是一个内容分析工具包，可以检测上千种文件类型，并提取它们的元数据和文本。tika在设计上十分精巧，单一的接口使它易于使用，在搜索引擎索引，内容分析，翻译等诸多方面得到了广泛使用。
+
+[appbaseio/dejavu](https://github.com/appbaseio/dejavu) Elasticsearch 缺少的 Web UI：使用丰富的过滤器和查询视图导入、浏览和编辑数据，直观地创建搜索 UI。
+
+[oramasearch/orama](https://github.com/oramasearch/orama) 快速、内存中、容错、用 TypeScript 编写的全文搜索引擎。
+
+[nextapps-de/flexsearch](https://github.com/nextapps-de/flexsearch) 适用于浏览器和Nodejs的下一代js全文搜索库
+
+[RediSearch/RediSearch](https://github.com/RediSearch/RediSearch) Redis的查询和索引引擎，提供二级索引，全文搜索，矢量相似性搜索和聚合。
+
+[GerevAI/gerev](https://github.com/GerevAI/gerev) 人工智能驱动的企业搜索引擎
+
+[alibaba/Chat2DB](https://github.com/alibaba/Chat2DB) 智能且通用的SQL客户端和数据库报告工具，集成了ChatGPT功能。
+
+[amazon-science/esci-data](https://github.com/amazon-science/esci-data) 一个困难搜索查询的大型数据集，旨在促进查询和产品语义匹配领域的研究。对于每个查询，数据集提供最多 40 个潜在相关结果的列表，以及 ESCI 相关性判断（精确、替代、补充、不相关），指示产品与查询的相关性。每个查询产品对都附有其他信息。数据集是多语言的，因为它包含英语、日语和西班牙语的查询。
+
+## 向量数据库、向量搜索、最近邻搜索
+
+[spotify/annoy](https://github.com/spotify/annoy) C++/Python 中的近似最近邻针对内存使用和加载/保存到磁盘进行了优化
+
+[qdrant/qdrant](https://github.com/qdrant/qdrant) 一个矢量相似性搜索引擎和矢量数据库。它提供生产就绪的服务，并带有方便的 API 来存储、搜索和管理点 - 具有附加有效载荷的矢量 Qdrant 专为扩展过滤支持量身定制。它使其可用于各种神经网络或基于语义的匹配、分面搜索和其他应用程序。
+
+[weaviate/weaviate](https://github.com/weaviate/weaviate) Weaviate 是一个开源矢量数据库，它存储对象和矢量，允许将矢量搜索与结构化过滤与云原生数据库的容错和可扩展性相结合，所有这些都可以通过 GraphQL、REST 和各种语言客户端访问。
+
+[pgvector/pgvector](https://github.com/pgvector/pgvector) Postgres的开源向量相似性搜索
+
+[FALCONN-LIB/FALCONN](https://github.com/FALCONN-LIB/FALCONN) 余弦和其他最近邻的首次查找（基于快速局部敏感哈希）
+
+[yahoojapan/NGT](https://github.com/yahoojapan/NGT) 使用邻域图和树进行最近邻搜索，以获取高维数据
+
+[hora-search/hora](https://github.com/hora-search/hora) 高效的近似最近邻搜索算法集合库用 Rust 编写。
+
+[marqo-ai/marqo](https://github.com/marqo-ai/marqo) 端到端的多模态矢量搜索引擎。借助 Marqo，用户可以通过单个易于使用的 API 存储和查询非结构化数据，例如文本、图像和代码。输入预处理、机器学习推理和存储都是开箱即用的，可以轻松扩展。
+
+[vearch/vearch](https://github.com/vearch/vearch) 一种基于嵌入的向量检索分布式系统
+
+[currentslab/awesome-vector-search](https://github.com/currentslab/awesome-vector-search) 矢量搜索相关库、服务和研究论文集
+
+[vdaas/vald](https://github.com/vdaas/vald) 高度可扩展的分布式矢量搜索引擎
+
+[docarray/docarray](https://github.com/docarray/docarray) 一个 Python 库，专为多模态数据的表示、传输、存储和检索而精心制作。专为多模态AI应用程序的开发量身定制，其设计可确保与广泛的Python和机器学习生态系统无缝集成。
+
+[neuml/txtai](https://github.com/neuml/txtai) 用于语义搜索、LLM 编排和语言模型工作流的一体化开源嵌入数据库
+
+## 其他__大数据
+
+[redis/redis](https://github.com/redis/redis) 一个内存中数据库，它保留在磁盘上。数据模型是键值，但支持许多不同类型的值：字符串、列表、集合、排序集、哈希、流、Hyper Log Logs、位图。
