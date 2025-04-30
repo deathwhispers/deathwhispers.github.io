@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "类chatgpt大语言对话模型及数据"
-date: 2025-04-23
+date: 2025-04-30
 tags: [学习资源, 深度学习,机器学习]
 comments: true
 author: deathwhispers
