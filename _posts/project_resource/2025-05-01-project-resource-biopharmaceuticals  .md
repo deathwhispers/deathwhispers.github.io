@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "生物医药"
-date: 2025-04-23
+date: 2025-05-01
 tags: [学习资源, 生物医药]
 comments: true
 author: deathwhispers
