@@ -1,0 +1,38 @@
+---
+layout: post
+title: "图数据库图算法"
+date: 2025-05-11
+tags: [学习资源, 图数据库]
+comments: true
+author: deathwhispers
+---
+
+
+
+# 图数据库图算法
+
+[Tencent/plato](https://github.com/Tencent/plato)
+
+[dgraph-io/dgraph](https://github.com/dgraph-io/dgraph)
+
+[hugegraph/hugegraph](https://github.com/hugegraph/hugegraph)
+
+[vtraag/leidenalg](https://github.com/vtraag/leidenalg)
+
+[erikbern/ann-benchmarks](https://github.com/erikbern/ann-benchmarks) 最邻近搜索
+
+[vesoft-inc/nebula](https://github.com/vesoft-inc/nebula) 分布式、可扩展、闪电般的图形数据库
+
+[milvus-io/milvus](https://github.com/milvus-io/milvus) 大规模特征向量的最快相似度搜索引擎 基于Faiss、Annoy等开源库，并针对性做了定制，支持结构化查询、多模查询等业界比较急需的功能；Milvus支持cpu、gpu、arm等多种类型的处理器；同时使用mysql存储元数据，并且在共享存储的支持下，Milvus可以支持分布式部署。
+
+[vearch/vearch](https://github.com/vearch/vearch) 用于嵌入式向量高效相似性搜索的分布式系统
+
+[dgraph-io/dgraph](https://github.com/dgraph-io/dgraph) The Only Native GraphQL Database With A Graph Backend.
+
+[vesoft-inc/nebula](https://github.com/vesoft-inc/nebula)  Nebula Graph 是一款开源的、分布式的、易扩展的原生图数据库，能够承载数千亿个点和数万亿条边的超大规模数据集，并且提供毫秒级查询。
+
+[shobrook/communities](https://github.com/shobrook/communities) 社区检测算法和可视化工具库
+
+[jm199504/Financial-Knowledge-Graphs](https://github.com/jm199504/Financial-Knowledge-Graphs) 小型金融知识图谱构建流程
+
+[apache/incubator-s2graph](https://github.com/apache/incubator-s2graph) [S2Graph](http://s2graph.apache.org/)是一个图形数据库，旨在大规模处理事务性图形处理。它的 REST API 允许您以完全异步和非阻塞的方式使用边缘和顶点表示来存储、管理和查询关系信息。S2Graph 是[Apache TinkerPop](https://tinkerpop.apache.org/)在[Apache HBASE](https://hbase.apache.org/)上的一个实现。
