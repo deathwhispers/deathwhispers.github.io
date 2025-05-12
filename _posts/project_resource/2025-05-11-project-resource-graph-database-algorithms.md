@@ -7,6 +7,10 @@ comments: true
 author: deathwhispers
 ---
 
+# 目录
+
+- [图数据库图算法](#图数据库图算法)
+
 
 # 图数据库图算法
 
