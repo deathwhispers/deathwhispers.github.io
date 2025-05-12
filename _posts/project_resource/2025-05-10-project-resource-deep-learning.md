@@ -7,8 +7,6 @@ comments: true
 author: deathwhispers
 ---
 
-
-
 # 机器学习与深度学习
 
 * [Coursera-ML-AndrewNg-Notes](https://github.com/fengdu78/Coursera-ML-AndrewNg-Notes) ![stars](https://img.shields.io/github/stars/fengdu78/Coursera-ML-AndrewNg-Notes.svg?style=social) [教程/笔记]吴恩达老师的机器学习课程个人笔记
