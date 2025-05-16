@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "精选深度学习资源汇总"
-date: 2025-04-23
+date: 2025-05-15
 tags: [学习资源, 深度学习,机器学习]
 comments: true
 author: deathwhispers
