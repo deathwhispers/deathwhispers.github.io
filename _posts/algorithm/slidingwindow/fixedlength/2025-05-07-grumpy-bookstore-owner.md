@@ -44,7 +44,7 @@ author: deathwhispers
 
 ## 代码实现
 ```java
-    public int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
+public int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
     int res = 0;
     int n = customers.length;
     int sum = 0;
