@@ -3,7 +3,7 @@ import os
 import requests
 import json
 from datetime import datetime
-from notion2md.exporter import StringExporter
+from notion2md.exporter import NotionToMarkdown
 
 # 获取环境变量
 NOTION_TOKEN = os.getenv('NOTION_TOKEN')
