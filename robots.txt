@@ -1,0 +1,2 @@
+# robots.txt file of https://example.com/
+sitemap: https://deathwhispers.github.io/sitemap.xml
