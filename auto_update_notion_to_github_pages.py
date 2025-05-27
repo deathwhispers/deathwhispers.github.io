@@ -46,7 +46,7 @@ def query_notion_articles():
         return response.json().get('results', [])
     return []
 
-# 将 Notion 文章转换为 Markdown 格式
+# 将 Notion 文章转换为 Markd··········own 格式
 
 def convert_to_markdown(article_id):
     exporter = StringExporter(token=NOTION_TOKEN)
