@@ -1,2 +1,4 @@
-# robots.txt file of https://example.com/
+User-agent: *
+Disallow: /
+
 sitemap: https://deathwhispers.github.io/sitemap.xml
