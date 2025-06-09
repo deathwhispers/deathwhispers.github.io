@@ -1,4 +1,4 @@
 User-agent: *
-allow: /
+Allow: /
 
-sitemap: https://deathwhispers.github.io/sitemap.xml
+Sitemap: https://deathwhispers.github.io/sitemap.xml
