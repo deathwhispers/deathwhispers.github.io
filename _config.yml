@@ -11,11 +11,14 @@ description: " 个人学习 | 日常记录 | 留档 "
 # Flags below are optional
 #
 
-# 这里的地址不能使用相对路径
+# 这里的地址:1.使用相对路径，但是不要用./images形式，必须从根目录/images/这样，不然在首页显示而文章页不显示，因为不在同一层级目录
+# 2. 直接使用一个可访问的链接，比如使用 github 访问链接。
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: /images/avatar.png
+#avatar: https://raw.githubusercontent.com/deathwhispers/deathwhispers.github.io/main/images/avatar.png
 # 你的favicon（出现在浏览器tab上）图片URL，建议使用较小(64px × 64px)的图片
 favicon: /images/favicon.ico
+#favicon: https://raw.githubusercontent.com/deathwhispers/deathwhispers.github.io/main/images/favicon.ico
 
 # Tabs in header. There are 'Blog', 'About', 'Archive', 'Tags'
 # and URL Link(e.g. 'Theme' tab below) tabs. If you don't need one, just delete
