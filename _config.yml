@@ -103,6 +103,7 @@ kramdown:
   input: GFM
   # Jekyll 3 and GitHub Pages now only support rouge for syntax highlighting
   syntax_highlighter: rouge
+  toc_levels: [1, 2, 3]
   syntax_highlighter_opts:
     # Use existing pygments syntax highlighting css
     css_class: 'highlight'
