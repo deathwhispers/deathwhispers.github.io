@@ -7,11 +7,6 @@ comments: true
 author: deathwhispers
 ---
 
-# 目录
-
-  - [CPU RISC-V](#cpu-risc-v)
-  - [硬件_其他](#硬件_其他)
-
 
 ## CPU RISC-V
 

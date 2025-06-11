@@ -7,6 +7,8 @@ comments: true
 author: deathwhispers
 ---
 
+
+[toc]
 # 推荐系统
 
 ## 推荐系统算法库与列表

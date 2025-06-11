@@ -2,21 +2,12 @@
 layout: post
 title: "机器学习与深度学习"
 date: 2025-05-10
-tags: [学习资源, 深度学习,机器学习]
+tags: [学习资源, 深度学习, 机器学习]
 comments: true
 author: deathwhispers
 ---
 
-# 目录
-
-- [特征工程](#特征工程)
-- [异常检测](#异常检测)
-- [参数优化](#参数优化)
-- [梯度提升和树模型](#梯度提升和树模型)
-- [神经网络结构搜索 Neural Architecture Search](#神经网络结构搜索 Neural Architecture Search)
-- [分布式机器学习](#分布式机器学习)
-- [其他_机器学习与深度学习](#其他_机器学习与深度学习)
-
+[toc]
 
 # 机器学习与深度学习
 
