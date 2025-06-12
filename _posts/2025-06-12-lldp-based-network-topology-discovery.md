@@ -14,6 +14,8 @@ author: deathwhispers
 
 我们将利用 SNMP (Simple Network Management Protocol) 来获取交换机的信息。SNMP 协议是管理网络设备的标准协议，Java 标准库并没有直接支持，但是有一些轻量级的开源库可以引入。通过引入 snmp4j 库来获取 LLDP 相关的信息。
 
+<!-- more -->
+
 ## 主要模块设计
 
 ```mermaid
