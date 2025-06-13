@@ -7,7 +7,10 @@ comments: true
 author: deathwhispers
 ---
 
-[toc]
+* toc
+{:toc}
+
+
 # 生物医药
 
 ## 蛋白质结构
