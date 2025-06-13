@@ -7,7 +7,9 @@ comments: true
 author: deathwhispers
 ---
 
-# Linux 安装 ollama
+* toc
+{:toc}
+
 
 ## 自动安装
 

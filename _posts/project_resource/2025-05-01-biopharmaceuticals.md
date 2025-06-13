@@ -11,8 +11,6 @@ author: deathwhispers
 {:toc}
 
 
-# 生物医药
-
 ## 蛋白质结构
 
 * [deepmind/alphafold](https://github.com/deepmind/alphafold) 此包提供了 AlphaFold v2.0 的推理流线的实现。AlphaFold是Google旗下DeepMind开发的一款人工智能程序，它使用深度学习算法通过蛋白质序列来预测蛋白质结构。蛋白质通过卷曲折叠会构成三维结构，蛋白质的功能正由其结构决定。了解蛋白质结构有助于开发治疗疾病的药物。

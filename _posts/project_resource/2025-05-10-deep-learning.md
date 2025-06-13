@@ -7,7 +7,8 @@ comments: true
 author: deathwhispers
 ---
 
-[toc]
+* toc
+{:toc}
 
 # 机器学习与深度学习
 

@@ -10,10 +10,6 @@ author: deathwhispers
 * toc
 {:toc}
 
-<!-- more -->
-
-# 安全与渗透
-
 ## 扫描器、资产收集、子域名
 
 * [nmap/nmap](https://github.com/nmap/nmap) 网络映射器，网络端口扫描器。

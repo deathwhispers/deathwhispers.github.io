@@ -4,12 +4,12 @@ title: "金融股票与时间序列"
 date: 2025-05-09
 tags: [学习资源, 深度学习,机器学习]
 comments: true
-toc: true
 author: deathwhispers
 ---
 
+* toc
+{:toc}
 
-# 金融股票与时间序列
 
 ## 金融股票
 

@@ -1,15 +1,16 @@
 ---
 layout: post
-title: "机器视觉"
+title: "计算机视觉"
 date: 2025-05-08
-tags: [学习资源, 机器视觉, CV]
+tags: [学习资源, 计算机视觉, CV]
 comments: true
 author: deathwhispers
 ---
 
 
-[toc]
-# 机器视觉
+* toc
+{:toc}
+
 
 ## 人像\姿势\3D人脸
 

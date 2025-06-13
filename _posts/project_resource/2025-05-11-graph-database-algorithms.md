@@ -7,8 +7,6 @@ comments: true
 author: deathwhispers
 ---
 
-[toc]
-
 # 图数据库图算法
 
 [Tencent/plato](https://github.com/Tencent/plato)
