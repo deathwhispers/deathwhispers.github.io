@@ -7,10 +7,10 @@ comments: true
 author: deathwhispers
 ---
 
-[toc]
-
 * toc
 {:toc}
+
+<!-- more -->
 
 # 安全与渗透
 
