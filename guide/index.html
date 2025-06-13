@@ -1,19 +1,155 @@
 ---
-layout: page
+layout: default
 title: 网址导航
 permalink: /guide/
+icon: fa-link
 ---
 
-{% if site.posts.size == 0 %}
-<h2>No post found</h2>
-{% endif %}
+<div class="links-container">
+    <h1>{{ page.title }}</h1>
+    <p>这里收集了一些我常用的或推荐的网站链接。</p>
 
-<div class="guide">
-    <ul class="label">
+    <div class="links-category">
+        <h2>个人博客/网站</h2>
+        <ul>
+            <li>
+                <a href="https://example.com/blog1" target="_blank" rel="noopener noreferrer">
+                    <h3>博客名称 A</h3>
+                    <p>一个关于技术分享的个人博客。</p>
+                </a>
+            </li>
+            <li>
+                <a href="https://example.com/blog2" target="_blank" rel="noopener noreferrer">
+                    <h3>个人网站 B</h3>
+                    <p>关于生活记录和摄影作品。</p>
+                </a>
+            </li>
+        </ul>
+    </div>
 
-    </ul>
+    <div class="links-category">
+        <h2>学习资源</h2>
+        <ul>
+            <li>
+                <a href="https://www.freecodecamp.org/" target="_blank" rel="noopener noreferrer">
+                    <h3>FreeCodeCamp</h3>
+                    <p>免费学习编程的在线平台。</p>
+                </a>
+            </li>
+            <li>
+                <a href="https://developer.mozilla.org/" target="_blank" rel="noopener noreferrer">
+                    <h3>MDN Web Docs</h3>
+                    <p>最全面的 Web 开发文档。</p>
+                </a>
+            </li>
+        </ul>
+    </div>
 
-    <ul class="guide">
+    <div class="links-category">
+        <h2>实用工具</h2>
+        <ul>
+            <li>
+                <a href="https://carbon.now.sh/" target="_blank" rel="noopener noreferrer">
+                    <h3>Carbon</h3>
+                    <p>生成精美代码图片。</p>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.remove.bg/" target="_blank" rel="noopener noreferrer">
+                    <h3>Remove.bg</h3>
+                    <p>在线去除图片背景。</p>
+                </a>
+            </li>
+        </ul>
+    </div>
 
-    </ul>
 </div>
+
+<style>
+    /* 简单的 CSS 样式，你可以根据你的主题进行调整 */
+    .links-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .links-container h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .links-container p {
+        text-align: center;
+        color: #666;
+        margin-bottom: 40px;
+    }
+
+    .links-category {
+        margin-bottom: 30px;
+    }
+
+    .links-category h2 {
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        color: #007bff; /* 可以选择你的主题色 */
+    }
+
+    .links-category ul {
+        list-style: none;
+        padding: 0;
+        display: grid; /* 使用 Grid 布局 */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 响应式列 */
+        gap: 20px; /* 项目间距 */
+    }
+
+    .links-category li {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .links-category li:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .links-category li a {
+        display: block;
+        padding: 15px;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .links-category li h3 {
+        margin-top: 0;
+        margin-bottom: 5px;
+        color: #333;
+        font-size: 1.2em;
+    }
+
+    .links-category li p {
+        margin-bottom: 0;
+        color: #666;
+        font-size: 0.9em;
+        line-height: 1.5;
+        text-align: left; /* 链接描述靠左对齐 */
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .links-container {
+            margin: 20px auto;
+            padding: 15px;
+        }
+        .links-category ul {
+            grid-template-columns: 1fr; /* 小屏幕下显示单列 */
+        }
+    }
+</style>
