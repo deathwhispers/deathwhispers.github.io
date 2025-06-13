@@ -32,6 +32,8 @@ navigation:
     url: /archive
   - name: 标签
     url: /tags
+  - name: 导航
+    url: /guide
 
 # Pagination
 paginate: 8
