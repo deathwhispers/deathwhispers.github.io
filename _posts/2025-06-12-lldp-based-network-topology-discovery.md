@@ -4,10 +4,11 @@ title: "基于 LLDP 协议的网络拓扑自动发现系统设计与实现"
 date: 2025-06-12
 tags: [LLDP, 网络拓扑]
 comments: true
-toc: true
 author: deathwhispers
 ---
 
+* toc
+{:toc}
 
 # 核心实现思路
 
