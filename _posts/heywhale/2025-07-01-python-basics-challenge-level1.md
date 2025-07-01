@@ -7,6 +7,11 @@ comments: true
 author: deathwhispers
 ---
 
+本项目来源于和鲸社区，使用转载需要标注来源
+* 作者: 和鲸社区
+* 来源: 和鲸社区
+
+
 # 1. Python基础_基础用法 
 
 ## 练习
