@@ -35,7 +35,7 @@ navigation:
 
 # Pagination
 paginate: 8
-
+mathjax: true
 excerpt_separator: <!-- more -->
 
 # Includes an icon in the footer for each username you enter
