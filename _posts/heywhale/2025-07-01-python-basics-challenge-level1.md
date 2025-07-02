@@ -5,12 +5,14 @@ date: 2025-07-01
 tags: [Python,heywhale,Python 基础]
 comments: true 
 author: deathwhispers
+mathjax: true
 ---
 
 本项目来源于和鲸社区，使用转载需要标注来源
 * 作者: 和鲸社区
 * 来源: 和鲸社区
 
+<!-- more -->
 
 # 1. Python基础_基础用法 
 
@@ -197,3 +199,4 @@ else:
 	y = "E"
 print(y)
 ```
+
