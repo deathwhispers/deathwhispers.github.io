@@ -5,7 +5,6 @@ date: 2025-07-01
 tags: [Python,heywhale,Python 基础]
 comments: true 
 author: deathwhispers
-mathjax: true
 ---
 
 本项目来源于和鲸社区，使用转载需要标注来源

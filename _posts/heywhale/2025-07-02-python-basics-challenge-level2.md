@@ -3,15 +3,15 @@ layout: post
 title: "Python基础_循环函数"
 date: 2025-07-02
 tags: [Python,heywhale,Python 基础]
-categories: [Python]
 comments: true
 author: deathwhispers
-katex: true
 ---
 
 本项目来源于和鲸社区，使用转载需要标注来源
 * 作者: 和鲸社区
 * 来源: 和鲸社区
+
+<!-- more -->
 
 # 2.Python基础_循环函数
 
