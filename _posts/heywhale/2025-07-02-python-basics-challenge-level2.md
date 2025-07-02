@@ -1,9 +1,9 @@
 ---
-layout: post 
-title: "尝试使用 Github pages 搭建个人博客"
-date: 2024-08-28 
-tags: [geek]
-comments: true 
+layout: post
+title: "Python基础_循环函数"
+date: 2025-07-02
+tags: [Python,heywhale,Python 基础]
+comments: true
 author: deathwhispers
 ---
 
