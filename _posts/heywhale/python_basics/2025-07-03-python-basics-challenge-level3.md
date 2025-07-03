@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Python基础_常用数据结构"
-date: 2025-07-01
+date: 2025-07-03
 tags: [Python,heywhale,Python 基础]
 comments: true
 author: deathwhispers
@@ -11,7 +11,9 @@ author: deathwhispers
 * 作者: 和鲸社区
 * 来源: 和鲸社区
 
-# 三、Python常用数据结构
+<!-- more -->
+
+# Python常用数据结构
 
 ## 内容概要
   * 字符串的使用 - 计算长度 / 下标运算 / 切片 / 常用方法
