@@ -13,6 +13,9 @@ author: deathwhispers
 
 <!-- more -->
 
+* toc
+{:toc}
+
 # 1. Python基础_基础用法 
 
 ## 练习

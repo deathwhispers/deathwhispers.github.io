@@ -13,6 +13,9 @@ author: deathwhispers
 
 <!-- more -->
 
+* toc
+{:toc}
+
 # Python常用数据结构
 
 ## 内容概要
