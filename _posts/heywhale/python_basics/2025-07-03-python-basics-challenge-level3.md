@@ -3,6 +3,8 @@ layout: post
 title: "Python基础_常用数据结构"
 date: 2025-07-03
 tags: [Python,heywhale,Python 基础]
+categories:
+  - 基础学习
 comments: true
 author: deathwhispers
 ---
