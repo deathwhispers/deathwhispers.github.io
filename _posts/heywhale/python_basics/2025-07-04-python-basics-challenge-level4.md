@@ -3,6 +3,8 @@ layout: post
 title: "Python基础_综合练习 1"
 date: 2025-07-04
 tags: [ Python,heywhale,Python 基础 ]
+categories:
+  - 基础学习
 comments: true
 author: deathwhispers
 ---

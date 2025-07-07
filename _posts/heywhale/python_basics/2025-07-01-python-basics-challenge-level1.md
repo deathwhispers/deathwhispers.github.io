@@ -2,8 +2,12 @@
 layout: post 
 title: "Python基础_基础用法"
 date: 2025-07-01 
-tags: [Python,heywhale,Python 基础]
-categories: [Python 基础学习]
+tags: 
+  - Python
+  - heywhale
+  - Python 基础
+categories: 
+  - Python 基础学习
 comments: true 
 author: deathwhispers
 ---
