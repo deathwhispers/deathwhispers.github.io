@@ -7,8 +7,6 @@ comments: true
 author: deathwhispers
 ---
 
-* toc
-{:toc}
 
 # 核心实现思路
 
