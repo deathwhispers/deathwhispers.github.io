@@ -7,7 +7,7 @@ tags:
   - heywhale
   - Python 基础
 categories:
-  - 基础学习
+  - Python 基础学习
 comments: true
 author: deathwhispers
 ---

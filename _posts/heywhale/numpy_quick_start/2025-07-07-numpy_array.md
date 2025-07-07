@@ -2,7 +2,12 @@
 layout: post
 title: "numpy基础 数组的创建与计算"
 date: 2025-07-07
-tags: [ numpy,heywhale,numpy 基础 ]
+tags:
+  - numpy
+  - heywhale
+  - numpy 基础
+categories:
+  - numpy 基础学习
 comments: true
 author: deathwhispers
 ---
