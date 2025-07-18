@@ -61,7 +61,7 @@ author: deathwhispers
 
 ### ✅ 2. 使用脚本进行批量替换（Python 示例）
 
-{% highlight python %}
+{% raw %}
 ```python
 import os
 import re
@@ -635,7 +635,7 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-{% endhighlight %}
+{% endraw %}
 
 ### ✅ 3. 执行步骤
 
