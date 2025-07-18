@@ -399,7 +399,7 @@ def _handle_api_model_property(old_attrs_content, mapping_config):
 # 映射表现在包含处理器函数的引用，以及每个注解的特定配置
 ANNOTATION_MAP = {
     '@ApiModel': {'handler': _handle_api_model, 'imports': 'io.swagger.v3.oas.annotations.media.Schema',
-                  'attr_map': {'description': 'description', 'value': 'name'},
+                  'attr_map': {'description': 'description', 'value': 'name', 'name': 'description'},
                   'default_attr_target': 'name', 'ignore_unmapped_attrs': True},
     '@Api': {'handler': _handle_api, 'imports': 'io.swagger.v3.oas.annotations.tags.Tag',
              'attr_map': {'value': 'name'}, # Primary mapping for common attrs
@@ -423,7 +423,7 @@ ANNOTATION_MAP = {
     '@ApiImplicitParams': {'handler': _handle_api_implicit_params, 'imports': 'io.swagger.v3.oas.annotations.Parameters',
                            'attr_map': {}, 'default_attr_target': None, 'ignore_unmapped_attrs': True},
     '@ApiModelProperty': {'handler': _handle_api_model_property, 'imports': 'io.swagger.v3.oas.annotations.media.Schema',
-                          'attr_map': {'value': 'name', 'name': 'name', 'notes': 'description'},
+                          'attr_map': {'value': 'name', 'name': 'description', 'notes': 'description'},
                           'default_attr_target': 'name', 'ignore_unmapped_attrs': True,
                           'attrs_to_remove': ['position', 'readOnly', 'hidden', 'allowableValues']},
 }
