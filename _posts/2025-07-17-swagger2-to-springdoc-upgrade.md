@@ -703,3 +703,12 @@ http://localhost:8080/swagger-ui.html
 > 不过也能解决绝大部分的问题了，能省点事。
 > 
 > 希望有大佬能搞个完美的解决方案，这个在升级中还是很有用的。
+
+
+## 参考文档
+1. http://blog.csdn.net/javaDeveloper2010/article/details/129119489
+2. https://blog.csdn.net/luostudent/article/details/131903001
+3. https://www.cnblogs.com/xiezhr/p/18253311
+4. https://v1.ballcat.cn/guide/other/swagger2ToOpenApi3.html
+
+
