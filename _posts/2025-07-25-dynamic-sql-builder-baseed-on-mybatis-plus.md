@@ -15,7 +15,7 @@ WHERE 子句：完全利用 MyBatis-Plus 的 LambdaQueryWrapper 来构建。这�
 
 SQL 执行：通过 DynamicReportMapper（使用 @SelectProvider 等）接收构建好的完整 SQL 字符串和 Wrapper 内部生成的参数 Map，并交由 MyBatis-Plus 框架执行。
 
-```
+```mermaid
 classDiagram
     class DynamicSqlBuilder {
         +buildSelectAndWhere(metadata, filters) Tuple<String, QueryWrapper<?>>
