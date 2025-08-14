@@ -1,11 +1,12 @@
 ---
 layout: post
-title: "自定义定时任务工具：基于 spring scheduling 增强"
+title: "Spring Boot定时任务再进化：从`@Scheduled`到企业级动态调度框架的设计之旅（一）"
 date: 2025-08-13
 tags:
   - spring scheduling
   - 定时任务
   - 任务调度
+category: Spring Boot定时任务
 comments: true
 author: deathwhispers
 ---
