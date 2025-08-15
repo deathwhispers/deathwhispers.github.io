@@ -1,0 +1,424 @@
+#---------------------------------------------------#
+## 配置文件需要放置在 $HOME/.config/clash/*.yaml
+
+## 这份文件是clashX的基础配置文件，请尽量新建配置文件进行修改。
+## 端口设置请在 菜单条图标->配置->更多配置 中进行修改
+
+## 如果您不知道如何操作，请参阅 官方Github文档 https://dreamacro.github.io/clash/
+#---------------------------------------------------#
+
+#---------------------------------------------------#
+## 自定义Clash配置
+## 作者： Colin Chang
+## 更新：2023-04-13 
+#---------------------------------------------------#
+
+
+mixed-port: 7890
+allow-lan: false
+mode: Rule
+log-level: error
+system-proxy: false
+external-controller: 127.0.0.1:9090
+
+proxy-providers:
+  FlyingBird-HongKong:
+    type: http
+    path: ./ProxySet/FlyingBird/HongKong.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: 'HK'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+  FlyingBird-TaiWan:
+    type: http
+    path: ./ProxySet/FlyingBird/TaiWan.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: 'TW'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+  FlyingBird-Singapore:
+    type: http
+    path: ./ProxySet/FlyingBird/Singapore.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: 'SP'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+  FlyingBird-Koran:
+    type: http
+    path: ./ProxySet/FlyingBird/Koran.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: 'KR'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+  FlyingBird-Japan:
+    type: http
+    path: ./ProxySet/FlyingBird/Japan.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: 'JP'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+  FlyingBird-USA:
+    type: http
+    path: ./ProxySet/FlyingBird/USA.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: 'US'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+  FlyingBird-UK:
+    type: http
+    path: ./ProxySet/FlyingBird/USA.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: 'UK'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+  FlyingBird-Netflix:
+    type: http
+    path: ./ProxySet/FlyingBird/Netflix.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: 'Netflix'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+  FlyingBird-ChatGPT:
+    type: http
+    path: ./ProxySet/FlyingBird/ChatGPT.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: "ChatGPT"
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+  FlyingBird-Media:
+    type: http
+    path: ./ProxySet/FlyingBird/Media.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: '流媒体'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+  FlyingBird-Xiaohongshu:
+    type: http
+    path: ./ProxySet/FlyingBird/Xiaohongshu.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: '美国'
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300  
+  FlyingBird-All:
+    type: http
+    path: ./ProxySet/FlyingBird/All.yaml
+    url: "https://ww5271.xyz/rss/cv1/285yyUJ/Eb8CUr"
+    interval: 1800
+    filter: ''
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+
+proxy-groups:
+  - name: 境外流量
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - FlyingBird-All
+  - name: Youtube
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - 流媒体
+  - name: Xiaohongshu
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - FlyingBird-Xiaohongshu
+  - name: Netflix
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - 流媒体
+  - name: Telegram
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - 境外流量
+  - name: Apple
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - DIRECT
+      - 境外流量
+  - name: 流媒体
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - FlyingBird-Media
+      - FlyingBird-Netflix
+    filter: "JP|US|TW"
+  - name: ChatGPT
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - FlyingBird-ChatGPT
+    filter: "JP"
+  - name: JP
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - FlyingBird-Japan
+
+rule-providers:
+  reject:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    path: ./RuleSet/reject.yaml
+    interval: 86400
+  icloud:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
+    path: ./RuleSet/icloud.yaml
+    interval: 86400
+  apple:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
+    path: ./RuleSet/apple.yaml
+    interval: 86400
+  google:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
+    path: ./RuleSet/google.yaml
+    interval: 86400
+  proxy:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+    path: ./RuleSet/proxy.yaml
+    interval: 86400
+  direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./RuleSet/direct.yaml
+    interval: 86400
+  private:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
+    path: ./RuleSet/private.yaml
+    interval: 86400
+  gfw:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
+    path: ./RuleSet/gfw.yaml
+    interval: 86400
+  greatfire:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/greatfire.txt"
+    path: ./RuleSet/greatfire.yaml
+    interval: 86400
+  tld-not-cn:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
+    path: ./RuleSet/tld-not-cn.yaml
+    interval: 86400
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
+    path: ./RuleSet/telegramcidr.yaml
+    interval: 86400
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
+    path: ./RuleSet/cncidr.yaml
+    interval: 86400
+  lancidr:
+     type: http
+     behavior: ipcidr
+     url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+     path: ./RuleSet/lancidr.yaml
+     interval: 86400
+rules:
+  # 自定义规则
+  # chatGPT
+  - DOMAIN-SUFFIX,openai.com,ChatGPT
+  - DOMAIN-SUFFIX,chatgpt.com,ChatGPT
+  - DOMAIN-SUFFIX,gemini.google.com,ChatGPT
+
+  - DOMAIN-SUFFIX,a-nomad.com,DIRECT
+  - DOMAIN-SUFFIX,api2d.net,DIRECT
+
+  # 内部网络
+  - IP-CIDR,100.65.0.0/16,DIRECT
+  - IP-CIDR,43.0.0.0/8,DIRECT
+  - IP-CIDR,192.168.1.0/24,DIRECT
+  - IP-CIDR,60.205.187.0/24,DIRECT
+  - IP-CIDR,182.92.6.0/24,DIRECT
+
+  # xiaohongshu
+  - DOMAIN-SUFFIX,xiaohongshu.com,Xiaohongshu
+  - DOMAIN-SUFFIX,xhslink.com,Xiaohongshu
+  - DOMAIN-SUFFIX,xhsimg.com,Xiaohongshu
+  - DOMAIN-SUFFIX,api.xiaohongshu.com,Xiaohongshu
+  - DOMAIN-SUFFIX,e.xiaohongshu.com,Xiaohongshu
+  - PROCESS-NAME,com.xingin.xhs,Xiaohongshu
+  
+  # 私有
+  - GEOIP,PRIVATE,DIRECT 
+
+  - DOMAIN-KEYWORD,youtube,Youtube
+  - DOMAIN,youtubei.googleapis.com,Youtube
+  - DOMAIN,yt3.ggpht.com,Youtube
+  - DOMAIN-SUFFIX,googlevideo.com,Youtube
+  - DOMAIN-SUFFIX,gvt2.com,Youtube
+  - DOMAIN-SUFFIX,withyoutube.com,Youtube
+  - DOMAIN-SUFFIX,youtu.be,Youtube
+  - DOMAIN-SUFFIX,youtube-nocookie.com,Youtube
+  - DOMAIN-SUFFIX,youtube.com,Youtube
+  - DOMAIN-SUFFIX,youtubeeducation.com,Youtube
+  - DOMAIN-SUFFIX,youtubegaming.com,Youtube
+  - DOMAIN-SUFFIX,youtubekids.com,Youtube
+  - DOMAIN-SUFFIX,yt.be,Youtube
+  - DOMAIN-SUFFIX,ytimg.com,Youtube
+  - DOMAIN-KEYWORD,netflixdnstest,Netflix
+  - DOMAIN,netflix.com.edgesuite.net,Netflix
+  - DOMAIN-SUFFIX,fast.com,Netflix
+  - DOMAIN-SUFFIX,netflix.com,Netflix
+  - DOMAIN-SUFFIX,netflix.net,Netflix
+  - DOMAIN-SUFFIX,netflixdnstest0.com,Netflix
+  - DOMAIN-SUFFIX,netflixdnstest1.com,Netflix
+  - DOMAIN-SUFFIX,netflixdnstest2.com,Netflix
+  - DOMAIN-SUFFIX,netflixdnstest3.com,Netflix
+  - DOMAIN-SUFFIX,netflixdnstest4.com,Netflix
+  - DOMAIN-SUFFIX,netflixdnstest5.com,Netflix
+  - DOMAIN-SUFFIX,netflixdnstest6.com,Netflix
+  - DOMAIN-SUFFIX,netflixdnstest7.com,Netflix
+  - DOMAIN-SUFFIX,netflixdnstest8.com,Netflix
+  - DOMAIN-SUFFIX,netflixdnstest9.com,Netflix
+  - DOMAIN-SUFFIX,nflxext.com,Netflix
+  - DOMAIN-SUFFIX,nflximg.com,Netflix
+  - DOMAIN-SUFFIX,nflximg.net,Netflix
+  - DOMAIN-SUFFIX,nflxso.net,Netflix
+  - DOMAIN-SUFFIX,nflxvideo.net,Netflix
+  - IP-CIDR,8.41.4.0/24,Netflix,no-resolve
+  - IP-CIDR,23.246.0.0/18,Netflix,no-resolve
+  - IP-CIDR,37.77.184.0/21,Netflix,no-resolve
+  - IP-CIDR,38.72.126.0/24,Netflix,no-resolve
+  - IP-CIDR,45.57.0.0/17,Netflix,no-resolve
+  - IP-CIDR,64.120.128.0/17,Netflix,no-resolve
+  - IP-CIDR,66.197.128.0/17,Netflix,no-resolve
+  - IP-CIDR,69.53.224.0/19,Netflix,no-resolve
+  - IP-CIDR,103.87.204.0/22,Netflix,no-resolve
+  - IP-CIDR,108.175.32.0/20,Netflix,no-resolve
+  - IP-CIDR,185.2.220.0/22,Netflix,no-resolve
+  - IP-CIDR,185.9.188.0/22,Netflix,no-resolve
+  - IP-CIDR,192.173.64.0/18,Netflix,no-resolve
+  - IP-CIDR,198.38.96.0/19,Netflix,no-resolve
+  - IP-CIDR,198.45.48.0/20,Netflix,no-resolve
+  - IP-CIDR,207.45.72.0/22,Netflix,no-resolve
+  - IP-CIDR,208.75.76.0/22,Netflix,no-resolve
+  - PROCESS-NAME,v2ray,DIRECT
+  - PROCESS-NAME,xray,DIRECT
+  - PROCESS-NAME,naive,DIRECT
+  - PROCESS-NAME,trojan,DIRECT
+  - PROCESS-NAME,trojan-go,DIRECT
+  - PROCESS-NAME,ss-local,DIRECT
+  - PROCESS-NAME,privoxy,DIRECT
+  - PROCESS-NAME,leaf,DIRECT
+  - PROCESS-NAME,v2ray.exe,DIRECT
+  - PROCESS-NAME,xray.exe,DIRECT
+  - PROCESS-NAME,naive.exe,DIRECT
+  - PROCESS-NAME,trojan.exe,DIRECT
+  - PROCESS-NAME,trojan-go.exe,DIRECT
+  - PROCESS-NAME,ss-local.exe,DIRECT
+  - PROCESS-NAME,privoxy.exe,DIRECT
+  - PROCESS-NAME,leaf.exe,DIRECT
+  - PROCESS-NAME,Surge,DIRECT
+  - PROCESS-NAME,Surge 2,DIRECT
+  - PROCESS-NAME,Surge 3,DIRECT
+  - PROCESS-NAME,Surge 4,DIRECT
+  - PROCESS-NAME,Surge%202,DIRECT
+  - PROCESS-NAME,Surge%203,DIRECT
+  - PROCESS-NAME,Surge%204,DIRECT
+  - PROCESS-NAME,Thunder,DIRECT
+  - PROCESS-NAME,DownloadService,DIRECT
+  - PROCESS-NAME,qBittorrent,DIRECT
+  - PROCESS-NAME,Transmission,DIRECT
+  - PROCESS-NAME,fdm,DIRECT
+  - PROCESS-NAME,aria2c,DIRECT
+  - PROCESS-NAME,Folx,DIRECT
+  - PROCESS-NAME,NetTransport,DIRECT
+  - PROCESS-NAME,uTorrent,DIRECT
+  - PROCESS-NAME,WebTorrent,DIRECT
+  - PROCESS-NAME,aria2c.exe,DIRECT
+  - PROCESS-NAME,BitComet.exe,DIRECT
+  - PROCESS-NAME,fdm.exe,DIRECT
+  - PROCESS-NAME,NetTransport.exe,DIRECT
+  - PROCESS-NAME,qbittorrent.exe,DIRECT
+  - PROCESS-NAME,Thunder.exe,DIRECT
+  - PROCESS-NAME,ThunderVIP.exe,DIRECT
+  - PROCESS-NAME,transmission-daemon.exe,DIRECT
+  - PROCESS-NAME,transmission-qt.exe,DIRECT
+  - PROCESS-NAME,uTorrent.exe,DIRECT
+  - PROCESS-NAME,WebTorrent.exe,DIRECT
+  - DOMAIN,clash.razord.top,DIRECT
+  - DOMAIN,yacd.haishan.me,DIRECT
+  - RULE-SET,private,DIRECT
+  - RULE-SET,reject,REJECT
+  - RULE-SET,direct,DIRECT
+  - RULE-SET,lancidr,DIRECT
+  - RULE-SET,icloud,Apple
+  - RULE-SET,apple,Apple
+  - RULE-SET,tld-not-cn,境外流量
+  - RULE-SET,gfw,境外流量
+  - RULE-SET,google,境外流量
+  - RULE-SET,proxy,境外流量
+  - RULE-SET,telegramcidr,Telegram
+  - GEOIP,LAN,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,DIRECT
+
