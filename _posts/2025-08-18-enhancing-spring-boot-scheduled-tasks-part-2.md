@@ -68,6 +68,7 @@ public @interface TaskDescriptor {
 
 基于此，我们的新架构如下图所示：
 
+{% raw %}
 ```mermaid
 graph TD
     subgraph "用户代码 (User Code)"
@@ -105,6 +106,8 @@ D -- 6 . 维护运行时状态 --> D
 C -- 7 . 最终任务列表提交给 --> J
 J -- 8 . 到点执行 --> E
 ```
+{% endraw %}
+
 
 **这个架构的工作流程解读如下**：
 
@@ -125,8 +128,8 @@ J -- 8 . 到点执行 --> E
 下面这段代码，正是我们实现上述流程的核心，它位于`LightSchedulerAutoConfiguration`中，展示了如何优雅地分类处理和替换所有类型的
 `@Scheduled`任务。
 
+{% raw %}
 ```java
-
 @Override
 public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
     if (this.taskManager == null) {
@@ -183,6 +186,7 @@ private void processIntervalTask(IntervalTask task, boolean isFixedRate, Schedul
     }
 }
 ```
+{% endraw %}
 
 通过这种方式，我们以一种极其微创和优雅的方式，完成了对Spring调度体系的全面增强。
 
