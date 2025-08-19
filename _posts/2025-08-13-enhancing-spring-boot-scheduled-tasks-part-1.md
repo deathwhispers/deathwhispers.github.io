@@ -11,7 +11,7 @@ comments: true
 author: deathwhispers
 ---
 
-# Spring Boot定时任务再进化：从`@Scheduled`到企业级动态调度框架的设计之旅（一）
+# Spring Boot定时任务再进化（一）：缘起、初心与第一次“推倒重来”
 
 > **摘要**: Spring Boot的`@Scheduled`
 > 注解以其极致的简洁性赢得了广大开发者的喜爱，但在复杂的生产环境中，其缺乏运行时控制、状态监控和持久化等能力的短板也日益凸显。本文将记录一次完整的思考与实践之旅，我们如何从零开始，基于Java
