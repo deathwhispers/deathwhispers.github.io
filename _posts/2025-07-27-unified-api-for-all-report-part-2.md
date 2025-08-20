@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "多报表统一接口管理：实现一套接口处理所有类型报表的导出2"
-date: 2025-07-29
+title: "多报表统一接口管理：实现一套接口处理所有类型报表的导出（二）"
+date: 2025-07-27
 tags:
   - excel
   - 策略模式
@@ -13,7 +13,7 @@ author: deathwhispers
 
 # Spring Boot 通用报表管理实践：从复杂到优雅的演进之路
 
-在现代企业应用中，报表功能是不可或缺的。然而，随着业务的快速发展，报表类型不断增多（每日、月度、施工计划等），且未来需求难以预估。如果每种报表都独立开发一套 CURD (创建、读取、更新、删除) 及导出功能，不仅代码量庞大，维护成本也会迅速失控。
+> 在现代企业应用中，报表功能是不可或缺的。然而，随着业务的快速发展，报表类型不断增多（每日、月度、施工计划等），且未来需求难以预估。如果每种报表都独立开发一套 CURD (创建、读取、更新、删除) 及导出功能，不仅代码量庞大，维护成本也会迅速失控。
 
 本文将详细阐述我们如何从零开始，在 Spring Boot 中设计并实现一个**通用、灵活且易于扩展**的报表管理方案，以及在这个过程中我们遇到的问题、踩过的坑，和最终选择的解决方案。
 
@@ -27,7 +27,7 @@ author: deathwhispers
 
 ## 二、整体方案思路：策略模式与工厂模式的融合
 
-为了达成目标，我们采用了\*\*策略模式（Strategy Pattern）\*\*与 \*\*工厂模式（Factory Pattern）\*\*相结合，并充分利用 Spring Boot 的依赖注入特性。
+为了达成目标，我们采用了**策略模式**（Strategy Pattern）与 **工厂模式**（Factory Pattern）相结合，并充分利用 Spring Boot 的依赖注入特性。
 
 **核心设计理念：**
 
@@ -93,7 +93,7 @@ graph TD
 
 在实现过程中，我们遇到了几个典型的 Spring Boot 和 Java 泛型相关的问题，这些问题的解决推动了方案的不断优化。
 
-### 1\. 坑点一：泛型 `@RequestBody T dto` 带来的 `ClassCastException`
+### 1. 坑点一：泛型 `@RequestBody T dto` 带来的 `ClassCastException`
 
 **问题现象：** 当 `Controller` 方法签名是 `public <T extends BaseReport> RespResult<?> create(@RequestBody T dto)` 时，即使 JSON 中有 `reportType` 字段，`dto` 在方法体中却总是 `BaseReport` 类型，而不是其真正的子类（如 `ConstrPlanRecord`），导致调用具体服务时抛出 `ClassCastException`。
 
@@ -133,7 +133,7 @@ public abstract class BaseReport implements Serializable { /* ... */ }
     * **缺点：** `Controller` 方法内部需要显式调用 `convertValue`；需要手动触发 Bean Validation (在 `convertValue` 之后)；客户端 JSON 必须包含 `reportType` 字段。
     * **抉择：** 尽管增加了 Controller 内部逻辑，但避免了 Spring 配置层面的复杂性，且 `convertValue` 操作是高效可靠的。这是在不牺牲核心通用性前提下，实现 URL 简洁和降低配置复杂度的合理权衡。
 
-### 2\. **核心改良：从静态 `JsonSubTypes` 到动态报表类型发现**
+### 2. **核心改良：从静态 `JsonSubTypes` 到动态报表类型发现**
 
 为了彻底解决“每新增一种报表就修改 `BaseReport`”的痛点，我们引入了动态报表类型发现机制。
 
@@ -177,9 +177,7 @@ public abstract class BaseReport implements Serializable { /* ... */ }
 * **极致简化：** `BaseReport` 不再背负子类列表的“包袱”，实体类本身也无需额外 `reportType` 字段（仅为 Jackson `property` 存在），`IReportService` 中的 `getReportType()` 方法也随之移除，使得 Service 层接口更加纯粹。
 * **提升开发效率：** 开发者可以更专注于业务逻辑，而非框架配置。
 
-### 3\. 坑点三：Service 中 `getReportType()` 方法的冗余
-
-（... 这部分现在可以更精简，因为在“核心改良”部分已经说明了 `getReportType()` 被移除的原因 ...）
+### 3. 坑点三：Service 中 `getReportType()` 方法的冗余
 
 **问题现象：** `IReportService` 接口中以及所有实现类中都包含 `String getReportType()` 方法，显得多余。
 
@@ -194,7 +192,7 @@ public abstract class BaseReport implements Serializable { /* ... */ }
 **优点：** 进一步精简了 Service 层代码，强化了“报表类型就是实体类名”的统一约定。
 
 
-### 4\. 坑点四：Maven 依赖冲突与 `NoClassDefFoundError`
+### 4. 坑点四：Maven 依赖冲突与 `NoClassDefFoundError`
 
 **问题现象：** 在引入 `easyexcel`、`poi-tl`、`apache-poi` 等库时，常常因传递性依赖导致 `org.apache.commons.io` 等库的版本冲突，表现为 `NoClassDefFoundError`。同时，`HttpServletResponse` 的 `getOutputStream()` 和 `getWriter()` 冲突引发 `IllegalStateException`。
 
