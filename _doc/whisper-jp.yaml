@@ -10,7 +10,7 @@
 #---------------------------------------------------#
 ## 自定义Clash配置
 ## 作者： Colin Chang
-## 更新：2023-04-13 
+## 更新：2023-04-13
 #---------------------------------------------------#
 
 
@@ -389,10 +389,10 @@ rules:
   - RULE-SET,lancidr,DIRECT
   - RULE-SET,icloud,Apple
   - RULE-SET,apple,Apple
-  - RULE-SET,tld-not-cn,境外流量
-  - RULE-SET,gfw,境外流量
-  - RULE-SET,google,境外流量
-  - RULE-SET,proxy,境外流量
+  - RULE-SET,tld-not-cn,JP
+  - RULE-SET,gfw,JP
+  - RULE-SET,google,JP
+  - RULE-SET,proxy,JP
   - RULE-SET,telegramcidr,Telegram
   - GEOIP,LAN,DIRECT
   - GEOIP,CN,DIRECT
