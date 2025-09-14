@@ -1,0 +1,31 @@
+# .github/workflows/sync-docs.yml
+name: 同步开源文档
+
+on:
+  # 每天凌晨3点自动同步
+  schedule:
+    - cron: '0 3 * * *'
+  # 也支持手动触发
+  workflow_dispatch:
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取博客仓库
+        uses: actions/checkout@v4
+        with:
+          submodules: true  # 拉取子模块
+
+      - name: 同步子模块到最新版本
+        run: |
+          cd docs/external-docs
+          git pull origin main  # 拉取开源文档的主分支
+
+      - name: 提交更新
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add docs/external-docs
+          git commit -m "自动同步开源文档更新 $(date +'%Y-%m-%d')" || echo "无更新"
+          git push
