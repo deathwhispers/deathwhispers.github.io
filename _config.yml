@@ -1,15 +1,7 @@
-#
-# This file contains configuration flags to customize your site
-#
-
 # Name of your site (displayed in the header)
 name: "death whisper"
 # Short bio or description (displayed in the header)
 description: " 个人学习 | 日常记录 | 留档 "
-
-#
-# Flags below are optional
-#
 
 # 这里的地址:1.使用相对路径，但是不要用./images形式，必须从根目录/images/这样，不然在首页显示而文章页不显示，因为不在同一层级目录
 # 2. 直接使用一个可访问的链接，比如使用 github 访问链接。
@@ -32,6 +24,23 @@ navigation:
     url: /archive
   - name: 标签
     url: /tags
+  # 新增：文档入口，指向开源文档子模块目录（后续会创建这个目录）
+  - name: 文档
+    url: /docs/external-docs/
+
+defaults:
+  - scope:
+      path: "docs"  # 覆盖所有 docs 目录下的文件（包括子模块的 external-docs）
+    values:
+      layout: "doc"  # 文档页面使用专门的 doc.html 布局（后续需创建）
+      toc: true      # 启用目录生成（依赖 jekyll-toc 插件，你已安装）
+      permalink: /docs/:path/  # 文档页面的 URL 规则（避免与博客文章冲突）
+      gitalk: true
+  # 保留你原有博客文章的默认配置（如果之前有，比如针对 _posts 的配置，这里补上）
+  - scope:
+      path: "_posts"
+    values:
+      layout: "post"  # 确保博客文章仍用 post 布局
 
 # Pagination
 paginate: 8
@@ -74,12 +83,9 @@ gitalk:
 # Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
 google_analytics: G-3KHTSZFS3Z
 
-
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
 url: "https://deathwhispers.github.io"
-#sitemap: https://deathwhispers.github.io/sitemap.xml
-#feed: https://deathwhispers.github.io/feed
 
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)
