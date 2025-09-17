@@ -11,8 +11,6 @@ comments: true
 author: deathwhispers
 ---
 
-# Spring Boot 定时任务再进化（第三章）：“偷天换日”——靠SchedulingConfigurer搞出全新架构
-
 ## 引言
 
 > 做开发这行，好多时候看着是“死路”，其实藏着通往新方案的“后门”。上一章咱设计的`TaskManager`因为循环依赖卡了壳，这也让咱明白：想从外面硬拧成熟框架的流程，根本行不通。真正的办法，是摸透框架的生命周期，跟着它的节奏来。好在Spring的开发者早给咱留了“钥匙”——`SchedulingConfigurer`接口。

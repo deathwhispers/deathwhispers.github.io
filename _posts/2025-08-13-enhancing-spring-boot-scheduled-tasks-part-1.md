@@ -11,9 +11,6 @@ comments: true
 author: deathwhispers
 ---
 
-
-# **Spring Boot 定时任务再进化（第一章）：甜蜜的“毒药”——为啥咱们对@Scheduled又爱又恨**
-
 ## **引言**
 
 > 聊Java开发，没人能绕开Spring框架——它直接把咱们搭项目的思路给换了；而Spring Boot更狠，带着“约定大于配置”的路子，让咱们写代码的效率直接上了快车道。在Spring Boot这生态圈里，`@Scheduled`注解绝对是颗“明星”。
