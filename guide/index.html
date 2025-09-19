@@ -7,7 +7,7 @@ icon: fa-link
 
 <style>
     .link-nav {
-        max-width: 1200px;
+        max-width: 1980px;
         margin: 2rem auto;
         padding: 2rem;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -19,7 +19,7 @@ icon: fa-link
         font-weight: 700;
         color: #2c3e50;
         margin-bottom: 1rem;
-        background: linear-gradient(90deg, #5468ff, #46d1ff);
+        background: linear-gradient(90deg, #1a288b, #2b7085);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -59,7 +59,7 @@ icon: fa-link
 
     .link-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 1.5rem;
     }
 
@@ -130,6 +130,25 @@ icon: fa-link
         line-height: 1.6;
         margin: 0;
     }
+    /* 响应式调整：在不同屏幕尺寸下自动调整列数 */
+    @media (max-width: 1980px) {
+        .link-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .link-grid {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        }
+    }
+
+    @media (max-width: 992px) {
+        .link-grid {
+            /* 中等屏幕显示3列 */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+    }
 
     @media (max-width: 768px) {
         .link-nav {
@@ -140,6 +159,13 @@ icon: fa-link
             font-size: 2rem;
         }
         .link-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .link-grid {
+            /* 手机显示1列 */
             grid-template-columns: 1fr;
         }
     }
