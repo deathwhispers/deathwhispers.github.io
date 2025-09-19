@@ -205,6 +205,10 @@
       url: https://www.sonarqube.org/
       desc: 代码质量管理平台
       icon: fa-bug
+    - name: Stomp WebSocket 测试工具
+      url: /assets/stomp.html
+      desc: Stomp WebSocket 测试工具
+      icon: fa-Stomp
 
 - category: 🧱 架构 & 设计模式
   icon: fa-project-diagram
