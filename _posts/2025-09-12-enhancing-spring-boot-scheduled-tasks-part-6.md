@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Spring Boot定时任务再进化：从`@Scheduled`到企业级动态调度框架的设计之旅（六）"
-date: 2025-09-01
+date: 2025-09-12
 tags:
   - Spring Scheduling
   - 定时任务
@@ -10,9 +10,6 @@ category: Spring Boot定时任务
 comments: true
 author: deathwhispers
 ---
-
-
-# Spring Boot 定时任务再进化（第六章）：通过 REST API 构建动态调度中枢
 
 ## 引言
 

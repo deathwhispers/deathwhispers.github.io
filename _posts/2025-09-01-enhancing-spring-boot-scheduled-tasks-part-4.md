@@ -11,7 +11,6 @@ comments: true
 author: deathwhispers
 ---
 
-# Spring Boot 定时任务再进化（第四章）：给框架装“长期记忆”——可插拔的持久化层设计
 
 ## 引言
 
