@@ -18,8 +18,6 @@ favicon: /images/favicon.ico
 navigation:
   - name: 首页
     url: /
-  - name: 关于
-    url: /about
   - name: 归档
     url: /archive
   - name: 标签
@@ -107,7 +105,8 @@ kramdown:
 
 # Set the Sass partials directory, as we're using @imports
 sass:
-  style: :expanded # You might prefer to minify using :compressed
+  style: :compressed # You might prefer to minify using :compressed
+  sass_dir: _sass
 
 # Use the following plug-ins
 plugins:
