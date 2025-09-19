@@ -1,0 +1,38 @@
+- category: 个人博客/网站
+  icon: fa-user
+  links:
+    - name: 博客名称 A
+      url: https://example.com/blog1
+      desc: 一个关于技术分享的个人博客。
+      icon: fa-code
+
+    - name: 我的本地工具页
+      url: /assets/stomp.html
+      desc: 这是一个本地 stomp 测试页面。
+      icon: fa-wrench
+
+- category: 学习资源
+  icon: fa-book
+  links:
+    - name: FreeCodeCamp
+      url: https://www.freecodecamp.org/
+      desc: 免费学习编程的在线平台。
+      icon: fa-laptop-code
+
+    - name: MDN Web Docs
+      url: https://developer.mozilla.org/
+      desc: 最全面的 Web 开发文档。
+      icon: fa-globe
+
+- category: 实用工具
+  icon: fa-tools
+  links:
+    - name: Carbon
+      url: https://carbon.now.sh/
+      desc: 生成精美代码图片。
+      icon: fa-paint-brush
+
+    - name: Remove.bg
+      url: https://www.remove.bg/
+      desc: 在线去除图片背景。
+      icon: fa-image

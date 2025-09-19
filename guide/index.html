@@ -5,151 +5,172 @@ permalink: /guide/
 icon: fa-link
 ---
 
-<div class="links-container">
-    <h1>{{ page.title }}</h1>
-    <p>这里收集了一些我常用的或推荐的网站链接。</p>
-
-    <div class="links-category">
-        <h2>个人博客/网站</h2>
-        <ul>
-            <li>
-                <a href="https://example.com/blog1" target="_blank" rel="noopener noreferrer">
-                    <h3>博客名称 A</h3>
-                    <p>一个关于技术分享的个人博客。</p>
-                </a>
-            </li>
-            <li>
-                <a href="https://example.com/blog2" target="_blank" rel="noopener noreferrer">
-                    <h3>个人网站 B</h3>
-                    <p>关于生活记录和摄影作品。</p>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <div class="links-category">
-        <h2>学习资源</h2>
-        <ul>
-            <li>
-                <a href="https://www.freecodecamp.org/" target="_blank" rel="noopener noreferrer">
-                    <h3>FreeCodeCamp</h3>
-                    <p>免费学习编程的在线平台。</p>
-                </a>
-            </li>
-            <li>
-                <a href="https://developer.mozilla.org/" target="_blank" rel="noopener noreferrer">
-                    <h3>MDN Web Docs</h3>
-                    <p>最全面的 Web 开发文档。</p>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <div class="links-category">
-        <h2>实用工具</h2>
-        <ul>
-            <li>
-                <a href="https://carbon.now.sh/" target="_blank" rel="noopener noreferrer">
-                    <h3>Carbon</h3>
-                    <p>生成精美代码图片。</p>
-                </a>
-            </li>
-            <li>
-                <a href="https://www.remove.bg/" target="_blank" rel="noopener noreferrer">
-                    <h3>Remove.bg</h3>
-                    <p>在线去除图片背景。</p>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-</div>
-
 <style>
-    /* 简单的 CSS 样式，你可以根据你的主题进行调整 */
-    .links-container {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    .link-nav {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
-    .links-container h1 {
+    .link-nav h1 {
         text-align: center;
-        color: #333;
-        margin-bottom: 20px;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        background: linear-gradient(90deg, #5468ff, #46d1ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
     }
 
-    .links-container p {
+    .link-nav .subtitle {
         text-align: center;
-        color: #666;
-        margin-bottom: 40px;
+        color: #7f8c8d;
+        font-size: 1.1rem;
+        margin-bottom: 3rem;
     }
 
-    .links-category {
-        margin-bottom: 30px;
+    .link-category {
+        margin-bottom: 3rem;
     }
 
-    .links-category h2 {
-        border-bottom: 2px solid #eee;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-        color: #007bff; /* 可以选择你的主题色 */
+    .link-category-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f0f0f0;
     }
 
-    .links-category ul {
-        list-style: none;
-        padding: 0;
-        display: grid; /* 使用 Grid 布局 */
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 响应式列 */
-        gap: 20px; /* 项目间距 */
+    .link-category-header i {
+        font-size: 1.5rem;
+        color: #3498db;
     }
 
-    .links-category li {
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 5px;
+    .link-category-header h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+    }
+
+    .link-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .link-card {
+        background: #ffffff;
+        border: 1px solid #eaeaea;
+        border-radius: 12px;
+        padding: 1.25rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        position: relative;
         overflow: hidden;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .links-category li:hover {
+    .link-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        border-color: #d1e7ff;
     }
 
-    .links-category li a {
-        display: block;
-        padding: 15px;
+    .link-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 0%;
+        background: linear-gradient(to bottom, #5468ff, #46d1ff);
+        transition: height 0.3s ease;
+    }
+
+    .link-card:hover::before {
+        height: 100%;
+    }
+
+    .link-card a {
         text-decoration: none;
-        color: #333;
+        color: inherit;
+        display: block;
+        height: 100%;
     }
 
-    .links-category li h3 {
-        margin-top: 0;
-        margin-bottom: 5px;
-        color: #333;
-        font-size: 1.2em;
+    .link-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
     }
 
-    .links-category li p {
-        margin-bottom: 0;
-        color: #666;
-        font-size: 0.9em;
-        line-height: 1.5;
-        text-align: left; /* 链接描述靠左对齐 */
+    .link-card-header i {
+        font-size: 1.25rem;
+        color: #3498db;
+        min-width: 24px;
+        text-align: center;
     }
 
-    /* 移动端适配 */
+    .link-card-header h3 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin: 0;
+        color: #2c3e50;
+        line-height: 1.3;
+    }
+
+    .link-card-desc {
+        font-size: 0.95rem;
+        color: #7f8c8d;
+        line-height: 1.6;
+        margin: 0;
+    }
+
     @media (max-width: 768px) {
-        .links-container {
-            margin: 20px auto;
-            padding: 15px;
+        .link-nav {
+            padding: 1rem;
+            margin: 1rem;
         }
-        .links-category ul {
-            grid-template-columns: 1fr; /* 小屏幕下显示单列 */
+        .link-nav h1 {
+            font-size: 2rem;
+        }
+        .link-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
+
+<div class="link-nav">
+    <h1>{{ page.title }}</h1>
+    <p class="subtitle">这里收集了一些我常用的或推荐的网站链接。</p>
+
+    {% for group in site.data.links %}
+    <div class="link-category">
+        <div class="link-category-header">
+            <i class="fas {{ group.icon | default: 'fa-link' }}"></i>
+            <h2>{{ group.category }}</h2>
+        </div>
+        <div class="link-grid">
+            {% for link in group.links %}
+            <div class="link-card">
+                <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">
+                    <div class="link-card-header">
+                        <i class="fas {{ link.icon | default: 'fa-external-link-alt' }}"></i>
+                        <h3>{{ link.name }}</h3>
+                    </div>
+                    <p class="link-card-desc">{{ link.desc }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- 引入 Font Awesome（如果主题未包含） -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">

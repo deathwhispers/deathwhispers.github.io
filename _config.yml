@@ -24,26 +24,17 @@ navigation:
     url: /archive
   - name: 标签
     url: /tags
-  # 新增：文档入口，指向开源文档子模块目录（后续会创建这个目录）
-  - name: 文档
-    url: /docs/external-docs/
+  - name: 导航
+    url: /guide
 
 defaults:
-  - scope:
-      path: "docs"  # 覆盖所有 docs 目录下的文件（包括子模块的 external-docs）
-    values:
-      layout: "doc"  # 文档页面使用专门的 doc.html 布局（后续需创建）
-      toc: true      # 启用目录生成（依赖 jekyll-toc 插件，你已安装）
-      permalink: /docs/:path/  # 文档页面的 URL 规则（避免与博客文章冲突）
-      gitalk: true
-  # 保留你原有博客文章的默认配置（如果之前有，比如针对 _posts 的配置，这里补上）
   - scope:
       path: "_posts"
     values:
       layout: "post"  # 确保博客文章仍用 post 布局
 
 # Pagination
-paginate: 8
+paginate: 10
 mathjax: true
 excerpt_separator: <!-- more -->
 
