@@ -605,3 +605,15 @@
       url: https://wiki.archlinux.org/
       desc: 最详尽的 Linux 维基（英文）
       icon: fa-info-circle
+
+- category: 临床试验导航网
+  icon: fa-graduation-cap
+  links:
+    - name: 临床试验导航网
+      url: https://www.chgcp.com/home
+      desc: 临床试验导航网
+      icon: fa-web
+    - name: 中国知网
+      url: https://www.cnki.net/
+      desc: 中国知网
+      icon: fa-web
