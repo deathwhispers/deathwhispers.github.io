@@ -1,13 +1,13 @@
-// 基础样式
+// 基础样式 - 缩小页边距，扩大内容宽度
 .link-nav {
-  max-width: 1200px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
+  max-width: 1400px; // 扩大最大宽度，容纳更多卡片
+  margin: 2rem auto; // 减小上下外边距
+  padding: 0 0.5rem; // 大幅减小左右内边距，扩大内容范围
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   h1 {
     text-align: center;
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
     background: linear-gradient(90deg, #1a288b, #2b7085);
@@ -19,33 +19,33 @@
   .subtitle {
     text-align: center;
     color: #7f8c8d;
-    font-size: 1rem;
-    margin-bottom: 2.5rem;
+    font-size: 0.95rem;
+    margin-bottom: 2rem; // 减小标题与内容的间距
   }
 }
 
 // 分类标题样式
 .link-category {
-  margin-bottom: 2.5rem;
-  padding: 0 0.5rem; // 增加内边距避免边缘拥挤
+  margin-bottom: 2rem; // 减小分类间的间距
+  padding: 0 0.3rem;
 
   &-header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #f0f0f0; // 增加分隔线
+    margin-bottom: 0.8rem; // 减小分类标题与卡片的间距
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid #f0f0f0;
 
     i {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: #3498db;
-      font-family: "Font Awesome 6 Free"; // 明确字体
-      font-weight: 900; // 确保 solid 图标正常显示
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
     }
 
     h2 {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 600;
       color: #2c3e50;
       margin: 0;
@@ -53,81 +53,72 @@
   }
 }
 
-// 链接网格布局
+// 链接网格布局 - 缩小间距，容纳更多卡片
 .link-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.2rem; // 增加间距更清晰
+  grid-template-columns: repeat(5, 1fr); // 默认5列（原4列），更多卡片
+  gap: 0.8rem; // 减小卡片间距
 }
 
-// 链接卡片样式
+// 链接卡片样式 - 降低高度，更精致
 .link-card {
   background: #ffffff;
   border: 1px solid #eaeaea;
-  border-radius: 10px;
-  padding: 1.2rem;
+  border-radius: 8px; // 稍小圆角更精致
+  padding: 0.8rem; // 大幅减小内边距，降低卡片高度
   display: flex;
   align-items: flex-start;
-  gap: 0.8rem;
-  transition: all 0.3s ease; // 统一过渡效果
+  gap: 0.6rem; // 减小图标与文字的间距
+  transition: all 0.2s ease;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-  text-decoration: none; // 移除链接下划线
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  text-decoration: none;
 
   &:hover {
     background-color: #f8f9fa;
     border-color: #d1d9e0;
-    transform: translateY(-2px); // 轻微上浮效果
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05); // 增强阴影
-
-    .link-title {
-      color: #e74c3c;
-    }
-
-    .link-icon {
-      color: #e74c3c;
-    }
+    transform: translateY(-1px); // 轻微上浮，不夸张
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   }
 }
 
-// 图标样式（核心修复）
+// 图标样式
 .link-icon {
-  font-size: 1.3rem; // 略微放大图标
-  color: var(--icon-color, #5d6d7e); // 优先使用变量，确保图标颜色正确
-  min-width: 20px;
+  font-size: 1.1rem; // 图标稍小，适配紧凑布局
+  color: var(--icon-color, #5d6d7e);
+  min-width: 18px;
   text-align: center;
-  margin-top: 1px;
-  font-family: "Font Awesome 6 Free"; // 明确 Font Awesome 字体
-  font-weight: 900; // 适配 solid 类型图标（fas）
+  margin-top: 0.1rem;
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
 }
 
-// 图标颜色变量（确保循环生效）
+// 图标颜色变量
 :root {
-  --color-1: #3498db;   // 蓝
-  --color-2: #e74c3c;   // 红
-  --color-3: #f39c12;   // 橙
-  --color-4: #2ecc71;   // 绿
-  --color-5: #8e44ad;   // 紫
+  --color-1: #3498db;
+  --color-2: #e74c3c;
+  --color-3: #f39c12;
+  --color-4: #2ecc71;
+  --color-5: #8e44ad;
 }
 
-// 循环应用颜色
 .link-card:nth-child(5n+1) .link-icon { --icon-color: var(--color-1); }
 .link-card:nth-child(5n+2) .link-icon { --icon-color: var(--color-2); }
 .link-card:nth-child(5n+3) .link-icon { --icon-color: var(--color-3); }
 .link-card:nth-child(5n+4) .link-icon { --icon-color: var(--color-4); }
 .link-card:nth-child(5n+5) .link-icon { --icon-color: var(--color-5); }
 
-// 链接内容样式
+// 链接内容样式 - 紧凑排版，降低卡片高度
 .link-content {
   flex: 1;
   min-width: 0;
 
   .link-title {
-    font-size: 0.95rem;
+    font-size: 0.9rem; // 标题稍小
     font-weight: 600;
     color: #2c3e50;
-    margin: 0 0 0.4rem 0;
-    line-height: 1.4;
+    margin: 0 0 0.2rem 0; // 大幅减小标题与描述的间距
+    line-height: 1.3;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -135,9 +126,9 @@
   }
 
   .link-desc {
-    font-size: 0.85rem;
+    font-size: 0.8rem; // 描述文字稍小
     color: #7f8c8d;
-    line-height: 1.5;
+    line-height: 1.4;
     margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -147,30 +138,38 @@
   }
 }
 
-// 响应式优化
+// 响应式优化 - 保持多列布局
+@media (max-width: 1200px) {
+  .link-grid {
+    grid-template-columns: repeat(4, 1fr); // 中等屏幕4列
+  }
+}
+
 @media (max-width: 992px) {
   .link-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr); // 平板3列
   }
 }
 
 @media (max-width: 768px) {
   .link-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); // 小平板2列
+    gap: 0.7rem;
   }
   .link-nav {
-    padding: 0 1rem;
+    padding: 0 0.8rem; // 小屏幕适当增加内边距
   }
 }
 
 @media (max-width: 576px) {
   .link-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; // 手机1列
+    gap: 0.7rem;
+  }
+  .link-nav {
+    padding: 0 0.8rem;
   }
   .link-nav h1 {
-    font-size: 1.8rem;
-  }
-  .link-category-header h2 {
-    font-size: 1.1rem; // 小屏幕缩小分类标题
+    font-size: 1.6rem;
   }
 }
