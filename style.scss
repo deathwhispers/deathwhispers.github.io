@@ -24,12 +24,12 @@ html {
 body {
   font-family: $base-font;
   color: $base-color;
-  line-height: 1.7em;
+  line-height: 1.6em;
 }
 
 .container {
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: 86%;
   padding: 0 20px;
   width: 100%;
 }
@@ -321,7 +321,7 @@ img {
 //
 
 .wrapper-sidebar {
-  width: 28%;
+  width: 26%;
 	-webkit-background-size: cover;
 	background-size: cover;
 	background-color: $background-color;
@@ -431,7 +431,7 @@ nav {
 
 .wrapper-content {
   float: right;
-  width: 72%;
+  width: 74%;
 
   @include mobile {
     float: none;
