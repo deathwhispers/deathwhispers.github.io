@@ -139,11 +139,11 @@ sudo systemctl start ollama
 sudo systemctl status ollama
 ```
 
-![image.png](../images/deepseek-privatization-deployment/image.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image.png)
 
 ollama -v 显示：
 
-![image.png](../images/deepseek-privatization-deployment/image%201.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%201.png)
 
 <aside>
 ⚠️
@@ -245,7 +245,7 @@ sudo rm -rf /usr/local/lib/ollama
 
 # 拉取并安装 DeepSeek
 
-![image.png](../images/deepseek-privatization-deployment/image%202.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%202.png)
 
 目前DeepSeek-R1可选的模型有满血版671B，和蒸馏版1.5B、7B、8B、14B、32B、70B：
 
@@ -288,15 +288,15 @@ sudo rm -rf /usr/local/lib/ollama
 ollama run deepseek-r1:7B
 ```
 
-![image.png](../images/deepseek-privatization-deployment/image%203.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%203.png)
 
 安装成功后的界面
 
-![image.png](../images/deepseek-privatization-deployment/image%204.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%204.png)
 
 可以直接使用了，简单提问试一下：
 
-![image.png](../images/deepseek-privatization-deployment/image%205.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%205.png)
 
 ### **安装 Page Assist**
 
@@ -304,59 +304,59 @@ ollama run deepseek-r1:7B
 
 通过 Chrome应用商店安装扩展插件，进入应用市场，搜索Page Assist
 
-![image.png](../images/deepseek-privatization-deployment/image%206.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%206.png)
 
 点击扩展插件，就可以看到刚刚加载的插件，点击📌将插件固定到浏览器中，方便以后随时打开使用
 
-![image.png](../images/deepseek-privatization-deployment/image%207.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%207.png)
 
 点击插件图标就可以打开UI界面了，和chatGPT的聊天界面类似，可以选择对应的模型开始提问。
 
-![image.png](../images/deepseek-privatization-deployment/image%208.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%208.png)
 
 点击模型下拉框，可以查看已经安装的模型，目前已经安装了1.5B和7B的deepseek蒸馏版模型。
 
-![image.png](../images/deepseek-privatization-deployment/image%209.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%209.png)
 
 接下来，可以选择一个模型提问试试
 
-![image.png](../images/deepseek-privatization-deployment/image%2010.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%2010.png)
 
 此时服务器CPU情况，推理速度很慢，且服务器资源占用量很大。
 
-![image.png](../images/deepseek-privatization-deployment/image%2011.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%2011.png)
 
 点击右上角的齿轮进入设置页面，可以进行一些基础的设置，如语言，语音识别语言等等。
 
 同时可以管理网络搜索，选择搜索引擎，是否默认联网搜索等。
 
-![image.png](../images/deepseek-privatization-deployment/image%2012.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%2012.png)
 
-![image.png](../images/deepseek-privatization-deployment/image%2013.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%2013.png)
 
 在“OpenAI 兼容 API”设置项中，会列出所有已添加的服务提供商，
 
-![image.png](../images/deepseek-privatization-deployment/image%2014.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%2014.png)
 
 点击“添加提供商”可以添加新的大模型服务提供商
 
-![image.png](../images/deepseek-privatization-deployment/image%2015.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%2015.png)
 
 比如，选择“DeepSeek”，会自动带出提供商名称和基础URL，当然也可以修改；填入对应的API key就可以使用了。
 
-![image.png](../images/deepseek-privatization-deployment/image%2016.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%2016.png)
 
 添加完成后，点击下载按钮，可以下载对应的模型
 
-![image.png](../images/deepseek-privatization-deployment/image%2017.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%2017.png)
 
 所有已下载的模型，可以在“管理模型”菜单中的 **Custom Models** 中列出
 
-![image.png](../images/deepseek-privatization-deployment/image%2018.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%2018.png)
 
 “管理知识”菜单栏，可以添加本地知识库，让DeepSeek更专业。
 
-![image.png](../images/deepseek-privatization-deployment/image%2019.png)
+![image.png](../assets/images/deepseek-privatization-deployment/image%2019.png)
 
 # 参考文档
 
