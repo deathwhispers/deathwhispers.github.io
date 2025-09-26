@@ -1,18 +1,34 @@
-# jekyll local file
+# Bundler cache
+.bundle
+vendor
+Gemfile.lock
+
+# Jekyll cache
 .jekyll*
 _site
 
-### IntelliJ IDEA ###
+# RubyGems
+*.gem
+
+# NPM dependencies
+node_modules
+package-lock.json
+
+# IDE configurations
 .idea
 *.iws
 *.iml
 *.ipr
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+
+# Misc
+_sass/vendors
+assets/js/dist
 
 ### maven ###
 .mvn/
 mvnw
 mvnw.cmd
-
-### 配置文件
-application*.yml
-logback*.xml
