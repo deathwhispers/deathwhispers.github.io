@@ -6,7 +6,8 @@ theme: jekyll-theme-chirpy
 # The language of the webpage › http://www.lingoes.net/en/translator/langcode.htm
 # If it has the same name as one of the files in folder `_data/locales`, the layout language will also be changed,
 # otherwise, the layout language will use the default value of 'en'.
-lang: en
+# 多语言支持  中文 zh-CN
+lang: zh-CN
 
 # Change to your timezone › https://kevinnovak.github.io/Time-Zone-Picker
 timezone: Asia/Shanghai
@@ -101,6 +102,7 @@ cdn:
 
 # the avatar on sidebar, support local or CORS resources
 avatar: /assets/images/avatar.png
+favicon: /assets/images/favicon.ico
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
