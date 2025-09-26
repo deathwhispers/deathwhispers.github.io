@@ -7,8 +7,6 @@ comments: true
 author: deathwhispers
 ---
 
-* toc
-{:toc}
 
 
 ## 金融股票

@@ -8,11 +8,10 @@ author: deathwhispers
 ---
 
 
-* toc
-{:toc}
 
 
-### 类ChatGPT大语言对话模型及数据
+
+## 类ChatGPT大语言对话模型及数据
 
 * [Significant-Gravitas/Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT#auto-gpt-an-autonomous-gpt-4-experiment) 使用GPT4来自动完成目标任务。一个实验性开源应用程序，展示了 GPT-4 语言模型的功能。该程序由 GPT-4 驱动，将 LLM 的“思想”链接在一起，以自主实现您设定的任何目标。作为 GPT-4 完全自主运行的首批示例之一，Auto-GPT 突破了 AI 的可能性界限。
 

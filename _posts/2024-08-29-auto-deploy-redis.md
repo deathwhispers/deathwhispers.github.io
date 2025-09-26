@@ -7,8 +7,7 @@ comments: true
 author: deathwhispers
 ---
 
-* toc 
-{:toc}
+
 
 ## 前言
 本文的脚本是之前从某个公众号上看到的（具体的已经忘了...），若有原帖链接可联系我补上

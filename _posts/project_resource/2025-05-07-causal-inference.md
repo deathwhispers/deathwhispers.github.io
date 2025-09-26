@@ -8,7 +8,7 @@ author: deathwhispers
 ---
 
 
-# 因果推断
+## 因果推断
 
 [microsoft/EconML](https://github.com/microsoft/EconML) ALICE（因果关系和经济学的自动学习和智能）是微软研究项目，旨在将AI概念应用于经济决策。 其目标之一是构建一个工具包，将最先进的机器学习技术与计量经济学相结合，以便将自动化应用于复杂的因果关系
 

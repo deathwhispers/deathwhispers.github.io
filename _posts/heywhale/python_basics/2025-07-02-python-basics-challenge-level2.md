@@ -18,8 +18,7 @@ author: deathwhispers
 
 <!-- more -->
 
-* toc
-{:toc}
+
 
 # 2.Python基础_循环函数
 
