@@ -19,7 +19,7 @@ author: deathwhispers
 `hadoken-scheduler`的“可观测性”设计，看看咱是咋靠`ManagedTask`这个核心模型和`MonitoredTaskWrapper`
 > 这个“数据探针”，把每个任务的“生命体征”实时抓下来，彻底跟“黑盒运维”说再见的。
 
-# 第一部分：企业级调度的 “中枢神经” ——ManagedTask运行时模型深度解析
+## 第一部分：企业级调度的 “中枢神经” ——ManagedTask运行时模型深度解析
 
 要监控任务，首先得有个“容器”装监控数据。在咱框架里，干这活儿的就是`ManagedTask`类。它不是个简单的POJO，而是每个调度任务在内存里的
 **实时镜像**——是个有状态、“活”着的对象。
@@ -84,7 +84,7 @@ MonitoredTaskWrapper ..> ManagedTask: 更新状态
 
 `ManagedTask`就像每个任务的“黑匣子+仪表盘”，有了它，后面所有的监控和管理操作才有了靠谱的数据基础。
 
-# 第二部分：任务监控体系的构建基石 —— `MonitoredTaskWrapper`的设计哲学与实现奥秘
+## 第二部分：任务监控体系的构建基石 —— `MonitoredTaskWrapper`的设计哲学与实现奥秘
 
 有了`ManagedTask`装数据，还得有个机制“抓数据”——这就是`MonitoredTaskWrapper`的活儿。
 
@@ -144,7 +144,7 @@ sequenceDiagram
 4. **状态更新与持久化**: 不管成功失败，`finally`块里都会更新`ManagedTask`的统计数据，还会调用`TaskLogStore`
    把执行日志存起来——下次查历史的时候，就能看到详细记录。
 
-# 第三部分：数据驱动下的调度智慧 —— 可视化与深度分析
+## 第三部分：数据驱动下的调度智慧 —— 可视化与深度分析
 
 靠`ManagedTask`和`MonitoredTaskWrapper`配合，咱能抓着一堆运行时数据。这些数据能帮咱从好几个维度看透任务的状态：
 
