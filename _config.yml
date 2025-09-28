@@ -127,8 +127,8 @@ comments:
     repo_id: R_kgDOHCEyLA
     category: General
     category_id: DIC_kwDOHCEyLM4Cv5_n
-    mapping: pathname# optional, default to 'pathname'
-    strict: 0# optional, default to '0'
+    mapping: pathname # optional, default to 'pathname'
+    strict: 0 # optional, default to '0'
     input_position: top # optional, default to 'bottom'
     lang: # optional, default to the value of `site.lang`
     reactions_enabled: # optional, default to the value of `1`
