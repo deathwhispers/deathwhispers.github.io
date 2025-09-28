@@ -41,9 +41,9 @@ platforms:
   #   icon: "fa-brands fa-bluesky"
   #   link: "https://bsky.app/intent/compose?text=TITLE%20URL"
   #
-  # - type: Reddit
-  #   icon: "fa-brands fa-square-reddit"
-  #   link: "https://www.reddit.com/submit?url=URL&title=TITLE"
+  - type: Reddit
+    icon: "fa-brands fa-square-reddit"
+    link: "https://www.reddit.com/submit?url=URL&title=TITLE"
   #
   # - type: Threads
   #   icon: "fa-brands fa-square-threads"

@@ -10,9 +10,9 @@
   icon: "fas fa-envelope"
   noblank: true # open link in current tab
 
-- type: stack-overflow
-  icon: 'fab fa-stack-overflow'
-  url:  ''                  # Fill with your stackoverflow homepage
+#- type: stack-overflow
+#  icon: 'fab fa-stack-overflow'
+#  url:  ''                  # Fill with your stackoverflow homepage
 
 - type: rss
   icon: "fas fa-rss"
