@@ -1,0 +1,355 @@
+// 导航容器
+.nav-container {
+  max-width: 90%;
+  margin: 2rem auto;
+  padding: 0 5%;
+}
+
+.nav-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.nav-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--heading-color);
+}
+
+.nav-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+// 热门链接区域
+.hot-links-section {
+  margin-bottom: 2.5rem;
+}
+
+.hot-links-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--heading-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hot-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(45%, 1fr));
+  gap: 1.2rem;
+}
+
+.hot-link-card {
+  @extend %link-card-base;
+  height: 6rem;
+  min-height: 6rem;
+}
+
+// 分类链接区域
+.category-section {
+  margin-bottom: 2.5rem;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.category-icon {
+  font-size: 1.1rem;
+  color: var(--link-color);
+  background: rgba(var(--link-color-rgb), 0.1);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--heading-color);
+  margin: 0;
+}
+
+// 卡片网格布局
+.link-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+}
+
+// 卡片基础样式
+%link-card-base {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: block;
+  position: relative;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--link-color);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    text-decoration: none;
+
+    .link-name, .hot-link-name {
+      color: var(--link-color);
+    }
+
+    .link-desc, .hot-link-desc {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      max-height: 3em;
+    }
+  }
+}
+
+// 链接卡片样式
+.link-card {
+  @extend %link-card-base;
+  height: 7rem;
+  min-height: 7rem;
+
+  &:hover .link-icon {
+    transform: scale(1.1);
+    background: rgba(var(--link-color-rgb), 0.15);
+  }
+}
+
+// 卡片内部元素样式
+.link-header, .hot-link-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.link-icon, .hot-link-icon {
+  font-size: 1.2rem;
+  color: var(--link-color);
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--link-color-rgb), 0.1);
+  border-radius: 8px;
+}
+
+.link-icon {
+  transition: all 0.3s ease;
+}
+
+.link-name, .hot-link-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--heading-color);
+  margin: 0;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.link-desc, .hot-link-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+  padding-left: 3.3rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.3s ease;
+  max-height: 1.4em;
+}
+
+// 徽章样式
+.click-badge {
+  background: var(--link-color);
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.recommend-badge {
+  background: linear-gradient(45deg, #ff6b6b, #ffa726);
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+// 动画效果
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.link-card, .hot-link-card {
+  animation: cardAppear 0.4s ease forwards;
+  opacity: 0;
+}
+
+// 卡片延迟动画
+@for $i from 1 through 6 {
+  .link-card:nth-child(#{$i}) {
+    animation-delay: 0.05s * $i;
+  }
+}
+
+@for $i from 1 through 4 {
+  .hot-link-card:nth-child(#{$i}) {
+    animation-delay: 0.1s + 0.05s * $i;
+  }
+}
+
+// 加载状态
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+}
+
+// 响应式设计
+@media (max-width: 1200px) {
+  .nav-container {
+    max-width: 95%;
+    padding: 0 2.5%;
+  }
+
+  .link-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .hot-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .link-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .hot-links-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .link-card {
+    height: 6.5rem;
+    min-height: 6.5rem;
+    padding: 1.2rem;
+  }
+
+  .hot-link-card {
+    height: 5.5rem;
+    min-height: 5.5rem;
+    padding: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    max-width: 100%;
+    padding: 0 5%;
+  }
+
+  .nav-title {
+    font-size: 1.8rem;
+  }
+
+  .category-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.6rem;
+  }
+
+  .category-icon {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1rem;
+  }
+
+  .link-desc, .hot-link-desc {
+    padding-left: 0;
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .link-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-container {
+    padding: 0 3%;
+  }
+
+  .link-card, .hot-link-card {
+    height: auto;
+    min-height: 6rem;
+  }
+
+  .link-header, .hot-link-header {
+    margin-bottom: 0.5rem;
+  }
+}
+
+// 暗色模式适配
+@media (prefers-color-scheme: dark) {
+  .link-card, .hot-link-card {
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  }
+
+  .link-card:hover, .hot-link-card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  }
+}
