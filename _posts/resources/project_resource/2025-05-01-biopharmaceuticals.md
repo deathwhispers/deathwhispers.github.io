@@ -1,0 +1,407 @@
+---
+layout: post
+title: "生物医药"
+date: 2025-05-01
+tags: 
+  - 生物医药
+categories: 
+  - resource
+comments: true
+author: deathwhispers
+---
+
+
+
+## 蛋白质结构
+
+* [deepmind/alphafold](https://github.com/deepmind/alphafold) 此包提供了 AlphaFold v2.0 的推理流线的实现。AlphaFold是Google旗下DeepMind开发的一款人工智能程序，它使用深度学习算法通过蛋白质序列来预测蛋白质结构。蛋白质通过卷曲折叠会构成三维结构，蛋白质的功能正由其结构决定。了解蛋白质结构有助于开发治疗疾病的药物。
+
+* [RosettaCommons/RoseTTAFold](https://github.com/RosettaCommons/RoseTTAFold) 结合AlphaFold相关思想的网络架构，并通过三轨网络获得了最佳性能，其中1D序列、2D距离图和3D坐标的信息依次转换和集成。三轨网络精度接近AlphaFold2，能够快速解决具有挑战性的X-ray晶体学和冷冻电镜结构建模问题，并提供对当前未知结构蛋白质功能的见解。还能够仅从序列信息中快速生成准确的蛋白质-蛋白质复合物模型。
+
+* [aqlaboratory/openfold](https://github.com/aqlaboratory/openfold) AlphaFold2的可训练、内存效率高且GPU友好的 PyTorch 再现。
+
+* [dauparas/ProteinMPNN](https://github.com/dauparas/ProteinMPNN) 基于深度学习的蛋白质序列设计方法，在计算和实验测试中都有出色的表现。在本地蛋白质骨架上，它的序列恢复率为52.4%，而Rosetta为32.9%。不同位置的氨基酸序列可以在单链或多链之间进行耦合，从而能够应用于当前广泛的蛋白质设计挑战。研究员利用X射线晶体学、冷冻电镜和功能研究证明了它的广泛实用性和高准确性，挽救了使用Rosetta或AlphaFold进行的蛋白质单体、环状同源寡聚体、四面体纳米颗粒和靶标结合蛋白的失败设计。
+
+* [HeliXonProtein/OmegaFold](https://github.com/HeliXonProtein/OmegaFold) 《从原生层序进行高分辨率从头构造预测》的代码。AI预测蛋白质3D结构，仅通过单条蛋白序列就能搞定。也就是说，AI预测蛋白质结构，可以不需要蛋白质进化过程中的同源信息。一些人工设计的蛋白质药物和工业合成用酶，也可以通过AI预测3D结构，确定其对人体的功能。达成这一成就的AI算法名为OmegaFold，在最近的全球持续蛋白质预测竞赛中，整体预测能力已经与DeepMind此前开发的AlphaFold2，和华盛顿大学开发的RoseTTAFold不相上下，甚至有些指标优于后两者。研究成果来自国内AI创新药物公司华深智药，一家成立不到一年的中国初创企业，孵化自张亚勤旗下的清华大学智能产业研究院。
+
+* [sokrypton/ColabFold](https://github.com/sokrypton/ColabFold) 让蛋白质折叠预测人人可及，预测蛋白质结构。
+
+* [salesforce/provis](https://github.com/salesforce/provis) BERTology Meets Biology: Interpreting Attention in Protein Language Models 注意力机制在蛋白质语言模型的应用
+
+* [ElwynWang/DeepFragLib](https://github.com/ElwynWang/DeepFragLib)  基于深度神经网络和改进的片段测序方法从头预测蛋白质结构
+
+* [bowman-lab/diffnets](https://github.com/bowman-lab/diffnets) 采用DiffNets通过比较结构集来深度学习蛋白质生化特性的结构决定因素
+
+* [nadavbra/protein_bert](https://github.com/nadavbra/protein_bert) 专为蛋白质序列和功能设计的通用深度学习模型
+
+* [pengxingang/Pocket2Mol](https://github.com/pengxingang/pocket2mol) 基于 3D 蛋白质口袋的高效分子采样  使用等变图神经网络来提高以前基于结构的药物设计模型的效率和分子质量。
+
+* [jertubiana/ScanNet](https://github.com/jertubiana/ScanNet) 可解释的几何深度学习模型，用于结构的蛋白质结合位点预测
+
+* [strauchlab/scaffold_design](https://github.com/strauchlab/scaffold_design) 小蛋白质折叠结构和序列空间的采样
+
+* [flatironinstitute/DeepFRI](https://github.com/flatironinstitute/DeepFRI) 基于结构和GCN的蛋白质功能预测
+
+* [j3xugit/RaptorX-3DModeling](https://github.com/j3xugit/RaptorX-3DModeling) RaptorX 通过深度卷积残差网络预测蛋白质接触/距离/方向和局部结构特性（例如，二级结构和 phi/psi 角度）。它还使用预测的距离/方向和 phi/psi 角度构建蛋白质序列的 3D 模型。
+
+* [FreyrS/dMaSIF](https://github.com/FreyrS/dMaSIF) 蛋白质表面的快速端到端学习.蛋白质的生物学功能由其 3D 分子表面的几何和化学结构定义。最近的工作表明，几何深度学习可用于蛋白质的基于网格的表示，以识别潜在的功能位点，例如潜在药物的结合目标。不幸的是，使用网格作为蛋白质结构的底层表示有多个缺点，包括需要预先计算输入特征和网格连接性。这成为蛋白质科学中许多重要任务的瓶颈。在本文中，我们提出了一个新的蛋白质结构深度学习框架，以解决这些限制。
+
+* [nferruz/ProtGPT2](https://huggingface.co/nferruz/ProtGPT2) 一种蛋白质语言模型，可用于从头蛋白质设计和工程。ProtGPT2产生的序列保留了天然蛋白质的关键特征（氨基酸倾向、二级结构含量和球形度），同时探索蛋白质空间的未被发现的区域。
+
+* [Superzchen/iLearnPlus](https://github.com/Superzchen/iLearnPlus) 具有基于图形和基于 Web 的用户界面的机器学习平台，可以构建自动化机器学习管道，以使用核酸和蛋白质序列进行计算分析和预测。
+
+* [baldassarreFe/graphqa](https://github.com/baldassarreFe/graphqa) 使用图卷积网络进行蛋白质质量评估
+
+* [phermosilla/IEConv_proteins](https://github.com/phermosilla/IEConv_proteins) 用于学习 3D 蛋白质结构的内在-外在卷积和池化
+
+* [sameerkhurana10/DSOL_rv0.2](https://github.com/sameerkhurana10/DSOL_rv0.2) 深度蛋白质溶解度预测
+
+* [luoyunan/ECNet](https://github.com/luoyunan/ECNet) 用于蛋白质工程的进化上下文集成深度学习框架
+
+* [luoyunan/ECNet](https://github.com/luoyunan/ECNet) 用于蛋白质工程的进化上下文集成深度学习框架
+
+* [deepmodeling/Uni-Fold](https://github.com/deepmodeling/Uni-Fold) Uni-Fold：训练您自己的深度蛋白质折叠模型。
+
+* [bigbio/py-pgatk](https://github.com/bigbio/py-pgatk/) 蛋白质组学分析工具包的 Python 工具。蛋白质组学是生物学研究的一个领域，它利用蛋白质组学、基因组学和转录组学的组合来帮助发现和识别/量化肽和蛋白质。蛋白质组学用于通过将 MS/MS 光谱与源自基因组和转录组学信息的蛋白质数据库进行比较来识别新肽。
+
+* [zjunlp/OntoProtein](https://github.com/zjunlp/OntoProtein) OntoProtein 是一种将 GO（Gene Ontology）中的结构用于文本增强的蛋白质预训练模型的有效方法。一种知识增强的蛋白质语言模型，它共同优化了 KE 和 MLM 目标，为广泛的蛋白质任务带来了出色的改进。并且我们引入了**ProteinKG25**，一个新的大规模KG数据集，促进了蛋白质语言预训练的研究。支持ss3, ss8( 3-class and 8-class protein secondary structure 3类和8类蛋白质二级结构), contact, remote_homology, fluorescence 荧光, stability 稳定等下游任务。
+
+* [ProteinDesignLab/protein_seq_des](https://github.com/ProteinDesignLab/protein_seq_des) 具有学习潜力的蛋白质序列设计
+
+* [gjoni/trRosetta](https://github.com/gjoni/trRosetta) 从序列数据中预测蛋白质残基间几何形状的软件包
+
+* [gjoni/trDesign](https://github.com/gjoni/trDesign) 用于蛋白质设计的 trRosetta
+
+* [RosettaCommons/RFDesign](https://github.com/RosettaCommons/RFDesign) 用RoseTTAFold 实现蛋白质幻觉(AI 生成)和修复
+
+* [facebookresearch/esm](https://github.com/facebookresearch/esm) 进化规模建模（esm）：蛋白质的预训练语言模型
+
+* [uw-ipd/RoseTTAFold2NA](https://github.com/uw-ipd/RoseTTAFold2NA) RoseTTAFold2蛋白/核酸复合物预测
+
+## 药物发现、药物设计
+
+* [DeepGraphLearning/torchdrug](https://github.com/DeepGraphLearning/torchdrug) 药物发现强大而灵活的机器学习平台
+
+* [jdurrant/deepfrag](https://git.durrantlab.pitt.edu/jdurrant/deepfrag) 药物发现是一个成本高昂且耗时的过程。在前期，研究员试图找到能够初步抑制某些疾病关联蛋白的苗头化合物。但这些化合物必须经过先导优化，包括添加或交换某些化学部分，旨在提高化合物的结合亲合力或其他与吸收、分布、代谢、排泄和毒性有关的化学性质（ADMET）。而计算机辅助药物设计（CADD）能够加速前期的这些研究。例如，作者团队最近开发了基于3D卷积神经网络的模型DeepFrag来进行更进一步的先导优化，不幸的是，基于深度学习的模型对于非计算机专业研究者并不友好。为了追求更高的易用性，作者开发了名为DeepFrag的网页应用，为对编程不太熟悉的研究人员提供了图形化的界面，利用本地资源即可运行DeepFrag进行CADD的研究。
+
+* [Mariewelt/OpenChem](https://github.com/Mariewelt/OpenChem) 用于计算化学和药物设计研究的深度学习工具包
+
+* [deepchem/deepchem](https://github.com/deepchem/deepchem) DeepChem 旨在提供一个高质量的开源工具链，使深度学习在药物发现、材料科学、量子化学和生物学中的使用民主化。
+
+* [maxime-langevin/scaffold-constrained-generation](https://github.com/maxime-langevin/scaffold-constrained-generation)  基于现有的 SMILES 循环神经网络模型来执行支架约束生成。支架约束生成和优化并不是很好研究的问题，但在处理药物发现项目时（尤其是在化合物的后期优化中），这是我们试图解决的问题。
+
+* [pyli0628/MPG](https://github.com/pyli0628/MPG) 一种有效的自我监督框架，用于学习药物发现的表达性分子全局表示
+
+* [luost26/3D-Generative-SBDD](https://github.com/luost26/3D-Generative-SBDD) 基于结构的药物设计的 3D 生成模型 (NeurIPS 2021)
+
+* [XuhanLiu/DrugEx](https://github.com/XuhanLiu/DrugEx) 多药理学中基于帕累托的多目标优化药物设计深度学习工具包。由于可用于寻找可行的类药物分子的类药物化学空间大，合理的药物设计通常从添加或修饰侧链/取代基的特定支架开始。随着深度学习在药物发现中应用的快速增长，已经开发出多种有效的方法来进行从头药物设计。提出了DrugEx 的方法，该方法可以应用于基于多目标深度强化学习的多药理学。为了提高普遍适用性， DrugEx 以设计基于支架的药物分子，支架由用户提供的多个片段组成。在这项工作中，Transformer 用于生成分子结构。Transformer 包含一个接收支架作为输入的编码器和一个生成分子作为输出的解码器。为了处理分子的图形表示，我们提出了一种基于邻接矩阵的每个原子和键的新位置编码，以扩展 Transformer 的架构。每个分子都是通过生长和连接给定支架中的片段的程序生成的，这些片段被统一到一个模型中。此外，我们在强化学习框架下训练了这个生成器，以增加所需配体的数量。
+
+  [kekegg/DLEPS](https://github.com/kekegg/DLEPS) 利用深度学习从基因转录数据中预测药物疗效
+
+  [tencent-ailab/DrugOOD](https://github.com/tencent-ailab/DrugOOD) 人工智能辅助药物发现的 OOD 数据集和基准
+
+## 药物-靶标 药物-药物 化合物-蛋白质 相互作用
+
+* [ddinter.scbdd.com](http://ddinter.scbdd.com/) 专门针对药物-药物相互作用的综合、专业和开放存取的数据库。它为每个 DDI 关联提供了丰富的注释，包括机制描述、风险级别、管理策略、替代药物等，以改善临床决策和患者安全。
+
+* [kexinhuang12345/DeepPurpose](https://github.com/kexinhuang12345/DeepPurpose) PyTorch来解锁50多个用于药物-靶标相互作用（Drug-Target Interaction）预测的模型。DTI预测是新药研发中的一项基本任务。DeepPurpose的操作模式是像scikit-learn一样。只需几行代码，就可以利用最前沿的深度学习和药物研发模型。DeepPurpose还有一个简单的界面来做DTI预测的两个重要应用：虚拟筛选（Virtual Screening）和旧药新用（Drug Repurposing）。
+
+* [ETHmodlab/molgrad](https://github.com/ETHmodlab/molgrad) 通过将积分梯度可解释人工智能（XAI）方法应用于图神经网络模型，提高了理性分子设计的建模透明度，并基于四个药理学相关ADME终点的实验，验证了所提出的方法能够突出与已知药效团基序一致的分子特征和结构元素，正确识别性质断崖，并提供了对非特异性配体-靶标相互作用的见解。
+
+* [thinng/GraphDTA](https://github.com/thinng/GraphDTA) 使用图神经网络预测药物-靶标的结合亲和力
+
+* [isjakewong/MIRACLE](https://github.com/isjakewong/MIRACLE) 多视图图对比表示学习用于药物药物相互作用预测
+
+* [FangpingWan/DeepCPI](https://github.com/FangpingWan/DeepCPI) 基于深度学习的化合物和蛋白质相互作用预测框架
+
+* [yueyu1030/SumGNN](https://github.com/yueyu1030/SumGNN) multi-typed drug interaction prediction via efficientknowledge graph summarization 基于高效知识图谱汇总的多类型药物关联预测。 整合了DDI信息（药物-药物相互作用）以及生物医学KG数据，并提出了有效的聚合机制以进行DDI预测。实验结果表明，该模型具有良好的预测性能。
+
+* [kanz76/SSI-DDI](https://github.com/kanz76/SSI-DDI) 预测药物之间不良DDI的深度学习框架。首次将药物间相互作用预测的任务转化为子结构间相互作用预测的任务。实验结果表明，该方法有着目前最好的性能。并在transductive和inductive (冷启动场景)设置方面都取得了良好的效果。
+
+* [jacklin18/KGNN](https://github.com/jacklin18/KGNN) IJCAI'20 "KGNN: Knowledge Graph Neural Network for Drug-Drug Interaction Prediction" 基于知识图谱的图神经网络（KGNN），以解决DDI预测问题。该框架可通过在KG中挖掘相关联的关系，来有效地捕获药物及其潜在的邻域实体信息。
+
+* [twopin/CAMP](https://github.com/twopin/CAMP) 用于多层次肽-蛋白质相互作用预测的基于卷积注意力的神经网络
+
+* [lvguofeng/GNN_PPI](https://github.com/lvguofeng/GNN_PPI) 提出了一种基于图神经网络的方法 (GNN-PPI)，以更好地预测新蛋白质之间的相互作用。在不同规模的真实世界数据集上的实验结果表明，GNN-PPI 显着优于最先进的 PPI 预测方法，特别是对于小说间的蛋白质相互作用预测。
+
+* [Liuxg16/GeoPPI](https://github.com/Liuxg16/GeoPPI) 用于模拟突变对蛋白质-蛋白质结合亲和力的影响的深度几何表示
+
+* [biomed-AI/GraphPPIS](https://github.com/biomed-AI/GraphPPIS) GraphPPIS 是一种使用深度图卷积网络进行基于结构的蛋白质-蛋白质相互作用位点预测的新框架，它能够从高阶空间相邻氨基酸中捕获信息。
+
+* [aqlaboratory/hsm](https://github.com/aqlaboratory/hsm) 使用机器学习对蛋白质-肽相互作用和信号网络进行生物物理预测
+
+* [THinnerichs/DTI-VOODOO](https://github.com/THinnerichs/DTI-VOODOO) 使用深度图学习方法进行药物靶标相互作用预测的 PPI 网络驱动方法。
+
+* [ohuelab/QEPPI](https://github.com/ohuelab/QEPPI) 针对蛋白质-蛋白质相互作用的化合物早期筛选的定量估计指数
+
+* [DeepRank/deeprank](https://github.com/DeepRank/deeprank)使用 CNN 数据挖掘蛋白质-蛋白质相互作用的深度学习框架
+
+* [violet-sto/TGSA](https://github.com/violet-sto/TGSA) TGSA 的 PyTorch 实现：基于蛋白质-蛋白质关联的双图神经网络用于相似性增强的药物反应预测
+
+* [PaddleHelix/drug_target_interaction/sign](https://github.com/PaddlePaddle/PaddleHelix/tree/dev/apps/drug_target_interaction/sign) 用于预测蛋白质-配体结合亲和力的结构感知交互式图神经网络
+
+* [biomed-AI/GraphSite](https://github.com/biomed-AI/GraphSite) 用于使用图形转换器和来自 AlphaFold2 的预测蛋白质结构进行基于序列的蛋白质-DNA 结合位点预测。
+
+* [pharmai/plip](https://github.com/pharmai/plip) 根据 PDB 文件分析和可视化非共价蛋白质-配体相互作用
+
+* [Layne-Huang/EGFI](https://github.com/Layne-Huang/EGFI) 融合丰富实体和句子信息的药物-药物相互作用提取和生成
+
+* [Ieremie/TransformerGO](https://github.com/Ieremie/TransformerGO) 通过对基因本体术语集之间的注意力进行建模来预测蛋白质-蛋白质相互作用
+
+* [YifanDengWHU/DDIMDL](https://github.com/YifanDengWHU/DDIMDL) 具有多种药物特征的多模式深度学习框架来预测药物-药物相互作用（DDI）事件。
+
+* [CSUBioGroup/BACPI](https://github.com/CSUBioGroup/BACPI) 用于化合物-蛋白质相互作用和结合亲和力预测的双向注意力神经网络
+
+* [biomed-AI/CoSMIG](https://github.com/biomed-AI/CoSMIG) 多关系归纳药物-基因相互作用预测的交际子图表示学习
+
+* [IsXudongZhang/Molormer](https://github.com/IsXudongZhang/Molormer) 基于分子图空间结构的轻量级自注意药物相互作用预测方法
+
+## 分子
+
+* [futianfan/CORE](https://github.com/futianfan/CORE) 利用复制和改进策略自动优化分子
+
+* [zhang-xuan1314/Molecular-graph-BERT](https://github.com/zhang-xuan1314/Molecular-graph-BERT) 面向药物分子性质预测的大规模原子表征预训练模型
+
+* [microsoft/Graphormer](https://github.com/microsoft/Graphormer) 图结构数据上的Transformer变种，应用于2D 分子化学结构图预测分子性质，还可以应用于主流图预测任务、社交网络的推荐和广告、知识图谱、自动驾驶的雷达点云数据、对交通物流运输等的时空预测和优化、程序理解和生成等等，还包括分子性质预测所涉及的行业，比如药物发掘、材料发现、分子动力学模拟、蛋白质结构预测等等。
+
+* [dptech-corp/Uni-Mol](https://github.com/dptech-corp/Uni-Mol) 通用的 3D 分子预训练框架，显着扩大了药物设计中的表示能力和应用范围。由两个模型组成：一个由 209M 分子 3D 构象训练的分子预训练模型； 由 3M 候选蛋白质口袋数据训练的口袋预训练模型。两种模型独立用于不同的任务，并在用于蛋白质-配体结合任务时结合使用。 Uni-Mol 在 14/15 分子特性预测任务中优于 SOTA。 此外，在3D空间任务中实现了卓越的性能，包括蛋白质-配体结合位姿预测(protein-ligand binding pose prediction)、分子构象生成(molecular conformation generation)等。
+
+* [HIPS/neural-fingerprint](https://github.com/HIPS/neural-fingerprint) 图卷积网络用于学习分子指纹。使用神经网络在数据样本中归纳总结，然后来预测新型分子的属性或者性质。
+
+* https://github.com/binghong-ml/MolEvol 通过可解释进化进行分子优化
+
+* [MinkaiXu/GeoDiff](https://github.com/MinkaiXu/GeoDiff) 用于分子构象生成的几何扩散模型 (ICLR 2022)。
+
+* [MinkaiXu/ConfVAE-ICML21](https://github.com/MinkaiXu/ConfVAE-ICML21) 基于双层规划的端到端分子构象生成框架
+
+* https://github.com/mohimanilab/molDiscovery 使用质谱数据预测分子的身份
+
+* https://github.com/binghong-ml/retro_star 自提升策略规划真实且可执行的分子逆合成路线
+
+* [GraphPKU/3DLinker](https://github.com/GraphPKU/3DLinker) 用于分子链接器设计的 E (3) 等变变分自动编码器
+
+* https://github.com/marcopodda/fragment-based-dgm 基于片段的分子深度生成模型.作者在ZINC数据集上进行了实验，该数据由250K类药物化合物组成。为了进一步评估LFM的影响，作者还使用了Pub Chem Bio Assay(PCBA)数据集测试了模型变体，该数据集包括约440k小分子。
+
+* https://github.com/torchmd/torchmd 一个混合经典和机器学习势的分子模拟（molecular simulations）的框架。通过将MD（经典分子动力学）中的键合和非键合力术语扩展到任意复杂的DNN上，实现了机器学习势的快速成型和集成。TorchMD关键点:一，PyTorch编写，容易集成其他ML模型；二，提供执行端到端可微模拟能力，在参数上都是可微的。
+
+* https://github.com/MolecularAI/GraphINVENT 基于GNN的分子生成平台
+
+* https://github.com/shenwanxiang/bidd-molmap MolMapNet 可预测药物特性，通过广泛学习的基于知识的分子表示对药物特性进行开箱即用的深度学习预测
+
+* https://github.com/DeepGraphLearning/GraphAF 基于Flow的自回归模型，以生成真实多样的分子图。由于标准化Flow的灵活性，GraphAF能够模拟复杂的分子分布，并在实验中生成新的和100%有效的分子。
+
+* https://github.com/anny0316/Drug3D-Net 提出了一种新的基于分子空间几何结构的深度神经网络结构Drug3D-Net，用于预测分子性质。它是基于网格的三维卷积神经网络，具有时空门注意模块，可以提取卷积过程中分子预测任务的几何特征。
+
+* [deepmodeling/deepmd-kit](https://github.com/deepmodeling/deepmd-kit) 用于多体势能表示和分子动力学的深度学习包
+
+* [lol88/Mol2Context-vec](https://github.com/lol88/Mol2Context-vec) 提供了一种深入的上下文感知分子表示，以推动药物发现的边界。它可以整合不同层次的内部状态，带来丰富的分子结构信息。
+
+* [jcchan23/CoMPT](https://github.com/jcchan23/CoMPT) 本文提出了Communicative Message Passing Transformer网络，一种通过在Transformer架构中融合消息传递机制并加强节点与边之间的消息交互来改进药物分子图的表征方法。此外，受热扩散现象的启发，该表征方法通过将消息传递机制转化为消息扩散机制减少了消息过度富集的影响。大量实验表明，本文提出的模型在七个化学性质数据集（图级任务）和两个化学位移数据集（节点级任务）上的性能优于基线模型的性能（平均性能提升约4%）。可视化研究也进一步表明该模型实现了更好的药物分子图表征能力。
+
+* [zetayue/MXMNet](https://github.com/zetayue/MXMNet) 具有分子结构多重图的分子力学驱动图神经网络
+
+* [ChenDdon/AGBTcode](https://github.com/ChenDdon/AGBTcode) 代数图辅助双向变换器用于分子特性预测”的实现
+
+* [yvquanli/trimnet](https://github.com/yvquanli/trimnet) 论文代码“TrimNet：从生物医学的三元组消息中学习分子表示”
+
+* [lmmpf/PyAutoFEP](https://github.com/lmmpf/PyAutoFEP) PyAutoFEP：用于 GROMACS 的自动化 FEP 工作流程，集成了增强的采样方法.PyAutoFEP 是一种自动化自由能扰动 (FEP) 计算的工具，用于估计小分子与大分子目标的相对自由能结合 (RFEB)。它自动生成微扰图、构建配体对的双拓扑、设置 MD 系统和分析。与众不同的是，PyAutoFEP 支持多个力场，集成了增强的采样方法，并允许灵活的 λ 窗口方案。
+
+* [hannesstark/3dinfomax](https://github.com/hannesstark/3dinfomax) 通过使用分子的 3D 几何来预训练 GNN，使自我监督学习对分子起作用。在 DGL 和 Pytorch Geometric 中实现。
+
+* [microsoft/FS-Mol](https://github.com/microsoft/FS-Mol) FS-Mol 是一个 Few-Shot 分子学习数据集，包含具有针对各种蛋白质靶标的活性测量值的分子化合物。该数据集提供了一个模型评估基准，旨在推动分子和图形结构数据领域的小样本学习研究。
+
+* [zhichunguo/Meta-MGNN](https://github.com/zhichunguo/Meta-MGNN) 用于分子性质预测的小样本图学习
+
+* [illidanlab/MoCL-DK](https://github.com/illidanlab/MoCL-DK) 论文 MoCL 的实现：具有多层次领域知识的分子图对比学习
+
+* [smiles724/Molformer](https://github.com/smiles724/Molformer)  Molformer（以前称为 3D-Transformer）的存储库，它在许多分子表示学习问题中实现了最先进的技术。
+
+* [gasteigerjo/dimenet](https://github.com/gasteigerjo/dimenet) DimeNet 和 DimeNet++ 模型，如“分子图的定向消息传递”（ICLR 2020）和“非平衡分子的快速和不确定性感知定向消息传递”（NeurIPS-W 2020）中提出
+
+* [LiteGEM/kddcup2021-PCQM4M-LSC](https://github.com/PaddlePaddle/PaddleHelix/tree/dev/competition/kddcup2021-PCQM4M-LSC) LiteGEM：KDD Cup 2021 PCQM4M-LSC解决方案. PCQM4M-LSC是量子化学数据集，任务是预测给定分子的重要分子特性，即HOMO-LUMO间隙(图形回归)。即一个分子图的量子特性回归数据集，它包含了3,803,453个图。它基于PubChemQC项目的归纳式图回归数据集。它包含约400万以SMILES串描述的小分子。目的是加速量子化学计算，尤其是预测每个分子的HOMO-LUMO轨道距离。HOMO-LUMO距离是量子化学中最重要的属性之一，因为他和分子的反应性、光激励、电荷输送有关。每个分子的真实标签是通过昂贵的DFT计算得到，每个分子需要计算几个小时。在足够的训练数据支持下，类似GNN的基于分子图网络的机器学习模型，可以以很小代价得到近似DFT的结果。这些分子根据他们的PubChem ID按照8：1：1划分作为训练、验证、测试数据集。
+
+* [deepmind//ogb_lsc/pcq](https://github.com/deepmind/deepmind-research/tree/master/ogb_lsc/pcq) DeepMind 进入OGB大规模挑战赛(OGB-LSC) 的PCQM4M-LSC（量子化学）轨道的条目 。通过汇集 20 个模型（10 倍 x 2 个种子）的集合来实现的。
+
+* [divelab/MoleculeX](https://github.com/divelab/MoleculeX) 用于分子探索的全新且快速发展的机器学习方法和软件工具。MoleculeX 的最终目标是实现各种基本和复杂的分子建模任务，例如分子性质预测、3D 几何建模等。目前，包括一套机器学习方法，用于基态 3D 分子几何预测和分子属性预测。具体来说，BasicProp包括基于图神经网络的基本监督学习方法，用于分子特性预测。BasicProp适用于有大量标记样本可用的任务，因此只需要监督学习。BasicProp已用于参与2021年OGB-LSC是获胜者之一。当只有少量标记样本可用时，AdvProp包括用于分子特性预测的机器学习方法，因此需要自我监督学习来实现理想的性能。此外，AdvProp能够处理来自不同类别的样本高度不平衡的任务。在这些情况下，我们采用先进的损失函数来优化曲线下的各个区域 (AUC)。AdvProp已被用于参与COVID-19 的 AI 治愈公开挑战赛排名第一。此外，Molecule3D提供了软件工具来处理我们提出的 数据集，这是一种专门为基态 3D 分子几何预测而设计的新型数据集。它还包括几种几何预测的基线方法，以及使用预测的 3D 几何作为输入的量子特性预测方法。目前，MoleculeX 的包只包含 Molecule3D 模块代码。
+
+* [divelab/MoleculeX](https://github.com/divelab/MoleculeX) 用于分子探索的全新且快速发展的机器学习方法和软件工具。MoleculeX 的最终目标是实现各种基本和复杂的分子建模任务，例如分子性质预测、3D 几何建模等。目前，包括一套机器学习方法，用于基态 3D 分子几何预测和分子属性预测。具体来说，BasicProp包括基于图神经网络的基本监督学习方法，用于分子特性预测。BasicProp适用于有大量标记样本可用的任务，因此只需要监督学习。BasicProp已用于参与2021年OGB-LSC是获胜者之一。当只有少量标记样本可用时，AdvProp包括用于分子特性预测的机器学习方法，因此需要自我监督学习来实现理想的性能。此外，AdvProp能够处理来自不同类别的样本高度不平衡的任务。在这些情况下，我们采用先进的损失函数来优化曲线下的各个区域 (AUC)。AdvProp已被用于参与COVID-19 的 AI 治愈公开挑战赛排名第一。此外，Molecule3D提供了一套软件工具来处理我们提出的 Molecule3D 数据集，这是一种专门为基态 3D 分子几何预测而设计的新型数据集。它还包括几种几何预测的基线方法，以及使用预测的 3D 几何作为输入的量子特性预测方法。目前，MoleculeX 的 pip 包只包含 Molecule3D 模块的代码。我们将在未来逐步包含其他模块。
+
+* [PattanaikL/GeoMol](https://github.com/PattanaikL/GeoMol) 直接从分子图生成 3D 构象集合的方法
+
+* [IBM/QMO](https://github.com/IBM/QMO) 基于查询的分子优化。利用来自分子自动编码器的潜在嵌入。在一组分子特性预测和评估指标的指导下，基于有效查询改进输入分子的所需特性
+
+* [grogdrinker/pyuul](https://bitbucket.org/grogdrinker/pyuul/src/master/) 旨在处理大分子的 3D 结构，例如 PDB，将它们转换为完全可微分的数据结构。
+
+* [Saoge123/ccgnet](https://github.com/Saoge123/ccgnet) Co-Crystal Graph Network是二元有机共晶虚拟筛选的深度学习框架，将先验知识融入分子图的特征学习中，实现共晶筛选性能的极大提升。
+
+* [ZJU-Fangyin/KCL](https://github.com/ZJU-Fangyin/KCL) 化学元素知识图谱的分子对比学习
+
+* [nyu-dl/dl4chem-mgm](https://github.com/nyu-dl/dl4chem-mgm) 用于[Masked 图建模分子生成](https://translate.google.com/website?sl=en&tl=zh-CN&hl=zh-CN&client=webapp&u=https://www.nature.com/articles/s41467-021-23415-2)中进行实验的模型、数据和脚本。
+
+* [ccsb-scripps/AutoDock-Vina](https://github.com/ccsb-scripps/AutoDock-Vina) 速度最快、使用最广泛的开源分子对接引擎之一。基于简单的评分函数和快速梯度优化构象搜索。它最初由分子图形实验室的 Oleg Trott 博士设计和实现。在分子建模领域，对接docking是一种在配体和靶标相互结合形成稳定复合物时，预测一个分子对第二个分子的优选取向的方法。 反过来，优选方向的知识可用于预测两个分子之间的缔合强度或结合亲和力，例如使用评分函数。将小分子配体与蛋白质靶标对接产生稳定复合物。蛋白质、肽、核酸、碳水化合物和脂质等生物学相关分子之间的关联在信号转导中起着核心作用。此外，两个相互作用伙伴的相对方向可能会影响产生的信号类型（例如，激动与拮抗）。因此，对接对于预测产生的信号的强度和类型非常有用。分子对接是基于结构的药物设计中最常用的方法之一，因为它能够预测小分子配体与适当靶结合位点的结合构象。结合行为的表征在药物的合理设计以及阐明基本的生化过程中起着重要作用。
+
+* [devalab/molgpt](https://github.com/devalab/molgpt) 使用下一个令牌预测任务在 Moses 和 Guacamol 数据集上训练小型自定义 GPT。然后将该模型用于无条件和有条件的分子生成。我们将我们的模型与之前在 Moses 和 Guacamol 数据集上的方法进行比较。使用Ecco库获得显着性图的可解释性。
+
+* [tencent-ailab/grover](https://github.com/tencent-ailab/grover) 大规模分子数据上的自监督图转换器。支持预训练、微调、预测、指纹生成和评估功能。
+
+* [rampasek/GraphGPS](https://github.com/rampasek/GraphGPS) 通用、强大、可扩展的图形转换器的秘诀。如何构建图形转换器？ 我们提供了一个由 3 部分组成的秘诀，介绍如何构建具有线性复杂度的图形转换器。 我们的 GPS 配方包括选择 3 种主要成分：位置/结构编码：LapPE、RWSE、SignNet、EquivStableLapPE，本地消息传递机制：GatedGCN、GINE、PNA，全局注意力机制：Transformer、Performer、BigBird。在ZINC 数据集上的图形回归任务目前SOTA。ZINC 是用于虚拟筛选的商用化合物的免费数据库。 ZINC 包含超过 2.3 亿种可购买的即用型 3D 格式化合物。 ZINC 还包含超过 7.5 亿种可购买的化合物，可用于搜索类似物。
+
+* [wenhao-gao/mol_opt](https://github.com/wenhao-gao/mol_opt) 实用分子优化 (PMO) 的开源基准，以促进对分子优化算法进展的透明和可重复评估。支持 23 种任务的 25 种分子设计算法。
+
+* [THUDM/GraphMAE](https://github.com/THUDM/GraphMAE) 生成式自监督图学习方法，在节点分类、图分类和分子特性预测等任务上与现有对比方法相比具有竞争力或更好的性能。
+
+* [lucidrains/egnn-pytorch](https://github.com/lucidrains/egnn-pytorch) E(n)-等变图网络， 可能最终用于Alphafold2 复制。 适用于简单的不变特征，最终在准确性和性能上击败了所有以前的方法（包括 SE3 Transformer 和 Lie Conv）。 动力系统模型、分子活动预测任务等中的 SOTA。
+
+* [OptiMaL-PSE-Lab/DeepDock](https://github.com/OptiMaL-PSE-Lab/DeepDock) 预测生物活性分子结合构象的几何深度学习方法
+
+* [hongliangduan/Self-supervised-molecular-pretraining-strategy-for-low-resource-reaction-prediction-scenarios](https://github.com/hongliangduan/Self-supervised-molecular-pretraining-strategy-for-low-resource-reaction-prediction-scenarios) 低资源反应预测场景的自监督分子预训练策略
+
+## 抗菌肽
+
+* https://github.com/vail-uvm/amp-gan 一种基于双向条件生成对抗网络的抗菌肽（AMPs）设计方法AMPGAN v2。AMPGAN v2使用生成器和鉴别器来学习数据驱动的先验知识，并使用条件变量控制生成。
+
+* https://github.com/reymond-group/MLpeptide 机器学习设计非溶血性抗菌肽。使用来自DBAASP的数据训练RNN来设计非溶血性抗菌肽(Antimicrobial peptides, AMP)，合成并测试了28个生成肽，鉴定出针对绿脓杆菌、鲍曼不动杆菌和耐甲氧西林金黄色葡萄球菌 (MRSA) 的8种新的非溶血性 AMP。结果表明机器学习可以用来设计非溶血性AMP。
+
+* https://github.com/IBM/controlled-peptide-generation  IBM利用深度生成模型和分子动力学模拟加速抗菌肽发现
+
+## 其他_生物医药
+
+[KailiWang1/DeepDTAF](https://github.com/KailiWang1/DeepDTAF) 预测蛋白质与配体结合亲和力的深度学习方法
+
+[cansyl/MDeePred](https://github.com/cansyl/MDeePred) 多通道蛋白质的特征化来解决深度学习下药物发现中亲和力预测问题
+
+[CBLUEbenchmark/CBLUE](https://github.com/CBLUEbenchmark/CBLUE) 中文医疗信息处理基准CBLUE 8个中文医疗语言理解任务。包括医学文本信息抽取（实体识别、关系抽取）、医学术语归一化、医学文本分类、医学句子关系判定和医学QA共5大类任务8个子任务。
+
+[mims-harvard/TDC](https://github.com/mims-harvard/TDC) Therapeutics Data Commons (TDC)，第一个机器学习在生物医药的大规模数据集。TDC目前包含了20+有意义的任务，和70多个高质量数据集，从靶蛋白的发现，药物动力学，安全性，药物生产都有包含到。而且不仅仅是小分子，还有抗体，疫苗，miRNA等。之后也会加入CRISPR，Clinical Trials等等。
+
+[lrsoenksen/CL_RNA_SynthBio](https://github.com/lrsoenksen/CL_RNA_SynthBio)  RNA合成生物学的深度学习
+
+[uci-cbcl/UFold](https://github.com/uci-cbcl/UFold) 利用深度学习进行快速准确的 RNA 二级结构预测
+
+[lanagarmire/DeepImpute](https://github.com/lanagarmire/DeepImpute) 一种基于深度神经网络来插补单细胞RNA测序数据的方法
+
+[emreg00/toolbox](https://github.com/emreg00/toolbox) 疾病和药物相关的生物学数据集时所使用的各种脚本。它包含用于数据处理的通用实用程序（例如，解析，基于网络的分析，邻近性等）。
+
+[ruoqi-liu/DeepIPW](https://github.com/ruoqi-liu/DeepIPW) 基于真实世界患者数据的药物重定位的深度学习框架
+
+[CutillasLab/DRUMLR](https://github.com/CutillasLab/DRUMLR) 利用机器学习预测抗癌药物疗效。提出Drug Ranking Using ML方法，使用omics数据，根据药物抗肿瘤细胞增殖疗效对超过400种药物进行排序。
+
+[kaist-amsg/Synthesizability-PU-CGCNN](https://github.com/kaist-amsg/Synthesizability-PU-CGCNN)  基于半监督学习的晶体结构的合成预测
+
+[xiaoyeye/CCST](https://github.com/xiaoyeye/CCST) 使用图神经网络对空间转录组学数据进行细胞聚类。利用最近的两个技术发展，空间转录组学和图神经网络，用图神经网络进行空间转录组学数据的细胞聚类，一种基于图卷积网络的无监督细胞聚类方法，以改进从头算细胞聚类和发现 基于策划的细胞类别注释的新型子细胞类型。 CCST是处理各种空间分辨转录组学的通用框架。
+
+[WLYLab/PepFormer](https://github.com/WLYLab/PepFormer) 基于Transformer的对比学习框架实现多肽可检测性预测
+
+[NYSCF/monoqlo_release](https://github.com/NYSCF/monoqlo_release) 提出了模块化的深度学习框架Monoqlo来自动识别细胞集落，并从细胞成像中识别克隆性。
+
+[deepmodeling/deepks-kit](https://github.com/deepmodeling/deepks-kit) DeePKS: A Comprehensive Data-Driven Approach toward Chemically Accurate Density Functional Theory 提出了构建准确且高效的密度泛函模型的通用机器学习框架，并且利用这一框架训练了具有化学精度的密度泛函模型，应用于电子结构性质的计算。
+
+[juexinwang/scGNN](https://github.com/juexinwang/scGNN) 新型的用于单细胞RNA测序分析的图神经网络框架
+
+[liulizhi1996/HPOFiller](https://github.com/liulizhi1996/HPOFiller) 一种基于图卷积网络(GCN)的方法，用于预测缺失的HPO注释。 人类表型本体(HPO)是描述人类疾病中遇到的表型异常的标准化词汇（疾病的术语）。探索人类蛋白质和异常表型之间的关系在疾病的预防、诊断和治疗中具有重要意义。
+
+[zty2009/GCN-DNN](https://github.com/zty2009/GCN-DNN) 基于图卷积网络和深度神经网络的药物靶点相互作用识别
+
+[WebyGit/CGINet](https://github.com/WebyGit/CGINet) 大规模药物信息网络构建及图卷积预测模型
+
+[ziyujia/SalientSleepNet](https://github.com/ziyujia/SalientSleepNet) 用于睡眠分期的多模态凸波检测网络
+
+[ziyujia/Physiological-Signal-Classification-Papers](https://github.com/ziyujia/Physiological-Signal-Classification-Papers) 500余篇基于机器学习/深度学习的生理信号分类论文列表
+
+[ziyujia/Sleep-Stages-Classification-Papers](https://github.com/ziyujia/Sleep-Stages-Classification-Papers) 基于深度学习的睡眠阶段分类论文列表
+
+[ziyujia/Motor-Imagery-Papers](https://github.com/ziyujia/Motor-Imagery-Papers) 基于深度学习的运动想象分类论文列表
+
+[BojarLab/SweetNet](https://github.com/BojarLab/SweetNet) 图卷积神经网络分析复杂碳水化合物。
+
+[jaswindersingh2/SPOT-RNA2](https://github.com/jaswindersingh2/SPOT-RNA2) 利用进化概况、突变耦合和二维迁移学习改进了RNA二级结构和三级碱基配对预测
+
+[QSong-github/scGCN](https://github.com/QSong-github/scGCN) 单细胞图卷积网络模型(single-cell Graph Convolutional Network)可以实现跨越不同数据集的知识转移(knowledge transfer)。通过在30个单细胞组学数据集上进行基准测试实验，结果表明scGCN在利用来自不同组织、平台和物种以及分子层的细胞方面展现了优于其他方法的准确性。
+
+[mauragarofalo/LICTOR](https://github.com/mauragarofalo/LICTOR) 抗体体细胞突变的机器学习分析预测免疫球蛋白轻链毒性
+
+[JieZheng-ShanghaiTech/KG4SL](https://github.com/JieZheng-ShanghaiTech/KG4SL) 用于人类癌症合成致死预测的知识图神经网络
+
+[immunogenomics/symphony](https://github.com/immunogenomics/symphony) 使用 Symphony 进行高效、精确的单细胞参考图谱映射
+
+[calico/scnym](https://github.com/calico/scnym) 用于对单细胞分类的半监督对抗式神经网络
+
+[enformer](https://github.com/deepmind/deepmind-research/tree/master/enformer) 一种新的Transformer模型，“通过整合长程相互作用从序列中有效预测基因表达“，可大大提高从 DNA 序列预测基因表达的准确性，其能够「阅读」很长的 DNA 序列，可处理的序列长度达到之前的 5 倍（20W 个碱基对）
+
+[schulter/EMOGI](https://github.com/schulter/EMOGI) 一种基于图卷积网络的可解释多组学图集成方法预测癌症基因。
+
+[hui2000ji/scETM](https://github.com/hui2000ji/scETM) 生成主题模型，可促进对大规模单细胞 RNA 测序数据的综合分析。
+
+[Google-Health/genomics-research](https://github.com/Google-Health/genomics-research) Google Health 共享的基因组学研究代码
+
+[CompbioLabUCF/omicsGAN](https://github.com/CompbioLabUCF/omicsGAN) omicsGAN 是一种基于生成对抗网络的框架，可以将两个 omiocs 数据与其交互网络相结合，以生成与每个组学特征相对应的合成数据，从而可以更好地预测表型。乳腺癌表型预测的样本数据集。
+
+[BackofenLab/CRISPRloci](https://github.com/BackofenLab/CRISPRloci) CRISPRloci 在细菌和古细菌基因组上提供了 CRISPR-Cas 系统的自动化和全面的计算机表征。它是完整的 CRISPR 基因座表征套件，包括 CRISPR 阵列定向、保守前导检测、cas 基因注释和亚型分类。
+
+[suhrig/arriba](https://github.com/suhrig/arriba) 从 RNA-Seq 数据中快速准确地检测基因融合
+
+[haiyang1986/Subtype-GAN](https://github.com/haiyang1986/Subtype-GAN) 多组学数据综合癌症亚型的深度学习方法
+
+[oxpig/dlab-public](https://github.com/oxpig/dlab-public) “DLAB——基于结构的抗体虚拟筛选的深度学习方法”论文代码
+
+[heislab/scarches](https://github.com/theislab/scarches) scArches 是一个将新生成的单细胞数据集集成到集成参考图谱中的包。我们的方法可以通过分散的培训和不同组的多个数据集的集成来促进大型协作项目。scArches 与[scanpy](https://scanpy.readthedocs.io/en/stable/)兼容。并为单细胞数据托管了几个条件生成模型的有效实现。
+
+- 构建单模态或多模态 (CITE-seq) 参考图集并共享经过训练的模型和数据（如果可能）。
+- 为您感兴趣的地图集下载预先训练的模型，使用新数据集对其进行更新并与您的合作者分享。
+- 在参考的顶部投影和集成查询数据集，并使用潜在表示进行下游任务，例如：差异测试、聚类、分类
+
+[HantaoShu/DeepSEM](https://github.com/HantaoShu/DeepSEM) 基于深度学习的方法，具有新颖的神经网络架构，可以推断基因调控网络，嵌入scRNA-seq数据，并通过解释不同的模块来模拟真实的scRNA-seq数据。
+
+[Tsedao/MultiRM](https://github.com/Tsedao/MultiRM) 基于注意力的多标签神经网络，用于对十二种广泛发生的 RNA 修饰进行综合预测和解释
+
+[hybrid-kg/clep](https://github.com/hybrid-kg/clep) 用于生成由数据和先验知识驱动的新患者表示的 Python 包
+
+[d909b/drnet](https://github.com/d909b/drnet) 剂量反应网络 (DRNets) 是一种学习方法，用于学习使用神经网络从观察数据中估计多个参数治疗的个体剂量反应曲线。
+
+[claudiashi57/dragonnet](https://github.com/claudiashi57/dragonnet) 适应神经网络以估计治疗效果 使用神经网络从观察数据中估计因果效应的方法。
+
+[PaddlePaddle/PaddleHelix](https://github.com/PaddlePaddle/PaddleHelix/) 螺旋桨（PaddleHelix）是一个生物计算工具集，是用机器学习的方法，特别是深度神经网络，致力于促进以下领域的发展：
+
+- **新药发现**。提供1)大规模预训练模型:化合物和蛋白质; 2)多种应用:分子属性预测,药物靶点亲和力预测,和分子生成。
+- **疫苗设计**。提供RNA设计算法,包括LinearFold和LinearPartition。
+- **精准医疗**。提供药物联用的应用。
+
+[OATML-Markslab/EVE](https://github.com/OATML-Markslab/EVE) 论文“使用进化数据和深度学习对遗传变异进行大规模临床解释”的官方存储库。
+
+[ZJUFanLab/scDeepSort](https://github.com/ZJUFanLab/scDeepSort) 使用带有加权图神经网络的深度学习对单细胞转录组学进行细胞类型注释.单细胞 RNA 测序 (scRNA-seq) 的最新进展已经实现了对多个复杂组织中数千个细胞的大规模转录表征，其中准确的细胞类型识别成为 scRNA-seq 研究的先决条件和重要步骤。开发了一种预训练的细胞类型标注方法，scDeepSort 是基于加权 GNN 框架构建的，然后在两个嵌入的高质量 scRNA-seq 图集中学习，该图集包含人类和小鼠 88 个组织中的 764,741 个细胞。
+
+[jianhuupenn/SpaGCN](https://github.com/jianhuupenn/SpaGCN) SpaGCN：整合基因表达、空间位置和组织学，通过图卷积网络识别空间域和空间可变基因
+
+[immunogenomics/symphony](https://github.com/immunogenomics/symphony) 使用 Symphony 进行高效、精确的单细胞参考图谱映射
+
+[kipoi/models](https://github.com/kipoi/models) 基因组学的预测模型，并用作Kipoi的模型源。Kipoi（发音：kípi；来自希腊语 κήποι：gardens）是一个API和用于基因组学的即用型训练模型的存储库。它目前包含 2201 个不同的模型，涵盖转录和转录后基因调控中的规范预测任务。例如预测称为转录因子的蛋白质如何与DNA结合，或者酶可能在何处拼接遗传密码。
+
+[LiuJJ0327/CCPE](https://github.com/LiuJJ0327/CCPE) scRNA-seq 数据的细胞周期假体估计。细胞周期（cell cycle）是指细胞从一次分裂完成开始到下一次分裂结束所经历的全过程，分为间期与分裂期两个阶段。
+
+[broadinstitute/Tangram](https://github.com/broadinstitute/Tangram) 单细胞转录组数据的空间对齐。单细胞数据集和空间数据集应该从相同的解剖区域/组织类型中收集，最好是从生物复制中收集，并且需要共享一组基因。Tangram 通过在共享基因上拟合基因表达来对齐空间中的单细胞数据。
+
+[franciscozorrilla/metaGEM](https://github.com/franciscozorrilla/metaGEM) 一个易于使用的工作流程，用于生成特定于上下文的基因组规模代谢模型并直接从宏基因组数据预测微生物群落内的代谢相互作用
+
+[scverse/scvi-tools](https://github.com/scverse/scvi-tools) 单细胞组学数据的深度概率分析
+
+[www.serratus.io](https://www.serratus.io/) 一个开放科学的病毒发现平台。NCBI 序列读取存档数据库包含来自全球研究实验室十多年来收集的数百万个生物多样性样本的 DNA 和 RNA 测序数据。我们正在重新分析 NCBI 短读存档中的所有 RNA-seq、元基因组学、元转录组学和环境测序数据，以发现新病毒。即>600 万个生物样本或 >10 PB 的测序数据。
+
+[BioDynaMo/biodynamo](https://github.com/BioDynaMo/biodynamo) 生物动力学建模器 可以通过该平台轻松创建、运行和可视化 3D 生物模拟。BioDynaMo 平台建立在最新的计算技术之上，将使用户能够执行以前无法实现的规模和复杂性的模拟，从而有可能解决具有挑战性的科学研究问题。
+
+[RasmussenLab/vamb](https://github.com/RasmussenLab/vamb) 用于宏基因组分档的变分自动编码器
+
+[XieResearchGroup/DeepREAL](https://github.com/XieResearchGroup/DeepREAL) 深度学习驱动的多尺度建模框架，用于预测配体结合的分布外受体活性
+
+[rankchen121212/RHSNet](https://github.com/frankchen121212/RHSNet) 用于重组热点识别和量化的 RHSNet 的 TF 和 Keras 实现。 重组热点是基因组中相对于中性预期表现出重组率升高的区域。热点内的重组率可以是周围区域的数百倍。 重组热点是由这些区域中较高的 DNA 断裂形成引起的，适用于有丝分裂和减数分裂细胞。这个称谓可以指由程序减数分裂双链断裂的不均匀分布引起的重组事件。通过交叉进行的减数分裂重组被认为是细胞促进同源染色体正确分离和修复 DNA 损伤的机制。交叉需要 DNA 双链断裂，然后是同源物的链入侵和随后的修复。
+
+[microsoft/InnerEye-DeepLearning](https://github.com/microsoft/InnerEye-DeepLearning) 用于在 Azure 机器学习上训练和部署 3D 分割模型的医学影像深度学习库
+
+[细菌和古细菌细胞结构图谱](https://jensenlab.caltech.edu/book/) 随着近 20 年低温电子断层扫描 (cryo-ET) 的发展，我们对细菌和古细菌细胞结构的理解有了爆炸式增长，但传统教科书并没有跟上所有新信息。为了解决这个问题，并与世界分享我们所见，我们创作了这本书。它遵循 1960 年代和 1970 年代细胞结构图谱的传统，显示了不同细胞和组织的显微照片以及扩展的图形图例，以帮助每个人了解他们在看什么。五十年后，我们有了一组新的图像——这次是 3D 冷冻断层照片——以及展示它们的新技术：我们的每个免费数字页面都包含一部 3D 断层照片的电影，而不是一本昂贵的书中的静态 2D 数字。一个单元格，带有注释和动画。
+
+[TencentAILabHealthcare/MLA-GNN](https://github.com/TencentAILabHealthcare/MLA-GNN) 对于胶质瘤数据集，基于共表达基因模块用于疾病诊断和预后的多级注意力图神经网络。
+
+[TencentAILabHealthcare/scBERT](https://github.com/TencentAILabHealthcare/scBERT) 单细胞RNA-seq数据细胞类型注释的大规模预训练深度语言模型。可靠的细胞类型注释是单细胞RNA测序数据下游分析的先决条件。受大规模预训练语言模型的启发，提出了基于预训练深度神经网络的模型scBERT。scBERT的第一阶段，它通过对大量未标记的scRNA-seq数据进行预训练，获得了对基因 - 基因相互作用的一般理解。然后，预先训练的scBERT可以通过监督微调用于看不见和用户特异性scRNA-seq数据的细胞注释任务。
+
+[Graylab/IgFold](https://github.com/Graylab/IgFold) 通过深度学习对大量天然抗体进行快速、准确的抗体结构预测。
+
+[Graylab/IgLM](https://github.com/Graylab/IgLM) 抗体设计的衍生语言建模

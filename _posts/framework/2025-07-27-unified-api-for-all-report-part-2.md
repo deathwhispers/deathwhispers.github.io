@@ -4,8 +4,10 @@ title: "多报表统一接口管理：实现一套接口处理所有类型报表
 date: 2025-07-27
 tags:
   - excel
-  - 策略模式
-  - 工厂模式
+  - strategy pattern
+  - factory pattern
+categories:
+  - Framework
 comments: true
 author: deathwhispers
 ---

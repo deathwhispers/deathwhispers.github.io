@@ -229,3 +229,31 @@ jekyll-archives:
   permalinks:
     tag: /tags/:name/
     category: /categories/:name/
+
+# _config.yml
+math:
+  enable: true  # 全局默认启用数学公式渲染
+  # 可选：指定渲染引擎（默认 MathJax，也可设为 katex）
+  engine: mathjax  # 或 katex
+  # 若使用 MathJax，可配置加载路径（默认使用 CDN）
+  mathjax:
+    cdn: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+    # 可选：自定义配置（如支持的格式）
+    config: "TeX-AMS-MML_HTMLorMML"
+  # 若使用 KaTeX，配置 CDN（需将 engine 设为 katex）
+  katex:
+    cdn:
+      css: https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css
+      js: https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js
+    # 自动渲染配置
+    auto_render: https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js
+
+# mermaid 配置
+mermaid:
+  enable: true  # 全局默认启用 Mermaid 渲染
+  # Mermaid JS 库的 CDN 路径（默认使用官方 CDN）
+  cdn: https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js
+  # 可选：Mermaid 配置项（如主题、字体等）
+  config:
+    theme: default  # 可选：dark, forest, neutral 等
+    fontFamily: "sans-serif"
