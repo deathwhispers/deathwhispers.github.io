@@ -3,10 +3,11 @@ layout: post
 title: "子数组最大平均数 I"
 date: 2025-04-25
 tags: 
-  - sliding window
-  - array
+  - Sliding Window
+  - Array
 categories: 
   - Algorithm
+  - Sliding Window
 comments: true 
 author: deathwhispers
 ---

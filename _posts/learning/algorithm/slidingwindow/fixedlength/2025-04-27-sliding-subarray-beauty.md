@@ -3,11 +3,12 @@ layout: post
 title: "滑动子数组的美丽值"
 date: 2025-04-25
 tags: 
-  - sliding window
-  - array
-  - hash table
+  - Sliding Window
+  - Array
+  - Hash Table
 categories: 
   - Algorithm
+  - Sliding Window
 comments: true 
 author: deathwhispers
 ---

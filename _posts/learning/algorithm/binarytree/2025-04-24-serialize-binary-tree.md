@@ -3,10 +3,11 @@ layout: post
 title: "序列化二叉树"
 date: 2025-04-24 
 tags: 
-  - tree
-  - binary tree
+  - Tree
+  - Binary Tree
 categories: 
   - Algorithm
+  - Binary Tree
 comments: true 
 author: deathwhispers
 ---

@@ -3,10 +3,10 @@ layout: post
 title: "新房装修记录"
 date: 2024-09-02
 tags: 
-  - life
+  - Life
   - 装修记录
 categories: 
-  - life
+  - Life
 comments: true
 author: deathwhispers
 ---

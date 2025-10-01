@@ -3,12 +3,15 @@ layout: post
 title: "多报表统一接口管理：实现一套接口处理所有类型报表的导出（二）"
 date: 2025-07-27
 tags:
-  - excel
-  - strategy pattern
-  - factory pattern
+  - Excel
+  - Strategy Pattern
+  - Factory Pattern
 categories:
   - Framework
+  - Report
 comments: true
+math: true
+mermaid: true
 author: deathwhispers
 ---
 

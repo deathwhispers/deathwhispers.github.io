@@ -4,7 +4,12 @@ title: "基于 MybatisPlus 的动态 sql 构建器"
 date: 2025-07-26
 tags:
   - MybatisPlus
+categories:
+  - Framework
+  - DynamicSqlBuilder
 comments: true
+math: true
+mermaid: true
 author: deathwhispers
 ---
 

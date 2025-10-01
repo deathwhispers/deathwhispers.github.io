@@ -3,10 +3,11 @@ layout: post
 title: "爱生气的书店老板"
 date: 2025-05-07
 tags: 
-  - sliding window
-  - array
+  - Sliding Window
+  - Array
 categories: 
   - Algorithm
+  - Sliding Window
 comments: true 
 author: deathwhispers
 ---

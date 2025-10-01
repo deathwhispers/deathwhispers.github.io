@@ -6,9 +6,11 @@ tags:
   - Spring Scheduling
   - Task Scheduling
 categories:
+  - Framework
   - Spring Boot定时任务
 comments: true
-#mermaid: true
+math: true
+mermaid: true
 author: deathwhispers
 ---
 

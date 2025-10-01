@@ -3,8 +3,8 @@ layout: post
 title: "Numpy 基础 - 数组的创建与计算"
 date: 2025-07-07
 tags:
-  - numpy
-  - heywhale
+  - Numpy
+  - HeyWhale
 categories:
   - Numpy
 comments: true
