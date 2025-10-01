@@ -9,6 +9,8 @@ tags:
 categories:
   - Framework
 comments: true
+math: true
+mermaid: true
 author: deathwhispers
 ---
 

@@ -9,6 +9,8 @@ categories:
   - Spring Boot定时任务
 comments: true
 author: deathwhispers
+math: true
+mermaid: true
 ---
 
 ## 引言

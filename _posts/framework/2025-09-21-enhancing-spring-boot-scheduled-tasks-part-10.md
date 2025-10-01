@@ -8,6 +8,7 @@ tags:
 categories:
   - Spring Boot定时任务
 comments: true
+#mermaid: true
 author: deathwhispers
 ---
 
