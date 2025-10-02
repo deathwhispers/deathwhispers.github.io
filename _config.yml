@@ -101,8 +101,8 @@ theme_mode:
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar: /assets/images/avatar.png
-favicon: /assets/images/favicon.ico
+avatar: /assets/img/avatar.png
+favicon: /assets/img/favicons/favicon.ico
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.

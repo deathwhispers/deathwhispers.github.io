@@ -4,7 +4,7 @@ title: "类chatgpt大语言对话模型及数据"
 date: 2025-04-30
 tags: 
   - LLM
-  - 大语言模型
+  - Large Language Model
 categories: 
   - resource
 comments: true

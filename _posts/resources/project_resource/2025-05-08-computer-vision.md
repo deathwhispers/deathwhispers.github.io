@@ -3,7 +3,7 @@ layout: post
 title: "计算机视觉"
 date: 2025-05-08
 tags: 
-  - ComputerVision
+  - Computer Vision
   - CV
 categories: 
   - resource

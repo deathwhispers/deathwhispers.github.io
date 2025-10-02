@@ -1,3 +1,14 @@
+# links.yml - 导航链接数据源
+# 字段说明：
+# - category：分类名称（对应页面分类标题）
+# - icon：分类图标（Font Awesome 图标类名，如 fa-code）
+# - links：分类下的链接列表
+#   - name：链接名称
+#   - url：链接地址（需带 http/https）
+#   - icon：链接图标（Font Awesome 图标类名）
+#   - desc：链接简短描述（1-2行，适配卡片显示）
+#   - hot: true（可选）：标记为热门链接，优先显示在「热门推荐」区
+
 - category: ☕ Java 核心 & 生态
   icon: fa-java
   links:
@@ -5,6 +16,7 @@
       url: https://docs.oracle.com/en/java/javase/
       desc: Java 官方文档（英文权威）
       icon: fa-book
+      hot: true
     - name: OpenJDK
       url: https://openjdk.org/
       desc: Java 开源实现

@@ -3,8 +3,8 @@ layout: post
 title: "机器学习与深度学习"
 date: 2025-05-10
 tags: 
-  - DeepLearning
-  - MachineLearning
+  - Deep Learning
+  - Machine Learning
 categories: 
   - resource
 comments: true

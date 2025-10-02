@@ -3,7 +3,7 @@ layout: post
 title: "因果推断"
 date: 2025-05-07
 tags: 
-  - CausalInference
+  - Causal Inference
 categories: 
   - resource
 comments: true

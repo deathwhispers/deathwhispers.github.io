@@ -69,7 +69,7 @@ print('let\'s go!')
 
 转义字符以“\”开头，后接某些特定的字符或数字。Python中常用的转义字符如表5所示。
 
-![escape_symbol.png](/assets/images/learning/heywhale/python_basics/escape_symbol.png)
+![escape_symbol.png](/assets/img/learning/heywhale/python_basics/escape_symbol.png)
 
 
 ```python
@@ -104,7 +104,7 @@ print('''"what's your name?"
 * 字符串格式化涉及到两个概念：格式和格式化，其中格式以%开头，格式化运算符用%表示用对象代替格式串中的格式，最终得到1个字符串。
 * 字符串格式化的一般形式如图5所示：
 
-![str_format .png](/assets/images/learning/heywhale/python_basics/str_format.png)
+![str_format .png](/assets/img/learning/heywhale/python_basics/str_format.png)
 
 
 #### 2.1.1 字符串格式的书写
@@ -116,7 +116,7 @@ print('''"what's your name?"
 
 #### 2.1.2 常用格式字符的含义
 
-![common_format_chars.png](/assets/images/learning/heywhale/python_basics/common_format_chars.png)
+![common_format_chars.png](/assets/img/learning/heywhale/python_basics/common_format_chars.png)
 
 
 ```python
@@ -129,7 +129,7 @@ print('我叫%s,今年%d岁'%(name,age))#一次转换多个对象，这些对象
 ### 2.2 format()方法格式化字符串
 format()方法是通过{}和:来代替传统%方式。一般形式如图所示:
 
-![format.png](/assets/images/learning/heywhale/python_basics/format.png)
+![format.png](/assets/img/learning/heywhale/python_basics/format.png)
 
 format方法格式化时，可以使用位置参数，根据位置来传递参数;也可以通过索引值来引用位置参数，只要format方法相应位置上有参数值即可，参数索引从0开始；
 

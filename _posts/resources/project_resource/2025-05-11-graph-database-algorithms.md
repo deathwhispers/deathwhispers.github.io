@@ -3,7 +3,8 @@ layout: post
 title: "图数据库图算法"
 date: 2025-05-11
 tags: 
-  - GraphDatabase
+  - Graph Database
+  - Graph
 categories: 
   - resource
 comments: true

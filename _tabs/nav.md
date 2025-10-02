@@ -5,15 +5,17 @@ order: 3
 ---
 
 <style>
+/* 容器与通用样式 */
 .nav-container {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1.5rem;
+  padding: 0;
+  margin: 0 auto;
 }
 
 .nav-header {
   text-align: center;
   margin-bottom: 2.5rem;
+  padding: 0 1.5rem;
 }
 
 .nav-title {
@@ -32,6 +34,7 @@ order: 3
 /* 热门链接区域 */
 .hot-links-section {
   margin-bottom: 2.5rem;
+  padding: 0 1.5rem;
 }
 
 .hot-links-title {
@@ -47,34 +50,35 @@ order: 3
 .hot-links-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
+  gap: 0.8rem 1.5rem;
+  line-height: 1.6;
 }
 
 .hot-link-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 6px;
-  color: var(--text-color);
+  gap: 0.4rem;
+  color: var(--link-color);
   text-decoration: none;
   font-size: 0.9rem;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .hot-link-tag:hover {
-  background: var(--link-color);
-  color: white;
-  border-color: var(--link-color);
-  text-decoration: none;
-  transform: translateY(-1px);
+  color: var(--link-hover-color, #0056b3);
+  text-decoration: underline;
 }
 
-/* 分类链接区域 */
+.hot-link-count {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-left: 0.3rem;
+}
+
+/* 分类链接区域 - 核心优化：卡片边框与阴影 */
 .category-section {
   margin-bottom: 2.5rem;
+  padding: 0 1.5rem;
 }
 
 .category-header {
@@ -105,33 +109,40 @@ order: 3
   margin: 0;
 }
 
-/* 4列网格布局 */
 .link-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
-/* 扁平化卡片样式 */
+/* 卡片样式优化：虚化边框+分层阴影，增强质感 */
 .link-card {
   background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 5px;
-  padding: 1rem;
-  transition: all 0.2s ease;
+  /* 虚化边框：用rgba降低不透明度，避免生硬实线 */
+  border: 1px solid rgba(var(--card-border-rgb), 0.5);
+  /* 轻微圆角增加柔和感 */
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  /* 过渡包含边框+阴影，确保交互流畅 */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   text-decoration: none;
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: 0.6rem;
   height: auto;
-  position: relative;
+  /* 正常状态：淡阴影增加悬浮感，不扁平 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
+/* hover状态：边框提亮+阴影加深，增强交互反馈 */
 .link-card:hover {
-  border-color: var(--link-color);
+  /* 边框关联链接色，增加关联性，同时保留虚化质感 */
+  border-color: rgba(var(--link-color-rgb), 0.6);
   background: var(--card-bg);
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  /* 阴影分层：内阴影增加通透感，外阴影增强立体感 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(var(--link-color-rgb), 0.1);
+  transform: translateY(-1px);
 }
 
 .link-card:hover .link-name {
@@ -143,7 +154,7 @@ order: 3
   color: var(--link-color);
   transition: all 0.2s ease;
   flex-shrink: 0;
-  margin-top: 0.1rem;
+  margin-top: 0.2rem;
 }
 
 .link-content {
@@ -155,7 +166,7 @@ order: 3
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--heading-color);
-  margin: 0 0 0.3rem 0;
+  margin: 0 0 0.5rem 0;
   line-height: 1.3;
   transition: color 0.2s ease;
   display: -webkit-box;
@@ -167,7 +178,7 @@ order: 3
 .link-desc {
   font-size: 0.82rem;
   color: var(--text-muted);
-  line-height: 1.4;
+  line-height: 1.5;
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -175,20 +186,7 @@ order: 3
   overflow: hidden;
 }
 
-/* 点击计数徽章 */
-.click-badge {
-  background: var(--link-color);
-  color: white;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.6rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  position: absolute;
-  top: 0.7rem;
-  right: 0.7rem;
-}
-
-/* 响应式设计 */
+/* 响应式调整 */
 @media (max-width: 1200px) {
   .link-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -200,12 +198,18 @@ order: 3
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .nav-container {
+  .nav-header,
+  .hot-links-section,
+  .category-section {
     padding: 0 1rem;
   }
   
   .nav-title {
     font-size: 1.8rem;
+  }
+  
+  .hot-links-container {
+    gap: 0.6rem 1rem;
   }
 }
 
@@ -215,21 +219,19 @@ order: 3
   }
   
   .hot-links-container {
-    flex-direction: column;
-  }
-  
-  .hot-link-tag {
-    justify-content: center;
+    gap: 0.5rem 0.8rem;
   }
 }
 
-/* 动画效果 */
+/* 卡片动画：保持轻盈过渡 */
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: translateY(5px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -238,7 +240,6 @@ order: 3
   opacity: 0;
 }
 
-/* 为每个卡片设置延迟动画 */
 .link-card:nth-child(1) { animation-delay: 0.05s; }
 .link-card:nth-child(2) { animation-delay: 0.1s; }
 .link-card:nth-child(3) { animation-delay: 0.15s; }
@@ -248,19 +249,14 @@ order: 3
 </style>
 
 <div class="nav-container">
-  <header class="nav-header">
-    <h1 class="nav-title">网址导航</h1>
-    <p class="nav-subtitle">精心整理的实用网站合集</p>
-  </header>
-
-  <!-- 动态热门链接区域 -->
+  <!-- 热门链接区域 -->
   <section class="hot-links-section">
     <h2 class="hot-links-title">
       <i class="fas fa-fire"></i>
       热门推荐
     </h2>
     <div class="hot-links-container" id="hotLinksContainer">
-      <!-- 动态内容将由JavaScript填充 -->
+      <!-- 动态填充 -->
     </div>
   </section>
 
@@ -281,6 +277,7 @@ order: 3
          rel="noopener noreferrer" 
          class="link-card" 
          data-link-id="{{ link.name | slugify }}"
+         data-is-hot="{{ link.hot | default: 'false' }}"
          onclick="trackClick('{{ link.name | slugify }}')">
         
         <i class="fas link-icon {{ link.icon | default: 'fa-external-link-alt' }}"></i>
@@ -288,7 +285,6 @@ order: 3
           <div class="link-name">{{ link.name }}</div>
           <div class="link-desc">{{ link.desc }}</div>
         </div>
-        <span class="click-badge" id="badge-{{ link.name | slugify }}" style="display: none;"></span>
       </a>
       {% endfor %}
     </div>
@@ -297,121 +293,63 @@ order: 3
 </div>
 
 <script>
-// 链接点击跟踪功能
+const HOT_LINKS_MAX = 8;
+
+// 跟踪链接点击
 function trackClick(linkId) {
   let clicks = localStorage.getItem(`nav_clicks_${linkId}`) || 0;
   clicks = parseInt(clicks) + 1;
   localStorage.setItem(`nav_clicks_${linkId}`, clicks);
-  
-  // 更新徽章显示
-  updateBadge(linkId, clicks);
-  
-  // 更新热门链接
   updateHotLinks();
-}
-
-// 更新单个链接的点击徽章
-function updateBadge(linkId, clicks) {
-  const badge = document.getElementById(`badge-${linkId}`);
-  if (badge && clicks > 0) {
-    badge.style.display = 'inline-block';
-    badge.textContent = clicks;
-  }
-}
-
-// 获取所有链接的点击数据
-function getLinkClickData() {
-  const links = document.querySelectorAll('.link-card');
-  const linkData = [];
-  
-  links.forEach(link => {
-    const linkId = link.getAttribute('data-link-id');
-    const name = link.querySelector('.link-name').textContent;
-    const desc = link.querySelector('.link-desc').textContent;
-    const url = link.getAttribute('href');
-    const icon = link.querySelector('.link-icon').className.match(/fa-[a-z-]+/)[0];
-    const clicks = parseInt(localStorage.getItem(`nav_clicks_${linkId}`)) || 0;
-    
-    linkData.push({
-      id: linkId,
-      name: name,
-      desc: desc,
-      url: url,
-      icon: icon,
-      clicks: clicks
-    });
-  });
-  
-  return linkData;
 }
 
 // 更新热门链接显示
 function updateHotLinks() {
-  const linkData = getLinkClickData();
-  
-  // 按点击量排序，取前8个
-  const hotLinks = linkData
-    .filter(link => link.clicks > 0)
-    .sort((a, b) => b.clicks - a.clicks)
-    .slice(0, 8);
-  
-  const hotLinksContainer = document.getElementById('hotLinksContainer');
-  
-  if (hotLinks.length > 0) {
-    hotLinksContainer.innerHTML = hotLinks.map(link => `
-      <a href="${link.url}" 
-         target="_blank" 
-         rel="noopener noreferrer" 
-         class="hot-link-tag"
-         onclick="trackClick('${link.id}')">
+  const container = document.getElementById('hotLinksContainer');
+  const allLinks = [];
+
+  // 从site.data.links中收集所有链接数据
+  site.data.links.forEach(group => {
+    group.links.forEach(link => {
+      const linkId = link.name.toLowerCase().replace(/\s+/g, '-');
+      allLinks.push({
+        id: linkId,
+        isHot: link.hot || false,
+        name: link.name,
+        url: link.url,
+        icon: link.icon || 'fa-external-link-alt',
+        clicks: parseInt(localStorage.getItem(`nav_clicks_${linkId}`)) || 0
+      });
+    });
+  });
+
+  // 筛选hot标签链接和高点击链接
+  const hotTaggedLinks = allLinks.filter(link => link.isHot);
+  const sortedNormalLinks = allLinks.filter(link => !link.isHot).sort((a, b) => b.clicks - a.clicks);
+  const finalHotLinks = [...hotTaggedLinks, ...sortedNormalLinks].slice(0, HOT_LINKS_MAX);
+
+  // 渲染热门链接
+  if (finalHotLinks.length > 0) {
+    container.innerHTML = finalHotLinks.map(link => `
+      <a 
+        href="${link.url}" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="hot-link-tag"
+        onclick="trackClick('${link.id}')"
+      >
         <i class="fas ${link.icon}"></i>
         ${link.name}
-        <span>(${link.clicks})</span>
+        ${link.clicks > 0 ? `<span class="hot-link-count">(${link.clicks})</span>` : ''}
       </a>
     `).join('');
   } else {
-    // 如果没有点击数据，显示默认的热门链接
-    showDefaultHotLinks();
+    container.innerHTML = '<span class="text-muted">暂无热门链接数据</span>';
   }
 }
 
-// 显示默认热门链接
-function showDefaultHotLinks() {
-  // 从数据中获取标记为hot的链接
-  const hotLinksContainer = document.getElementById('hotLinksContainer');
-  
-  // 这里使用Jekyll数据，但需要确保数据文件中有hot标记
-  // 如果没有，可以手动创建一些默认热门链接
-  hotLinksContainer.innerHTML = `
-    <a href="https://github.com/" class="hot-link-tag">
-      <i class="fab fa-github"></i> GitHub
-    </a>
-    <a href="https://developer.mozilla.org/" class="hot-link-tag">
-      <i class="fas fa-book"></i> MDN Web Docs
-    </a>
-    <a href="https://stackoverflow.com/" class="hot-link-tag">
-      <i class="fab fa-stack-overflow"></i> Stack Overflow
-    </a>
-    <a href="https://www.google.com/" class="hot-link-tag">
-      <i class="fab fa-google"></i> Google
-    </a>
-  `;
-}
-
 // 页面加载时初始化
-document.addEventListener('DOMContentLoaded', function() {
-  // 初始化所有链接的点击徽章
-  const links = document.querySelectorAll('.link-card');
-  links.forEach(link => {
-    const linkId = link.getAttribute('data-link-id');
-    const clicks = localStorage.getItem(`nav_clicks_${linkId}`) || 0;
-    
-    if (clicks > 0) {
-      updateBadge(linkId, parseInt(clicks));
-    }
-  });
-  
-  // 更新热门链接
+document.addEventListener('DOMContentLoaded', () => {
   updateHotLinks();
 });
 </script>

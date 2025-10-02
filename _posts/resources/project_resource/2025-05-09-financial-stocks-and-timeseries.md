@@ -3,7 +3,7 @@ layout: post
 title: "金融股票与时间序列"
 date: 2025-05-09
 tags: 
-  - FinancialStocks
+  - Financial Stocks
   - TimeSeries
 categories: 
   - resource

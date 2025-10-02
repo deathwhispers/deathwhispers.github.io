@@ -3,7 +3,7 @@ layout: post
 title: "推荐系统"
 date: 2025-05-14
 tags: 
-  - RecommendationSystem
+  - Recommendation System
 categories: 
   - resource
 comments: true

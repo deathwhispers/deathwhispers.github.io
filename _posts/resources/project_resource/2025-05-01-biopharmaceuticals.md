@@ -3,7 +3,7 @@ layout: post
 title: "生物医药"
 date: 2025-05-01
 tags: 
-  - 生物医药
+  - BioPharmaceuticals
 categories: 
   - resource
 comments: true

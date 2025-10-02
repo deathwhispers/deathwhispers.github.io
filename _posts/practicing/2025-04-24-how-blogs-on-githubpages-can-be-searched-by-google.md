@@ -20,20 +20,20 @@ author: deathwhispers
 site:http://xxxx.github.io
 ```
 其中`http://xxxx.github.io为`你的博客地址，如果出现如下结果，则意味着没有被收录：
-![img.png](/assets/images/practicing/how-blogs-on-githubpages-can-be-searched-by-google/img.png)
+![img.png](/assets/img/practicing/how-blogs-on-githubpages-can-be-searched-by-google/img.png)
 如果搜索出你想要的结果，那么不用继续往下看了。
 
 ## 搜索资源提交
 进入Google Web Master Search Console:
-![img_2.png](/assets/images/practicing/how-blogs-on-githubpages-can-be-searched-by-google/img_2.png)
+![img_2.png](/assets/img/practicing/how-blogs-on-githubpages-can-be-searched-by-google/img_2.png)
 
 我们可以选择网址前缀，并输入你的博客地址：
 
 点击“继续”，网站会提示需要验证网站所有权
-![img_3.png](/assets/images/practicing/how-blogs-on-githubpages-can-be-searched-by-google/img_3.png)
+![img_3.png](/assets/img/practicing/how-blogs-on-githubpages-can-be-searched-by-google/img_3.png)
 网站给我们提示了一个推荐验证方法：是通过在你的网站上添加一个它提供的HTML文件来验证，我们将这个 html 文件下载下来，并上传到 GitHub，通过浏览器能正常访问该文件就可以。点击“验证”提示已完成所有权验证
-![img_4.png](/assets/images/practicing/how-blogs-on-githubpages-can-be-searched-by-google/img_4.png)
+![img_4.png](/assets/img/practicing/how-blogs-on-githubpages-can-be-searched-by-google/img_4.png)
 这个文件是不能被删除的，否则验证会失效，因此可以考虑增加多种验证方法来保证稳定性。
-![img_5.png](/assets/images/practicing/how-blogs-on-githubpages-can-be-searched-by-google/img_5.png)
+![img_5.png](/assets/img/practicing/how-blogs-on-githubpages-can-be-searched-by-google/img_5.png)
 
 等待 Google处理完数据后，就可以在 Google 中搜索到自己博客中的内容了
