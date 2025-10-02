@@ -78,19 +78,21 @@ public TaskStore taskStore(...) {
 
 ```mermaid
 graph TD
-    A[Spring容器启动] --> B{扫用户配置};
-    B --> C{发现用户写的`@Bean JpaTaskStore`?};
-C -- " 是 " --> D[把JpaTaskStore注册成TaskStore];
-D --> E{框架的taskStore()方法执行};
-E --> F{@ConditionalOnMissingBean检查};
-F -- " 失败！容器里已有TaskStore" --> G[框架默认Bean跳过];
-C -- " 否 " --> H[框架的taskStore()方法执行];
-H --> I{@ConditionalOnMissingBean检查};
-I -- " 通过！容器里没TaskStore " --> J[按配置创建默认Bean（比如RedisTaskStore）];
-J --> K[注册默认TaskStore];
+    A[Spring容器启动] ---> B{扫用户配置}
+    B ---> C{发现用户写的`@Bean JpaTaskStore`?}
 
-style G fill: #fbb, stroke: #f00, stroke-width: 2px
-style J fill: #bbf, stroke: #333, stroke-width: 2px
+    C --|是|---> D[把JpaTaskStore注册成TaskStore]
+    D ---> E{框架的taskStore（）方法执行}
+    E ---> F{@ConditionalOnMissingBean检查}
+    F --|失败！容器里已有TaskStore|---> G[框架默认Bean跳过]
+    
+    C --|否|---> H[框架的taskStore（）方法执行]
+    H ---> I{@ConditionalOnMissingBean检查}
+    I --|通过！容器里没TaskStore|---> J[按配置创建默认Bean（比如RedisTaskStore）]
+    J ---> K[注册默认TaskStore]
+    
+    style G fill:#fbb,stroke:#f00,stroke-width:2px
+    style J fill:#bbf,stroke:#333,stroke-width:2px
 ```
 
 就这个小注解，让框架特别灵活——**用户的实现永远比框架默认的优先级高**，想换就换。
