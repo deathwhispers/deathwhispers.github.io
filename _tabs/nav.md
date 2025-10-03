@@ -15,7 +15,7 @@ order: 3
 .nav-header {
   text-align: center;
   margin-bottom: 2.5rem;
-  padding: 0 1.5rem;
+  padding: 0 1.0rem;
 }
 
 .nav-title {
@@ -51,7 +51,7 @@ order: 3
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem 1.5rem;
-  line-height: 1.6;
+  line-height: 1.6rem;
 }
 
 .hot-link-tag {
@@ -62,6 +62,7 @@ order: 3
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.2s ease;
+  position: relative;
 }
 
 .hot-link-tag:hover {
@@ -69,22 +70,45 @@ order: 3
   text-decoration: underline;
 }
 
-.hot-link-count {
-  color: var(--text-muted);
+/* 等级徽章样式 */
+.hot-link-badge {
+  margin-left: 0.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
   font-size: 0.8rem;
-  margin-left: 0.3rem;
+  font-weight: 500;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.4rem;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* 脉动动画 */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* 分类链接区域 - 核心优化：卡片边框与阴影 */
 .category-section {
   margin-bottom: 2.5rem;
-  padding: 0 1.5rem;
+  padding: 0 0.8rem;
 }
 
 .category-header {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.5rem;
   margin-bottom: 1.2rem;
   padding-bottom: 0.7rem;
   border-bottom: 1px solid var(--border-color);
@@ -277,8 +301,7 @@ order: 3
          rel="noopener noreferrer" 
          class="link-card" 
          data-link-id="{{ link.name | slugify }}"
-         data-is-hot="{{ link.hot | default: 'false' }}"
-         onclick="trackClick('{{ link.name | slugify }}')">
+         data-is-hot="{{ link.hot | default: false }}">
         
         <i class="fas link-icon {{ link.icon | default: 'fa-external-link-alt' }}"></i>
         <div class="link-content">
@@ -293,13 +316,91 @@ order: 3
 </div>
 
 <script>
-const HOT_LINKS_MAX = 8;
+// 配置数据
+const config = {% if site.data.navigation %}{{ site.data.navigation | jsonify }}{% else %}{
+  hot_links: { max_display: 10 },
+  click_time_range: 7,
+  badge_levels: [
+    { min_clicks: 0, max_clicks: 4, title: "新晋热度", icon: "fas fa-star", icon_color: "#ffd700", style: "color: #ffd700; font-size: 0.9rem;" },
+    { min_clicks: 5, max_clicks: 9, title: "持续热门", icon: "fas fa-rocket", icon_color: "#ff9800", style: "color: #ff9800; font-size: 0.9rem;" },
+    { min_clicks: 10, max_clicks: 19, title: "非常热门", icon: "fas fa-fire", icon_color: "#f44336", style: "color: #f44336; font-size: 1.0rem; text-shadow: 0 0 6px rgba(244, 67, 54, 0.6);" },
+    { min_clicks: 20, max_clicks: 999999, title: "本周爆火 🔥", icon: "fas fa-fire", icon_color: "#f44336", style: "color: #f44336; font-size: 1.0rem; text-shadow: 0 0 6px rgba(244, 67, 54, 0.6); animation: pulse 1.8s infinite;" }
+  ]
+}{% endif %};
+
+// 将 Jekyll 数据转换为 JavaScript 可用格式
+const linksData = [
+  {% for group in site.data.links %}
+    {
+      category: "{{ group.category }}",
+      icon: "{{ group.icon | default: 'fa-link' }}",
+      links: [
+        {% for link in group.links %}
+          {
+            name: "{{ link.name }}",
+            url: "{{ link.url }}",
+            desc: "{{ link.desc }}",
+            icon: "{{ link.icon | default: 'fa-external-link-alt' }}",
+            hot: {{ link.hot | default: false }},
+            id: "{{ link.name | slugify }}"
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+];
+
+// 获取点击时间范围内的点击数据
+function getRecentClicks(linkId) {
+  const now = new Date().getTime();
+  const timeRangeMs = config.click_time_range * 24 * 60 * 60 * 1000;
+  
+  let clickData;
+  try {
+    clickData = JSON.parse(localStorage.getItem(`nav_clicks_${linkId}`) || '[]');
+  } catch (e) {
+    clickData = [];
+  }
+
+  // 确保 clickData 是数组
+  if (!Array.isArray(clickData)) {
+    clickData = [];
+  }
+
+  const recentClicks = clickData.filter(clickTime => {
+    return typeof clickTime === 'number' && now - clickTime < timeRangeMs;
+  });
+
+  return recentClicks.length;
+}
+
+// 根据点击次数获取等级徽章
+function getBadgeForClicks(clickCount) {
+  for (const level of config.badge_levels) {
+    if (clickCount >= level.min_clicks && clickCount <= level.max_clicks) {
+      return level;
+    }
+  }
+  return null;
+}
 
 // 跟踪链接点击
 function trackClick(linkId) {
-  let clicks = localStorage.getItem(`nav_clicks_${linkId}`) || 0;
-  clicks = parseInt(clicks) + 1;
-  localStorage.setItem(`nav_clicks_${linkId}`, clicks);
+  const now = new Date().getTime();
+  
+  let clickData;
+  try {
+    clickData = JSON.parse(localStorage.getItem(`nav_clicks_${linkId}`) || '[]');
+  } catch (e) {
+    clickData = [];
+  }
+
+  if (!Array.isArray(clickData)) {
+    clickData = [];
+  }
+
+  clickData.push(now);
+  localStorage.setItem(`nav_clicks_${linkId}`, JSON.stringify(clickData));
   updateHotLinks();
 }
 
@@ -308,41 +409,58 @@ function updateHotLinks() {
   const container = document.getElementById('hotLinksContainer');
   const allLinks = [];
 
-  // 从site.data.links中收集所有链接数据
-  site.data.links.forEach(group => {
+  // 从 linksData 中收集所有链接数据
+  linksData.forEach(group => {
     group.links.forEach(link => {
-      const linkId = link.name.toLowerCase().replace(/\s+/g, '-');
+      const clickCount = getRecentClicks(link.id);
       allLinks.push({
-        id: linkId,
-        isHot: link.hot || false,
+        id: link.id,
+        isHot: link.hot,
         name: link.name,
         url: link.url,
-        icon: link.icon || 'fa-external-link-alt',
-        clicks: parseInt(localStorage.getItem(`nav_clicks_${linkId}`)) || 0
+        icon: link.icon,
+        desc: link.desc,
+        clickCount: clickCount
       });
     });
   });
 
-  // 筛选hot标签链接和高点击链接
-  const hotTaggedLinks = allLinks.filter(link => link.isHot);
-  const sortedNormalLinks = allLinks.filter(link => !link.isHot).sort((a, b) => b.clicks - a.clicks);
-  const finalHotLinks = [...hotTaggedLinks, ...sortedNormalLinks].slice(0, HOT_LINKS_MAX);
+  // 排序：点击次数降序，相同点击次数时hot标签为true的排在前面
+  allLinks.sort((a, b) => {
+    if (b.clickCount !== a.clickCount) {
+      return b.clickCount - a.clickCount;
+    }
+    if (b.isHot && !a.isHot) return 1;
+    if (a.isHot && !b.isHot) return -1;
+    return 0;
+  });
+
+  // 取前N个链接
+  const finalHotLinks = allLinks.slice(0, config.hot_links.max_display);
 
   // 渲染热门链接
   if (finalHotLinks.length > 0) {
-    container.innerHTML = finalHotLinks.map(link => `
-      <a 
-        href="${link.url}" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        class="hot-link-tag"
-        onclick="trackClick('${link.id}')"
-      >
-        <i class="fas ${link.icon}"></i>
-        ${link.name}
-        ${link.clicks > 0 ? `<span class="hot-link-count">(${link.clicks})</span>` : ''}
-      </a>
-    `).join('');
+    container.innerHTML = finalHotLinks.map(link => {
+      const badge = getBadgeForClicks(link.clickCount);
+      const badgeHtml = badge ? 
+        `
+           <i class="${badge.icon}" style="color: ${badge.icon_color}"></i>
+         ` : '';
+
+      return `
+        <a 
+          href="${link.url}" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="hot-link-tag"
+          onclick="trackClick('${link.id}')"
+        >
+          <i class="fas ${link.icon}"></i>
+          ${link.name}
+          ${badgeHtml}
+        </a>
+      `;
+    }).join('');
   } else {
     container.innerHTML = '<span class="text-muted">暂无热门链接数据</span>';
   }
@@ -351,5 +469,16 @@ function updateHotLinks() {
 // 页面加载时初始化
 document.addEventListener('DOMContentLoaded', () => {
   updateHotLinks();
+  
+  // 为所有链接添加点击事件监听
+  const linkCards = document.querySelectorAll('.link-card');
+  linkCards.forEach(card => {
+    const linkId = card.getAttribute('data-link-id');
+    card.addEventListener('click', () => {
+      setTimeout(() => {
+        trackClick(linkId);
+      }, 100);
+    });
+  });
 });
 </script>

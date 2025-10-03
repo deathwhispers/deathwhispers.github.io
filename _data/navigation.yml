@@ -1,0 +1,49 @@
+# _data/navigation.yml
+
+# 热门链接配置
+hot_links:
+  max_display: 10   # 最大显示数量
+
+# 点击时间范围配置（单位：天）
+click_time_range: 7   # 只统计7天内的点击
+
+# 等级徽章配置
+badge_levels:
+  - min_clicks: 0
+    max_clicks: 4
+    title: 新晋热度
+    icon: fas fa-star
+    icon_color: "#ffd700"
+    style: |
+      color: #ffd700;
+      font-size: 0.8rem;
+
+  - min_clicks: 5
+    max_clicks: 9
+    title: 持续热门
+    icon: fas fa-rocket
+    icon_color: "#ff9800"
+    style: |
+      color: #ff9800;
+      font-size: 0.9rem;
+
+  - min_clicks: 10
+    max_clicks: 19
+    title: 非常热门
+    icon: fas fa-fire
+    icon_color: "#f44336"
+    style: |
+      color: #f44336;
+      font-size: 1.0rem;
+      text-shadow: 0 0 6px rgba(244, 67, 54, 0.6);
+
+  - min_clicks: 20
+    max_clicks: 999999
+    title: 本周爆火 🔥
+    icon: fas fa-fire
+    icon_color: "#f44336"
+    style: |
+      color: #f44336;
+      font-size: 1.0rem;
+      text-shadow: 0 0 6px rgba(244, 67, 54, 0.6);
+      animation: pulse 1.8s infinite;
