@@ -31,9 +31,7 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add _posts/ assets/images/
-          if git diff --cached --quiet; then
-            echo "No changes detected. Skipping commit."
-          else
-            git commit -m "Sync from Notion [ci skip]"
-            git push
+          git add -A
+          git commit -m "Sync from Notion [ci skip]" || echo "No changes to commit"
+          git push
+
