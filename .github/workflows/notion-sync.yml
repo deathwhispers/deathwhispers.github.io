@@ -21,6 +21,7 @@ jobs:
         run: pip install requests pyyaml
 
       - name: Run Notion Sync
+        working-directory: .github/scripts
         env:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
