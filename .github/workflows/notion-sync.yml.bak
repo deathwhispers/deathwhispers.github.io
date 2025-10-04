@@ -1,0 +1,35 @@
+name: Sync Notion to Blog
+
+on:
+  workflow_dispatch:   # 手动触发
+  schedule:
+    - cron: "0 2 * * *"   # 每天早上 10 点 (UTC+8)
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          pip install notion-client notion2md
+
+      - name: Run sync script
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: python sync_notion.py
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add _posts/
+          git commit -m "Sync from Notion" || echo "No changes"
+          git push
