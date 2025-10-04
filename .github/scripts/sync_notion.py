@@ -6,14 +6,13 @@ Notion → Markdown 同步脚本（增强版）
 特点：
 1. 支持段落、标题、列表、代码、图片、待办、引用、callout、toggle、公式、Mermaid
 2. 自动下载图片到 assets/images
-3. front matter 自动生成
+3. front matter 自动生成，严格符合 Jekyll 博客格式
 4. 绝对路径保证 _posts/ 和 assets/images/ 在仓库根目录
 5. 健壮性：网络重试、异常捕获、缺失字段容错
 """
 
 import os
 import requests
-import yaml
 import shutil
 import time
 from pathlib import Path
@@ -21,7 +20,6 @@ from datetime import datetime
 import re
 
 # ================== GitHub 仓库根目录 ==================
-# 在 GitHub Actions 中，GITHUB_WORKSPACE 指向仓库根目录
 ROOT_DIR = os.environ.get("GITHUB_WORKSPACE", os.getcwd())
 POSTS_DIR = os.path.join(ROOT_DIR, "_posts")
 IMAGES_BASE_DIR = os.path.join(ROOT_DIR, "assets/images")
@@ -167,6 +165,46 @@ def block_to_md(block, indent=0):
 def get_page_blocks(page_id):
     return get_block_children_md(page_id)
 
+# ================== Front Matter 格式化 ==================
+def format_front_matter(fm: dict) -> str:
+    """
+    严格生成 front matter:
+    - title 用双引号
+    - date 不加引号
+    - tags 和 categories 保留列表格式，即使为空
+    - 字段顺序固定
+    """
+    lines = ["---"]
+    lines.append(f'layout: {fm.get("layout", "post")}')
+    lines.append(f'title: "{fm.get("title","")}"')
+    lines.append(f'date: {fm.get("date","")}')
+
+    # tags
+    tags = fm.get("tags", [])
+    lines.append("tags:")
+    if tags:
+        for t in tags:
+            lines.append(f"  - {t}")
+    else:
+        lines.append("  []")
+
+    # categories
+    categories = fm.get("categories", [])
+    lines.append("categories:")
+    if categories:
+        for c in categories:
+            lines.append(f"  - {c}")
+    else:
+        lines.append("  []")
+
+    # 其他字段
+    lines.append(f'comments: {str(fm.get("comments", True)).lower()}')
+    lines.append(f'math: {str(fm.get("math", True)).lower()}')
+    lines.append(f'mermaid: {str(fm.get("mermaid", True)).lower()}')
+    lines.append(f'author: {fm.get("author","unknown")}')
+    lines.append("---\n")
+    return "\n".join(lines)
+
 # ================== 保存 Markdown ==================
 def save_markdown(page):
     title = get_page_property(page, "Title", "Untitled")
@@ -213,9 +251,7 @@ def save_markdown(page):
     file_path = os.path.join(save_dir, filename)
 
     with open(file_path, "w", encoding="utf-8") as f:
-        f.write("---\n")
-        yaml.dump(fm, f, allow_unicode=True)
-        f.write("---\n\n")
+        f.write(format_front_matter(fm))
         f.write(md_content)
 
     print(f"✅ Saved: {file_path}")
