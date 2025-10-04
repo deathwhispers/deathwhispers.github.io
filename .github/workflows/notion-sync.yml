@@ -3,67 +3,36 @@ name: Sync Notion to Blog
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 2 * * *" # 每天早上 10 点 (UTC+8)
+    - cron: "0 2 * * *"
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 拉取仓库代码
       - uses: actions/checkout@v3
 
-      # 2. 设置 Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          node-version: "20"
+          python-version: "3.12"
 
-      # 3. 安装依赖并缓存 node_modules
       - name: Install dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-            node_modules
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
-      - run: npm install
+        run: pip install requests pyyaml
 
-      # 4. 执行 Notion 同步脚本，并记录同步的文章标题
       - name: Run Notion Sync
-        id: sync
         env:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-        run: |
-          # 执行同步脚本
-          node sync_notion.js > sync_output.log
+        run: python sync_notion.py
 
-          # 提取同步的文章标题
-          titles=$(grep '✅ Saved:' sync_output.log | sed 's/✅ Saved: //' | awk -F/ '{print $NF}' | sed 's/.md$//')
-          echo "titles=$titles" >> $GITHUB_OUTPUT
-
-      # 5. Git 提交（只提交新增/修改的 SaveDir 和 ImageDir）
-      - name: Commit and Push Changes
+      - name: Commit and Push
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          
-          # 添加 SaveDir 和 ImageDir
-          git add $(grep '✅ Saved:' sync_output.log | sed 's/✅ Saved: //' | xargs dirname)
-          
-          # 检查是否有改动
+          git add _posts/ assets/images/
           if git diff --cached --quiet; then
             echo "No changes detected. Skipping commit."
           else
-            # 提取文章标题
-            titles=$(grep '✅ Saved:' sync_output.log \
-                      | sed 's/✅ Saved: //' \
-                      | awk -F/ '{print $NF}' \
-                      | sed 's/.md$//' \
-                      | sed 's/[:\/?<>|*]/-/g')  # 替换不安全字符
-          
-            git commit -m "Sync from Notion: $titles [ci skip]"
+            git commit -m "Sync from Notion [ci skip]"
             git push
