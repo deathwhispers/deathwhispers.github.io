@@ -5,7 +5,7 @@ date: 2025-05-01
 tags: 
   - BioPharmaceuticals
 categories: 
-  - resource
+  - Resource
 comments: true
 author: deathwhispers
 ---

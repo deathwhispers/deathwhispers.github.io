@@ -6,7 +6,7 @@ tags:
   - Deep Learning
   - Machine Learning
 categories: 
-  - resource
+  - Resource
 comments: true
 author: deathwhispers
 ---

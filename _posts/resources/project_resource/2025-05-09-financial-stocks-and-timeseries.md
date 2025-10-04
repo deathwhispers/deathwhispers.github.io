@@ -6,7 +6,7 @@ tags:
   - Financial Stocks
   - TimeSeries
 categories: 
-  - resource
+  - Resource
 comments: true
 author: deathwhispers
 ---

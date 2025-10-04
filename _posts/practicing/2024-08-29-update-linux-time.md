@@ -5,7 +5,7 @@ date: 2024-08-29
 tags: 
   - hwclock
 categories: 
-  - linux
+  - Linux
 comments: true
 author: deathwhispers
 ---

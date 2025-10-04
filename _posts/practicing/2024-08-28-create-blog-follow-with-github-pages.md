@@ -3,10 +3,10 @@ layout: post
 title: "尝试使用 Github pages 搭建个人博客"
 date: 2024-08-28 
 tags: 
-  - geek
-  - blog
+  - Geek
+  - Blog
 categories: 
-  - life
+  - Life
 comments: true 
 author: deathwhispers
 ---

@@ -5,7 +5,7 @@ date: 2025-05-07
 tags: 
   - Causal Inference
 categories: 
-  - resource
+  - Resource
 comments: true
 author: deathwhispers
 ---

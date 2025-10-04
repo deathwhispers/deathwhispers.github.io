@@ -6,7 +6,7 @@ tags:
   - Virtualization
   - Docker
 categories: 
-  - resource
+  - Resource
 comments: true
 author: deathwhispers
 ---

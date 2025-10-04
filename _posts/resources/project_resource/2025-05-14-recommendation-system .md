@@ -5,7 +5,7 @@ date: 2025-05-14
 tags: 
   - Recommendation System
 categories: 
-  - resource
+  - Resource
 comments: true
 author: deathwhispers
 ---

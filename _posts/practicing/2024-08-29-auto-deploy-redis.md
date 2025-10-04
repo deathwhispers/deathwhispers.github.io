@@ -3,10 +3,10 @@ layout: post
 title: "一键自动部署redis（转）"
 date: 2024-08-29
 tags: 
-  - shell
-  - redis
+  - Shell
+  - Redis
 categories: 
-  - linux
+  - Linux
 comments: true
 author: deathwhispers
 ---

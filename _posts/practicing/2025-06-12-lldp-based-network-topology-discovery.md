@@ -6,7 +6,7 @@ tags:
   - LLDP
   - 网络拓扑
 categories: 
-  - network
+  - Network
 comments: true
 author: deathwhispers
 ---

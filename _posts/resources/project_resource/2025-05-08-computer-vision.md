@@ -6,7 +6,7 @@ tags:
   - Computer Vision
   - CV
 categories: 
-  - resource
+  - Resource
 comments: true
 author: deathwhispers
 ---

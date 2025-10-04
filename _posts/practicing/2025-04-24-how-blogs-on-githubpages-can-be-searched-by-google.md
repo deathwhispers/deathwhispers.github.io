@@ -6,7 +6,7 @@ tags:
   - GitHub Pages
   - Google 搜索
 categories: 
-  - life
+  - Life
 comments: true
 author: deathwhispers
 ---

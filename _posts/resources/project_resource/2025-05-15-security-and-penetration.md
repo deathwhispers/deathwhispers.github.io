@@ -6,7 +6,7 @@ tags:
   - Security
   - Penetration
 categories: 
-  - resource
+  - Resource
 comments: true
 author: deathwhispers
 ---

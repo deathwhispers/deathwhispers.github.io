@@ -6,7 +6,7 @@ tags:
   - LLM
   - Large Language Model
 categories: 
-  - resource
+  - Resource
 comments: true
 author: deathwhispers
 ---

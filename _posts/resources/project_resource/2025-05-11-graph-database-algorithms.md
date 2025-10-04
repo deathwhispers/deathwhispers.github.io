@@ -6,7 +6,7 @@ tags:
   - Graph Database
   - Graph
 categories: 
-  - resource
+  - Resource
 comments: true
 author: deathwhispers
 ---
