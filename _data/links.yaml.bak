@@ -1,0 +1,628 @@
+# links.yml - 导航链接数据源
+# 字段说明：
+# - category：分类名称（对应页面分类标题）
+# - icon：分类图标（Font Awesome 图标类名，如 fa-code）
+# - links：分类下的链接列表
+#   - name：链接名称
+#   - url：链接地址（需带 http/https）
+#   - icon：链接图标（Font Awesome 图标类名）
+#   - icon_color：链接图标颜色
+#   - desc：链接简短描述（1-2行，适配卡片显示）
+#   - hot: true（可选）：标记为热门链接，优先显示在「热门推荐」区
+
+- category: Java 核心 & 生态
+  icon: fa-java
+  links:
+    - name: Oracle Java SE Docs
+      url: https://docs.oracle.com/en/java/javase/
+      desc: Java 官方文档（英文权威）
+      icon: fa-book
+      hot: true
+    - name: OpenJDK
+      url: https://openjdk.org/
+      desc: Java 开源实现
+      icon: fa-code-branch
+    - name: Spring Framework
+      url: https://spring.io/projects/spring-framework
+      desc: Spring 官方框架
+      icon: fa-book
+    - name: Spring Boot 中文文档
+      url: https://springdoc.cn/
+      desc: 非官方但最实用的中文指南
+      icon: fa-language
+    - name: Spring Cloud Alibaba
+      url: https://sca.aliyun.com/
+      desc: 阿里微服务全家桶（Nacos/Sentinel/Seata）
+      icon: fa-fire
+    - name: MyBatis-Plus
+      url: https://baomidou.com/
+      desc: MyBatis 增强工具包（国产神器）
+      icon: fa-fire
+    - name: Hutool
+      url: https://hutool.cn/
+      desc: 小而全 Java 工具类库（国产）
+      icon: fa-fire
+    - name: Sa-Token
+      url: https://sa-token.cc/
+      desc: 轻量级权限认证框架（国产）
+      icon: fa-shield-alt
+    - name: EasyExcel
+      url: https://easyexcel.opensource.alibaba.com/
+      desc: 阿里开源 Excel 处理工具
+      icon: fa-table
+    - name: MapStruct
+      url: https://mapstruct.org/
+      desc: 对象映射生成器，替代 BeanUtils
+      icon: fa-exchange-alt
+    - name: Lombok
+      url: https://projectlombok.org/
+      desc: 用注解简化 Java 代码
+      icon: fa-bolt
+    - name: JHipster
+      url: https://www.jhipster.tech/
+      desc: 快速生成 Spring Boot + Angular/React/Vue 应用
+      icon: fa-rocket
+
+- category: 数据库 & 缓存
+  icon: fa-database
+  links:
+    - name: MySQL 官网
+      url: https://www.mysql.com/
+      desc: 最流行的开源关系型数据库
+      icon: fa-database
+    - name: MySQL 中文网
+      url: https://www.mysqlzh.com/
+      desc: 中文文档与教程
+      icon: fa-language
+    - name: PostgreSQL
+      url: https://www.postgresql.org/
+      desc: 功能强大的开源对象关系数据库
+      icon: fa-database
+    - name: Redis
+      url: https://redis.io/
+      desc: 高性能键值存储系统
+      icon: fa-server
+    - name: Redis 中文网
+      url: http://www.redis.cn/
+      desc: Redis 中文文档和命令参考
+      icon: fa-language
+    - name: MongoDB
+      url: https://www.mongodb.com/
+      desc: NoSQL 文档数据库
+      icon: fa-database
+    - name: Elasticsearch
+      url: https://www.elastic.co/cn/elasticsearch/
+      desc: 分布式搜索和分析引擎
+      icon: fa-search
+    - name: Doris
+      url: https://doris.apache.org/
+      desc: 实时分析型数据库（国产 Apache 项目）
+      icon: fa-fire
+    - name: TiDB
+      url: https://cn.pingcap.com/
+      desc: 分布式 NewSQL 数据库（国产）
+      icon: fa-fire
+    - name: ShardingSphere
+      url: https://shardingsphere.apache.org/
+      desc: 数据库分库分表中间件（国产 Apache 项目）
+      icon: fa-fire
+
+- category: 云原生 & 中间件
+  icon: fa-cloud
+  links:
+    - name: Docker
+      url: https://www.docker.com/
+      desc: 容器化标准平台
+      icon: fa-docker
+    - name: Kubernetes
+      url: https://kubernetes.io/
+      desc: 容器编排系统
+      icon: fa-cubes
+    - name: Nacos
+      url: https://nacos.io/
+      desc: 服务发现 & 配置中心（阿里开源）
+      icon: fa-fire
+    - name: Sentinel
+      url: https://sentinelguard.io/
+      desc: 流量控制 & 熔断降级（阿里开源）
+      icon: fa-fire
+    - name: Seata
+      url: https://seata.io/
+      desc: 分布式事务解决方案（阿里开源）
+      icon: fa-fire
+    - name: RocketMQ
+      url: https://rocketmq.apache.org/
+      desc: 分布式消息中间件（阿里开源 → Apache）
+      icon: fa-envelope
+    - name: Kafka
+      url: https://kafka.apache.org/
+      desc: 高吞吐分布式消息系统
+      icon: fa-tachometer-alt
+    - name: ZooKeeper
+      url: https://zookeeper.apache.org/
+      desc: 分布式协调服务
+      icon: fa-paw
+    - name: Dubbo
+      url: https://dubbo.apache.org/
+      desc: 高性能 RPC 框架（阿里开源 → Apache）
+      icon: fa-exchange-alt
+    - name: SkyWalking
+      url: https://skywalking.apache.org/
+      desc: 分布式系统 APM 监控（国产 Apache 项目）
+      icon: fa-fire
+
+- category: DevOps & CI/CD
+  icon: fa-cogs
+  links:
+    - name: Jenkins
+      url: https://www.jenkins.io/
+      desc: 自动化服务器（CI/CD）
+      icon: fa-wrench
+    - name: GitLab CI/CD
+      url: https://docs.gitlab.com/ee/ci/
+      desc: 集成在 GitLab 中的流水线
+      icon: fa-gitlab
+    - name: GitHub Actions
+      url: https://github.com/features/actions
+      desc: GitHub 自带自动化工作流
+      icon: fa-github
+    - name: Argo CD
+      url: https://argo-cd.readthedocs.io/
+      desc: GitOps 持续交付工具
+      icon: fa-code-branch
+    - name: Prometheus
+      url: https://prometheus.io/
+      desc: 开源监控 & 告警系统
+      icon: fa-chart-line
+    - name: Grafana
+      url: https://grafana.com/
+      desc: 可视化监控仪表盘
+      icon: fa-chart-bar
+    - name: Harbor
+      url: https://goharbor.io/
+      desc: 企业级 Docker Registry（CNCF 项目）
+      icon: fa-ship
+    - name: Ansible
+      url: https://www.ansible.com/
+      desc: 自动化配置管理工具
+      icon: fa-robot
+
+- category: 测试 & 质量保障
+  icon: fa-vial
+  links:
+    - name: JUnit 5
+      url: https://junit.org/junit5/
+      desc: Java 单元测试标准框架
+      icon: fa-flask
+    - name: Mockito
+      url: https://site.mockito.org/
+      desc: Java Mock 测试框架
+      icon: fa-magic
+    - name: TestNG
+      url: https://testng.org/
+      desc: 更强大的测试框架（支持并发、分组等）
+      icon: fa-check-circle
+    - name: Selenium
+      url: https://www.selenium.dev/
+      desc: Web 自动化测试工具
+      icon: fa-spider
+    - name: Postman
+      url: https://www.postman.com/
+      desc: API 调试与测试（国际标准）
+      icon: fa-paper-plane
+    - name: Apifox
+      url: https://www.apifox.cn/
+      desc: API 一体化协作平台（国产替代 Postman + Swagger + Mock）
+      icon: fa-fire
+    - name: SonarQube
+      url: https://www.sonarqube.org/
+      desc: 代码质量管理平台
+      icon: fa-bug
+    - name: Stomp WebSocket 测试工具
+      url: /assets/stomp.html
+      desc: Stomp WebSocket 测试工具
+      icon: fa-Stomp
+
+- category: 架构 & 设计模式
+  icon: fa-project-diagram
+  links:
+    - name: 微服务架构指南
+      url: https://microservices.io/
+      desc: 微服务模式权威站点（英文）
+      icon: fa-network-wired
+    - name: Martin Fowler 博客
+      url: https://martinfowler.com/
+      desc: 软件架构大师，设计模式之父
+      icon: fa-user-tie
+    - name: Refactoring Guru
+      url: https://refactoring.guru/
+      desc: 设计模式 & 重构图解（中英文）
+      icon: fa-sitemap
+    - name: 幂等实验室
+      url: https://idempotency.cn/
+      desc: 分布式系统幂等性实践（中文）
+      icon: fa-language
+    - name: 阿里技术公众号 / 阿里云栖社区
+      url: https://developer.aliyun.com/
+      desc: 阿里内部架构实践分享（中文）
+      icon: fa-fire
+    - name: 美团技术团队博客
+      url: https://tech.meituan.com/
+      desc: 高并发、分布式实战经验（强烈推荐）
+      icon: fa-fire
+    - name: 腾讯云开发者社区
+      url: https://cloud.tencent.com/developer
+      desc: 腾讯技术文章聚合（中文）
+      icon: fa-fire
+
+- category: 前端开发（Java程序员必备）
+  icon: fa-laptop-code
+  links:
+    - name: Vue.js
+      url: https://vuejs.org/
+      desc: 渐进式 JavaScript 框架
+      icon: fa-vuejs
+    - name: React
+      url: https://react.dev/
+      desc: Facebook 出品 UI 库
+      icon: fa-react
+    - name: Element Plus
+      url: https://element-plus.org/
+      desc: Vue 3 组件库（国产精品）
+      icon: fa-fire
+    - name: Ant Design
+      url: https://ant.design/
+      desc: React UI 设计语言（阿里出品）
+      icon: fa-fire
+    - name: Tailwind CSS
+      url: https://tailwindcss.com/
+      desc: 实用优先的 CSS 框架
+      icon: fa-wind
+    - name: Vite
+      url: https://vitejs.dev/
+      desc: 下一代前端构建工具
+      icon: fa-bolt
+    - name: TypeScript
+      url: https://www.typescriptlang.org/
+      desc: JavaScript 超集，大型项目必备
+      icon: fa-code
+
+- category: 中文技术社区 & 博客
+  icon: fa-comments
+  links:
+    - name: 掘金
+      url: https://juejin.cn/
+      desc: 国内最活跃的技术社区
+      icon: fa-fire
+    - name: 思否（SegmentFault）
+      url: https://segmentfault.com/
+      desc: 中文开发者问答社区
+      icon: fa-question
+    - name: 开源中国（OSChina）
+      url: https://www.oschina.net/
+      desc: 国内老牌开源技术社区
+      icon: fa-code-branch
+    - name: 知乎 - Java 话题
+      url: https://www.zhihu.com/topic/19552521/hot
+      desc: 高质量问答与深度文章
+      icon: fa-quora
+    - name: V2EX
+      url: https://www.v2ex.com/
+      desc: 程序员自由交流社区
+      icon: fa-comments
+    - name: 阮一峰的网络日志
+      url: https://www.ruanyifeng.com/blog/
+      desc: 前端 & 后端经典教程
+      icon: fa-fire
+    - name: 芋道源码
+      url: https://www.iocoder.cn/
+      desc: Java 源码解析 & 实战（国产精品）
+      icon: fa-fire
+    - name: 江南一点雨
+      url: https://www.javaboy.org/
+      desc: Spring Boot & 微服务实战教程
+      icon: fa-graduation-cap
+    - name: 程序员DD
+      url: https://blog.didispace.com/
+      desc: Spring Cloud & 微服务专家博客
+      icon: fa-feather
+    - name: Hollis 的博客
+      url: https://www.hollischuang.com/
+      desc: Java 底层 & 面试干货
+      icon: fa-book-open
+
+- category: 在线工具 & 效率
+  icon: fa-wrench
+  links:
+    - name: JSON.cn
+      url: https://www.json.cn/
+      desc: 中文 JSON 格式化 & 校验
+      icon: fa-fire
+    - name: 菜鸟工具
+      url: https://c.runoob.com/
+      desc: 编码/转换/校验工具集合
+      icon: fa-tools
+    - name: ProcessOn
+      url: https://www.processon.com/
+      desc: 在线画流程图、架构图
+      icon: fa-project-diagram
+    - name: Carbon
+      url: https://carbon.now.sh/
+      desc: 生成精美代码截图
+      icon: fa-paint-brush
+    - name: GitMind
+      url: https://gitmind.cn/
+      desc: 免费在线思维导图工具
+      icon: fa-sitemap
+    - name: Apifox
+      url: https://www.apifox.cn/
+      desc: API 设计/调试/文档/Mock 一体化
+      icon: fa-fire
+    - name: Regex101
+      url: https://regex101.com/
+      desc: 强大的正则表达式测试器
+      icon: fa-search
+    - name: ASCII Flow
+      url: http://asciiflow.com/
+      desc: 用文本画流程图（极客最爱）
+      icon: fa-font
+    - name: Draw.io (diagrams.net)
+      url: https://app.diagrams.net/
+      desc: 免费开源绘图工具（可离线）
+      icon: fa-draw-polygon
+
+- category: AI & 新兴技术
+  icon: fa-robot
+  links:
+    - name: Hugging Face
+      url: https://huggingface.co/
+      desc: AI 模型共享平台
+      icon: fa-hugging-face
+    - name: ModelScope（魔搭）
+      url: https://modelscope.cn/
+      desc: 阿里达摩院模型开放平台（中文）
+      icon: fa-fire
+    - name: 通义千问（Qwen）
+      url: https://qwen.cn/
+      desc: 阿里大模型官网（支持代码生成）
+      icon: fa-fire
+    - name: DeepSeek
+      url: https://www.deepseek.com/
+      desc: 国产大模型（擅长编程）
+      icon: fa-code
+    - name: Cursor
+      url: https://cursor.sh/
+      desc: AI 编程编辑器（GPT-4 驱动）
+      icon: fa-terminal
+    - name: Codeium
+      url: https://codeium.com/
+      desc: 免费 AI 代码补全工具
+      icon: fa-magic
+    - name: Claude
+      url: https://claude.ai/
+      desc: Anthropic 出品，逻辑推理强
+      icon: fa-brain
+    - name: Perplexity AI
+      url: https://www.perplexity.ai/
+      desc: 联网问答 + 引用来源（适合查资料）
+      icon: fa-globe
+
+- category: 开源项目 & 代码托管
+  icon: fa-code-branch
+  links:
+    - name: GitHub
+      url: https://github.com/
+      desc: 全球最大开源社区
+      icon: fa-github
+    - name: Gitee
+      url: https://gitee.com/
+      desc: 国内主流代码托管平台（中文）
+      icon: fa-fire
+    - name: GitCode
+      url: https://gitcode.com/
+      desc: CSDN 旗下开源平台（中文）
+      icon: fa-code
+    - name: OpenAtom 开源基金会
+      url: https://www.openatom.org/
+      desc: 国内开源项目孵化平台
+      icon: fa-globe-asia
+    - name: Apache 软件基金会
+      url: https://www.apache.org/
+      desc: 国际顶级开源组织
+      icon: fa-feather
+    - name: Awesome Java
+      url: https://github.com/akullpp/awesome-java
+      desc: GitHub 上最火的 Java 资源集合
+      icon: fa-list
+    - name: CNPMJS / 国产开源项目
+      url: https://www.cnpmjs.org/
+      desc: 国产优秀开源项目导航
+      icon: fa-fire
+
+- category: 求职 & 面试
+  icon: fa-briefcase
+  links:
+    - name: 牛客网
+      url: https://www.nowcoder.com/
+      desc: 国内程序员笔试面试首选平台
+      icon: fa-fire
+    - name: LeetCode 中国
+      url: https://leetcode.cn/
+      desc: 中文版算法刷题平台
+      icon: fa-code
+    - name: 看准网
+      url: https://www.kanzhun.com/
+      desc: 公司评价 & 面经分享
+      icon: fa-building
+    - name: Boss直聘
+      url: https://www.zhipin.com/
+      desc: 直接和招聘方沟通
+      icon: fa-comments
+    - name: 拉勾网
+      url: https://www.lagou.com/
+      desc: 互联网职位招聘平台
+      icon: fa-laptop-code
+    - name: 脉脉
+      url: https://maimai.cn/
+      desc: 职场社交 & 内推机会
+      icon: fa-users
+
+- category: 学习 & 教程平台
+  icon: fa-graduation-cap
+  links:
+    - name: 慕课网
+      url: https://www.imooc.com/
+      desc: 国内知名 IT 在线教育平台
+      icon: fa-video
+    - name: 极客时间
+      url: https://time.geekbang.org/
+      desc: 高质量技术专栏 & 视频课
+      icon: fa-clock
+    - name: Bilibili 学习区
+      url: https://www.bilibili.com/v/technology/
+      desc: 大量免费优质编程教程（中文）
+      icon: fa-fire
+    - name: 菜鸟教程
+      url: https://www.runoob.com/
+      desc: 基础编程语法速查（中文）
+      icon: fa-book-open
+    - name: W3School 中文
+      url: https://www.w3school.com.cn/
+      desc: Web 开发基础教程（中文）
+      icon: fa-language
+    - name: Coursera
+      url: https://www.coursera.org/
+      desc: 国际名校计算机课程（需科学上网）
+      icon: fa-university
+    - name: edX
+      url: https://www.edx.org/
+      desc: MIT & Harvard 联合在线课程
+      icon: fa-graduation-cap
+
+- category: 技术资讯 & 周刊
+  icon: fa-newspaper
+  links:
+    - name: InfoQ
+      url: https://www.infoq.cn/
+      desc: 专业架构 & 技术前沿资讯（中文）
+      icon: fa-fire
+    - name: 开发者头条
+      url: https://toutiao.io/
+      desc: 程序员专属内容聚合
+      icon: fa-th-large
+    - name: ImportNew
+      url: https://www.importnew.com/
+      desc: 专注 Java & JVM 技术（中文）
+      icon: fa-java
+    - name: 高可用架构
+      url: https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzI3OTUwMjM4MA==&action=getalbum&album_id=1342708308628733953
+      desc: 架构师必读公众号（微信内打开）
+      icon: fa-building
+    - name: Hacker News
+      url: https://news.ycombinator.com/
+      desc: 硅谷程序员都在看的科技新闻（英文）
+      icon: fa-globe
+    - name: Reddit r/programming
+      url: https://www.reddit.com/r/programming/
+      desc: 编程话题讨论区（英文）
+      icon: fa-reddit
+
+- category: 免费电子书 & 文档站
+  icon: fa-book-reader
+  links:
+    - name: JavaGuide
+      url: https://javaguide.cn/
+      desc: Java 面试 + 学习指南（国产神作）
+      icon: fa-fire
+    - name: advanced-java
+      url: https://github.com/doocs/advanced-java
+      desc: 互联网 Java 工程师进阶知识（GitHub 热榜）
+      icon: fa-fire
+    - name: CS-Notes
+      url: https://github.com/CyC2018/CS-Notes
+      desc: 计算机基础 & 面试笔记（超全面）
+      icon: fa-fire
+    - name: free-programming-books-zh_CN
+      url: https://github.com/EbookFoundation/free-programming-books/blob/main/books/free-programming-books-zh.md
+      desc: 免费中文编程书籍大全
+      icon: fa-book
+    - name: GitBook
+      url: https://www.gitbook.com/
+      desc: 在线编写和托管技术文档
+      icon: fa-book-open
+
+- category: 网络 & 安全
+  icon: fa-shield-alt
+  links:
+    - name: OWASP
+      url: https://owasp.org/
+      desc: 开放 Web 应用安全项目（权威）
+      icon: fa-user-shield
+    - name: PortSwigger Web Security Academy
+      url: https://portswigger.net/web-security
+      desc: Burp Suite 出品，Web 安全免费教程
+      icon: fa-bug
+    - name: 看雪学院
+      url: https://www.kanxue.com/
+      desc: 二进制安全 & 逆向工程（中文）
+      icon: fa-language
+    - name: 安全客
+      url: https://www.anquanke.com/
+      desc: 国内网络安全技术社区
+      icon: fa-shield-virus
+
+- category: 效率 & 办公
+  icon: fa-clipboard-check
+  links:
+    - name: Notion
+      url: https://www.notion.so/
+      desc: 个人知识库 & 项目管理神器
+      icon: fa-clipboard-list
+    - name: FlowUs
+      url: https://flowus.cn/
+      desc: Notion 中文替代品（支持微信登录）
+      icon: fa-fire
+    - name: Wolai
+      url: https://www.wolai.com/
+      desc: 国产 Notion 风知识管理工具
+      icon: fa-fire
+    - name: XMind
+      url: https://xmind.cn/
+      desc: 思维导图软件（国产）
+      icon: fa-sitemap
+    - name: Typora
+      url: https://typora.io/
+      desc: 极简 Markdown 编辑器
+      icon: fa-pen
+
+- category: Linux & 操作系统
+  icon: fa-linux
+  links:
+    - name: Linux 命令行大全
+      url: https://wangchujiang.com/linux-command/
+      desc: 中文 Linux 命令速查手册
+      icon: fa-fire
+    - name: The Linux Documentation Project
+      url: https://tldp.org/
+      desc: Linux 官方文档（英文）
+      icon: fa-book
+    - name: Ubuntu 官网
+      url: https://ubuntu.com/
+      desc: 最流行的 Linux 发行版
+      icon: fa-linux
+    - name: CentOS
+      url: https://www.centos.org/
+      desc: 企业级服务器常用系统
+      icon: fa-server
+    - name: ArchWiki
+      url: https://wiki.archlinux.org/
+      desc: 最详尽的 Linux 维基（英文）
+      icon: fa-info-circle
+
+- category: 临床试验导航网
+  icon: fa-graduation-cap
+  links:
+    - name: 临床试验导航网
+      url: https://www.chgcp.com/home
+      desc: 临床试验导航网
+      icon: fa-web
