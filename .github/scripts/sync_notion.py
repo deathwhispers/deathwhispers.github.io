@@ -18,6 +18,8 @@ import time
 from pathlib import Path
 from datetime import datetime
 import re
+import unicodedata
+from pypinyin import lazy_pinyin, Style
 
 # ================== GitHub 仓库根目录 ==================
 ROOT_DIR = os.environ.get("GITHUB_WORKSPACE", os.getcwd())
@@ -37,6 +39,65 @@ REQUEST_RETRY = 3
 REQUEST_TIMEOUT = 20
 
 # ================== 工具函数 ==================
+# ================== Slug 生成（无网络、无 API） ==================
+
+def slugify_safe(text: str) -> str:
+    """通用 slug 化：只保留字母数字和连字符"""
+    if not text:
+        return ""
+    text = unicodedata.normalize('NFD', text)
+    text = text.encode('ascii', 'ignore').decode('utf-8')  # 移除重音
+    text = re.sub(r'[^a-zA-Z0-9\u4e00-\u9fff\s\-]', ' ', text)  # 保留中英文、数字、空格、连字符
+    text = re.sub(r'[\s\-]+', '-', text)
+    return text.strip('-').lower()
+
+def mixed_slug(title: str) -> str:
+    """
+    智能混合 slug：
+    - 英文/数字/符号 → 保留并 slugify
+    - 中文 → 转拼音
+    示例：
+      "安装 FFmpeg 教程！" → "an-zhuang-ffmpeg-jiao-cheng"
+      "Hello 世界" → "hello-shi-jie"
+    """
+    if not title:
+        return "untitled"
+
+    # 分段处理：逐字符判断
+    parts = []
+    current_en = []
+    current_zh = []
+
+    for char in title:
+        if '\u4e00' <= char <= '\u9fff':  # 中文字符
+            if current_en:
+                parts.append(slugify_safe(''.join(current_en)))
+                current_en = []
+            current_zh.append(char)
+        else:
+            if current_zh:
+                # 中文转拼音
+                pinyin = lazy_pinyin(''.join(current_zh), style=Style.NORMAL, errors='ignore')
+                parts.append('-'.join(pinyin))
+                current_zh = []
+            current_en.append(char)
+
+    # 处理剩余
+    if current_en:
+        parts.append(slugify_safe(''.join(current_en)))
+    if current_zh:
+        pinyin = lazy_pinyin(''.join(current_zh), style=Style.NORMAL, errors='ignore')
+        parts.append('-'.join(pinyin))
+
+    slug = '-'.join([p for p in parts if p])
+    # 再次清理
+    slug = re.sub(r'[^a-z0-9\-]', '', slug)
+    slug = re.sub(r'-+', '-', slug)
+    return slug.strip('-') or "post"
+
+def generate_slug_from_title(title: str) -> str:
+    return mixed_slug(title)
+
 def mkdir_safe(path):
     Path(path).mkdir(parents=True, exist_ok=True)
 
@@ -208,6 +269,13 @@ def format_front_matter(fm: dict) -> str:
 # ================== 保存 Markdown ==================
 def save_markdown(page):
     title = get_page_property(page, "Title", "Untitled")
+
+    custom_slug = get_page_property(page, "Slug", None)
+    if custom_slug:
+        slug = slugify_safe(custom_slug)
+    else:
+        slug = generate_slug_from_title(title)
+
     date = get_page_property(page, "Date", datetime.today().strftime("%Y-%m-%d"))
     tags = get_page_property(page, "Tags", [])
     categories = get_page_property(page, "Categories", [])
@@ -237,6 +305,7 @@ def save_markdown(page):
         "layout": "post",
         "title": title,
         "date": date,
+        "slug": slug,
         "tags": tags,
         "categories": categories,
         "comments": comments,
@@ -247,7 +316,9 @@ def save_markdown(page):
     }
 
     mkdir_safe(save_dir)
-    filename = f"{date}-{title.replace(' ', '-')}.md"
+    # 使用 slug 生成文件名
+    filename = f"{date}-{slug}.md"
+
     file_path = os.path.join(save_dir, filename)
 
     with open(file_path, "w", encoding="utf-8") as f:
