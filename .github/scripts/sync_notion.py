@@ -19,7 +19,6 @@ from pathlib import Path
 from datetime import datetime
 import re
 import unicodedata
-from pypinyin import lazy_pinyin, Style
 
 # ================== GitHub 仓库根目录 ==================
 ROOT_DIR = os.environ.get("GITHUB_WORKSPACE", os.getcwd())
@@ -39,64 +38,36 @@ REQUEST_RETRY = 3
 REQUEST_TIMEOUT = 20
 
 # ================== 工具函数 ==================
-# ================== Slug 生成（无网络、无 API） ==================
-
-def slugify_safe(text: str) -> str:
-    """通用 slug 化：只保留字母数字和连字符"""
-    if not text:
-        return ""
-    text = unicodedata.normalize('NFD', text)
-    text = text.encode('ascii', 'ignore').decode('utf-8')  # 移除重音
-    text = re.sub(r'[^a-zA-Z0-9\u4e00-\u9fff\s\-]', ' ', text)  # 保留中英文、数字、空格、连字符
-    text = re.sub(r'[\s\-]+', '-', text)
-    return text.strip('-').lower()
-
-def mixed_slug(title: str) -> str:
+# ================== Slug 工具（无拼音、无翻译） ==================
+def safe_slugify(text: str) -> str:
     """
-    智能混合 slug：
-    - 英文/数字/符号 → 保留并 slugify
-    - 中文 → 转拼音
-    示例：
-      "安装 FFmpeg 教程！" → "an-zhuang-ffmpeg-jiao-cheng"
-      "Hello 世界" → "hello-shi-jie"
+    将任意字符串转为安全的 slug：
+    - 移除重音符号（如 café → cafe）
+    - 保留字母、数字、中文、空格、连字符
+    - 空格和特殊字符转为连字符
+    - 多个连字符合并为一个
+    - 转小写
     """
-    if not title:
+    if not text or not text.strip():
         return "untitled"
 
-    # 分段处理：逐字符判断
-    parts = []
-    current_en = []
-    current_zh = []
+    # 标准化 Unicode（分解重音）
+    text = unicodedata.normalize('NFD', text)
+    # 移除非 ASCII 字符中的变音符号（但保留中文等非拉丁字符）
+    text = ''.join(c for c in text if not unicodedata.combining(c))
 
-    for char in title:
-        if '\u4e00' <= char <= '\u9fff':  # 中文字符
-            if current_en:
-                parts.append(slugify_safe(''.join(current_en)))
-                current_en = []
-            current_zh.append(char)
-        else:
-            if current_zh:
-                # 中文转拼音
-                pinyin = lazy_pinyin(''.join(current_zh), style=Style.NORMAL, errors='ignore')
-                parts.append('-'.join(pinyin))
-                current_zh = []
-            current_en.append(char)
+    # 将所有非字母、非数字、非中文、非空格、非连字符的字符替换为空格
+    # 注意：保留中文字符 \u4e00-\u9fff
+    text = re.sub(r'[^\w\s\u4e00-\u9fff\-]', ' ', text)
 
-    # 处理剩余
-    if current_en:
-        parts.append(slugify_safe(''.join(current_en)))
-    if current_zh:
-        pinyin = lazy_pinyin(''.join(current_zh), style=Style.NORMAL, errors='ignore')
-        parts.append('-'.join(pinyin))
+    # 将空格、下划线、连字符统一转为连字符，并合并
+    text = re.sub(r'[\s\_\-]+', '-', text)
 
-    slug = '-'.join([p for p in parts if p])
-    # 再次清理
-    slug = re.sub(r'[^a-z0-9\-]', '', slug)
-    slug = re.sub(r'-+', '-', slug)
-    return slug.strip('-') or "post"
+    # 去掉首尾连字符，转小写
+    slug = text.strip('-').lower()
 
-def generate_slug_from_title(title: str) -> str:
-    return mixed_slug(title)
+    # 如果结果为空（比如全是特殊符号），返回默认值
+    return slug if slug else "post"
 
 def mkdir_safe(path):
     Path(path).mkdir(parents=True, exist_ok=True)
@@ -271,10 +242,10 @@ def save_markdown(page):
     title = get_page_property(page, "Title", "Untitled")
 
     custom_slug = get_page_property(page, "Slug", None)
-    if custom_slug:
-        slug = slugify_safe(custom_slug)
+    if custom_slug and custom_slug.strip():
+        slug = safe_slugify(custom_slug)
     else:
-        slug = generate_slug_from_title(title)
+        slug = safe_slugify(title)
 
     date = get_page_property(page, "Date", datetime.today().strftime("%Y-%m-%d"))
     tags = get_page_property(page, "Tags", [])
@@ -286,17 +257,17 @@ def save_markdown(page):
 
     # 路径基于仓库根目录
     save_dir = POSTS_DIR
-    image_dir = os.path.join(IMAGES_BASE_DIR, title.replace(" ", "-"))
+    image_dir = os.path.join(IMAGES_BASE_DIR, slug)  # 使用 slug 作为图片子目录名
 
     clean_dir(image_dir)
     page_id = page.get("id")
     md_content = get_page_blocks(page_id)
 
-    # 图片替换为本地路径
+    # 图片下载替换
     def repl_image(match):
         url = match.group(1)
         local_path = download_image(url, image_dir)
-        return f"![]({local_path})" if local_path else match.group(0)
+        return f"[]({local_path})" if local_path else match.group(0)
 
     md_content = re.sub(r'!\[.*?\]\((https://[^\)]+)\)', repl_image, md_content)
 
@@ -318,7 +289,6 @@ def save_markdown(page):
     mkdir_safe(save_dir)
     # 使用 slug 生成文件名
     filename = f"{date}-{slug}.md"
-
     file_path = os.path.join(save_dir, filename)
 
     with open(file_path, "w", encoding="utf-8") as f:
