@@ -7,7 +7,6 @@ tags:
   - Binary Tree
 categories: 
   - Algorithm
-  - Binary Tree
 comments: true 
 author: deathwhispers
 ---

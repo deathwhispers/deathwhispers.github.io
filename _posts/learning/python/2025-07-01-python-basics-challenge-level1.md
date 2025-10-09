@@ -4,9 +4,9 @@ title: "Python基础_基础用法"
 date: 2025-07-01 
 tags: 
   - Python
-  - heywhale
-categories: 
-  - Python 基础学习
+  - HeyWhale
+categories:
+  - Python
 comments: true 
 author: deathwhispers
 ---

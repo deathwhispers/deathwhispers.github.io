@@ -10,7 +10,6 @@ tags:
   - Rolling Hash
 categories: 
   - Algorithm
-  - Sliding Window
 comments: true 
 author: deathwhispers
 ---

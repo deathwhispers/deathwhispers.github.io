@@ -4,9 +4,9 @@ title: "Python基础_综合练习 1"
 date: 2025-07-04
 tags:
   - Python
-  - heywhale
+  - HeyWhale
 categories:
-  - Python 基础学习
+  - Python
 comments: true
 author: deathwhispers
 ---
