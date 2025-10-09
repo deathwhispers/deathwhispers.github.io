@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Spring Boot定时任务再进化：从`@Scheduled`到企业级动态调度框架的设计之旅（二）"
+title: "Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（二）"
 date: 2025-08-18
 tags:
   - Spring Scheduling
