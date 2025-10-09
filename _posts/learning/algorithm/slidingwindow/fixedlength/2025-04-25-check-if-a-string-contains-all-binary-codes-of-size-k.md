@@ -1,6 +1,5 @@
 ---
 layout: post
-category: 双指针
 title: "检查一个字符串是否包含所有长度为 K 的二进制子串"
 date: 2025-04-24 
 tags: 
