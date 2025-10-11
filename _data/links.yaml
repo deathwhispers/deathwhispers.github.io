@@ -508,6 +508,18 @@
       icon: fa-info-circle
 
 
+- category: 机场 & 代理
+  icon: fa-book-reader
+  links:
+    - name: 机场推荐
+      url: https://jichangtuijian.com/proxyclient.html
+      desc: Windows安卓Mac和ios代理客户端软件整理推荐
+      icon: fa-air
+    - name: 机场评测
+      url: https://jichangtuijian.com/ssr-v2ray%E4%B8%93%E7%BA%BF%E6%9C%BA%E5%9C%BA%E6%8E%A8%E8%8D%90.html
+      desc: 2025机场推荐与机场评测SSR/V2ray/Trojan订阅
+      icon: fa-air
+
 
 
 
