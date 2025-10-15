@@ -1,0 +1,382 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Notion → Markdown 同步脚本（增强版）
+特点：
+1. 支持段落、标题、列表、代码、图片、待办、引用、callout、toggle、公式、Mermaid
+2. 自动下载图片到 assets/images
+3. front matter 自动生成，严格符合 Jekyll 博客格式
+4. 绝对路径保证 _posts/ 和 assets/images/ 在仓库根目录
+5. 健壮性：网络重试、异常捕获、缺失字段容错
+"""
+
+import os
+import requests
+import shutil
+import time
+from pathlib import Path
+from datetime import datetime
+import re
+import unicodedata
+
+# ================== GitHub 仓库根目录 ==================
+ROOT_DIR = os.environ.get("GITHUB_WORKSPACE", os.getcwd())
+POSTS_DIR = os.path.join(ROOT_DIR, "_posts")
+IMAGES_BASE_DIR = os.path.join(ROOT_DIR, "assets/images")
+
+# ================== 配置 ==================
+NOTION_API_KEY = os.environ.get("NOTION_API_KEY")
+NOTION_DATABASE_ID = os.environ.get("NOTION_DATABASE_ID")
+HEADERS = {
+    "Authorization": f"Bearer {NOTION_API_KEY}",
+    "Notion-Version": "2022-06-28",
+    "Content-Type": "application/json"
+}
+
+REQUEST_RETRY = 3
+REQUEST_TIMEOUT = 20
+
+
+# ================== Slug 工具（无拼音、无翻译） ==================
+def safe_slugify(text: str) -> str:
+    """
+    将任意字符串转为安全的 slug：
+    - 移除重音符号（如 café → cafe）
+    - 保留字母、数字、中文、空格、连字符
+    - 空格和特殊字符转为连字符
+    - 多个连字符合并为一个
+    - 转小写
+    """
+    if not text or not text.strip():
+        return "untitled"
+
+    # 标准化 Unicode（分解重音）
+    text = unicodedata.normalize('NFD', text)
+    # 移除非 ASCII 字符中的变音符号（但保留中文等非拉丁字符）
+    text = ''.join(c for c in text if not unicodedata.combining(c))
+
+    # 将所有非字母、非数字、非中文、非空格、非连字符的字符替换为空格
+    # 注意：保留中文字符 \u4e00-\u9fff
+    text = re.sub(r'[^\w\s\u4e00-\u9fff\-]', ' ', text)
+
+    # 将空格、下划线、连字符统一转为连字符，并合并
+    text = re.sub(r'[\s\_\-]+', '-', text)
+
+    # 去掉首尾连字符，转小写
+    slug = text.strip('-').lower()
+
+    # 如果结果为空（比如全是特殊符号），返回默认值
+    return slug if slug else "post"
+
+
+def mkdir_safe(path):
+    Path(path).mkdir(parents=True, exist_ok=True)
+
+
+def clean_dir(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
+    mkdir_safe(path)
+
+
+def download_image(url, save_dir):
+    mkdir_safe(save_dir)
+    filename = url.split("/")[-1].split("?")[0] or "image.png"
+    file_path = os.path.join(save_dir, filename)
+    for i in range(REQUEST_RETRY):
+        try:
+            resp = requests.get(url, timeout=REQUEST_TIMEOUT)
+            resp.raise_for_status()
+            with open(file_path, "wb") as f:
+                f.write(resp.content)
+            return file_path.replace("\\", "/")
+        except Exception as e:
+            print(f"⚠️ Retry {i + 1} download image {url} failed: {e}")
+            time.sleep(1)
+    print(f"❌ Failed to download image {url} after {REQUEST_RETRY} retries")
+    return None
+
+
+# ================== Notion API ==================
+def query_database():
+    url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
+    payload = {
+        "filter": {
+            "property": "Status",
+            "select": {"equals": "Published"}
+        }
+    }
+    for i in range(REQUEST_RETRY):
+        try:
+            resp = requests.post(url, headers=HEADERS, json=payload, timeout=REQUEST_TIMEOUT)
+            resp.raise_for_status()
+            return resp.json().get("results", [])
+        except Exception as e:
+            print(f"⚠️ Retry {i + 1} query database failed: {e}")
+            time.sleep(1)
+    print("❌ Failed to query Notion database after retries")
+    return []
+
+
+def get_page_property(page, prop_name, default=None):
+    """更精确地根据 Notion 字段类型解析属性值"""
+    try:
+        prop = page.get("properties", {}).get(prop_name)
+        if not prop:
+            return default
+
+        prop_type = prop.get("type")
+        val = prop.get(prop_type)
+
+        if prop_type == "title":
+            return "".join([t.get("plain_text", "") for t in val])
+        elif prop_type == "rich_text":
+            return "".join([t.get("plain_text", "") for t in val])
+        elif prop_type == "url":
+            return val or default
+        elif prop_type == "date":
+            return val.get("start") if val else default
+        elif prop_type == "select":
+            # 单选，返回字符串
+            return val["name"] if val else default
+        elif prop_type == "multi_select":
+            # 多选，返回字符串列表
+            return [v["name"] for v in val] if val else []
+        elif prop_type == "checkbox":
+            return val
+        elif prop_type == "number":
+            return val
+        elif prop_type == "people":
+            return [p["name"] for p in val] if val else []
+        elif prop_type == "files":
+            return [f["name"] for f in val] if val else []
+        else:
+            return default
+    except Exception as e:
+        print(f"⚠️ Error parsing property '{prop_name}': {e}")
+        return default
+
+
+def get_property_with_aliases(page, aliases, default=None):
+    """按别名查找字段"""
+    for name in aliases:
+        if name in page.get("properties", {}):
+            return get_page_property(page, name, default)
+    return default
+
+
+# ================== Markdown 转换 ==================
+def get_block_children_md(block_id, indent=0):
+    url = f"https://api.notion.com/v1/blocks/{block_id}/children?page_size=100"
+    try:
+        resp = requests.get(url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        blocks = resp.json().get("results", [])
+        md_list = [block_to_md(b, indent) for b in blocks]
+        return "\n\n".join(md_list)
+    except Exception as e:
+        print(f"❌ Failed to fetch children for block {block_id}: {e}")
+        return ""
+
+
+def block_to_md(block, indent=0):
+    t = block.get("type")
+    space = "  " * indent
+    if t == "paragraph":
+        text = "".join([r.get("plain_text", "") for r in block.get("paragraph", {}).get("rich_text", [])])
+        return f"{space}{text}"
+    elif t == "heading_1":
+        text = "".join([r.get("plain_text", "") for r in block.get("heading_1", {}).get("rich_text", [])])
+        return f"# {text}"
+    elif t == "heading_2":
+        text = "".join([r.get("plain_text", "") for r in block.get("heading_2", {}).get("rich_text", [])])
+        return f"## {text}"
+    elif t == "heading_3":
+        text = "".join([r.get("plain_text", "") for r in block.get("heading_3", {}).get("rich_text", [])])
+        return f"### {text}"
+    elif t == "code":
+        code = "".join([r.get("plain_text", "") for r in block.get("code", {}).get("rich_text", [])])
+        lang = block.get("code", {}).get("language", "")
+        return f"```{lang}\n{code}\n```"
+    elif t == "image":
+        url = block.get("image", {}).get("file", {}).get("url") or block.get("image", {}).get("external", {}).get("url")
+        return f"![]({url})" if url else ""
+    elif t == "bulleted_list_item":
+        text = "".join([r.get("plain_text", "") for r in block.get("bulleted_list_item", {}).get("rich_text", [])])
+        return f"{space}- {text}"
+    elif t == "numbered_list_item":
+        text = "".join([r.get("plain_text", "") for r in block.get("numbered_list_item", {}).get("rich_text", [])])
+        return f"{space}1. {text}"
+    elif t == "quote":
+        text = "".join([r.get("plain_text", "") for r in block.get("quote", {}).get("rich_text", [])])
+        return f"{space}> {text}"
+    elif t == "to_do":
+        checked = block.get("to_do", {}).get("checked", False)
+        text = "".join([r.get("plain_text", "") for r in block.get("to_do", {}).get("rich_text", [])])
+        mark = "x" if checked else " "
+        return f"{space}- [{mark}] {text}"
+    elif t == "callout":
+        text = "".join([r.get("plain_text", "") for r in block.get("callout", {}).get("rich_text", [])])
+        emoji = block.get("callout", {}).get("icon", {}).get("emoji", "💡")
+        children_md = ""
+        if block.get("has_children"):
+            children_md = get_block_children_md(block.get("id"), indent + 1)
+        return f"{space}{emoji} {text}\n{children_md}"
+    elif t == "toggle":
+        text = "".join([r.get("plain_text", "") for r in block.get("toggle", {}).get("rich_text", [])])
+        children_md = ""
+        if block.get("has_children"):
+            children_md = get_block_children_md(block.get("id"), indent + 1)
+        return f"{space}<details>\n{space}<summary>{text}</summary>\n\n{children_md}\n{space}</details>"
+    elif t == "equation":
+        eq = block.get("equation", {}).get("expression", "")
+        return f"${eq}$"
+    else:
+        return ""
+
+
+def get_page_blocks(page_id):
+    return get_block_children_md(page_id)
+
+
+# ================== Front Matter 格式化 ==================
+# ================== Front Matter 格式化（兼容类型安全解析） ==================
+def format_front_matter(fm: dict) -> str:
+    """
+    严格生成 front matter:
+    - title 用双引号
+    - date 不加引号
+    - tags 和 categories 保留列表格式，即使为空
+    - 字段顺序固定
+    - 支持 multi_select(list) / select(str)
+    """
+    lines = ["---"]
+    lines.append(f'layout: {fm.get("layout", "post")}')
+    lines.append(f'title: "{fm.get("title", "")}"')
+    lines.append(f'date: {fm.get("date", "")}')
+
+    # tags: 支持 str 或 list
+    tags = fm.get("tags", [])
+    if isinstance(tags, str):
+        tags = [tags] if tags else []
+    lines.append("tags:")
+    if tags:
+        for t in tags:
+            lines.append(f"  - {t}")
+    else:
+        lines.append("  []")
+
+    # categories: 支持 str 或 list
+    categories = fm.get("categories", [])
+    if isinstance(categories, str):
+        categories = [categories] if categories else []
+    lines.append("categories:")
+    if categories:
+        for c in categories:
+            lines.append(f"  - {c}")
+    else:
+        lines.append("  []")
+
+    # 其他字段
+    lines.append(f'comments: {str(fm.get("comments", True)).lower()}')
+    lines.append(f'math: {str(fm.get("math", True)).lower()}')
+    lines.append(f'mermaid: {str(fm.get("mermaid", True)).lower()}')
+    lines.append(f'author: {fm.get("author", "unknown")}')
+    lines.append("---\n")
+    return "\n".join(lines)
+
+
+
+# ================== 保存 Markdown ==================
+def save_markdown(page):
+    title = get_page_property(page, "Title", "Untitled")
+
+    custom_slug = get_page_property(page, "Slug", None)
+    if custom_slug and custom_slug.strip():
+        slug = safe_slugify(custom_slug)
+    else:
+        slug = safe_slugify(title)
+
+    # categories = get_page_property(page, "Categories", [])
+    # tags = get_page_property(page, "Tags", [])
+    # author = get_page_property(page, "Author", "unknown")
+    # date = get_page_property(page, "Date", datetime.today().strftime("%Y-%m-%d"))
+
+    categories = get_property_with_aliases(page, ["Categories", "Category", "分类"], [])
+    tags = get_property_with_aliases(page, ["Tags", "标签"], [])
+    author = get_property_with_aliases(page, ["Author", "作者"], default="unknown")
+    date = get_property_with_aliases(page, ["Date", "日期"], default=datetime.now().strftime("%Y-%m-%d"))
+
+    comments = get_page_property(page, "Comments", True)
+    math = get_page_property(page, "Math", True)
+    mermaid = get_page_property(page, "Mermaid", True)
+
+    # 路径基于仓库根目录
+    save_dir = POSTS_DIR
+    image_dir = os.path.join(IMAGES_BASE_DIR, slug)  # 使用 slug 作为图片子目录名
+
+    clean_dir(image_dir)
+    page_id = page.get("id")
+    md_content = get_page_blocks(page_id)
+
+    # 图片下载替换
+    def repl_image(match):
+        url = match.group(1)
+        local_path = download_image(url, image_dir)
+        return f"[]({local_path})" if local_path else match.group(0)
+
+    md_content = re.sub(r'!\[.*?\]\((https://[^\)]+)\)', repl_image, md_content)
+
+    # front matter
+    fm = {
+        "layout": "post",
+        "title": title,
+        "date": date,
+        "slug": slug,
+        "tags": tags,
+        "categories": categories,
+        "comments": comments,
+        "math": math,
+        "mermaid": mermaid,
+        "author": author,
+        "images_dir": image_dir
+    }
+
+    # 读取 Notion 字段（别名支持）
+    save_dir_field = get_property_with_aliases(page, ["SaveDir", "保存目录"], default=None)
+
+    mkdir_safe(save_dir)
+    # 使用 slug 生成文件名
+    filename = f"{date}-{slug}.md"
+    file_path = os.path.join(save_dir, filename)
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(format_front_matter(fm))
+        f.write(md_content)
+
+    print(f"✅ Saved: {file_path}")
+    return file_path
+
+
+# ================== 主函数 ==================
+def main():
+    pages = query_database()
+    if not pages:
+        print("⚠️ No published pages found")
+        return
+
+    saved_files = []
+    for page in pages:
+        try:
+            saved_file = save_markdown(page)
+            saved_files.append(saved_file)
+        except Exception as e:
+            print(f"❌ Failed to process page: {e}")
+
+    print(f"✅ Total saved files: {len(saved_files)}")
+    return saved_files
+
+
+if __name__ == "__main__":
+    main()

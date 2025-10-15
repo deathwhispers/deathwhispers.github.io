@@ -6,12 +6,14 @@ tags:
   - DeepSeek
   - 神经网络
 categories:
-  []
+  - DeepSeek
+  - 白话 DeepSeek 系列
 comments: true
 math: true
 mermaid: true
 author: deathwhispers
 ---
+
 # 如何计算神经网络的参数：从损失函数到梯度下降与反向传播
 
 ## 摘要
