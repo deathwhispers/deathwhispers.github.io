@@ -3,11 +3,13 @@ name: Sync Notion to Blog
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "0 1 * * *"
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai
 
     steps:
       - uses: actions/checkout@v3
