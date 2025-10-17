@@ -24,7 +24,7 @@ author: deathwhispers
 
 函数是描述输入与输出之间映射关系的工具，即给定输入值（自变量 $x$ ），通过特定规则计算得到唯一的输出值（因变量 $y$ ）。通用表达式为 $y=f(x)$。
 
-![](/assets/images/deepseek/from-functions-to-neural-networks/7e30b1adc66648b2.png)
+![](/assets/images/deepseek/from-functions-to-neural-networks/bacc5511c80e4b29.png)
 
 ### 1.1 从“精确解”到“近似解”：联结主义的引入
 
@@ -32,7 +32,7 @@ author: deathwhispers
 
 联结主义的引入，则转变了思路：既然无法找到精确函数，不如退而求其次，找到一个可以无限逼近真实关系的“近似函数”。这一思想是神经网络诞生的根本驱动力。
 
-![](/assets/images/deepseek/from-functions-to-neural-networks/d867c85fe33a4dfc.png)
+![](/assets/images/deepseek/from-functions-to-neural-networks/69b0d1873f1a4732.png)
 
 ### 1.2 多输入函数的扩展与线性变换
 
@@ -49,7 +49,7 @@ $$
 
 但是当数据稍微变化一下，出现曲线的时候，简单的线性函数就没办法解决这个问题了。那我们的目标就是将线性函数转为非线性函数，这可以通过套一个非线性函数来做到，比如平方、正弦函数、指数函数。这就是激活函数。
 
-![](/assets/images/deepseek/from-functions-to-neural-networks/51937b59d1a54d51.png)
+![](/assets/images/deepseek/from-functions-to-neural-networks/296880a8edd24c0f.png)
 
 ## 第二章 从多输入函数到感知机：神经网络的基本单元
 
@@ -69,7 +69,7 @@ $$
 
 在神经网络的图示中，一个神经元（小圆圈）就代表了一个完整的感知机（即一个多输入非线性函数）。信号从左侧输入，在神经元内进行加权求和和激活变换，最终从右侧输出。
 
-![](/assets/images/deepseek/from-functions-to-neural-networks/7784fc3203a74a95.png)
+![](/assets/images/deepseek/from-functions-to-neural-networks/3bbc41590edb4a3a.png)
 
 ## 第三章 多层组合：从感知机到神经网络
 
@@ -95,7 +95,7 @@ $$
 
 其中 $f_i$ 代表第 $i$ 层的函数映射。网络的深度（隐藏层数量）和宽度（每层神经元数量）决定了其函数拟合能力的复杂程度。
 
-![](/assets/images/deepseek/from-functions-to-neural-networks/25d59cfc441c4f61.png)
+![](/assets/images/deepseek/from-functions-to-neural-networks/f887bce840a34be2.png)
 
 ### 3.2 神经网络的“学习”本质：函数参数优化
 
