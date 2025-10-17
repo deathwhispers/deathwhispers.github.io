@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "生物医药"
-date: 2025-05-01
+date: 2023-11-14
 tags: 
   - BioPharmaceuticals
 categories: 

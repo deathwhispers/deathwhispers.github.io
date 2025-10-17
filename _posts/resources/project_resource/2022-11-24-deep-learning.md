@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "机器学习与深度学习"
-date: 2025-05-10
+date: 2022-11-24
 tags: 
   - Deep Learning
   - Machine Learning

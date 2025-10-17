@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "类chatgpt大语言对话模型及数据"
-date: 2025-04-30
+date: 2024-09-30
 tags: 
   - LLM
   - Large Language Model

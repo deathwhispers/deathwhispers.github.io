@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "因果推断"
-date: 2025-05-07
+date: 2024-11-07
 tags: 
   - Causal Inference
 categories: 

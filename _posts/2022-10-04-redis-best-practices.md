@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Redis使用规范"
-date: 2025-10-04
+date: 2022-10-04
 tags:
   - Redis
 categories:
