@@ -10,7 +10,6 @@ Notion → Markdown 同步脚本（优化版）
 - 图片下载缓存逻辑清晰
 - 不改变原先业务逻辑
 """
-
 import os
 import re
 import shutil
@@ -22,12 +21,19 @@ from pathlib import Path
 from typing import Any
 
 import requests
+from dotenv import load_dotenv
 
 # ================== 全局配置 ==================
-# ROOT_DIR = Path(__file__).resolve().parents[2]
-ROOT_DIR = os.environ.get("GITHUB_WORKSPACE", os.getcwd())
+ROOT_DIR = os.environ.get("GITHUB_WORKSPACE", Path(__file__).resolve().parents[2])
 DEFAULT_POSTS_DIR = "_posts"
 DEFAULT_IMAGES_DIR = os.path.join("assets", "images")
+
+# ================== 加载本地 .env ==================
+# 仅在本地开发时使用，GitHub Actions 会使用 secrets
+env_path = ROOT_DIR / ".env"
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
+    print(f"Loaded environment variables from {env_path}")
 
 NOTION_API_KEY = os.environ.get("NOTION_API_KEY")
 NOTION_DATABASE_ID = os.environ.get("NOTION_DATABASE_ID")
@@ -210,7 +216,7 @@ def query_database() -> list[dict]:
             r.raise_for_status()
             return r.json().get("results", [])
         except Exception as e:
-            print(f"⚠️ Retry {i+1} failed: {e}")
+            print(f"⚠️ Retry {i + 1} failed: {e}")
             time.sleep(1)
     print("❌ Failed to query Notion database")
     return []
@@ -254,7 +260,7 @@ def block_to_md(block: dict, indent: int = 0) -> str:
 
     if t.startswith("heading_"):
         level = int(t[-1])
-        return f"{'#'*level} {text}"
+        return f"{'#' * level} {text}"
     if t == "paragraph":
         return text.strip()
     if t == "code":
@@ -326,6 +332,7 @@ def format_front_matter(fm: dict) -> str:
     lines.append("---\n")
     return "\n".join(lines)
 
+
 def normalize_md(content: str) -> str:
     """
     标准化 Markdown 内容，用于比较
@@ -336,6 +343,7 @@ def normalize_md(content: str) -> str:
     content = re.sub(r'\s+', ' ', content)  # 合并空格
     content = re.sub(r'\n+', '\n', content)  # 合并空行
     return content.strip()
+
 
 # ================== Markdown 保存 ==================
 def save_page_markdown(page: dict) -> str:
