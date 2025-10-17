@@ -105,6 +105,20 @@
       url: https://github.com/fengdu78/Coursera-ML-AndrewNg-Notes
       desc: 吴恩达机器学习课程中文笔记 + 课件集合
       icon: fa-book
+    - name: Grok
+      url: https://grok.com
+      desc: Grok 是一个 AI 助手，能够回答你的问题
+      icon: fa-book
+      hot: true
+    - name: ChatGPT
+      url: https://chatgpt.com/c/68f209ba-1844-8323-90f7-c2040d910be4
+      desc: ChatGPT
+      icon: fa-book
+      hot: true
+
+
+
+
 
 - category: Python & 算法
   icon: fa-python
@@ -490,6 +504,11 @@
       url: https://www.json.cn/
       desc: JSON 格式化与校验（中文）
       icon: fa-fire
+    - name: Stomp 测试
+      url: /assets/tools/stomp.html
+      desc: Stomp 协议测试工具（本地）
+      icon: fa-fire
+      hot: true
 
 - category: Linux & 操作系统
   icon: fa-linux
