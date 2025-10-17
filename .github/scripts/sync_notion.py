@@ -63,13 +63,6 @@ def mkdir_safe(abs_path: str):
     Path(abs_path).mkdir(parents=True, exist_ok=True)
 
 
-def clean_dir(abs_path: str):
-    """清理目录并重新创建"""
-    if os.path.exists(abs_path):
-        shutil.rmtree(abs_path)
-    mkdir_safe(abs_path)
-
-
 def is_safe_subpath(base: str, target: str) -> bool:
     """检查 target 是否在 base 目录下"""
     try:
@@ -333,13 +326,23 @@ def format_front_matter(fm: dict) -> str:
     lines.append("---\n")
     return "\n".join(lines)
 
+def normalize_md(content: str) -> str:
+    """
+    标准化 Markdown 内容，用于比较
+    - 移除图片 URL，只保留 ![]()
+    - 移除多余空行和空格
+    """
+    content = re.sub(r'!\[.*?\]\(.*?\)', '![]()', content)  # 忽略图片 URL
+    content = re.sub(r'\s+', ' ', content)  # 合并空格
+    content = re.sub(r'\n+', '\n', content)  # 合并空行
+    return content.strip()
 
 # ================== Markdown 保存 ==================
 def save_page_markdown(page: dict) -> str:
     """
     保存页面为 Markdown
-    - 自动处理 SaveDir、ImageDir
-    - 替换 markdown 图片 URL 为本地相对路径
+    - 删除时只清理当前文章图片目录（slug）
+    - 若文章未变化则跳过覆盖
     """
     title = get_property_with_aliases(page, ["Title", "标题"], default="Untitled")
     slug_field = get_property_with_aliases(page, ["Slug", "slug"], default=None)
@@ -360,21 +363,27 @@ def save_page_markdown(page: dict) -> str:
     page_id = page.get("id")
     md_content = page_to_markdown(page_id)
 
-    # 图片处理
+    # ========== 图片处理 ==========
     image_urls = re.findall(r'!\[.*?\]\((https?://[^\)\s]+)\)', md_content)
     has_images = bool(image_urls)
     image_dir_field = get_property_with_aliases(page, ["ImageDir", "Image Dir", "图片目录"], default=None)
+
     image_dir_abs = None
     if has_images:
         if image_dir_field:
             image_dir_abs = normalize_path(image_dir_field, DEFAULT_IMAGES_DIR)
         else:
             image_dir_abs = normalize_path(os.path.join(DEFAULT_IMAGES_DIR, slug), DEFAULT_IMAGES_DIR)
-        clean_dir(image_dir_abs)
+
+        # ✅ 只清理当前文章的图片子目录
+        post_image_dir = os.path.join(image_dir_abs, slug)
+        if os.path.exists(post_image_dir):
+            shutil.rmtree(post_image_dir)
+        mkdir_safe(post_image_dir)
 
         def repl_img(match):
             url = match.group(1)
-            if not url or url.startswith("data:") or not image_dir_abs:
+            if not url or url.startswith("data:"):
                 return match.group(0)
             local_path = download_image_to_dir(url, image_dir_abs, slug)
             if local_path:
@@ -384,7 +393,7 @@ def save_page_markdown(page: dict) -> str:
 
         md_content = re.sub(r'!\[.*?\]\((https?://[^\)\s]+)\)', repl_img, md_content)
 
-    # Front Matter
+    # ========== Front Matter ==========
     images_dir_rel = os.path.relpath(image_dir_abs, ROOT_DIR).replace("\\", "/") if image_dir_abs else ""
     fm = {
         "layout": "post",
@@ -400,12 +409,24 @@ def save_page_markdown(page: dict) -> str:
     }
 
     file_path = os.path.join(save_dir_abs, f"{date}-{slug}.md")
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(format_front_matter(fm))
-        f.write("\n")
-        f.write(md_content)
+    new_content = format_front_matter(fm) + "\n" + md_content
 
-    print(f"✅ Saved: {file_path}  (images: {'yes' if has_images else 'no'})")
+    # ========== 重复检测 ==========
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            old_normalized = normalize_md(f.read())
+        new_normalized = normalize_md(new_content)
+        if old_normalized == new_normalized:
+            print(f"⚪ Skipped (no meaningful change): {file_path}")
+            return file_path
+        else:
+            print(f"🟡 Updated: {file_path}")
+    else:
+        print(f"🟢 Created: {file_path}")
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(new_content)
+
     return file_path
 
 
