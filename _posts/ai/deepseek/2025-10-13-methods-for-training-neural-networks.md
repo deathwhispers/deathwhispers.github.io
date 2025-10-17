@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "白话 DeepSeek 03｜调教神经网络的方法"
-date: 2025-10-13T10:52:00.000+08:00
+date: 2025-10-13
 tags:
   - DeepSeek
   - 神经网络
@@ -34,7 +34,7 @@ author: deathwhispers
 
 ## 🎯 二、什么是过拟合？（附直观示意）
 
-![](/assets/images/deepseek/methods-for-training-neural-networks/7bdeca4c3d694e49.webp)
+![](/assets/images/deepseek/methods-for-training-neural-networks/7cb2723680374cde.webp)
 
 > 图：左为欠拟合，中为理想拟合，右为过拟合。
 
@@ -128,7 +128,7 @@ plt.show()
 
 当无法采集更多样本时，可以通过数据增强来“制造”新样本。
 
-![](/assets/images/deepseek/methods-for-training-neural-networks/31bf5fd1264a4f08.png)
+![](/assets/images/deepseek/methods-for-training-neural-networks/27003cedd1fc46e3.png)
 
 > 图：图像任务中常用的数据增强方式，旋转、翻转、裁剪、加噪声等方式
 
@@ -186,7 +186,7 @@ $$
 
 - L2 正则化：抑制权重过大（更平滑）
 
-![](/assets/images/deepseek/methods-for-training-neural-networks/4f478a22625540bd.webp)
+![](/assets/images/deepseek/methods-for-training-neural-networks/a5e1a263b03f4ba3.webp)
 
 ### ✅ 代码实现（PyTorch）
 
@@ -204,7 +204,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
 
 为了防止模型依赖少数神经元，可以在训练时随机丢弃部分连接：
 
-![](/assets/images/deepseek/methods-for-training-neural-networks/be0d7eed2d434d52.webp)
+![](/assets/images/deepseek/methods-for-training-neural-networks/76e62f07b4b949b3.webp)
 
 代码实现：
 
