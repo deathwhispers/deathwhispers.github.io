@@ -20,7 +20,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install requests pyyaml pypinyin
+        run: pip install requests pyyaml pypinyin dotenv
 
       - name: Run Notion Sync
 #        working-directory: .github/scripts
