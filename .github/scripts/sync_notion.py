@@ -30,10 +30,10 @@ DEFAULT_IMAGES_DIR = os.path.join("assets", "images")
 
 # ================== 加载本地 .env ==================
 # 仅在本地开发时使用，GitHub Actions 会使用 secrets
-env_path = ROOT_DIR / ".env"
-if env_path.exists():
-    load_dotenv(dotenv_path=env_path)
-    print(f"Loaded environment variables from {env_path}")
+# env_path = ROOT_DIR / ".env"
+# if env_path.exists():
+#     load_dotenv(dotenv_path=env_path)
+#     print(f"Loaded environment variables from {env_path}")
 
 NOTION_API_KEY = os.environ.get("NOTION_API_KEY")
 NOTION_DATABASE_ID = os.environ.get("NOTION_DATABASE_ID")
