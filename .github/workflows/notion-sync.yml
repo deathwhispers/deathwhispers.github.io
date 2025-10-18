@@ -3,7 +3,7 @@ name: Sync Notion to Blog
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 1 * * *"
+    - cron: "0 20 * * *"
 
 jobs:
   sync:
