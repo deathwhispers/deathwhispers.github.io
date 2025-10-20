@@ -371,38 +371,7 @@ def save_page_markdown(page: dict) -> str:
     page_id = page.get("id")
     md_content = page_to_markdown(page_id)
 
-    # ========== 图片处理 ==========
-    image_urls = re.findall(r'!\[.*?\]\((https?://[^\)\s]+)\)', md_content)
-    has_images = bool(image_urls)
-    image_dir_field = get_property_with_aliases(page, ["ImageDir", "Image Dir", "图片目录"], default=None)
-
-    image_dir_abs = None
-    if has_images:
-        if image_dir_field:
-            image_dir_abs = normalize_path(image_dir_field, DEFAULT_IMAGES_DIR)
-        else:
-            image_dir_abs = normalize_path(os.path.join(DEFAULT_IMAGES_DIR, slug), DEFAULT_IMAGES_DIR)
-
-        # ✅ 只清理当前文章的图片子目录
-        post_image_dir = os.path.join(image_dir_abs, slug)
-        if os.path.exists(post_image_dir):
-            shutil.rmtree(post_image_dir)
-        mkdir_safe(post_image_dir)
-
-        def repl_img(match):
-            url = match.group(1)
-            if not url or url.startswith("data:"):
-                return match.group(0)
-            local_path = download_image_to_dir(url, image_dir_abs, slug)
-            if local_path:
-                rel = os.path.relpath(local_path, ROOT_DIR).replace("\\", "/")
-                return f"![](/" + rel + ")"
-            return match.group(0)
-
-        md_content = re.sub(r'!\[.*?\]\((https?://[^\)\s]+)\)', repl_img, md_content)
-
     # ========== Front Matter ==========
-    images_dir_rel = os.path.relpath(image_dir_abs, ROOT_DIR).replace("\\", "/") if image_dir_abs else ""
     fm = {
         "layout": "post",
         "title": title,
@@ -412,8 +381,7 @@ def save_page_markdown(page: dict) -> str:
         "comments": comments,
         "math": math,
         "mermaid": mermaid,
-        "author": author,
-        "images_dir": images_dir_rel
+        "author": author
     }
 
     file_path = os.path.join(save_dir_abs, f"{date}-{slug}.md")
@@ -431,6 +399,32 @@ def save_page_markdown(page: dict) -> str:
             print(f"🟡 Updated: {file_path}")
     else:
         print(f"🟢 Created: {file_path}")
+
+    # ========== 图片处理 ==========
+    image_urls = re.findall(r'!\[.*?\]\((https?://[^\)\s]+)\)', md_content)
+    has_images = bool(image_urls)
+    if has_images:
+        # 获取配置的图片路径，如果未配置则使用默认路径
+        image_dir_field = get_property_with_aliases(page, ["ImageDir", "Image Dir", "图片目录"], default=None)
+        image_dir_abs = normalize_path(image_dir_field, DEFAULT_IMAGES_DIR)
+
+        # 只清理当前文章的图片子目录
+        post_image_dir = os.path.join(image_dir_abs, slug)
+        if os.path.exists(post_image_dir):
+            shutil.rmtree(post_image_dir)
+        mkdir_safe(post_image_dir)
+
+        def repl_img(match):
+            url = match.group(1)
+            if not url or url.startswith("data:"):
+                return match.group(0)
+            local_path = download_image_to_dir(url, image_dir_abs, slug)
+            if local_path:
+                rel = os.path.relpath(local_path, ROOT_DIR).replace("\\", "/")
+                return f"![](/" + rel + ")"
+            return match.group(0)
+
+        new_content = re.sub(r'!\[.*?\]\((https?://[^\)\s]+)\)', repl_img, new_content)
 
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(new_content)
