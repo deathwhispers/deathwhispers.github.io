@@ -4,7 +4,7 @@ title: "DeepSeek私有化部署"
 date: 2025-02-13
 tags: 
   - DeepSeek
-  - 私有化部署
+  - Private Deployment
 categories: 
   - DeepSeek
 comments: true

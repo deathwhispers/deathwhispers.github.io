@@ -4,7 +4,7 @@ title: "让Google搜索到搭建在Github Pages上的博客"
 date: 2025-04-24
 tags: 
   - GitHub Pages
-  - Google 搜索
+  - Google Search Console
 categories: 
   - Life
 comments: true
