@@ -14,6 +14,8 @@ mermaid: true
 author: deathwhispers
 ---
 
+> 全文总结于 Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！
+
 # 如何计算神经网络的参数：从损失函数到梯度下降与反向传播
 
 ## 摘要
