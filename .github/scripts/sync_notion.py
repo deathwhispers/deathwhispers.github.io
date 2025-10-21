@@ -207,9 +207,16 @@ def get_property_with_aliases(page: dict, aliases: list[str], default: Any = Non
 
 # ================== Notion API ==================
 def query_database() -> list[dict]:
-    """查询已发布页面"""
+    """查询已发布或需要重新发布的页面"""
     url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
-    payload = {"filter": {"property": "Status", "select": {"equals": "Published"}}}
+    payload = {
+        "filter": {
+            "or": [
+                {"property": "Status", "select": {"equals": "Published"}},
+                {"property": "Status", "select": {"equals": "Republish"}}
+            ]
+        }
+    }
     for i in range(REQUEST_RETRY):
         try:
             r = requests.post(url, headers=HEADERS, json=payload, timeout=REQUEST_TIMEOUT)
@@ -347,16 +354,41 @@ def normalize_md(content: str) -> str:
 
 # ================== Markdown 保存 ==================
 def save_page_markdown(page: dict) -> str:
-    """
-    保存页面为 Markdown
-    - 删除时只清理当前文章图片目录（slug）
-    - 若文章未变化则跳过覆盖
-    """
     title = get_property_with_aliases(page, ["Title", "标题"], default="Untitled")
     slug_field = get_property_with_aliases(page, ["Slug", "slug"], default=None)
     slug = safe_slugify(slug_field) if slug_field else safe_slugify(title)
-
     date = get_property_with_aliases(page, ["Date", "日期"], default=datetime.today().strftime("%Y-%m-%d"))
+    status = get_property_with_aliases(page, ["Status", "状态"], default="Draft")
+
+    if status == "Draft":
+        print(f"⚪ Skipped (Draft): {title}")
+        return ""
+
+    image_dir_field = get_property_with_aliases(page, ["ImageDir", "Image Dir", "图片目录"], default=None)
+    image_dir_abs = normalize_path(image_dir_field, DEFAULT_IMAGES_DIR)
+    post_image_dir = os.path.join(image_dir_abs, slug)
+
+    save_dir_field = get_property_with_aliases(page, ["SaveDir", "保存目录", "Save Dir"], default=None)
+    save_dir_abs = normalize_path(save_dir_field, DEFAULT_POSTS_DIR)
+    mkdir_safe(save_dir_abs)
+    file_path = os.path.join(save_dir_abs, f"{date}-{slug}.md")
+
+    if status == "Republish":
+        print(f"⚪ Update (Republish): {get_property_with_aliases(page, ['Title', '标题'], 'Untitled')}")
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"🗑 Deleted old file: {file_path}")
+        if os.path.exists(post_image_dir):
+            shutil.rmtree(post_image_dir)
+            print(f"🗑 Deleted old images: {post_image_dir}")
+
+    if os.path.exists(file_path):
+        print(f"⚪ Skipped (file exists): {file_path}")
+        return file_path
+
+    page_id = page.get("id")
+    md_content = page_to_markdown(page_id)
+
     tags = get_property_with_aliases(page, ["Tags", "标签"], default=[])
     categories = get_property_with_aliases(page, ["Categories", "Category", "分类"], default=[])
     author = get_property_with_aliases(page, ["Author", "作者"], default="unknown")
@@ -364,14 +396,6 @@ def save_page_markdown(page: dict) -> str:
     math = get_property_with_aliases(page, ["Math", "math"], default=True)
     mermaid = get_property_with_aliases(page, ["Mermaid", "mermaid"], default=True)
 
-    save_dir_field = get_property_with_aliases(page, ["SaveDir", "保存目录", "Save Dir"], default=None)
-    save_dir_abs = normalize_path(save_dir_field, DEFAULT_POSTS_DIR)
-    mkdir_safe(save_dir_abs)
-
-    page_id = page.get("id")
-    md_content = page_to_markdown(page_id)
-
-    # ========== Front Matter ==========
     fm = {
         "layout": "post",
         "title": title,
@@ -383,35 +407,11 @@ def save_page_markdown(page: dict) -> str:
         "mermaid": mermaid,
         "author": author
     }
-
-    file_path = os.path.join(save_dir_abs, f"{date}-{slug}.md")
     new_content = format_front_matter(fm) + "\n" + md_content
 
-    # ========== 重复检测 ==========
-    if os.path.exists(file_path):
-        with open(file_path, "r", encoding="utf-8") as f:
-            old_normalized = normalize_md(f.read())
-        new_normalized = normalize_md(new_content)
-        if old_normalized == new_normalized:
-            print(f"⚪ Skipped (no meaningful change): {file_path}")
-            return file_path
-        else:
-            print(f"🟡 Updated: {file_path}")
-    else:
-        print(f"🟢 Created: {file_path}")
-
-    # ========== 图片处理 ==========
+    # 图片处理
     image_urls = re.findall(r'!\[.*?\]\((https?://[^\)\s]+)\)', md_content)
-    has_images = bool(image_urls)
-    if has_images:
-        # 获取配置的图片路径，如果未配置则使用默认路径
-        image_dir_field = get_property_with_aliases(page, ["ImageDir", "Image Dir", "图片目录"], default=None)
-        image_dir_abs = normalize_path(image_dir_field, DEFAULT_IMAGES_DIR)
-
-        # 只清理当前文章的图片子目录
-        post_image_dir = os.path.join(image_dir_abs, slug)
-        if os.path.exists(post_image_dir):
-            shutil.rmtree(post_image_dir)
+    if image_urls:
         mkdir_safe(post_image_dir)
 
         def repl_img(match):
@@ -429,6 +429,7 @@ def save_page_markdown(page: dict) -> str:
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(new_content)
 
+    print(f"🟢 Created: {file_path}")
     return file_path
 
 
@@ -446,7 +447,13 @@ def main():
     saved_files = []
     for page in pages:
         try:
-            saved_files.append(save_page_markdown(page))
+            status = get_property_with_aliases(page, ["Status", "状态"], default="Draft")
+            if status == "Draft":
+                print(f"⚪ Skipped (Draft): {get_property_with_aliases(page, ['Title', '标题'], 'Untitled')}")
+                continue
+            saved_file = save_page_markdown(page)
+            if saved_file:
+                saved_files.append(saved_file)
         except Exception as e:
             print(f"❌ Error processing page {page.get('id')}: {e}")
 
