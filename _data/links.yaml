@@ -487,11 +487,11 @@
     - name: Notion
       url: https://www.notion.so/
       desc: 知识库与项目管理工具
-      icon: fa-clipboard-list
+      icon: fa-brands fa-notion
     - name: Typora
       url: https://typora.io/
       desc: 极简 Markdown 编辑器
-      icon: fa-pen
+      icon: fa-brands fa-markdown
     - name: Carbon
       url: https://carbon.now.sh/
       desc: 生成精美代码截图
@@ -511,33 +511,41 @@
       hot: true
 
 - category: Linux & 操作系统
-  icon: fa-linux
+  icon: fa-brands fa-linux
   links:
     - name: Linux 命令行大全
       url: https://wangchujiang.com/linux-command/
       desc: 中文 Linux 命令速查手册
-      icon: fa-fire
+      icon: fa-brands fa-linux
     - name: Ubuntu 官网
       url: https://ubuntu.com/
       desc: 主流桌面 / 服务器发行版
-      icon: fa-linux
+      icon: fa-brands fa-ubuntu
     - name: ArchWiki
       url: https://wiki.archlinux.org/
       desc: 详尽的 Linux 使用与配置文档（英文）
-      icon: fa-info-circle
+      icon: fa-brands fa-linux
 
 
 - category: 机场 & 代理
-  icon: fa-book-reader
+  icon: fa-plane-departure
   links:
     - name: 机场推荐
       url: https://jichangtuijian.com/proxyclient.html
       desc: Windows安卓Mac和ios代理客户端软件整理推荐
-      icon: fa-air
+      icon: fa-plane
     - name: 机场评测
       url: https://jichangtuijian.com/ssr-v2ray%E4%B8%93%E7%BA%BF%E6%9C%BA%E5%9C%BA%E6%8E%A8%E8%8D%90.html
       desc: 2025机场推荐与机场评测SSR/V2ray/Trojan订阅
-      icon: fa-air
+      icon: fa-plane-up
+    - name: 西部数据
+      url: https://wd-cloud.net/
+      desc: 快如闪电的全球边缘网络，隐私无忧，极速畅享，连接全球本地网络资源，解锁无限流媒体服务
+      icon: fa-plane-arrival
+    - name: Dler Cloud
+      url: https://dlercloud.com/
+      desc: Simple & trustworthy
+      icon: fa-plane-slash
 
 
 
