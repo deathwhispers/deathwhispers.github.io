@@ -29,11 +29,26 @@ DEFAULT_POSTS_DIR = "_posts"
 DEFAULT_IMAGES_DIR = os.path.join("assets", "images")
 
 # ================== 加载本地 .env ==================
-# 仅在本地开发时使用，GitHub Actions 会使用 secrets
-# env_path = ROOT_DIR / ".env"
-# if env_path.exists():
-#     load_dotenv(dotenv_path=env_path)
-#     print(f"Loaded environment variables from {env_path}")
+# 1. 判断是否在 GitHub Actions 环境中
+# GITHUB_ACTIONS 环境变量在 GitHub Actions 运行时会自动设置为 'true'
+is_github_actions = os.environ.get("GITHUB_ACTIONS") == "true"
+if is_github_actions:
+    # GitHub Actions 环境：
+    # - 环境变量（如 secrets）已由 Action 自动注入
+    # - 无需加载本地 .env 文件，避免不必要的磁盘操作或错误
+    print("Running in GitHub Actions environment. Using injected secrets/variables.")
+else:
+    # 本地开发环境：
+    # - 尝试加载本地的 .env 文件
+    env_path = ROOT_DIR / ".env"
+
+    if env_path.exists():
+        # override=True 可确保本地 .env 覆盖系统变量
+        load_dotenv(dotenv_path=env_path)
+        print(f"Loaded environment variables from local {env_path}")
+    else:
+        print(
+            f"Not running in GitHub Actions and local {env_path} not found. Proceeding with existing environment variables.")
 
 NOTION_API_KEY = os.environ.get("NOTION_API_KEY")
 NOTION_DATABASE_ID = os.environ.get("NOTION_DATABASE_ID")
@@ -243,18 +258,64 @@ def get_block_children(page_id: str, page_size: int = 100) -> list[dict]:
 
 # ================== Markdown 转换 ==================
 def text_from_rich_text(rich_list: list[dict]) -> str:
-    """富文本列表转换为 Markdown 文本"""
+    """
+    富文本列表转换为 Markdown 文本，正确处理链接和格式。
+
+    关键修复点：
+    1. 检查 'href' 属性以生成 Markdown 链接 [text](url)。
+    2. 检查 'annotations' 属性以应用粗体、斜体、代码等格式。
+    3. 区分行内公式和块级公式（这里只处理行内公式）。
+    """
     if not rich_list:
         return ""
+
     parts = []
+
     for r in rich_list:
         ttype = r.get("type")
-        if ttype == "text":
-            parts.append(r.get("plain_text", ""))
-        elif ttype == "equation":
+
+        # 提取 plain_text 作为基础内容
+        content = r.get("plain_text", "")
+
+        # ================== 1. 处理公式 (Equation) ==================
+        if ttype == "equation":
             expr = r.get("equation", {}).get("expression", "").strip()
             if expr:
-                parts.append(expr if "$" in expr else f"${expr}$")
+                # 默认使用 $...$ 标记行内公式
+                # 如果表达式本身已包含 $ 符号，则可能是一个复杂的公式，直接返回表达式
+                content = expr if ("$" in expr or expr.startswith("\\")) else f"${expr}$"
+            else:
+                content = ""  # 空公式
+
+        # ================== 2. 处理文本 (Text) ==================
+        elif ttype == "text":
+            # 处理超链接 (Link)
+            href = r.get("href")
+            if href:
+                # 格式: [text](url)
+                content = f"[{content}]({href})"
+
+            # 处理文本格式 (Annotations)
+            annotations = r.get("annotations", {})
+
+            # 代码 (Code) - 最高优先级，因为行内代码不应被其他格式包裹
+            if annotations.get("code"):
+                content = f"`{content}`"
+            # 加粗 (Bold)
+            if annotations.get("bold"):
+                content = f"**{content}**"
+            # 斜体 (Italic)
+            if annotations.get("italic"):
+                content = f"*{content}*"
+            # 删除线 (Strikethrough)
+            if annotations.get("strikethrough"):
+                content = f"~~{content}~~"
+            # 下划线 (Underline) - Markdown 不原生支持下划线，通常用 HTML 标签 <ins>
+            if annotations.get("underline"):
+                content = f"<ins>{content}</ins>"
+        # 其他类型 (如 Mention, Date) - 保持 plain_text
+        if content:
+            parts.append(content)
     return "".join(parts)
 
 
