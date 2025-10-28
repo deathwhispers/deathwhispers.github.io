@@ -245,77 +245,109 @@ def query_database() -> list[dict]:
 
 
 def get_block_children(page_id: str, page_size: int = 100) -> list[dict]:
-    """获取页面所有 block"""
+    """递归获取页面所有 block，支持分页"""
+    results = []
     url = f"https://api.notion.com/v1/blocks/{page_id}/children?page_size={page_size}"
-    try:
-        r = requests.get(url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
-        r.raise_for_status()
-        return r.json().get("results", [])
-    except Exception as e:
-        print(f"❌ Failed to fetch blocks for {page_id}: {e}")
-        return []
+    has_more = True
+    start_cursor = None
+
+    while has_more:
+        params = {}
+        if start_cursor:
+            params["start_cursor"] = start_cursor
+
+        try:
+            r = requests.get(url, headers=HEADERS, params=params, timeout=REQUEST_TIMEOUT)
+            r.raise_for_status()
+            data = r.json()
+            results.extend(data.get("results", []))
+            has_more = data.get("has_more", False)
+            start_cursor = data.get("next_cursor")
+        except Exception as e:
+            print(f"❌ Failed to fetch blocks for {page_id}: {e}")
+            break
+
+    return results
 
 
 # ================== Markdown 转换 ==================
+def _escape_liquid(s: str) -> str:
+    """
+    避免触发 Liquid 的 {{ ... }}，把 '{{' -> '{ {'，'}}' -> '} }'
+    保持视觉上几乎相同但不被 Liquid 解析。
+    """
+    return s.replace("{{", "{ {").replace("}}", "} }")
+
+def _normalize_equation_for_inline(expr: str) -> str:
+    """
+    把公式适配为行内形式：
+    - 删除首尾多余空白和换行
+    - 把内部换行换成空格
+    - 转义可能与 Liquid 冲突的花括号
+    - 最终用 $...$ 包裹（如果已包含 $ 则只清理）
+    """
+    if not expr:
+        return ""
+    # 清理首尾空白并把多行合并为单行（表格单元格应为行内）
+    expr = expr.strip()
+    expr = re.sub(r'\s*\n\s*', ' ', expr)
+    # 避免 Liquid 解析
+    # expr = _escape_liquid(expr)
+    # 如果已经包含 $，则直接返回（保护原貌），否则包 $...$
+    if "$" in expr:
+        return expr
+    return f"${expr}$"
+
 def text_from_rich_text(rich_list: list[dict]) -> str:
     """
-    富文本列表转换为 Markdown 文本，正确处理链接和格式。
-
-    关键修复点：
-    1. 检查 'href' 属性以生成 Markdown 链接 [text](url)。
-    2. 检查 'annotations' 属性以应用粗体、斜体、代码等格式。
-    3. 区分行内公式和块级公式（这里只处理行内公式）。
+    富文本列表转换为 Markdown 文本，正确处理链接、注释、公式。
+    行内公式( rich item of type 'equation' ) 会生成 $...$。
     """
     if not rich_list:
         return ""
 
     parts = []
-
     for r in rich_list:
         ttype = r.get("type")
-
-        # 提取 plain_text 作为基础内容
+        # 基础文本
         content = r.get("plain_text", "")
 
-        # ================== 1. 处理公式 (Equation) ==================
+        # ============ Equation (inline) ============
         if ttype == "equation":
             expr = r.get("equation", {}).get("expression", "").strip()
-            if expr:
-                # 默认使用 $...$ 标记行内公式
-                # 如果表达式本身已包含 $ 符号，则可能是一个复杂的公式，直接返回表达式
-                content = expr if ("$" in expr or expr.startswith("\\")) else f"${expr}$"
-            else:
-                content = ""  # 空公式
+            content = _normalize_equation_for_inline(expr)
+            if not content:
+                continue
 
-        # ================== 2. 处理文本 (Text) ==================
+        # ============ Text ============
         elif ttype == "text":
-            # 处理超链接 (Link)
             href = r.get("href")
             if href:
-                # 格式: [text](url)
                 content = f"[{content}]({href})"
 
-            # 处理文本格式 (Annotations)
-            annotations = r.get("annotations", {})
-
-            # 代码 (Code) - 最高优先级，因为行内代码不应被其他格式包裹
-            if annotations.get("code"):
+            # 注释（annotations）
+            ann = r.get("annotations", {}) or {}
+            # code highest priority
+            if ann.get("code"):
                 content = f"`{content}`"
-            # 加粗 (Bold)
-            if annotations.get("bold"):
+            if ann.get("bold"):
                 content = f"**{content}**"
-            # 斜体 (Italic)
-            if annotations.get("italic"):
+            if ann.get("italic"):
                 content = f"*{content}*"
-            # 删除线 (Strikethrough)
-            if annotations.get("strikethrough"):
+            if ann.get("strikethrough"):
                 content = f"~~{content}~~"
-            # 下划线 (Underline) - Markdown 不原生支持下划线，通常用 HTML 标签 <ins>
-            if annotations.get("underline"):
+            if ann.get("underline"):
                 content = f"<ins>{content}</ins>"
-        # 其他类型 (如 Mention, Date) - 保持 plain_text
+
+        # 其他类型（mention、date 等）— 使用 plain_text
+        else:
+            content = r.get("plain_text", "")
+
         if content:
+            # 最后统一做 Liquid 保护（对普通文本我们通常不修改花括号，但为安全在公式以外也保护可能的 '{{' 出现）
+            # content = _escape_liquid(content)
             parts.append(content)
+
     return "".join(parts)
 
 
@@ -360,7 +392,59 @@ def block_to_md(block: dict, indent: int = 0) -> str:
         return f"<details>\n<summary>{text}</summary>\n\n{children_md}\n</details>"
     if t == "equation":
         expr = block.get("equation", {}).get("expression", "").strip()
-        return f"$$\n{expr}\n$$" if expr else ""
+        if expr:
+            # 避免触发 Liquid
+            expr = expr.replace("{{", "{ {").replace("}}", "} }")
+            return f"\n$$\n{expr}\n$$\n"
+        return ""
+    # ========== table ==========
+    if t == "table":
+        # 获取表格行（Notion 的 table block 子节点是 table_row）
+        rows = get_block_children(block.get("id"))
+        if not rows:
+            return ""
+
+        # helper: sanitize cell content for markdown table
+        def _sanitize_cell(cell_text: str) -> str:
+            if cell_text is None:
+                return ""
+            # 把行内的 $$...$$ 或块级 $$...$$ 转为单行行内 $...$（表格内不适合多行块级）
+            # 先去掉首尾空白
+            s = str(cell_text).strip()
+            # 把块级 $$...$$ -> $...$
+            s = re.sub(r'\$\$\s*(.*?)\s*\$\$', lambda m: _normalize_equation_for_inline(m.group(1)), s, flags=re.S)
+            # 把单行内可能包含换行的内容换成 <br>，避免破坏表格布局
+            s = s.replace("\n", "<br>")
+            # 转义竖线 '|'（以防分栏错误）
+            s = s.replace("|", "&#124;")
+            return s
+
+        table_lines = []
+        # First row will be header if table has header row (Notion tables usually first row is header)
+        # We'll treat the first row as header always (user can control in Notion)
+        for idx, row in enumerate(rows):
+            if row.get("type") != "table_row":
+                continue
+            cells = row.get("table_row", {}).get("cells", [])
+            # cells is list of rich_text arrays per cell
+            cell_texts = []
+            for cell in cells:
+                # each cell is a rich_text array
+                cell_md = text_from_rich_text(cell)
+                cell_md = _sanitize_cell(cell_md)
+                cell_texts.append(cell_md)
+            # ensure consistent column count by padding with empty cells
+            col_count = max(len(r.get("table_row", {}).get("cells", [])) for r in rows if r.get("type") == "table_row")
+            if len(cell_texts) < col_count:
+                cell_texts.extend([""] * (col_count - len(cell_texts)))
+            line = "| " + " | ".join(cell_texts) + " |"
+            table_lines.append(line)
+            # insert header separator after first row
+            if idx == 0:
+                table_lines.append("| " + " | ".join(["---"] * len(cell_texts)) + " |")
+        # add blank line before and after table to be safe in Markdown rendering
+        return "\n\n" + "\n".join(table_lines) + "\n\n"
+
     return text
 
 
