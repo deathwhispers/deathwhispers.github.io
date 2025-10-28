@@ -16,6 +16,16 @@ author: deathwhispers
 
 ## Docker 基础命令
 
+| 命令 | 说明 | 示例 |
+| --- | --- | --- |
+| `docker version` | 查看 Docker 客户端与服务端版本 | `docker version` |
+| `docker info` | 显示 Docker 系统信息 | `docker info` |
+| `docker login` | 登录 Docker Registry（如 Docker Hub） | `docker login` |
+| `docker logout` | 退出登录 | `docker logout` |
+| `docker search <name>` | 在 Docker Hub 搜索镜像 | `docker search nginx` |
+| `docker pull <image>` | 拉取镜像 | `docker pull ubuntu:20.04` |
+| `docker push <image>` | 推送镜像到仓库 | `docker push myrepo/myimage:latest` |
+
 - 新装 Docker 环境后，执行 `docker run hello-world` 验证运行是否正常；
 
 - 使用 `docker info | grep "Storage Driver"` 检查存储驱动（overlay2 / aufs）；
@@ -23,6 +33,17 @@ author: deathwhispers
 - 使用 `docker system df` 检查镜像和卷的磁盘占用。
 
 ## 镜像（Image）管理
+
+| 命令 | 功能 | 示例 |
+| --- | --- | --- |
+| `docker images` | 列出本地镜像 | `docker images` |
+| `docker rmi <image>` | 删除镜像 | `docker rmi nginx:latest` |
+| `docker tag <src> <target>` | 给镜像打标签 | `docker tag nginx:latest myrepo/nginx:v1` |
+| `docker save -o <file>.tar <image>` | 导出镜像到文件 | `docker save -o nginx.tar nginx:latest` |
+| `docker load -i <file>.tar` | 从文件导入镜像 | `docker load -i nginx.tar` |
+| `docker history <image>` | 查看镜像构建历史 | `docker history nginx:latest` |
+| `docker inspect <image>` | 查看镜像详细信息（JSON 格式） | `docker inspect nginx` |
+| `docker build -t <tag> <dir>` | 根据 Dockerfile 构建镜像 | `docker build -t myapp:v1 .` |
 
 ```bash
 # 拉取常用镜像
@@ -44,6 +65,22 @@ docker history myapp:1.0
 
 ## 容器（Container）管理
 
+| 命令 | 功能 | 示例 |
+| --- | --- | --- |
+| `docker ps` | 查看运行中的容器 | `docker ps` |
+| `docker ps -a` | 查看所有容器（含已停止） | `docker ps -a` |
+| `docker run [options] <image>` | 创建并运行容器 | `docker run -d -p 80:80 nginx` |
+| `docker start <container>` | 启动已存在容器 | `docker start myapp` |
+| `docker stop <container>` | 停止容器 | `docker stop myapp` |
+| `docker restart <container>` | 重启容器 | `docker restart myapp` |
+| `docker rm <container>` | 删除容器 | `docker rm myapp` |
+| `docker rename <old> <new>` | 重命名容器 | `docker rename old_name new_name` |
+| `docker inspect <container>` | 查看容器详细信息 | `docker inspect myapp` |
+| `docker exec -it <container> <cmd>` | 进入容器执行命令 | `docker exec -it myapp /bin/bash` |
+| `docker logs -f <container>` | 实时查看容器日志 | `docker logs -f myapp` |
+| `docker top <container>` | 查看容器中进程 | `docker top myapp` |
+| `docker cp <container>:<path> <local>` | 从容器复制文件到主机 | `docker cp myapp:/app/config.yml .` |
+
 ```bash
 # 运行容器（后台 + 端口映射 + 命名）
 docker run -d -p 8080:80 --name web nginx
@@ -62,7 +99,7 @@ docker rm web
 
 **实战场景：**
 
-1️⃣ **部署一个测试环境：**
+**部署一个测试环境：**
 
 ```bash
 docker run -d --name mysql-dev \
@@ -71,16 +108,16 @@ docker run -d --name mysql-dev \
   mysql:8.0
 ```
 
-👉 用于本地开发测试数据库。
+用于本地开发测试数据库。
 
-2️⃣ **启动前端 + 后端容器：**
+**启动前端 + 后端容器：**
 
 ```bash
 docker run -d --name api -p 8080:8080 my-api:v1
 docker run -d --name web -p 80:80 -e API_URL=http://localhost:8080 my-web:v1
 ```
 
-3️⃣ **容器故障排查：**
+**容器故障排查：**
 
 ```bash
 docker exec -it api bash
@@ -88,6 +125,15 @@ cat /var/log/app/error.log
 ```
 
 ## 数据卷（Volumes）与挂载
+
+| 命令 | 功能 | 示例 |
+| --- | --- | --- |
+| `docker volume ls` | 查看所有卷 | `docker volume ls` |
+| `docker volume create <name>` | 创建数据卷 | `docker volume create mydata` |
+| `docker volume inspect <name>` | 查看卷信息 | `docker volume inspect mydata` |
+| `docker volume rm <name>` | 删除卷 | `docker volume rm mydata` |
+| `docker run -v <local>:<container>` | 挂载本地目录 | `docker run -v /data:/var/www nginx` |
+| `docker run --mount` | 使用更灵活的挂载语法 | `docker run --mount source=mydata,target=/app/data nginx` |
 
 - **持久化数据库**：容器删除后数据仍保留；
 
@@ -97,9 +143,18 @@ cat /var/log/app/error.log
 
 ## 网络（Networks）
 
+| 命令 | 功能 | 示例 |
+| --- | --- | --- |
+| `docker network ls` | 查看所有网络 | `docker network ls` |
+| `docker network inspect <name>` | 查看网络详情 | `docker network inspect bridge` |
+| `docker network create <name>` | 创建自定义网络 | `docker network create mynet` |
+| `docker network rm <name>` | 删除网络 | `docker network rm mynet` |
+| `docker run --network=<name>` | 指定容器使用网络 | `docker run --network=mynet nginx` |
+| `docker network connect/disconnect` | 将容器加入/移出网络 | `docker network connect mynet myapp` |
+
 **实战场景：**
 
-1️⃣ **自定义网络实现容器互通：**
+**自定义网络实现容器互通：**
 
 ```bash
 docker network create backend_net
@@ -108,9 +163,9 @@ docker run -d --name db --network backend_net mysql:8.0
 docker run -d --name app --network backend_net -e DB_HOST=db myapp:v1
 ```
 
-> 👉 `app` 可直接通过主机名 `db` 访问数据库，无需暴露端口。
+> `app` 可直接通过主机名 `db` 访问数据库，无需暴露端口。
 
-2️⃣ **快速排查网络问题：**
+**快速排查网络问题：**
 
 ```bash
 docker exec -it app ping db
@@ -119,7 +174,24 @@ docker exec -it app curl http://db:3306
 
 ## 容器文件与交互调试
 
-## 🧩 七、Docker Compose 常用命令
+| 命令 | 功能 | 示例 |
+| --- | --- | --- |
+| `docker attach <container>` | 附加到运行中容器控制台 | `docker attach myapp` |
+| `docker diff <container>` | 查看容器文件系统变化 | `docker diff myapp` |
+| `docker stats` | 查看容器实时资源使用 | `docker stats` |
+| `docker system df` | 查看磁盘使用情况 | `docker system df` |
+| `docker system prune` | 清理无用容器/镜像/卷 | `docker system prune -a` |
+
+## 七、Docker Compose 常用命令
+
+| 命令 | 功能 | 示例 |
+| --- | --- | --- |
+| `docker compose up -d` | 启动所有服务 | `docker compose up -d` |
+| `docker compose down` | 停止并删除容器/网络 | `docker compose down` |
+| `docker compose ps` | 查看 Compose 服务状态 | `docker compose ps` |
+| `docker compose logs -f` | 查看所有服务日志 | `docker compose logs -f` |
+| `docker compose build` | 构建镜像 | `docker compose build` |
+| `docker compose exec <service> <cmd>` | 在容器中执行命令 | `docker compose exec web bash` |
 
 docker-compose.yml 示例
 
@@ -159,6 +231,13 @@ docker compose exec web bash
 
 ## 系统级清理命令（慎用）
 
+| 命令 | 功能 |
+| --- | --- |
+| `docker system prune -a` | 删除所有未使用镜像、容器、网络、缓存 |
+| `docker image prune -a` | 删除所有未使用镜像 |
+| `docker container prune` | 删除所有已停止容器 |
+| `docker volume prune` | 删除所有未使用卷 |
+
 ```bash
 # 清理未使用资源
 docker system prune -a
@@ -176,9 +255,9 @@ docker rmi $(docker images -q -f dangling=true)
 
 - 在 CI 环境中可自动清理临时镜像，避免 runner 宕机。
 
-> 💀 提示： 这些命令不可逆，请务必确认后再执行！
+> 提示： 这些命令不可逆，请务必确认后再执行！
 
-## 🧭 九、实用技巧与组合命令
+## 九、实用技巧与组合命令
 
 ```bash
 # 查看最近启动的容器日志
