@@ -14,7 +14,7 @@ mermaid: true
 author: deathwhispers
 ---
 
-> 全文总结于 Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！
+> [全文总结于 Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！](https://www.bilibili.com/video/BV1NCgVzoEG9?spm_id_from=333.788.videopod.sections&vd_source=1ce32605a59581a6ec6d48f9eaa72d66&p=3)
 
 # 矩阵表示、卷积与 CNN：从“密集连接”到“局部共享”的直观演绎
 
@@ -24,7 +24,7 @@ author: deathwhispers
 > 2. 阐明全连接（fully-connected）在图像任务上的局限；
 > 3. 通过卷积的直观定义、数学表示与参数对比，说明 CNN 为什么更适合图像；
 > 4. 补充池化、实现细节与局限性，引导后续主题（如序列/时序任务应使用哪类网络）。
-> 
+>
 
 ## 一、回到矩阵表示：把复杂式子变得简洁且可并行
 
@@ -84,7 +84,9 @@ $$
 
 ## 三、卷积运算：把“局部 + 共享”搬到网络里
 
-为了解决上述问题，我们把注意力转向 卷积运算（convolution）。直观做法是：在输入图像上滑动一个小窗（例如 3×3），把窗口内像素与一个同大小矩阵做对应位置相乘并求和，结果放到输出特征图的对应位置。这个 3×3 的小矩阵就是 卷积核（filter / kernel） 或称权重模板。
+为了解决上述问题，我们把注意力转向 卷积运算（convolution）。直观做法是：在输入图像上滑动一个小窗（例如
+3×3），把窗口内像素与一个同大小矩阵做对应位置相乘并求和，结果放到输出特征图的对应位置。这个 3×3 的小矩阵就是 卷积核（filter /
+kernel） 或称权重模板。
 
 简图如下（示意卷积核在图片上滑动并产生输出）：
 
@@ -100,7 +102,9 @@ $$
 
 ## 四、从数学上看：矩阵乘法 → 卷积运算的替代
 
-经典全连接层是矩阵乘法：(W a)。卷积则是局部乘加的线性算子。在实现层面，卷积通常可以被转化为矩阵乘法（例如 im2col/unfold 将滑动窗口展开成列，然后做一次巨大的矩阵乘法），这使得卷积同样能高效地利用 GPU（矩阵乘法的高速库）。因此，从“并行化”角度来看，卷积并不会在速度上落后，反而在参数效率和特征可重用性上占优势。
+经典全连接层是矩阵乘法：(W a)。卷积则是局部乘加的线性算子。在实现层面，卷积通常可以被转化为矩阵乘法（例如 im2col/unfold
+将滑动窗口展开成列，然后做一次巨大的矩阵乘法），这使得卷积同样能高效地利用
+GPU（矩阵乘法的高速库）。因此，从“并行化”角度来看，卷积并不会在速度上落后，反而在参数效率和特征可重用性上占优势。
 
 ## 五、参数量比较（用数字说话）
 
@@ -134,7 +138,8 @@ $$
 
 ## 七、简单代码示例（PyTorch）——对比参数与输出形状
 
-下面是一个简短可运行的 PyTorch 代码片段（注释充分），演示把图像扁平化接全连接 vs 使用卷积层，并统计参数数目与输出形状（继续用单通道 30×30 为例）：
+下面是一个简短可运行的 PyTorch 代码片段（注释充分），演示把图像扁平化接全连接 vs 使用卷积层，并统计参数数目与输出形状（继续用单通道
+30×30 为例）：
 
 ```python
 import torch
@@ -143,21 +148,24 @@ import torch.nn as nn
 # 假设输入：batch=8, channels=1, H=W=30
 x = torch.randn(8, 1, 30, 30)
 
+
 # 全连接方案：flatten -> Linear(900 -> 1000)
 class FCModel(nn.Module):
     def __init__(self):
         super().__init__()
-        self.fc = nn.Linear(30*30*1, 1000)
+        self.fc = nn.Linear(30 * 30 * 1, 1000)
         self.act = nn.ReLU()
 
     def forward(self, x):
-        x_flat = x.view(x.size(0), -1)   # flatten: [B, 900]
-        out = self.fc(x_flat)            # linear: [B, 1000]
+        x_flat = x.view(x.size(0), -1)  # flatten: [B, 900]
+        out = self.fc(x_flat)  # linear: [B, 1000]
         return self.act(out)
+
 
 fc = FCModel()
 print("FC params:", sum(p.numel() for p in fc.parameters()))
-print("FC out shape:", fc(x).shape)   # -> [8, 1000]
+print("FC out shape:", fc(x).shape)  # -> [8, 1000]
+
 
 # 卷积方案：Conv2d(1 -> 16, kernel=3, padding=1) -> ReLU
 class ConvModel(nn.Module):
@@ -167,8 +175,9 @@ class ConvModel(nn.Module):
         self.act = nn.ReLU()
 
     def forward(self, x):
-        out = self.conv(x)              # output: [B, 16, 30, 30]
+        out = self.conv(x)  # output: [B, 16, 30, 30]
         return self.act(out)
+
 
 conv = ConvModel()
 print("Conv params:", sum(p.numel() for p in conv.parameters()))
@@ -182,7 +191,8 @@ print("Conv out shape:", conv(x).shape)  # -> [8, 16, 30, 30]
 
 在传统图像处理里（如用 Sobel、Laplacian 等算子），卷积核是手工设定的，目标是求边缘、模糊或锐化。这些核是固定的，不参与学习。
 
-在 CNN 中，卷积核是可学习参数：通过梯度下降等优化方法自动学习出“对当前任务最有用”的滤波器（例如检测某类边缘、纹理或形状）。这使得 CNN 在复杂视觉任务上具有极强的表达与适应能力。
+在 CNN 中，卷积核是可学习参数：通过梯度下降等优化方法自动学习出“对当前任务最有用”的滤波器（例如检测某类边缘、纹理或形状）。这使得
+CNN 在复杂视觉任务上具有极强的表达与适应能力。
 
 ## 九、局限性与扩展（何时不该只用 CNN？）
 

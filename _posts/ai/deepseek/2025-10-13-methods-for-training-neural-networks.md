@@ -14,7 +14,7 @@ mermaid: true
 author: deathwhispers
 ---
 
-> 全文总结于 Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！
+> [全文总结于 Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！](https://www.bilibili.com/video/BV1NCgVzoEG9?spm_id_from=333.788.videopod.sections&vd_source=1ce32605a59581a6ec6d48f9eaa72d66&p=3)
 
 # 🧠 神经网络训练中的问题与解决方法
 
@@ -279,20 +279,21 @@ from sklearn.metrics import accuracy_score
 # ---------------------------
 # 可配置项（运行前可以修改）
 # ---------------------------
-SEED = 42                # 随机种子，便于复现实验结果
-N_SAMPLES = 300          # 数据总样本数
-TEST_SIZE = 0.3          # 测试集占比
-BATCH_SIZE = 32          # minibatch 大小
-LR = 1e-2                # 学习率
-MAX_EPOCHS = 300         # 最大训练轮数（EarlyStopping 会提前终止）
-PATIENCE = 20            # EarlyStopping 的 patience
-FIG_DIR = "figures"      # 保存图片的目录
+SEED = 42  # 随机种子，便于复现实验结果
+N_SAMPLES = 300  # 数据总样本数
+TEST_SIZE = 0.3  # 测试集占比
+BATCH_SIZE = 32  # minibatch 大小
+LR = 1e-2  # 学习率
+MAX_EPOCHS = 300  # 最大训练轮数（EarlyStopping 会提前终止）
+PATIENCE = 20  # EarlyStopping 的 patience
+FIG_DIR = "figures"  # 保存图片的目录
 
 # ---------------------------
 # 环境准备与随机种子（确保可复现）
 # ---------------------------
 # 如果可用则使用 GPU，否则使用 CPU
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 # 固定 Python, numpy, torch 的随机性以提高实验可复现性
 def set_seed(seed: int):
@@ -306,10 +307,12 @@ def set_seed(seed: int):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
+
 set_seed(SEED)
 
 # 确保图片保存目录存在
 os.makedirs(FIG_DIR, exist_ok=True)
+
 
 # ---------------------------
 # 数据准备：make_moons（二分类 toy 数据）
@@ -339,7 +342,9 @@ def prepare_data(n_samples: int, test_size: float, seed: int) -> Tuple[DataLoade
 
     return train_loader, test_loader, X_test, y_test
 
+
 train_loader, test_loader, X_test_np, y_test_np = prepare_data(N_SAMPLES, TEST_SIZE, SEED)
+
 
 # ---------------------------
 # 模型定义
@@ -350,6 +355,7 @@ class SimpleMLP(nn.Module):
     - 可选择在隐藏层之间加入 dropout（通过 dropout_rate 参数）
     - 结构：Linear -> ReLU -> (Dropout) -> Linear -> ReLU -> (Dropout) -> Linear
     """
+
     def __init__(self, input_dim=2, hidden_dim=64, output_dim=2, dropout_rate: float = 0.0):
         super().__init__()
         # 第1个全连接层（输入 -> 隐层）
@@ -378,6 +384,7 @@ class SimpleMLP(nn.Module):
         x = self.fc3(x)
         return x
 
+
 # ---------------------------
 # 训练与验证函数
 # ---------------------------
@@ -398,20 +405,21 @@ def evaluate(model: nn.Module, loader: DataLoader, device: torch.device) -> Tupl
             X_batch = X_batch.to(device)
             y_batch = y_batch.to(device)
 
-            logits = model(X_batch)                   # 前向计算 logits
-            loss = criterion(logits, y_batch)         # 计算交叉熵损失
+            logits = model(X_batch)  # 前向计算 logits
+            loss = criterion(logits, y_batch)  # 计算交叉熵损失
             total_loss += loss.item() * X_batch.size(0)  # 累计（按样本数加权）
 
-            preds = torch.argmax(logits, dim=1)       # 取最大概率索引为预测类别
+            preds = torch.argmax(logits, dim=1)  # 取最大概率索引为预测类别
             all_preds.append(preds.cpu().numpy())
             all_labels.append(y_batch.cpu().numpy())
 
     # 将分批的预测与标签拼接为完整数组
     all_preds = np.concatenate(all_preds, axis=0)
     all_labels = np.concatenate(all_labels, axis=0)
-    avg_loss = total_loss / len(loader.dataset)     # 计算平均损失
-    acc = accuracy_score(all_labels, all_preds)     # 计算准确率
+    avg_loss = total_loss / len(loader.dataset)  # 计算平均损失
+    acc = accuracy_score(all_labels, all_preds)  # 计算准确率
     return avg_loss, acc
+
 
 def train_one_epoch(model: nn.Module, loader: DataLoader, optimizer, device: torch.device) -> float:
     """
@@ -424,16 +432,17 @@ def train_one_epoch(model: nn.Module, loader: DataLoader, optimizer, device: tor
         X_batch = X_batch.to(device)
         y_batch = y_batch.to(device)
 
-        optimizer.zero_grad()            # 清除上一轮的梯度
-        logits = model(X_batch)          # 前向计算
+        optimizer.zero_grad()  # 清除上一轮的梯度
+        logits = model(X_batch)  # 前向计算
         loss = criterion(logits, y_batch)  # 计算损失
-        loss.backward()                  # 反向传播（计算梯度）
-        optimizer.step()                 # 参数更新（应用梯度）
+        loss.backward()  # 反向传播（计算梯度）
+        optimizer.step()  # 参数更新（应用梯度）
 
         running_loss += loss.item() * X_batch.size(0)  # 按样本数累计损失
 
     avg_loss = running_loss / len(loader.dataset)
     return avg_loss
+
 
 # ---------------------------
 # EarlyStopping 辅助类
@@ -444,6 +453,7 @@ class EarlyStopping:
     - 当验证损失在 patience 次 epoch 内没有得到改善时，触发停止
     - 保持一份最佳模型的拷贝（基于验证损失）
     """
+
     def __init__(self, patience: int = 20, min_delta: float = 1e-6):
         self.patience = patience
         self.min_delta = min_delta
@@ -463,6 +473,7 @@ class EarlyStopping:
             self.counter += 1
             if self.counter >= self.patience:
                 self.early_stop = True
+
 
 # ---------------------------
 # 实验运行函数：负责构建模型、训练、验证并记录历史
@@ -581,6 +592,7 @@ def plot_histories(histories: Dict[str, Dict[str, List[float]]], filename_prefix
     plt.close()
     print(f"Saved accuracy comparison figure to: {acc_path}")
 
+
 # ---------------------------
 # 主程序：定义并运行一组实验
 # ---------------------------
@@ -624,6 +636,7 @@ def main():
         final_val_acc = h["val_acc"][-1]
         print(f"- {name}: val_acc = {final_val_acc:.4f}")
     print("#" * 40 + "\n")
+
 
 if __name__ == "__main__":
     main()

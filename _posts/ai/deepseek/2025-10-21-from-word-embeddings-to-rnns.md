@@ -14,7 +14,7 @@ mermaid: true
 author: deathwhispers
 ---
 
-> 全文总结于 Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！
+> [全文总结于 Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！](https://www.bilibili.com/video/BV1NCgVzoEG9?spm_id_from=333.788.videopod.sections&vd_source=1ce32605a59581a6ec6d48f9eaa72d66&p=3)
 
 # 循环神经网络 RNN（Recurrent Neural Network）
 
@@ -116,7 +116,8 @@ author: deathwhispers
 
 ![](/assets/images/deepseek/from-word-embeddings-to-rnns/05322331ae224ec3.webp)
 
-这样就将自然语言之间的联系转为可以用数学公式计算的方式。同时，一些数学上的计算结果可能反映出一些很微妙的关系，例如一个训练好的词嵌入矩阵，很可能使得桌子-椅子 = 鼠标 - 键盘。
+这样就将自然语言之间的联系转为可以用数学公式计算的方式。同时，一些数学上的计算结果可能反映出一些很微妙的关系，例如一个训练好的词嵌入矩阵，很可能使得桌子-椅子 =
+鼠标 - 键盘。
 
 ### ✳️ 例子
 
