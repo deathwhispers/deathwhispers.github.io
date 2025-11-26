@@ -1,0 +1,10 @@
+{
+  "promptDelete": false,
+  "alwaysUpdateLinks": true,
+  "userIgnoreFilters": [
+    "_plugins/",
+    "_site/",
+    "_tabs/",
+    "_plugins/"
+  ]
+}

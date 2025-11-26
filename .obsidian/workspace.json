@@ -1,0 +1,255 @@
+{
+  "main": {
+    "id": "0d4c2236b2e5ad2f",
+    "type": "split",
+    "children": [
+      {
+        "id": "4b5e606f38ab9eb1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2f6d5f3c85b59ea6",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "新标签页"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "895ed9f43617a015",
+    "type": "split",
+    "children": [
+      {
+        "id": "1666129a20b1e094",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "78edf5bee7eed862",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "81727e216033e22e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:Spring Scheduling",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "2e6bf31a63bc6b31",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 328.5
+  },
+  "right": {
+    "id": "42ab22e584869ab3",
+    "type": "split",
+    "children": [
+      {
+        "id": "a047f468495cdbb5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3ccec998e748fb60",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "反向链接"
+            }
+          },
+          {
+            "id": "740034dbb0357f7e",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "出链"
+            }
+          },
+          {
+            "id": "995308dbf1a7ac92",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "329e285de0e4c781",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
+          },
+          {
+            "id": "c493d363589fc1a8",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "大纲"
+            }
+          },
+          {
+            "id": "0a8a5de777da89ba",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
+          },
+          {
+            "id": "59af9ff6aaaccad3",
+            "type": "leaf",
+            "state": {
+              "type": "advanced-tables-toolbar",
+              "state": {},
+              "icon": "lucide-ghost",
+              "title": "advanced-tables-toolbar"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "templates:插入模板": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "command-palette:打开命令面板": false,
+      "bases:创建新数据库": false,
+      "obsidian-importer:Open Importer": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "templater-obsidian:Templater": false,
+      "obsidian-excalidraw-plugin:新建绘图文件": false,
+      "obsidian-git:Open Git source control": false
+    }
+  },
+  "active": "2f6d5f3c85b59ea6",
+  "lastOpenFiles": [
+    "_posts/framework/2025-07-31-dynamic-sql-builder-based-on-mybatis-plus.md",
+    "_posts/learning/numpy/2025-07-07-numpy_array.md",
+    "_posts/framework/2025-09-21-enhancing-spring-boot-scheduled-tasks-part-10.md",
+    "_posts/framework/2025-09-17-enhancing-spring-boot-scheduled-tasks-part-8.md",
+    "_posts/framework/2025-09-15-enhancing-spring-boot-scheduled-tasks-part-7.md",
+    "_posts/framework/2025-09-05-enhancing-spring-boot-scheduled-tasks-part-5.md",
+    "_posts/framework/2025-08-20-enhancing-spring-boot-scheduled-tasks-part-3.md",
+    "_posts/ai/deepseek/2025-10-21-from-word-embeddings-to-rnns.md",
+    "_posts/ai/deepseek/2025-10-16-from-matrices-to-cnns.md",
+    "_posts/ai/deepseek/2025-10-22-simple-yet-powerful-transformers.md",
+    "_posts/ai/deepseek/2025-10-09-how-to-calculate-neural-network-parameters.md",
+    "_posts/ai/deepseek/2025-10-05-from-functions-to-neural-networks.md",
+    "_posts/ai/deepseek/2025-10-13-methods-for-training-neural-networks.md",
+    "_posts/framework/2025-09-20-enhancing-spring-boot-scheduled-tasks-part-9.md",
+    "_posts/framework/2025-08-13-enhancing-spring-boot-scheduled-tasks-part-1.md",
+    "_posts/framework/2025-08-18-enhancing-spring-boot-scheduled-tasks-part-2.md",
+    "_posts/framework/2025-07-24-unified-api-for-all-report-part-1.md",
+    "Untitled.md",
+    "_posts/framework/2025-09-01-enhancing-spring-boot-scheduled-tasks-part-4.md",
+    "_posts/framework/2025-07-27-unified-api-for-all-report-part-2.md",
+    "_posts/2025-10-24-learn-math-in-markdown.md",
+    "_posts/2024-06-20-macos-one-key-hidpi.md",
+    "_posts/2022-10-04-redis-best-practices.md",
+    "Notion/博客专栏/白话 DeepSeek 01｜从函数到神经网络.md",
+    "Notion/博客专栏/常用的 Docker 命令.md",
+    "Notion/博客专栏/白话 DeepSeek 05｜从词嵌入到 RNN.md",
+    "image 5.png",
+    "image 4.png",
+    "image 3.png",
+    "image 2.png",
+    "image 1.png",
+    "image.png",
+    "Notion/博客专栏/博客专栏.base",
+    "Notion/博客专栏",
+    "Notion",
+    "未命名.canvas",
+    "未命名.base",
+    "RHY工作记录/系统组件/ 贵州安盘-机电运维系统-华驰/部署资料/部署资料.base",
+    "RHY工作记录/系统组件/ 贵州安盘-机电运维系统-华驰/部署资料/服务部署环境/New database/New database.base",
+    "images/image.png",
+    "images/1704959100450-bb9e23e4-908e-4c17-9000-bc041f3e9042.svg",
+    "images/基于高速公路网格化和雷达测量的交通态势分析/image 4.png",
+    "images/基于高速公路网格化和雷达测量的交通态势分析/道路网格化-3.png",
+    "images/基于高速公路网格化和雷达测量的交通态势分析",
+    "images",
+    "RHY工作记录/系统组件/ 贵州安盘-机电运维系统-华驰/接口设计文档/接口设计文档.base",
+    "RHY工作记录/系统组件/ 贵州安盘-机电运维系统-华驰/其他资料/其他资料.base"
+  ]
+}
