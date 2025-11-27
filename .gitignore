@@ -25,11 +25,11 @@ package-lock.json
 !.vscode/extensions.json
 !.vscode/tasks.json
 
-# Misc
-_sass/vendors
-assets/js/dist
-
 ### maven ###
 .mvn/
 mvnw
 mvnw.cmd
+
+# Obsidian
+.obsidian
+00 inbond/
