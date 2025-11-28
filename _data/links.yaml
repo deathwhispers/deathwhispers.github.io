@@ -546,6 +546,10 @@
       url: https://dlercloud.com/
       desc: Simple & trustworthy
       icon: fa-plane-slash
+    - name: 小火箭配置使用教程
+      url: https://fanqiang.gitbook.io/fanqiang/ios/shadowrocket
+      desc: Shadowrocket小火箭配置使用教程
+      icon: fa-rocket
 
 
 
