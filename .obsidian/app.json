@@ -6,5 +6,8 @@
     "_site/",
     "_tabs/",
     "_plugins/"
-  ]
+  ],
+  "attachmentFolderPath": "00 inbond/files",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "00 inbond/notes"
 }

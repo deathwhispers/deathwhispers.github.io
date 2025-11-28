@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "4b5e606f38ab9eb1",
+        "id": "6765710985da4d5d",
         "type": "tabs",
         "children": [
           {
-            "id": "2f6d5f3c85b59ea6",
+            "id": "db2b015dbff24f7a",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "_posts/learning/spring/Spring + Mybatis 操作 Phoenix 数据库.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "Spring + Mybatis 操作 Phoenix 数据库"
             }
           }
         ]
@@ -49,7 +63,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:Spring Scheduling",
+                "query": "[\"Participants\"]",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -70,12 +84,11 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 328.5
+    "width": 445.5
   },
   "right": {
     "id": "42ab22e584869ab3",
@@ -151,12 +164,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "_posts/learning/spring/Spring + Mybatis 操作 Phoenix 数据库.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "Spring + Mybatis 操作 Phoenix 数据库 的大纲"
             }
           },
           {
@@ -178,9 +192,21 @@
               "icon": "lucide-ghost",
               "title": "advanced-tables-toolbar"
             }
+          },
+          {
+            "id": "fb3e82b889c834e2",
+            "type": "leaf",
+            "state": {
+              "type": "footnotes",
+              "state": {
+                "file": "assets/templates/meeting.md"
+              },
+              "icon": "lucide-file-signature",
+              "title": "脚注"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -197,59 +223,59 @@
       "bases:创建新数据库": false,
       "obsidian-importer:Open Importer": false,
       "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "templater-obsidian:Templater": false,
       "obsidian-excalidraw-plugin:新建绘图文件": false,
-      "obsidian-git:Open Git source control": false
+      "obsidian-git:Open Git source control": false,
+      "publish:发布更改": false
     }
   },
-  "active": "2f6d5f3c85b59ea6",
+  "active": "78edf5bee7eed862",
   "lastOpenFiles": [
-    "_posts/framework/2025-07-31-dynamic-sql-builder-based-on-mybatis-plus.md",
-    "_posts/learning/numpy/2025-07-07-numpy_array.md",
-    "_posts/framework/2025-09-21-enhancing-spring-boot-scheduled-tasks-part-10.md",
-    "_posts/framework/2025-09-17-enhancing-spring-boot-scheduled-tasks-part-8.md",
-    "_posts/framework/2025-09-15-enhancing-spring-boot-scheduled-tasks-part-7.md",
-    "_posts/framework/2025-09-05-enhancing-spring-boot-scheduled-tasks-part-5.md",
-    "_posts/framework/2025-08-20-enhancing-spring-boot-scheduled-tasks-part-3.md",
-    "_posts/ai/deepseek/2025-10-21-from-word-embeddings-to-rnns.md",
-    "_posts/ai/deepseek/2025-10-16-from-matrices-to-cnns.md",
-    "_posts/ai/deepseek/2025-10-22-simple-yet-powerful-transformers.md",
-    "_posts/ai/deepseek/2025-10-09-how-to-calculate-neural-network-parameters.md",
-    "_posts/ai/deepseek/2025-10-05-from-functions-to-neural-networks.md",
-    "_posts/ai/deepseek/2025-10-13-methods-for-training-neural-networks.md",
-    "_posts/framework/2025-09-20-enhancing-spring-boot-scheduled-tasks-part-9.md",
-    "_posts/framework/2025-08-13-enhancing-spring-boot-scheduled-tasks-part-1.md",
-    "_posts/framework/2025-08-18-enhancing-spring-boot-scheduled-tasks-part-2.md",
-    "_posts/framework/2025-07-24-unified-api-for-all-report-part-1.md",
-    "Untitled.md",
-    "_posts/framework/2025-09-01-enhancing-spring-boot-scheduled-tasks-part-4.md",
-    "_posts/framework/2025-07-27-unified-api-for-all-report-part-2.md",
-    "_posts/2025-10-24-learn-math-in-markdown.md",
-    "_posts/2024-06-20-macos-one-key-hidpi.md",
-    "_posts/2022-10-04-redis-best-practices.md",
-    "Notion/博客专栏/白话 DeepSeek 01｜从函数到神经网络.md",
-    "Notion/博客专栏/常用的 Docker 命令.md",
-    "Notion/博客专栏/白话 DeepSeek 05｜从词嵌入到 RNN.md",
-    "image 5.png",
-    "image 4.png",
-    "image 3.png",
-    "image 2.png",
-    "image 1.png",
-    "image.png",
-    "Notion/博客专栏/博客专栏.base",
-    "Notion/博客专栏",
-    "Notion",
-    "未命名.canvas",
-    "未命名.base",
-    "RHY工作记录/系统组件/ 贵州安盘-机电运维系统-华驰/部署资料/部署资料.base",
-    "RHY工作记录/系统组件/ 贵州安盘-机电运维系统-华驰/部署资料/服务部署环境/New database/New database.base",
-    "images/image.png",
-    "images/1704959100450-bb9e23e4-908e-4c17-9000-bc041f3e9042.svg",
-    "images/基于高速公路网格化和雷达测量的交通态势分析/image 4.png",
-    "images/基于高速公路网格化和雷达测量的交通态势分析/道路网格化-3.png",
-    "images/基于高速公路网格化和雷达测量的交通态势分析",
-    "images",
-    "RHY工作记录/系统组件/ 贵州安盘-机电运维系统-华驰/接口设计文档/接口设计文档.base",
-    "RHY工作记录/系统组件/ 贵州安盘-机电运维系统-华驰/其他资料/其他资料.base"
+    "_site/about/index.html",
+    "_site/about",
+    "_site/navigation/index.html",
+    "_site/navigation",
+    "_site/archives/index.html",
+    "_site/archives",
+    "_site/tags/index.html",
+    "_site/categories/index.html",
+    "_site/posts/virtualization/index.html",
+    "_site/posts/update-linux-time/index.html",
+    "_site/posts/unified-api-for-all-report-part-2/index.html",
+    "_site/assets/img/favicons/mstile-150x150.png",
+    "_site/assets/img/favicons/favicon-32x32.png",
+    "_site/assets/img/favicons/favicon-16x16.png",
+    "_site/assets/img/favicons/android-chrome-512x512.png",
+    "_site/assets/img/favicons/android-chrome-192x192.png",
+    "_site/assets/lib/fontawesome-free/README.md",
+    "_site/assets/lib/README.md",
+    "_site/assets/img/favicons3/web-app-manifest-512x512.png",
+    "_site/assets/img/favicons3/web-app-manifest-192x192.png",
+    "_site/assets/img/favicons3/favicon.svg",
+    "_site/assets/img/favicons3/favicon-96x96.png",
+    "_site/assets/img/favicons3/apple-touch-icon.png",
+    "_posts/learning/bigdata/hive/2021-04-03-hive-installation-on-linux.md",
+    "_posts/learning/bigdata/hive/2021-04-09-hive-introduction-and-core-concepts.md",
+    "_posts/learning/bigdata/hive/2021-04-11-hive-cli-and-beeline-command-line-basic-usage.md",
+    "_posts/learning/bigdata/storm/2022-04-24-storm-integration-hdfs-and-hbase.md",
+    "_posts/learning/bigdata/storm/2022-04-11-storm-cluster-setup.md",
+    "_posts/learning/bigdata/storm/2022-04-16-storm-and-stream-processing-introduction.md",
+    "_posts/learning/bigdata/storm/2022-04-27-storm-integration-kafka.md",
+    "_posts/learning/bigdata/storm/2022-04-28-storm-integration-redis-detail.md",
+    "_posts/learning/bigdata/storm/2022-04-18-storm-core-concepts-explanation.md",
+    "_posts/learning/bigdata/storm/2022-04-16-storm-three-packaging-methods-comparison-analysis.md",
+    "_posts/learning/bigdata/storm/2022-04-20-storm-programming-model.md",
+    "_posts/learning/bigdata/storm/2022-04-09-storm-single-node-environment-setup.md",
+    "_posts/learning/bigdata/sparkSQL/2020-05-23-spark-sql-join.md",
+    "_posts/learning/bigdata/sparkSQL/2020-05-23-spark-sql-external-data-sources.md",
+    "_posts/learning/bigdata/sparkSQL/2020-05-22-spark-sql-introduction.md",
+    "_posts/learning/bigdata/sparkSQL/2020-05-25-spark-sql-aggregations.md",
+    "_posts/learning/bigdata/sparkstreaming/2020-06-03-spark-streaming-basic-operations.md",
+    "_posts/learning/bigdata/sparkstreaming/2020-06-23-spark-streaming-integration-with-flume.md",
+    "_posts/learning/bigdata/sparkstreaming/2020-06-28-spark-streaming-integration-with-kafka.md",
+    "_posts/learning/bigdata/sparkstreaming/2020-06-18-spark-streaming-and-stream-processing.md",
+    "_posts/learning/bigdata/spark/2020-05-09-spark-introduction.md",
+    "_posts/learning/bigdata/spark/2020-05-23-transformation-and-action-common-operators.md",
+    "_posts/learning/bigdata/spark/2020-05-21-structured-api-basic-usage.md",
+    "未命名.canvas"
   ]
 }
