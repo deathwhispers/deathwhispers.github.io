@@ -8,10 +8,9 @@ tags:
 categories:
   - DeepSeek
   - 白话 DeepSeek 系列
-comments: true
-math: true
-mermaid: true
 author: deathwhispers
+created: 2025-11-28 09:57
+updated: 2025-11-28 09:57
 ---
 
 > [全文总结于 Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！](https://www.bilibili.com/video/BV1NCgVzoEG9?spm_id_from=333.788.videopod.sections&vd_source=1ce32605a59581a6ec6d48f9eaa72d66&p=3)
