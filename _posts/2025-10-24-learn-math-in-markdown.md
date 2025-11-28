@@ -1,17 +1,15 @@
 ---
 layout: post
-title: "一文学会在Markdown中编辑数学符号与公式"
+title: 一文学会在Markdown中编辑数学符号与公式
 date: 2025-10-24
 tags:
   - Markdown
   - LaTeX
-categories:
-  []
-comments: true
-math: true
-mermaid: true
+categories: 
+render-with-liquid: false
 author: deathwhispers
-render_with_liquid: false
+created: 2025-11-28 09:57
+updated: 2025-11-28 09:57
 ---
 
 > [本文转载自博客园 行无际《一文学会在Markdown中编辑数学符号与公式》](https://www.cnblogs.com/bytesfly/p/markdown-formula.html)

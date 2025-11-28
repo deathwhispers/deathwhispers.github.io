@@ -6,10 +6,9 @@ tags:
   - Redis
 categories:
   []
-comments: true
-math: true
-mermaid: true
 author: deathwhispers
+created: 2025-11-28 09:57
+updated: 2025-11-28 09:57
 ---
 
 # redis使用规范
