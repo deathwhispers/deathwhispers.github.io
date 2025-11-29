@@ -1,0 +1,237 @@
+---
+layout: post
+title: JetLinks 事件驱动
+slug: jetlinks-event-driver
+type:
+  - note
+date: 2023-05-27
+status: draft
+tags:
+  - JetLinks
+categories:
+  - IoT
+mood:
+weather:
+author: deathwhispers
+created: 2023-05-27 11:45
+updated: 2023-05-27 18:33
+---
+# 事件驱动
+
+# 事件驱动
+
+在JetLinks中大量使用到事件驱动来实现功能解耦,主要由Spring Event和事件总线(EventBus)组成.
+
+## Spring Event
+
+直接使用spring-framework的事件模型,通过ApplicationEventPublisher来发送事件，在方法上注解@EventListener来监听事件.
+
+注意
+
+由于Spring Event不支持响应式,平台封装了响应式事件抽象类，可实现接口AsyncEvent或者继承DefaultAsyncEvent来处理 响应式操作。监听响应式事件时需要使用event.async( doSomeThing(event) )来注册响应式操作. 例如：
+
+```plain text
+@EventListener
+public void handleEvent(EntitySavedEvent<DeviceInstanceEntity>  event){
+
+event.async( this.sendNotify(event.getEntity()) );
+
+}
+
+public Mono<Void> this.sendNotify(List<DeviceInstanceEntity> entities){
+
+  return ....;
+}
+```
+
+### 通用CRUD事件
+
+在实体类上注解@EnableEntityEvent以开启对应实体类的事件,或者通过:实现接口EntityEventListenerCustomizer并注入到spring, 来实现实体类事件自定义. 对应的事件类如下：
+
+- EntityPrepareCreateEvent
+实体类创建预处理事件,可在这个阶段修改实体类属性值,对应操作
+insert
+- EntityPrepareModifyEvent
+实体类修改预处理事件,可在这个阶段修改实体类属性值,对应操作
+update
+- EntityPrepareSaveEvent
+实体类修改预处理事件,可在这个阶段修改实体类属性值,对应操作
+save
+- EntityBeforeCreateEvent
+实体类创建前事件,可用于校验参数等操作,对应操作
+insert
+- EntityBeforeDeleteEvent
+实体类删除前事件,可用于校验是否能删除等操作,对应操作
+delete
+- EntityBeforeModifyEvent
+实体类修改事件,可用于校验参数等操作,对应操作
+update
+- EntityBeforeQueryEvent
+实体类查询前事件,可用于自定义查询条件,对应操作
+query
+- EntityBeforeSaveEvent
+实体类保存前事件,可用于校验参数等操作,对应操作
+save
+- EntitySavedEvent
+实体类保存事件,可用于记录日志等操作,对应操作
+save
+- EntityModifyEvent
+实体类修改事件,可用于记录日志等操作,对应操作
+update
+- EntityCreatedEvent
+实体类创建事件,可用于记录日志等操作,对应操作
+insert
+- EntityDeletedEvent
+实体类删除事件,可用于记录日志等操作,对应操作
+delete
+
+注意
+
+事件类的泛型为想要监听的实体类,例如: EntitySavedEvent. 如果想要全部实体,则直接监听EntitySavedEvent即可.
+
+### 授权相关事件
+
+使用接口/authorize/login进行登录时，将会触发相应的实现来实现自定义授权逻辑，如自定义验证码，密码加解密等。 相关类:AuthorizationController
+
+- AuthorizationDecodeEvent
+认证解密事件，可用于自定义用户名密码加密解密
+- AuthorizationBeforeEvent
+认证前触发，可用于校验其他参数，比如验证码
+- AuthorizationSuccessEvent
+认证通过时触发，可用于认证通过后，自定义一些信息给前端返回
+- AuthorizationFailedEvent
+认证失败时触发，可用于自定义失败时的处理逻辑
+
+### 用户管理相关
+
+- UserCreatedEvent
+用户创建事件
+- UserDeletedEvent
+用户删除事件
+- UserModifiedEvent
+用户修改事件
+- UserStateChangedEvent
+用户状态变更事件
+- ClearUserAuthorizationCacheEvent
+清空用户权限缓存信息事件,可用发送此事件来清理用户权限缓存
+
+### 数据权限相关(企业版)
+
+- AssetsBindEvent
+资产绑定事件
+- AssetsUnBindEvent
+资产解绑事件
+- AssetsUnBindAllEvent
+全部资产解绑事件
+- TenantMemberBindEvent
+租户成员绑定事件
+- TenantMemberUnBindEvent
+租户成员解绑事件
+
+注意
+
+资产绑定方式分为手动绑定和自动绑定, 自动绑定是在创建数据,删除数据等操作时执行的. 手动绑定通常是通过接口进行资产分配时执行的.可以通过以下方式来区分绑定方式:
+
+- AssetsUtils.doWhenSourceIsAutoBind
+- AssetsUtils.doWhenSourceIsManualBind
+
+```plain text
+@EventListener
+public void handleEvent(AssetsBindEvent event){
+  event.async(
+    AssetsUtils
+      .doWhenSourceIsAutoBind(doSomeThing(event.getAssetId()),true)
+  )
+}
+```
+
+### 设备管理相关
+
+- DeviceDeployedEvent
+: 设备激活时触发
+- DeviceUnregisterEvent
+: 设备注销时触发
+- DeviceAutoRegisterEvent
+: 设备自动注册时触发,可返回是否允许自动注册
+- DeviceProductDeployEvent
+: 产品激活时触发
+
+## EventBus
+
+由于Spting Event不支持更细粒度的订阅,例如: 订阅某一个设备的消息。平台还提供了事件总线来实现粒度更细的事件支持.
+
+### Topic
+
+采用树结构来定义topic如:/device/id/message/type . topic支持路径通配符,如:/device/** 或者/device/*/message/*.
+
+TIP
+
+通配符**表示匹配多层路径,表示匹配单层路径. 不支持前后匹配,如: /device/id-/message. 发布和订阅均支持通配符,发布时使用通配符时则进行广播.
+
+### 使用
+
+订阅消息:
+
+```plain text
+@Subscribe("/device/**")
+public Mono<Void> handleDeviceMessage(DeviceMessage message){
+    return publishDeviecMessageToKafka(message);
+}
+```
+
+发布消息:
+
+```plain text
+@Autowired
+private EventBus eventBus;
+
+public Mono<Void> saveUser(UserEntity entity){
+    return service.saveUser(entity)
+            .then(eventBus.publish("/user/"+entity.getId()+"/saved",entity))
+            .then();
+}
+```
+
+### 设备消息
+
+[点击查看](http://doc.jetlinks.cn/best-practices/start.html#%E8%AE%BE%E5%A4%87%E6%B6%88%E6%81%AF%E5%AF%B9%E5%BA%94%E4%BA%8B%E4%BB%B6%E6%80%BB%E7%BA%BFtopic)
+
+### 设备告警
+
+在配置了设备告警规则,设备发生告警时,会发送消息到消息总线.
+
+/rule-engine/device/alarm/{productId}/{deviceId}/{ruleId}
+
+```plain text
+{
+  "productId":"",
+  "alarmId":"",
+  "alarmName":"",
+  "deviceId":"",
+  "deviceName":"",
+  "...":"其他从规则中获取到到信息"
+}
+```
+
+### 系统日志
+
+topic格式: /logging/system/{logger名称,.替换为/}/{level}.
+
+/logging/system/org/jetlinks/pro/TestService/{level}
+
+```plain text
+{
+    "name": "org.jetlinks.pro.TestService", //logger名称
+    "threadName" :"线程名称",
+    "level": "日志级别",
+    "className" :"产生日志的类名",
+    "methodName": "产生日志的方法名",
+    "lineNumber"：32,//行号
+    "message": "日志内容",
+    "exceptionStack": "异常栈信息",
+    "createTime": "日志时间",
+    "context":{} //上下文信息
+}
+```
+
+%23%20%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%0A%0A%E5%9C%A8JetLinks%E4%B8%AD%E5%A4%A7%E9%87%8F%E4%BD%BF%E7%94%A8%E5%88%B0%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E6%9D%A5%E5%AE%9E%E7%8E%B0%E5%8A%9F%E8%83%BD%E8%A7%A3%E8%80%A6%2C%E4%B8%BB%E8%A6%81%E7%94%B1%60Spring%20Event%60%E5%92%8C%60%E4%BA%8B%E4%BB%B6%E6%80%BB%E7%BA%BF(EventBus)%60%E7%BB%84%E6%88%90.%0A%0A%23%23%20Spring%20Event%0A%0A%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%60spring-framework%60%E7%9A%84%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B%2C%E9%80%9A%E8%BF%87%60ApplicationEventPublisher%60%E6%9D%A5%E5%8F%91%E9%80%81%E4%BA%8B%E4%BB%B6%EF%BC%8C%E5%9C%A8%E6%96%B9%E6%B3%95%E4%B8%8A%E6%B3%A8%E8%A7%A3%60%40EventListener%60%E6%9D%A5%E7%9B%91%E5%90%AC%E4%BA%8B%E4%BB%B6.%0A%0A%E6%B3%A8%E6%84%8F%0A%0A%E7%94%B1%E4%BA%8E%60Spring%20Event%60%E4%B8%8D%E6%94%AF%E6%8C%81%E5%93%8D%E5%BA%94%E5%BC%8F%2C%E5%B9%B3%E5%8F%B0%E5%B0%81%E8%A3%85%E4%BA%86%E5%93%8D%E5%BA%94%E5%BC%8F%E4%BA%8B%E4%BB%B6%E6%8A%BD%E8%B1%A1%E7%B1%BB%EF%BC%8C%E5%8F%AF%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3%60AsyncEvent%60%E6%88%96%E8%80%85%E7%BB%A7%E6%89%BF%60DefaultAsyncEvent%60%E6%9D%A5%E5%A4%84%E7%90%86%20%E5%93%8D%E5%BA%94%E5%BC%8F%E6%93%8D%E4%BD%9C%E3%80%82%E7%9B%91%E5%90%AC%E5%93%8D%E5%BA%94%E5%BC%8F%E4%BA%8B%E4%BB%B6%E6%97%B6%E9%9C%80%E8%A6%81%E4%BD%BF%E7%94%A8%60event.async(%20doSomeThing(event)%20)%60%E6%9D%A5%E6%B3%A8%E5%86%8C%E5%93%8D%E5%BA%94%E5%BC%8F%E6%93%8D%E4%BD%9C.%20%E4%BE%8B%E5%A6%82%EF%BC%9A%0A%0A%60%60%60java%0A%40EventListener%0Apublic%20void%20handleEvent(EntitySavedEvent%3CDeviceInstanceEntity%3E%20%20event)%7B%0A%0Aevent.async(%20this.sendNotify(event.getEntity())%20)%3B%0A%20%20%0A%7D%0A%0Apublic%20Mono%3CVoid%3E%20this.sendNotify(List%3CDeviceInstanceEntity%3E%20entities)%7B%0A%0A%20%20return%20….%3B%0A%7D%0A%60%60%60%0A%0A%23%23%23%20%E9%80%9A%E7%94%A8CRUD%E4%BA%8B%E4%BB%B6%0A%0A%E5%9C%A8%E5%AE%9E%E4%BD%93%E7%B1%BB%E4%B8%8A%E6%B3%A8%E8%A7%A3%60%40EnableEntityEvent%60%E4%BB%A5%E5%BC%80%E5%90%AF%E5%AF%B9%E5%BA%94%E5%AE%9E%E4%BD%93%E7%B1%BB%E7%9A%84%E4%BA%8B%E4%BB%B6%2C%E6%88%96%E8%80%85%E9%80%9A%E8%BF%87%3A%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3%60EntityEventListenerCustomizer%60%E5%B9%B6%E6%B3%A8%E5%85%A5%E5%88%B0%60spring%60%2C%20%E6%9D%A5%E5%AE%9E%E7%8E%B0%E5%AE%9E%E4%BD%93%E7%B1%BB%E4%BA%8B%E4%BB%B6%E8%87%AA%E5%AE%9A%E4%B9%89.%20%E5%AF%B9%E5%BA%94%E7%9A%84%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%A6%82%E4%B8%8B%EF%BC%9A%0A%0A-%20%60EntityPrepareCreateEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%88%9B%E5%BB%BA%E9%A2%84%E5%A4%84%E7%90%86%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E5%9C%A8%E8%BF%99%E4%B8%AA%E9%98%B6%E6%AE%B5%E4%BF%AE%E6%94%B9%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%B1%9E%E6%80%A7%E5%80%BC%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60insert%60%0A-%20%60EntityPrepareModifyEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E4%BF%AE%E6%94%B9%E9%A2%84%E5%A4%84%E7%90%86%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E5%9C%A8%E8%BF%99%E4%B8%AA%E9%98%B6%E6%AE%B5%E4%BF%AE%E6%94%B9%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%B1%9E%E6%80%A7%E5%80%BC%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60update%60%0A-%20%60EntityPrepareSaveEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E4%BF%AE%E6%94%B9%E9%A2%84%E5%A4%84%E7%90%86%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E5%9C%A8%E8%BF%99%E4%B8%AA%E9%98%B6%E6%AE%B5%E4%BF%AE%E6%94%B9%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%B1%9E%E6%80%A7%E5%80%BC%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60save%60%0A-%20%60EntityBeforeCreateEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%88%9B%E5%BB%BA%E5%89%8D%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E7%94%A8%E4%BA%8E%E6%A0%A1%E9%AA%8C%E5%8F%82%E6%95%B0%E7%AD%89%E6%93%8D%E4%BD%9C%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60insert%60%0A-%20%60EntityBeforeDeleteEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%88%A0%E9%99%A4%E5%89%8D%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E7%94%A8%E4%BA%8E%E6%A0%A1%E9%AA%8C%E6%98%AF%E5%90%A6%E8%83%BD%E5%88%A0%E9%99%A4%E7%AD%89%E6%93%8D%E4%BD%9C%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60delete%60%0A-%20%60EntityBeforeModifyEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E4%BF%AE%E6%94%B9%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E7%94%A8%E4%BA%8E%E6%A0%A1%E9%AA%8C%E5%8F%82%E6%95%B0%E7%AD%89%E6%93%8D%E4%BD%9C%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60update%60%0A-%20%60EntityBeforeQueryEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E6%9F%A5%E8%AF%A2%E5%89%8D%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E7%94%A8%E4%BA%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9F%A5%E8%AF%A2%E6%9D%A1%E4%BB%B6%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60query%60%0A-%20%60EntityBeforeSaveEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E4%BF%9D%E5%AD%98%E5%89%8D%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E7%94%A8%E4%BA%8E%E6%A0%A1%E9%AA%8C%E5%8F%82%E6%95%B0%E7%AD%89%E6%93%8D%E4%BD%9C%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60save%60%0A-%20%60EntitySavedEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E4%BF%9D%E5%AD%98%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E7%94%A8%E4%BA%8E%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97%E7%AD%89%E6%93%8D%E4%BD%9C%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60save%60%0A-%20%60EntityModifyEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E4%BF%AE%E6%94%B9%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E7%94%A8%E4%BA%8E%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97%E7%AD%89%E6%93%8D%E4%BD%9C%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60update%60%0A-%20%60EntityCreatedEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%88%9B%E5%BB%BA%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E7%94%A8%E4%BA%8E%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97%E7%AD%89%E6%93%8D%E4%BD%9C%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60insert%60%0A-%20%60EntityDeletedEvent%60%20%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%88%A0%E9%99%A4%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E7%94%A8%E4%BA%8E%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97%E7%AD%89%E6%93%8D%E4%BD%9C%2C%E5%AF%B9%E5%BA%94%E6%93%8D%E4%BD%9C%60delete%60%0A%0A%E6%B3%A8%E6%84%8F%0A%0A%E4%BA%8B%E4%BB%B6%E7%B1%BB%E7%9A%84%E6%B3%9B%E5%9E%8B%E4%B8%BA%E6%83%B3%E8%A6%81%E7%9B%91%E5%90%AC%E7%9A%84%E5%AE%9E%E4%BD%93%E7%B1%BB%2C%E4%BE%8B%E5%A6%82%3A%20%60EntitySavedEvent%3CDeviceInstanceEntity%3E%60.%20%E5%A6%82%E6%9E%9C%E6%83%B3%E8%A6%81%E5%85%A8%E9%83%A8%E5%AE%9E%E4%BD%93%2C%E5%88%99%E7%9B%B4%E6%8E%A5%E7%9B%91%E5%90%AC%60EntitySavedEvent%60%E5%8D%B3%E5%8F%AF.%0A%0A%23%23%23%20%E6%8E%88%E6%9D%83%E7%9B%B8%E5%85%B3%E4%BA%8B%E4%BB%B6%0A%0A%E4%BD%BF%E7%94%A8%E6%8E%A5%E5%8F%A3%60%2Fauthorize%2Flogin%60%E8%BF%9B%E8%A1%8C%E7%99%BB%E5%BD%95%E6%97%B6%EF%BC%8C%E5%B0%86%E4%BC%9A%E8%A7%A6%E5%8F%91%E7%9B%B8%E5%BA%94%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%9D%A5%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%88%E6%9D%83%E9%80%BB%E8%BE%91%EF%BC%8C%E5%A6%82%E8%87%AA%E5%AE%9A%E4%B9%89%E9%AA%8C%E8%AF%81%E7%A0%81%EF%BC%8C%E5%AF%86%E7%A0%81%E5%8A%A0%E8%A7%A3%E5%AF%86%E7%AD%89%E3%80%82%20%E7%9B%B8%E5%85%B3%E7%B1%BB%3A%60AuthorizationController%60%0A%0A-%20%60AuthorizationDecodeEvent%60%20%E8%AE%A4%E8%AF%81%E8%A7%A3%E5%AF%86%E4%BA%8B%E4%BB%B6%EF%BC%8C%E5%8F%AF%E7%94%A8%E4%BA%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%0A-%20%60AuthorizationBeforeEvent%60%20%E8%AE%A4%E8%AF%81%E5%89%8D%E8%A7%A6%E5%8F%91%EF%BC%8C%E5%8F%AF%E7%94%A8%E4%BA%8E%E6%A0%A1%E9%AA%8C%E5%85%B6%E4%BB%96%E5%8F%82%E6%95%B0%EF%BC%8C%E6%AF%94%E5%A6%82%E9%AA%8C%E8%AF%81%E7%A0%81%0A-%20%60AuthorizationSuccessEvent%60%20%E8%AE%A4%E8%AF%81%E9%80%9A%E8%BF%87%E6%97%B6%E8%A7%A6%E5%8F%91%EF%BC%8C%E5%8F%AF%E7%94%A8%E4%BA%8E%E8%AE%A4%E8%AF%81%E9%80%9A%E8%BF%87%E5%90%8E%EF%BC%8C%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%BA%9B%E4%BF%A1%E6%81%AF%E7%BB%99%E5%89%8D%E7%AB%AF%E8%BF%94%E5%9B%9E%0A-%20%60AuthorizationFailedEvent%60%20%E8%AE%A4%E8%AF%81%E5%A4%B1%E8%B4%A5%E6%97%B6%E8%A7%A6%E5%8F%91%EF%BC%8C%E5%8F%AF%E7%94%A8%E4%BA%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E5%A4%B1%E8%B4%A5%E6%97%B6%E7%9A%84%E5%A4%84%E7%90%86%E9%80%BB%E8%BE%91%0A%0A%23%23%23%20%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86%E7%9B%B8%E5%85%B3%0A%0A-%20%60UserCreatedEvent%60%20%E7%94%A8%E6%88%B7%E5%88%9B%E5%BB%BA%E4%BA%8B%E4%BB%B6%0A-%20%60UserDeletedEvent%60%20%E7%94%A8%E6%88%B7%E5%88%A0%E9%99%A4%E4%BA%8B%E4%BB%B6%0A-%20%60UserModifiedEvent%60%20%E7%94%A8%E6%88%B7%E4%BF%AE%E6%94%B9%E4%BA%8B%E4%BB%B6%0A-%20%60UserStateChangedEvent%60%20%E7%94%A8%E6%88%B7%E7%8A%B6%E6%80%81%E5%8F%98%E6%9B%B4%E4%BA%8B%E4%BB%B6%0A-%20%60ClearUserAuthorizationCacheEvent%60%20%E6%B8%85%E7%A9%BA%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%E7%BC%93%E5%AD%98%E4%BF%A1%E6%81%AF%E4%BA%8B%E4%BB%B6%2C%E5%8F%AF%E7%94%A8%E5%8F%91%E9%80%81%E6%AD%A4%E4%BA%8B%E4%BB%B6%E6%9D%A5%E6%B8%85%E7%90%86%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%E7%BC%93%E5%AD%98%0A%0A%23%23%23%20%E6%95%B0%E6%8D%AE%E6%9D%83%E9%99%90%E7%9B%B8%E5%85%B3(%E4%BC%81%E4%B8%9A%E7%89%88)%0A%0A-%20%60AssetsBindEvent%60%20%E8%B5%84%E4%BA%A7%E7%BB%91%E5%AE%9A%E4%BA%8B%E4%BB%B6%0A-%20%60AssetsUnBindEvent%60%20%E8%B5%84%E4%BA%A7%E8%A7%A3%E7%BB%91%E4%BA%8B%E4%BB%B6%0A-%20%60AssetsUnBindAllEvent%60%20%E5%85%A8%E9%83%A8%E8%B5%84%E4%BA%A7%E8%A7%A3%E7%BB%91%E4%BA%8B%E4%BB%B6%0A-%20%60TenantMemberBindEvent%60%20%E7%A7%9F%E6%88%B7%E6%88%90%E5%91%98%E7%BB%91%E5%AE%9A%E4%BA%8B%E4%BB%B6%0A-%20%60TenantMemberUnBindEvent%60%20%E7%A7%9F%E6%88%B7%E6%88%90%E5%91%98%E8%A7%A3%E7%BB%91%E4%BA%8B%E4%BB%B6%0A%0A%E6%B3%A8%E6%84%8F%0A%0A%E8%B5%84%E4%BA%A7%E7%BB%91%E5%AE%9A%E6%96%B9%E5%BC%8F%E5%88%86%E4%B8%BA%E6%89%8B%E5%8A%A8%E7%BB%91%E5%AE%9A%E5%92%8C%E8%87%AA%E5%8A%A8%E7%BB%91%E5%AE%9A%2C%20%E8%87%AA%E5%8A%A8%E7%BB%91%E5%AE%9A%E6%98%AF%E5%9C%A8%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%2C%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E7%AD%89%E6%93%8D%E4%BD%9C%E6%97%B6%E6%89%A7%E8%A1%8C%E7%9A%84.%20%E6%89%8B%E5%8A%A8%E7%BB%91%E5%AE%9A%E9%80%9A%E5%B8%B8%E6%98%AF%E9%80%9A%E8%BF%87%E6%8E%A5%E5%8F%A3%E8%BF%9B%E8%A1%8C%E8%B5%84%E4%BA%A7%E5%88%86%E9%85%8D%E6%97%B6%E6%89%A7%E8%A1%8C%E7%9A%84.%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E4%BB%A5%E4%B8%8B%E6%96%B9%E5%BC%8F%E6%9D%A5%E5%8C%BA%E5%88%86%E7%BB%91%E5%AE%9A%E6%96%B9%E5%BC%8F%3A%0A%0A-%20%60AssetsUtils.doWhenSourceIsAutoBind%60%0A-%20%60AssetsUtils.doWhenSourceIsManualBind%60%0A%0A%60%60%60java%0A%0A%40EventListener%0Apublic%20void%20handleEvent(AssetsBindEvent%20event)%7B%0A%20%20event.async(%0A%20%20%20%20AssetsUtils%0A%20%20%20%20%20%20.doWhenSourceIsAutoBind(doSomeThing(event.getAssetId())%2Ctrue)%0A%20%20)%0A%7D%0A%0A%60%60%60%0A%0A%23%23%23%20%E8%AE%BE%E5%A4%87%E7%AE%A1%E7%90%86%E7%9B%B8%E5%85%B3%0A%0A-%20%60DeviceDeployedEvent%60%3A%20%E8%AE%BE%E5%A4%87%E6%BF%80%E6%B4%BB%E6%97%B6%E8%A7%A6%E5%8F%91%0A-%20%60DeviceUnregisterEvent%60%3A%20%E8%AE%BE%E5%A4%87%E6%B3%A8%E9%94%80%E6%97%B6%E8%A7%A6%E5%8F%91%0A-%20%60DeviceAutoRegisterEvent%60%3A%20%E8%AE%BE%E5%A4%87%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E6%97%B6%E8%A7%A6%E5%8F%91%2C%E5%8F%AF%E8%BF%94%E5%9B%9E%E6%98%AF%E5%90%A6%E5%85%81%E8%AE%B8%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%0A-%20%60DeviceProductDeployEvent%60%3A%20%E4%BA%A7%E5%93%81%E6%BF%80%E6%B4%BB%E6%97%B6%E8%A7%A6%E5%8F%91%0A%0A%23%23%20EventBus%0A%0A%E7%94%B1%E4%BA%8E%60Spting%20Event%60%E4%B8%8D%E6%94%AF%E6%8C%81%E6%9B%B4%E7%BB%86%E7%B2%92%E5%BA%A6%E7%9A%84%E8%AE%A2%E9%98%85%2C%E4%BE%8B%E5%A6%82%3A%20%E8%AE%A2%E9%98%85%E6%9F%90%E4%B8%80%E4%B8%AA%E8%AE%BE%E5%A4%87%E7%9A%84%E6%B6%88%E6%81%AF%E3%80%82%E5%B9%B3%E5%8F%B0%E8%BF%98%E6%8F%90%E4%BE%9B%E4%BA%86%E4%BA%8B%E4%BB%B6%E6%80%BB%E7%BA%BF%E6%9D%A5%E5%AE%9E%E7%8E%B0%E7%B2%92%E5%BA%A6%E6%9B%B4%E7%BB%86%E7%9A%84%E4%BA%8B%E4%BB%B6%E6%94%AF%E6%8C%81.%0A%0A%23%23%23%20Topic%0A%0A%E9%87%87%E7%94%A8%E6%A0%91%E7%BB%93%E6%9E%84%E6%9D%A5%E5%AE%9A%E4%B9%89topic%E5%A6%82%3A%60%2Fdevice%2Fid%2Fmessage%2Ftype%60%20.%20topic%E6%94%AF%E6%8C%81%E8%B7%AF%E5%BE%84%E9%80%9A%E9%85%8D%E7%AC%A6%2C%E5%A6%82%3A%60%2Fdevice%2F**%60%20%E6%88%96%E8%80%85%60%2Fdevice%2F*****%2Fmessage%2F*****%60.%0A%0ATIP%0A%0A%E9%80%9A%E9%85%8D%E7%AC%A6%60**%60%E8%A1%A8%E7%A4%BA%E5%8C%B9%E9%85%8D%E5%A4%9A%E5%B1%82%E8%B7%AF%E5%BE%84%2C%60*%60%E8%A1%A8%E7%A4%BA%E5%8C%B9%E9%85%8D%E5%8D%95%E5%B1%82%E8%B7%AF%E5%BE%84.%20%60%E4%B8%8D%E6%94%AF%E6%8C%81%60%E5%89%8D%E5%90%8E%E5%8C%B9%E9%85%8D%2C%E5%A6%82%3A%20%60%2Fdevice%2Fid-*%2Fmessage%60.%20%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85%E5%9D%87%E6%94%AF%E6%8C%81%E9%80%9A%E9%85%8D%E7%AC%A6%2C%E5%8F%91%E5%B8%83%E6%97%B6%E4%BD%BF%E7%94%A8%E9%80%9A%E9%85%8D%E7%AC%A6%E6%97%B6%E5%88%99%E8%BF%9B%E8%A1%8C%E5%B9%BF%E6%92%AD.%0A%0A%23%23%23%20%E4%BD%BF%E7%94%A8%0A%0A%E8%AE%A2%E9%98%85%E6%B6%88%E6%81%AF%3A%0A%0A%60%60%60java%0A%0A%40Subscribe(%22%2Fdevice%2F**%22)%0Apublic%20Mono%3CVoid%3E%20handleDeviceMessage(DeviceMessage%20message)%7B%0A%20%20%20%20return%20publishDeviecMessageToKafka(message)%3B%0A%7D%0A%0A%60%60%60%0A%0A%E5%8F%91%E5%B8%83%E6%B6%88%E6%81%AF%3A%0A%0A%60%60%60java%0A%0A%40Autowired%0Aprivate%20EventBus%20eventBus%3B%0A%0Apublic%20Mono%3CVoid%3E%20saveUser(UserEntity%20entity)%7B%0A%20%20%20%20return%20service.saveUser(entity)%0A%20%20%20%20%20%20%20%20%20%20%20%20.then(eventBus.publish(%22%2Fuser%2F%22%2Bentity.getId()%2B%22%2Fsaved%22%2Centity))%0A%20%20%20%20%20%20%20%20%20%20%20%20.then()%3B%0A%7D%0A%0A%60%60%60%0A%0A%23%23%23%20%E8%AE%BE%E5%A4%87%E6%B6%88%E6%81%AF%0A%0A%5B%E7%82%B9%E5%87%BB%E6%9F%A5%E7%9C%8B%5D(http%3A%2F%2Fdoc.jetlinks.cn%2Fbest-practices%2Fstart.html%23%25E8%25AE%25BE%25E5%25A4%2587%25E6%25B6%2588%25E6%2581%25AF%25E5%25AF%25B9%25E5%25BA%2594%25E4%25BA%258B%25E4%25BB%25B6%25E6%2580%25BB%25E7%25BA%25BFtopic)%0A%0A%23%23%23%20%E8%AE%BE%E5%A4%87%E5%91%8A%E8%AD%A6%0A%0A%E5%9C%A8%E9%85%8D%E7%BD%AE%E4%BA%86%E8%AE%BE%E5%A4%87%E5%91%8A%E8%AD%A6%E8%A7%84%E5%88%99%2C%E8%AE%BE%E5%A4%87%E5%8F%91%E7%94%9F%E5%91%8A%E8%AD%A6%E6%97%B6%2C%E4%BC%9A%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF%E5%88%B0%E6%B6%88%E6%81%AF%E6%80%BB%E7%BA%BF.%0A%0A%0A%60%2Frule-engine%2Fdevice%2Falarm%2F%7BproductId%7D%2F%7BdeviceId%7D%2F%7BruleId%7D%60%0A%0A%60%60%60json%0A%7B%0A%20%20%22productId%22%3A%22%22%2C%0A%20%20%22alarmId%22%3A%22%22%2C%0A%20%20%22alarmName%22%3A%22%22%2C%0A%20%20%22deviceId%22%3A%22%22%2C%0A%20%20%22deviceName%22%3A%22%22%2C%0A%20%20%22…%22%3A%22%E5%85%B6%E4%BB%96%E4%BB%8E%E8%A7%84%E5%88%99%E4%B8%AD%E8%8E%B7%E5%8F%96%E5%88%B0%E5%88%B0%E4%BF%A1%E6%81%AF%22%0A%7D%0A%60%60%60%0A%0A%23%23%23%20%E7%B3%BB%E7%BB%9F%E6%97%A5%E5%BF%97%0A%0Atopic%E6%A0%BC%E5%BC%8F%3A%20%60%2Flogging%2Fsystem%2F%7Blogger%E5%90%8D%E7%A7%B0%2C.%E6%9B%BF%E6%8D%A2%E4%B8%BA%2F%7D%2F%7Blevel%7D%60.%0A%0A%60%2Flogging%2Fsystem%2Forg%2Fjetlinks%2Fpro%2FTestService%2F%7Blevel%7D%60%0A%0A%0A%60%60%60json%0A%7B%0A%20%20%20%20%22name%22%3A%20%22org.jetlinks.pro.TestService%22%2C%20%2F%2Flogger%E5%90%8D%E7%A7%B0%0A%20%20%20%20%22threadName%22%20%3A%22%E7%BA%BF%E7%A8%8B%E5%90%8D%E7%A7%B0%22%2C%0A%20%20%20%20%22level%22%3A%20%22%E6%97%A5%E5%BF%97%E7%BA%A7%E5%88%AB%22%2C%0A%20%20%20%20%22className%22%20%3A%22%E4%BA%A7%E7%94%9F%E6%97%A5%E5%BF%97%E7%9A%84%E7%B1%BB%E5%90%8D%22%2C%0A%20%20%20%20%22methodName%22%3A%20%22%E4%BA%A7%E7%94%9F%E6%97%A5%E5%BF%97%E7%9A%84%E6%96%B9%E6%B3%95%E5%90%8D%22%2C%0A%20%20%20%20%22lineNumber%22%EF%BC%9A32%2C%2F%2F%E8%A1%8C%E5%8F%B7%0A%20%20%20%20%22message%22%3A%20%22%E6%97%A5%E5%BF%97%E5%86%85%E5%AE%B9%22%2C%0A%20%20%20%20%22exceptionStack%22%3A%20%22%E5%BC%82%E5%B8%B8%E6%A0%88%E4%BF%A1%E6%81%AF%22%2C%0A%20%20%20%20%22createTime%22%3A%20%22%E6%97%A5%E5%BF%97%E6%97%B6%E9%97%B4%22%2C%0A%20%20%20%20%22context%22%3A%7B%7D%20%2F%2F%E4%B8%8A%E4%B8%8B%E6%96%87%E4%BF%A1%E6%81%AF%0A%7D%0A%60%60%60
