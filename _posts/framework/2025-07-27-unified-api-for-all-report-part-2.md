@@ -9,10 +9,9 @@ tags:
 categories:
   - Framework
   - Report
-comments: true
-math: true
-mermaid: true
 author: deathwhispers
+created: 2025-11-28 09:57
+updated: 2025-11-28 09:57
 ---
 
 

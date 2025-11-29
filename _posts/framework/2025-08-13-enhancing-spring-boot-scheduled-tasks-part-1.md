@@ -8,10 +8,9 @@ tags:
 categories:
   - Framework
   - Spring Boot定时任务
-comments: true
-math: true
-mermaid: true
 author: deathwhispers
+created: 2025-11-28 09:57
+updated: 2025-11-28 09:57
 ---
 
 ## **引言**

@@ -9,10 +9,9 @@ tags:
 categories:
   - Framework
   - Report
-comments: true
-math: true
-mermaid: true
 author: deathwhispers
+created: 2025-11-28 09:57
+updated: 2025-11-28 09:57
 ---
 
 > 在企业应用开发中，报表功能是不可或缺的一部分。随着业务的发展，我们面临着这样的挑战：
