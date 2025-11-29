@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ReactorQL
+title: JetLinks ReactorQL
 slug: jetlinks-reactorql
 type:
   - note
@@ -10,6 +10,7 @@ tags:
   - JetLinks
 categories:
   - IoT
+  - JetLinks
 mood:
 weather:
 author: deathwhispers

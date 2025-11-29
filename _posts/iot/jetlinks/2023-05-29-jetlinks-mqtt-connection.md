@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 使用MQTT服务网关接入设备
+title: JetLinks 使用MQTT服务网关接入设备
 slug: jetlinks-mqtt-connection
 type:
   - note
@@ -10,6 +10,7 @@ tags:
   - JetLinks
 categories:
   - IoT
+  - JetLinks
 mood:
 weather:
 author: deathwhispers

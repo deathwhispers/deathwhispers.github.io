@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 统一单点登录
+title: JetLinks 统一单点登录
 slug: jetlinks-sso
 type:
   - note
@@ -10,6 +10,7 @@ tags:
   - JetLinks
 categories:
   - IoT
+  - JetLinks
 mood:
 weather:
 author: deathwhispers

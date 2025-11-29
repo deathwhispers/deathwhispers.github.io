@@ -1,15 +1,16 @@
 ---
 layout: post
-title: 使用websocket订阅平台相关消息
+title: JetLinks 使用websocket订阅平台相关消息
 slug: jetlinks-websocket-subscribe
 type:
   - note
-date: 2023-05-29
+date: 2023-06-09
 status: draft
 tags:
   - JetLinks
 categories:
   - IoT
+  - JetLinks
 mood:
 weather:
 author: deathwhispers

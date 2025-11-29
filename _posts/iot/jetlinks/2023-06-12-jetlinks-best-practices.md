@@ -1,15 +1,16 @@
 ---
 layout: post
-title: 最佳实践
+title: JetLinks 最佳实践
 slug: jetlinks-best-practices
 type:
   - note
-date: 2023-05-29
+date: 2023-06-12
 status: draft
 tags:
   - JetLinks
 categories:
   - IoT
+  - JetLinks
 mood:
 weather:
 author: deathwhispers

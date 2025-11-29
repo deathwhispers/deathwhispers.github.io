@@ -1,15 +1,16 @@
 ---
 layout: post
-title: 物模型说明
+title: JetLinks 设备模型说明
 slug: jetlinks-device-model
 type:
   - note
-date: 2023-05-29
+date: 2023-06-07
 status: draft
 tags:
   - JetLinks
 categories:
   - IoT
+  - JetLinks
 mood:
 weather:
 author: deathwhispers

@@ -1,15 +1,16 @@
 ---
 layout: post
-title: 数据权限,资产管理
+title: JetLinks 数据权限,资产管理
 slug: jetlinks-assets-permissions
 type:
   - note
-date: 2023-05-29
+date: 2023-06-04
 status: draft
 tags:
   - JetLinks
 categories:
   - IoT
+  - JetLinks
 mood:
 weather:
 author: deathwhispers

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 协议开发说明
+title: JetLinks 协议开发说明
 slug: jetlinks-protocol-development
 type:
   - note
@@ -10,6 +10,7 @@ tags:
   - JetLinks
 categories:
   - IoT
+  - JetLinks
 mood:
 weather:
 author: deathwhispers

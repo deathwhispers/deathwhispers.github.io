@@ -1,15 +1,16 @@
 ---
 layout: post
-title: 规则引擎说明
+title: JetLinks 规则引擎说明
 slug: jetlinks-rule-engine
 type:
   - note
-date: 2023-05-29
+date: 2023-06-15
 status: draft
 tags:
   - JetLinks
 categories:
   - IoT
+  - JetLinks
 mood:
 weather:
 author: deathwhispers
