@@ -1,0 +1,39 @@
+---
+layout: post
+title: MySQL单行数据最大长度
+slug: mysql-row-max-length
+type:
+  - note
+date: 2021-08-15
+tags:
+  - mysql
+categories:
+  - mysql
+author: deathwhispers
+created: 2021-08-15 11:45
+updated: 2021-08-15 22:17
+---
+
+# MySQL单行数据最大长度
+
+mysql要求一个行的定义不能超过65535
+
+单个字段如果大于65535,则转化为TEXT类型
+
+单行最大限制为65535, 这里不包含TEXT, BLOB
+
+# [MySQL TEXT数据类型的最大长度](https://www.cnblogs.com/exmyth/p/8747293.html)
+
+| TINYTEXT | 256 bytes |   |
+| --- | --- | --- |
+| TEXT | 65,535 bytes | ~64kb |
+| MEDIUMTEXT | 16,777,215 bytes | ~16MB |
+| LONGTEXT | 4,294,967,295 bytes | ~4GB |
+
+[MySQL BLOB数据类型的最大长度](https://www.cnblogs.com/exmyth/p/8747293.html)
+
+| TINYBLOB | 256 bytes |   |
+| --- | --- | --- |
+| BLOB | 65,535 bytes | ~64kb |
+| MEDIUMBLOB | 16,777,215 bytes | ~16MB |
+| LONGBLOB | 4,294,967,295 bytes | ~4GB |
