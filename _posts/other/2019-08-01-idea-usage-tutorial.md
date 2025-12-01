@@ -1,0 +1,53 @@
+---
+layout: post
+title: Idea 用法教程
+slug: idea-usage-tutorial
+type:
+  - note
+status: published
+date: 2019-08-01
+tags:
+  - Idea
+author: deathwhispers
+---
+
+
+# idea用法教程
+
+调试使用
+
+跨过执行 F8
+
+单步执行
+
+跳入执行 F7
+
+跳出执行
+
+查看断点 Ctrl+Shift+F8
+
+idea maven 使用
+
+jar包冲突问题 - maven helper插件
+
+重构的使用
+
+重命名{重构类名、方法名、参数名} Shift+F6
+
+重构方法{}
+
+代码块、移动方法
+
+代码的上提或者下沉
+
+idea分析器使用
+
+代码check
+
+分析重复块 local duplicate
+
+分析覆盖率报表
+
+分析代码异常堆栈
+
+分析数据来源和去向

@@ -1,0 +1,58 @@
+---
+layout: post
+title: Idea 自动注释模板
+slug: idea-auto-annotation-template
+type:
+  - note
+status: published
+date: 2019-08-12
+tags:
+  - Idea
+author: deathwhispers
+---
+
+
+# idea自动注释模板
+
+参考文章：[https://www.cnblogs.com/youqc/p/8721399.html](https://www.cnblogs.com/youqc/p/8721399.html)
+
+设置类注释模板：
+
+1.选择File–>Settings–>Editor–>File and Code Templates–>Includes–>File Header.
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698214684783-50e31fce-2ebc-4440-af3b-70cc0b8bcad0.png)
+
+```java
+/***@Auther: ${USER}*@Date: ${DATE} ${HOUR}:${MINUTE}*@Description:*/
+```
+
+设置方法注释模板：
+
+步骤：
+
+1.File->Settings->Live Templates,点击右上角的加号，选择Template Group
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698214684895-6a520e60-8160-41f9-8c1c-a1eb7f86626f.png)
+
+方法模板:
+
+```java
+*** @Description: TODO
+* @Author: $USER$
+* @Date: $date$ $time$
+$params$
+$returns$
+*/
+```
+
+params参数:
+
+```groovy
+groovyScript("if(\"${_1}\".length() == 2) {return '';} else {def result=''; def params=\"${_1}\".replaceAll('[\\\\[|\\\\]|\\\\s]', '').split(',').toList();for(i = 0; i < params.size(); i++) {if(i<(params.size()-1)){result+=' * @param ' + params[i] + ' : ' + '\\n'}else{result+=' * @param ' + params[i] + ' : '}}; return result;}", methodParameters());
+```
+
+return:
+
+```groovy
+groovyScript("def returnType = \"${_1}\"; def result = ' * @return : ' + returnType; return result;", methodReturnType());
+```

@@ -1,0 +1,117 @@
+---
+layout: post
+title: Maven 命令小记
+slug: maven-command-notes
+type:
+  - note
+status: published
+date: 2020-03-15
+tags:
+  - Maven
+author: deathwhispers
+---
+
+
+# Maven 命令小记
+
+使用maven构建项目
+
+一：构建java项目
+
+1.1创建JavaProject
+
+```plain text
+1、使用mvn archetype:generate命令，如下所示
+
+    mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=myapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+2、使用mvn archetype:create命令，如下所示：
+
+    mvn archetype:create -DgroupId=com.mycompany.app -DartifactId=myapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+总结：使用"mvn archetype:generate"命令和"mvn archetype:create"都可以创建项目，目前没有发现这两者的区别，唯一区别的地方就是发现使用"mvn archetype:generate"命令创建项目时要特别长的时间才能够将项目创建好，
+
+而使用"mvn archetype:create"命令则可以很快将项目创建出来。
+```
+
+maven项目的标准目录结构：
+
+```plain text
+src
+
+  -main
+
+      –bin 脚本库
+
+      –java java源代码文件
+
+      –resources 资源库，会自动复制到classes目录里
+
+      –filters 资源过滤文件
+
+      –assembly 组件的描述配置（如何打包）
+
+      –config 配置文件
+
+      –webapp web应用的目录。WEB-INF、css、js等
+
+  -test
+
+      –java 单元测试java源代码文件
+
+      –resources 测试需要用的资源库
+
+      –filters 测试资源过滤库
+
+  -site Site（一些文档）
+
+target
+
+LICENSE.txt Project’s license
+
+README.txt Project’s readme
+```
+
+maven常用命令：
+
+```plain text
+1：编译
+
+    编译源程序，进入命令行，切换到myapp（项目目录），执行命令：mvn clean compile
+
+2：测试
+
+    进入命令行，切换到myapp（项目目录），执行命令：mvn clean test
+
+3：打包
+
+    进入命令行，切换到myapp目录，执行命令：mvn clean package
+
+    打包成功后，会在target目录下生成一个jar/war包
+
+4：安装
+
+    进入命令行，切换到my-app目录，执行命令：mvn clean install ，执行安装命令前，会先执行编译、测试、打包命令
+
+5：运行jar包
+
+    进入命令行，切换到myapp目录，执行命令：java -cp target\myapp-1.0-SNAPSHOT.jar com.mycompany.app.App
+```
+
+二、构建javaWeb项目
+
+2.1创建javaWeb项目
+
+```plain text
+1.使用mvn archetype:generate命令，如下所示：
+
+    mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=my-WebApp -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
+
+2.使用mvn archetype:create命令，如下所示：
+
+    mvn archetype:create -DgroupId=com.mycompany.app -DartifactId=myWebApp -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
+
+使用"mvn archetype:generate"命令创建一个javaWeb项目的时间非常长，要了40多秒，有时甚至会更久，不知道为啥。而使用"mvn archetype:create"命令时间会短很多
+
+maven-archetype-quickstart骨架是用来创建一个Java Project，而maven-archetype-webapp骨架则是用来创建一个JavaWeb Project。
+```
