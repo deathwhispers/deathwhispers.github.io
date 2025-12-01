@@ -4,14 +4,14 @@ title: db2常用操作
 slug: db2-common-operations
 type:
   - note
-date: 2017-04-16
+date: 2018-04-16
 tags:
   - db2
 categories:
   - db2
 author: deathwhispers
-created: 2017-04-16 11:45
-updated: 2017-04-16 22:17
+created: 2018-04-16 11:45
+updated: 2018-04-16 22:17
 ---
 # db2常用操作
 

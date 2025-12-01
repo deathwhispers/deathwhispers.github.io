@@ -4,14 +4,14 @@ title: db2完全卸载
 slug: db2-uninstall
 type:
   - note
-date: 2017-05-11
+date: 2018-05-11
 tags:
   - db2
 categories:
   - db2
 author: deathwhispers
-created: 2017-05-11 11:45
-updated: 2017-05-11 22:17
+created: 2018-05-11 11:45
+updated: 2018-05-11 22:17
 ---
 # db2完全卸载
 

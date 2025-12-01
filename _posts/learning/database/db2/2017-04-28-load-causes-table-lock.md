@@ -4,14 +4,14 @@ title: load导致锁表
 slug: load-causes-table-lock
 type:
   - note
-date: 2017-04-28
+date: 2018-04-28
 tags:
   - db2
 categories:
   - db2
 author: deathwhispers
-created: 2017-04-28 11:45
-updated: 2017-04-28 22:17
+created: 2018-04-28 11:45
+updated: 2018-04-28 22:17
 ---
 # load导致锁表
 
