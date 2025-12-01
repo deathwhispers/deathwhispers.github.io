@@ -9,6 +9,8 @@ categories:
   - Life
 comments: true
 author: deathwhispers
+created: 2024-08-28 09:57
+updated: 2024-08-28 09:57
 ---
 
 作为一个懒散的程序员，这么多年了，从来不写博客，也没在社交媒体上输出文章之类的。
