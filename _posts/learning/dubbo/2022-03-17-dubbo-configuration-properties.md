@@ -1,0 +1,138 @@
+---
+layout: post
+title: 属性配置
+slug: dubbo-configuration-properties
+type:
+  - note
+date: 2022-03-17
+status: draft
+tags:
+  - Dubbo
+categories:
+  - Dubbo
+mood:
+weather:
+author: deathwhispers
+created: 2022-04-10 11:50
+updated: 2022-04-10 18:33
+---
+
+
+本文基于 Dubbo 2.6.1 版本，望知悉。
+
+友情提示，【**配置**】这块的内容，会相对比较枯燥。所以，如果看到一些很难懂的地方，建议先跳过。
+
+对于 Dubbo ，重点是要去理解，多协议、RPC、容错等等模块，而不是【**配置**】。
+
+估计好多胖友被【**配置**】这章劝退了把？？？
+
+# 1. 概述
+
+首先，我们来看看**属性配置**的定义：
+
+FROM [《Dubbo 用户指南 —— 属性配置》](http://dubbo.apache.org/zh-cn/docs/user/configuration/properties.html)
+
+如果公共配置很**简单**，没有多注册中心，多协议等情况，或者想多个 Spring 容器想共享配置，可以使用 dubbo.properties 作为缺省配置。
+
+Dubbo 将自动加载 classpath 根目录下的 dubbo.properties，可以通过JVM启动参数 -Ddubbo.properties.file=xxx.properties 改变缺省配置位置。
+
+从定义上，很关键的一个词是 “**简单**” 。
+
+- **属性配置**
+，不支持多注册中心，多协议等情况，原因见代码。
+- **外部化配置**[《Dubbo 外部化配置（Externalized Configuration）》](https://github.com/mercyblitz/blogs/blob/master/java/dubbo/Dubbo-Externalized-Configuration.md)
+，能够解决上述的问题，感兴趣的胖友可以自己看下
+。当然，这块内容后面分享，不在本文的范畴。
+
+OK ，下面在开始看看具体代码之前，胖友先仔细阅读下 [《Dubbo 用户指南 —— 属性配置》](http://dubbo.apache.org/zh-cn/docs/user/configuration/properties.html) ，有助于下面代码的理解。
+
+# 2. AbstractConfig
+
+在 AbstractConfig 中，提供了 [#appendProperties(config)](https://github.com/YunaiV/dubbo/blob/d3c3975f320c78452f96098b04441fed4c00ab70/dubbo-config/dubbo-config-api/src/main/java/com/alibaba/dubbo/config/AbstractConfig.java#L132-L212) 方法，读取**启动参数变量**和 **properties 配置**到配置对象。在前面的几篇文章里，我们多次看到这个方法被调用，如下图所示：
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698038324887-2bf15a12-ff05-4970-a031-e5902cdf2e2a.png)
+
+读取调用
+
+代码如下：
+
+```java
+protected static void appendProperties(AbstractConfig config) {if (config == null) {    return;}String prefix = "dubbo." + getTagName(config.getClass()) + ".";Method[] methods = config.getClass().getMethods();for (Method method : methods) {    try {        String name = method.getName();        if (name.length() > 3 && name.startsWith("set") && Modifier.isPublic(method.getModifiers()) // 方法是 public 的 setting 方法。            && method.getParameterTypes().length == 1 && isPrimitive(method.getParameterTypes()[0])) { // 方法的唯一参数是基本数据类型            // 获得属性名，例如 `ApplicationConfig#setName(...)` 方法，对应的属性名为 name 。            String property = StringUtils.camelToSplitName(name.substring(3, 4).toLowerCase() + name.substring(4), ".");            // 【启动参数变量】优先从带有 `Config#id` 的配置中获取，例如：`dubbo.application.demo-provider.name` 。            String value = null;            if (config.getId() != null && config.getId().length() > 0) {                String pn = prefix + config.getId() + "." + property; // 带有 `Config#id`                value = System.getProperty(pn);                if (!StringUtils.isBlank(value)) {                    logger.info("Use System Property " + pn + " to config dubbo");                }            }            // 【启动参数变量】获取不到，其次不带 `Config#id` 的配置中获取，例如：`dubbo.application.name` 。            if (value == null || value.length() == 0) {                String pn = prefix + property; // // 不带 `Config#id`                value = System.getProperty(pn);                if (!StringUtils.isBlank(value)) {                    logger.info("Use System Property " + pn + " to config dubbo");                }            }            if (value == null || value.length() == 0) {                // 覆盖优先级为：启动参数变量 > XML 配置 > properties 配置，因此需要使用 getter 判断 XML 是否已经设置                Method getter;                try {                    getter = config.getClass().getMethod("get" + name.substring(3), new Class<?>[0]);                } catch (NoSuchMethodException e) {                    try {                        getter = config.getClass().getMethod("is" + name.substring(3), new Class<?>[0]);                    } catch (NoSuchMethodException e2) {                        getter = null;                    }                }                if (getter != null) {                    if (getter.invoke(config, new Object[0]) == null) { // 使用 getter 判断 XML 是否已经设置                        // 【properties 配置】优先从带有 `Config#id` 的配置中获取，例如：`dubbo.application.demo-provider.name` 。                        if (config.getId() != null && config.getId().length() > 0) {                            value = ConfigUtils.getProperty(prefix + config.getId() + "." + property);                        }                            // 【properties 配置】获取不到，其次不带 `Config#id` 的配置中获取，例如：`dubbo.application.name` 。                            if (value == null || value.length() == 0) {                                value = ConfigUtils.getProperty(prefix + property);                            }                            // 【properties 配置】老版本兼容，获取不到，最后不带 `Config#id` 的配置中获取，例如：`dubbo.protocol.name` 。                            if (value == null || value.length() == 0) {                                String legacyKey = legacyProperties.get(prefix + property);                                if (legacyKey != null && legacyKey.length() > 0) {                                    value = convertLegacyValue(legacyKey, ConfigUtils.getProperty(legacyKey));                                }                            }                        }                    }                }                // 获取到值，进行反射设置。                if (value != null && value.length() > 0) {                    method.invoke(config, new Object[]{convertPrimitive(method.getParameterTypes()[0], value)});                }            }        } catch (Exception e) {            logger.error(e.getMessage(), e);        }    }}
+```
+
+- 第 5 行：获得配置项**前缀**[#getTagName(Class<?>)](https://github.com/YunaiV/dubbo/blob/d3c3975f320c78452f96098b04441fed4c00ab70/dubbo-config/dubbo-config-api/src/main/java/com/alibaba/dubbo/config/AbstractConfig.java#L214-L230)
+。此处的
+方法，使用配置类的类名，获得对应的属性标签。该方法代码如下：
+
+```java
+/** * 配置类名的后缀 * 例如，ServiceConfig 后缀为 Config；ServiceBean 后缀为 Bean。 */private static final String[] SUFFIXES = new String[]{"Config", "Bean"};/** * 获取类名对应的属性标签，例如，ServiceConfig 对应为 service 。 * * @param cls 类名 * @return 标签 */private static String getTagName(Class<?> cls) {    String tag = cls.getSimpleName();    for (String suffix : SUFFIXES) {        if (tag.endsWith(suffix)) {            tag = tag.substring(0, tag.length() - suffix.length());            break;        }    }    tag = tag.toLowerCase();    return tag;}
+```
+
+- 第 6 行：获得配置类的所有方法，用于下面通过**反射启动参数变量properties 配置**
+获得配置项的属性名，再用属性名，去读取
+和
+到配置对象。
+- 第 10 至 11 行：public && setting 方法 && **唯一**
+参数为基本类型。
+    - 其中**唯一基本类型数组没有多注册中心，多协议等情况属性配置**
+参数为
+，决定了一个配置对象无法设置另外一个配置对象
+为属性，即
+。例如，ServiceConfig 无法通过
+设置多个 ProtocolConfig 对象。
+    - 当然上述问题，正如文初所说，[《Dubbo 外部化配置（Externalized Configuration）》](https://github.com/mercyblitz/blogs/blob/master/java/dubbo/Dubbo-Externalized-Configuration.md)
+已经支持。
+    - 另外，**属性配置外部化配置**[《Dubbo 外部化配置（Externalized Configuration）》](https://github.com/mercyblitz/blogs/blob/master/java/dubbo/Dubbo-Externalized-Configuration.md)[“属性配置”](http://dubbo.apache.org/zh-cn/docs/user/configuration/properties.html)
+和
+有一定的相似点：
+FROM
+在 Dubbo 官方用户手册的
+章节中，
+dubbo.properties
+配置属性能够映射到
+ApplicationConfig
+、
+ProtocolConfig
+以及
+RegistryConfig
+的字段。从某种意义上来说，
+dubbo.properties
+也是 Dubbo 的外部化配置。
+- 第 13 行：获得属性名。例如，
+ApplicationConfig#setName(…)
+方法，对应的属性名为
+“name”
+。
+- 读取的**覆盖策略**
+如下：
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698038324957-9669ad93-2133-42d7-b1db-e33b93e7c50f.png)
+覆盖策略
+- 第 15 至 31 行：优先从【**启动参数变量**
+】获取配置项的值。
+    - 有**两种**
+情况，胖友细看下注释。
+- 第 33 至 45 行：因为 XML配置 的优先级**大于获取并使用已经拥有**
+properties配置，因此需要
+getting 方法，判断配置对象
+该配置项的值。如果有，则不从 properties配置 读取对应的值。
+- 第 46 至 59 行：最后从【**properties配置**
+】获取配置项的值。
+    - 有**三种启动参数变量**
+情况，前两种和【
+】相同。
+    - 最后一种，主要是兼容老版本的配置项。代码如下：
+- 第 65 至 68 行：有值，通过反射进行设置到配置对象中。
+- 第 70 至 72 行：逻辑中间发生异常，**不抛出异常**
+，仅打印错误日志。
+
+# 666. 彩蛋
+
+聚有趣的灵魂聊有趣的技术读有趣的源码写有趣的代码
+
+```java
+/** * 新老版本的 properties 的 key 映射 * * key：新版本的配置 映射 * value：旧版本的配置 映射 * * 来自 2012/3/8 下午 5：51 cb1f705 提交 * DUBBO-251 增加API覆盖dubbo.properties的测试，以及旧版本配置项测试。 */private static final Map<String, String> legacyProperties = new HashMap<String, String>();/** * 将键对应的值转换成目标的值。 * * 因为，新老配置可能有一些差异，通过该方法进行转换。 * * @param key 键 * @param value 值 * @return 转换后的值 */private static String convertLegacyValue(String key, String value) {    if (value != null && value.length() > 0) {        if ("dubbo.service.max.retry.providers".equals(key)) {            return String.valueOf(Integer.parseInt(value) - 1);        } else if ("dubbo.service.allow.no.provider".equals(key)) {            return String.valueOf(!Boolean.parseBoolean(value));        }    }    return value;}
+```
+
+```plain text
+    * <font style="color:rgb(51, 51, 51);">x</font>
+```

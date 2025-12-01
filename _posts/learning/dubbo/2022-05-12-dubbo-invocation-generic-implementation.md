@@ -1,0 +1,222 @@
+---
+layout: post
+title: 调用特性（三）之泛化实现
+slug: dubbo-invocation-generic-implementation
+type:
+  - note
+date: 2022-05-12
+status: draft
+tags:
+  - Dubbo
+categories:
+  - Dubbo
+mood:
+weather:
+author: deathwhispers
+created: 2022-05-11 11:52
+updated: 2022-05-11 18:33
+---
+本文基于 Dubbo 2.6.1 版本，望知悉。
+
+# 1. 概述
+
+本文分享**泛化实现**。我们来看下 [《用户指南 —— 泛化实现》](http://dubbo.apache.org/zh-cn/docs/user/demos/generic-service.html) 的定义：
+
+泛接口实现方式主要用于服务器端没有API接口及模型类元的情况，参数及返回值中的所有 POJO 均用 Map 表示，通常用于框架集成，比如：实现一个通用的远程服务 Mock 框架，可通过实现 GenericService 接口处理所有服务请求。
+
+请注意，消费**提供者**没有 **API 接口** 及 **模型类元**。那就是说，Dubbo 在泛化实现中，需要做两件事情：
+
+**泛化实现**适用于服务提供者，和**泛化引用**适用于服务消费者，恰恰“相反”。
+
+- 没有 **API 接口**[com.alibaba.dubbo.rpc.service.GenericService](https://github.com/YunaiV/dubbo/blob/f83e70b53389a064e49babe32e61a5648002a44a/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/service/GenericService.java)
+，所以提供一个泛化服务接口，目前是
+。
+    - **一个一个**
+泛化实现，只实现
+服务。
+    - 通过实现 **处理所有该服务的请求**
+$invoke(method, parameterTypes, args)
+方法，
+。
+    - 具体的使用方式，我们在 [「2. 示例」](http://svip.iocoder.cn/Dubbo/rpc-feature-generic-service/#)
+中看。
+- 没有 **模型类元转换处理**
+，所以方法参数和方法返回若是 POJO ( 例如 User 和 Order 等 ) ，需要
+：
+    - 服务消费者，将 POJO 转成 Map ，然后再调用服务提供者。（**透明**
+）
+    - 服务提供者，返回 Map 。
+    - 服务消费者，若**收到**
+返回值是 Map ，则转换成 POJO 再返回。
+    - 此处的 Map 只是举例子，实际在下文中，我们会看到还有**一种透明**
+转换方式。 （
+）
+
+整体流程如下：
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698038372895-39996e3f-0256-40e7-8fce-48660e9cec2c.png)
+
+流程
+
+# 2. 示例
+
+**服务提供者**
+
+在 [dubbo-generic-service-demo-provider](https://github.com/YunaiV/dubbo/tree/3766a47c5e97ee86c29d765dc88ee11ab5225604/dubbo-demo/dubbo-generic-reference-demo-provider) ，我们提供了例子。我们挑**重点**的地方说。
+
+① 在 Java 代码中实现 GenericService 接口：
+
+```plain text
+plain public class DemoServiceImpl implements GenericService {      @Override     public Object $invoke(String method, String[] parameterTypes, Object[] args) throws GenericException {         if ("sayHello".equals(method)) {             return "Welcome " + args[0];         }         return "unknown method";     }  }
+```
+
+---
+
+② 在 Spring 配置申明服务的实现：
+
+```plain text
+plain <bean id="demoService" class="com.alibaba.dubbo.demo.provider.DemoServiceImpl" />  <dubbo:service interface="com.alibaba.dubbo.demo.DemoService" ref="demoService" generic="true" />
+```
+
+---
+
+- interface**该服务**
+配置项，泛化实现的服务接口。通过该配置，服务消费者，可以从注册中心，获取到所有
+的提供方的地址，包括泛化实现的该服务的地址。
+- generic**两种配置项的值**
+配置项，默认为
+false
+，不使用配置项。目前有
+，开启泛化实现的功能：
+    - generic=true[com.alibaba.dubbo.common.utils.PojoUtils](https://github.com/YunaiV/dubbo/blob/f83e70b53389a064e49babe32e61a5648002a44a/dubbo-common/src/main/java/com/alibaba/dubbo/common/utils/PojoUtils.java)
+，使用
+，实现
+POJO <=> Map
+的互转。
+    - generic=bean[com.alibaba.dubbo.common.beanutil.JavaBeanSerializeUtil](https://github.com/YunaiV/dubbo/blob/master/dubbo-common/src/main/java/com/alibaba/dubbo/common/beanutil/JavaBeanSerializeUtil.java)
+，使用
+，实现
+POJO <=> JavaBeanDescriptor
+的互转。
+    - 不存在
+generic=nativejava
+配置项。
+
+**服务消费者**
+
+在 [dubbo-generic-service-demo-consumer](https://github.com/YunaiV/dubbo/tree/3766a47c5e97ee86c29d765dc88ee11ab5225604/dubbo-demo/dubbo-generic-service-demo-consumer) ，我们提供了例子。我们挑**重点**的地方说。
+
+调用代码如下：
+
+```plain text
+plain DemoService demoService = (DemoService) context.getBean("demoService"); // get remote service proxy Object result = demoService.say01("NIHAO"); System.out.println("result: " + result);
+```
+
+---
+
+- 和我们普通的服务消费者，调用服务提供者，**一模一样一模一样**
+，注意，是
+。
+
+# 3. 服务消费者 GenericImplFilter
+
+[com.alibaba.dubbo.rpc.filter.GenericImplFilter](https://github.com/YunaiV/dubbo/blob/3766a47c5e97ee86c29d765dc88ee11ab5225604/dubbo-rpc/dubbo-rpc-api/src/main/java/com/alibaba/dubbo/rpc/filter/GenericImplFilter.java) ，实现 Filter 接口，服务消费者的泛化调用过滤器。代码如下：
+
+```plain text
+plain 1: @Activate(group = Constants.CONSUMER, value = Constants.GENERIC_KEY, order = 20000)   2: public class GenericImplFilter implements Filter {   3:    4:     private static final Logger logger = LoggerFactory.getLogger(GenericImplFilter.class);   5:    6:     private static final Class<?>[] GENERIC_PARAMETER_TYPES = new Class<?>[]{String.class, String[].class, Object[].class};   7:    8:     @Override   9:     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {  10:         // 获得 `generic` 配置项  11:         String generic = invoker.getUrl().getParameter(Constants.GENERIC_KEY);  12:   13:         // 泛化实现的调用  14:         if (ProtocolUtils.isGeneric(generic)  15:                 && !Constants.$INVOKE.equals(invocation.getMethodName())  16:                 && invocation instanceof RpcInvocation) {  17:             RpcInvocation invocation2 = (RpcInvocation) invocation;  18:             String methodName = invocation2.getMethodName();  19:             Class<?>[] parameterTypes = invocation2.getParameterTypes();  20:             Object[] arguments = invocation2.getArguments();  21:   22:             // 获得参数类型数组  23:             String[] types = new String[parameterTypes.length];  24:             for (int i = 0; i < parameterTypes.length; i++) {  25:                 types[i] = ReflectUtils.getName(parameterTypes[i]);  26:             }  27:   28:             Object[] args;  29:             // 【第一步】`bean` ，序列化参数，方法参数 => JavaBeanDescriptor  30:             if (ProtocolUtils.isBeanGenericSerialization(generic)) {  31:                 args = new Object[arguments.length];  32:                 for (int i = 0; i < arguments.length; i++) {  33:                     args[i] = JavaBeanSerializeUtil.serialize(arguments[i], JavaBeanAccessor.METHOD);  34:                 }  35:             // 【第一步】`true` ，序列化参数，仅有 Map => POJO  36:             } else {  37:                 args = PojoUtils.generalize(arguments);  38:             }  39:   40:             // 修改调用方法的名字为 `$invoke`  41:             invocation2.setMethodName(Constants.$INVOKE);  42:             // 设置调用方法的参数类型为 `GENERIC_PARAMETER_TYPES`  43:             invocation2.setParameterTypes(GENERIC_PARAMETER_TYPES);  44:             // 设置调用方法的参数数组，分别为方法名、参数类型数组、参数数组  45:             invocation2.setArguments(new Object[]{methodName, types, args});  46:   47:             // 【第二步】RPC 调用  48:             Result result = invoker.invoke(invocation2);  49:   50:             // 【第三步】反序列化正常结果  51:             if (!result.hasException()) {  52:                 Object value = result.getValue();  53:                 try {  54:                     // 【第三步】`bean` ，反序列化结果，JavaBeanDescriptor => 结果  55:                     if (ProtocolUtils.isBeanGenericSerialization(generic)) {  56:                         if (value == null) {  57:                             return new RpcResult(null);  58:                         } else if (value instanceof JavaBeanDescriptor) {  59:                             return new RpcResult(JavaBeanSerializeUtil.deserialize((JavaBeanDescriptor) value));  60:                         } else { // 必须是 JavaBeanDescriptor 返回  61:                             throw new RpcException(  62:                                     new StringBuilder(64)  63:                                             .append("The type of result value is ")  64:                                             .append(value.getClass().getName())  65:                                             .append(" other than ")  66:                                             .append(JavaBeanDescriptor.class.getName())  67:                                             .append(", and the result is ")  68:                                             .append(value).toString());  69:                         }  70:                     } else {  71:                         // 获得对应的方法 Method 对象  72:                         Method method = invoker.getInterface().getMethod(methodName, parameterTypes);  73:                         //【第三步】`true` ，反序列化结果，仅有 Map => POJO  74:                         return new RpcResult(PojoUtils.realize(value, method.getReturnType(), method.getGenericReturnType()));  75:                     }  76:                 } catch (NoSuchMethodException e) {  77:                     throw new RpcException(e.getMessage(), e);  78:                 }  79:             // 【第三步】反序列化异常结果  80:             } else if (result.getException() instanceof GenericException) {  81:                 GenericException exception = (GenericException) result.getException();  82:                 try {  83:                     String className = exception.getExceptionClass();  84:                     Class<?> clazz = ReflectUtils.forName(className);  85:                     Throwable targetException = null;  86:                     Throwable lastException = null;  87:                     // 创建原始异常  88:                     try {  89:                         targetException = (Throwable) clazz.newInstance();  90:                     } catch (Throwable e) {  91:                         lastException = e;  92:                         for (Constructor<?> constructor : clazz.getConstructors()) {  93:                             try {  94:                                 targetException = (Throwable) constructor.newInstance(new Object[constructor.getParameterTypes().length]);  95:                                 break;  96:                             } catch (Throwable e1) {  97:                                 lastException = e1;  98:                             }  99:                         } 100:                     } 101:                     // 设置异常的明细 102:                     if (targetException != null) { 103:                         try { 104:                             Field field = Throwable.class.getDeclaredField("detailMessage"); 105:                             if (!field.isAccessible()) { 106:                                 field.setAccessible(true); 107:                             } 108:                             field.set(targetException, exception.getExceptionMessage()); 109:                         } catch (Throwable e) { 110:                             logger.warn(e.getMessage(), e); 111:                         } 112:                         // 创建新的异常 RpcResult 对象 113:                         result = new RpcResult(targetException); 114:                     // 创建原始异常失败，抛出异常 115:                     } else if (lastException != null) { 116:                         throw lastException; 117:                     } 118:                 } catch (Throwable e) { // 若发生异常，包装成 RpcException 异常，抛出。 119:                     throw new RpcException("Can not deserialize exception " + exception.getExceptionClass() + ", message: " + exception.getExceptionMessage(), e); 120:                 } 121:             } 122:             // 返回 RpcResult 结果 123:             return result; 124:         } 125:  126:         // 省略代码....泛化引用的调用 127:  128:          // 普通调用 129:         return invoker.invoke(invocation); 130:     } 131:  132:     // ... 省略 getting/setting 的方法 133:  134: }
+```
+
+---
+
+- 整体，和**服务提供者类似**
+的 GenericFilter 有一些
+。
+- 使用 Dubbo SPI Adaptive 机制，**自动加载服务消费者**
+，仅限
+，并且有
+generic
+配置项。
+- 第 126 行：省略**泛化引用**[《精尽 Dubbo 源码分析 —— 调用特性（二）之泛化引用》](http://svip.iocoder.cn/Dubbo/rpc-feature-generic-reference)
+的调用，在
+中，详细解析。
+- 第 129 行：若是普通调用( **非泛化引用的调用**
+)，调用
+Invoker#invoke(invocation)
+方法，继续过滤链的调用，最终调用 Service 服务。
+- 正戏
+- 第 14 至 16 行：判断是**泛化实现**
+的调用
+- 第 22 至 26 行：获得**参数类型**
+数组。
+- ========== 【第一步：序列化参数】 ==========
+- 第 29 至 34 行：
+generic = bean
+，调用
+JavaBeanSerializeUtil#serialize(JavaBeanDescriptor)
+方法，序列化参数，即
+方法参数 => JavaBeanDescriptor
+。
+- 第 35 至 38 行：[PojoUtils#generalize(Object[] objs](https://github.com/YunaiV/dubbo/blob/f83e70b53389a064e49babe32e61a5648002a44a/dubbo-common/src/main/java/com/alibaba/dubbo/common/utils/PojoUtils.java#L63-L69)
+generic = true
+，调用
+方法，序列化参数，仅有
+POJO => Map
+。
+- ========== 【第二步：RPC 调用】 ==========
+- 第 41 行：设置 RpcInvocation 的方法名为
+$invoke
+。
+- 第 42 行：设置 RpcInvocation 的方法参数类型为
+GENERIC_PARAMETER_TYPES
+。
+- 第 43 行：设置 RpcInvocation 的参数数组为
+methodName
+types
+types
+。
+- 第 48 行：通过如上的 **RpcInvocation泛化实现**
+的设置，我们调用
+Invoker#invoke(invocation)
+方法，就能 RPC 调用到
+的服务。
+- ========== 【第三步：反序列化**正常**
+结果】 ==========
+- 第 55 至 69 行：
+generic = bean
+，调用
+JavaBeanSerializeUtil#serialize(JavaBeanDescriptor)
+方法，反序列化结果，即
+JavaBeanDescriptor => POJO
+。
+- 第 71 至 74 行：
+generic = true
+，调用
+PojoUtils#realize(pojo, type, genericType)
+方法，反序列化结果，仅有
+Map => POJO
+。
+- **注意新的**
+，反序列完，是会创建
+RpcResult 。
+- ========== 【第三步：反序列化**异常**
+结果】 ==========
+- 第 87 至 100 行：根据 GenericException 异常，创建**原始**
+异常
+targetException
+。
+- 第 101 至 111 行：设置异常明细到
+targetException
+。
+- 第 113 行：创建**新的**
+异常 RpcResult 对象。
+- 第 114 至 117 行：创建原始异常失败，抛出异常
+lastException
+。
+
+# 666. 彩蛋
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698038372975-dedf4565-e4ad-4dad-953e-1f39c1fae145.png)
+
+知识星球
+
+艿艿在本文，并未解析 POJO 的序列化和反序列化的相关代码，感兴趣的胖友，可以自己研究。
