@@ -1,0 +1,19 @@
+---
+layout: post
+title: 黄陂木兰草原
+slug: travel-huangpi-mulan
+type:
+  - life
+status: completed
+date: 2023-03-25
+tags:
+  - 黄陂
+categories:
+  - Travel
+place: 黄陂木兰草原
+end-time: 2023-03-25
+start-time: 2023-03-25
+author: deathwhispers
+created: 2023-03-25 10:00
+updated: 2023-03-25 10:00
+---
