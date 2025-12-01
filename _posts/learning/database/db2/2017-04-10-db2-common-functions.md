@@ -1,0 +1,110 @@
+---
+layout: post
+title: db2常用函数
+slug: db2-common-functions
+type:
+  - note
+date: 2017-04-10
+tags:
+  - db2
+categories:
+  - db2
+author: deathwhispers
+created: 2017-04-10 11:45
+updated: 2017-04-10 22:17
+---
+# db2常用函数
+
+**1、VALUE函数**
+
+- *
+
+**
+
+语法：VALUE(expresion1,expresion2)
+
+VALUE函数是用于返回一个非空的值，如果expresion1不为空则返回expresion1，如果expresion1为空则返回expresion2；
+
+- *
+
+**
+
+**2、COALESCE函数**
+
+语法：COALESCE(expr1,expr2,……,expr(n))
+
+COALESCE函数用于返回表达式里面第一个非空的表达式，如果所有表达式都为空，则返回空；
+
+**3、LENGTH函数**
+
+语法：LENGTH(AVG)
+
+LENGTH函数用于返回参数的长度；
+
+**4、LCASE、LOWER函数、UCASE、UPPER函数**
+
+语法：LCASE(AVG) / LOWER（AVG）
+
+用于返回定长、变长字符串的小写形式；
+
+语法：UCASE(AVG) / UPPER（AVG）
+
+用于返回定长、变长字符串的大写形式；
+
+**6、LTRIM、RTRIM函数**
+
+**7、LEFT、RIGHT函数**
+
+**8、CONCAT函数**
+
+**9、INSERT函数**
+
+语法：INSERT(AVG1,POS,SIZE,AVG2)
+
+INSERT函数用于返回一个字符串，将AVG1从POS位置处删除SIZE个字符，将AVG2插入到该位置；
+
+如：select insert(‘123456789’,3,2,‘aaaa’) from xxxx
+
+返回字符串‘12aaaa56789’
+
+**10、LOCATE函数**
+
+语法：LOCATE(AVG1,AVG2) LOCATE(AVG1,AVG2,POS)
+
+LOCATE函数在AVG2里面查找AVG1第一次出现的位置,如果POS存在则返回从POS位置开始的AVG1第一次出现的位置；
+
+**11、POSSTR函数**
+
+语法：POSSTR(EXP1,EXP2)
+
+POSSTR函数返回EXP2在EXP1中的位置；
+
+**12、REPEAT函数**
+
+语法：REPEAT(AVG1,NUM_TIMES)
+
+REPEAT函数用于返回AVG1被重复NUM_TIMES次数的字符串；
+
+**13、REPLACE函数**
+
+语法：REPLACE(EXP1,EXP2,EXP3)
+
+REPEAT函数用EXP3替换EXP1中所有的EXP2;
+
+**14、SPACE函数**
+
+语法：SPACE(SIZE)
+
+SPACE函数返回含有SIZE个空格的字符串；
+
+**15、SUBSTR函数**
+
+语法：SUBSTR(AVG1,POS,LENGTH)
+
+SUBSTR函数返回ARG1中POS位置开始的LENGTH个字符，如果没有指定LENGTH，则返回剩余的字符。
+
+**16、CAST表达式**
+
+语法：CAST(AVG AS D_TYPE)
+
+CAST表达式用来转化数据类型；

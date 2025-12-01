@@ -1,0 +1,142 @@
+---
+layout: post
+title: db2常用操作
+slug: db2-common-operations
+type:
+  - note
+date: 2017-04-16
+tags:
+  - db2
+categories:
+  - db2
+author: deathwhispers
+created: 2017-04-16 11:45
+updated: 2017-04-16 22:17
+---
+# db2常用操作
+
+mark一下，勉励自己
+
+[https://blog.csdn.net/sunrier/article/details/7835578](https://blog.csdn.net/sunrier/article/details/7835578)写的比较全面详细
+
+强制关闭实例上的所有应用程序：db2 force application all
+
+数据库实例的关闭：db2stop / db2stop force
+
+显示所有实例：db2ilist (需切换至db2用户)
+
+db2 get instance 显示当前的实例
+
+删除一个实例，需root用户权限
+
+cd 至db2安装目录下/instance
+
+./db2drop db2inst1
+
+列出当前实例用户下所有数据库
+
+db2 list db directory
+
+创建数据库
+
+db2 create database test
+
+db2 create database test on ‘/home/db2inst1’ using codeset UTF-8 territory CN
+
+on ‘/home/db2inst1’ 表示数据库路径
+
+一般情况下’/home/db2inst1’为默认数据库路径
+
+db2 connect to test
+
+db2 connect to test user username using password
+
+b2 list active databases
+
+查看表空间
+
+db2 list tablespaces [ show detail ]
+
+db2pd -tablespaces -db 数据库名
+
+查看表结构
+
+db2 describe table tablename
+
+db2 “describe select * from db2inst1.student”
+
+创建一个表结构相同的表
+
+db2 create table people like student
+
+修改表字段类型
+
+db2 “alter table  alter column  set data type ”
+
+添加字段
+
+db2 “alter table  add  ”
+
+删除字段
+
+alter table  drop column
+
+alter执行删除后，可能导致锁表，需reorg
+
+db2 reorg table
+
+查看表
+
+db2 list tables for user
+
+db2 list tables for system
+
+db2 list tables for schema xxx
+
+显示当前数据库连接有哪些应用程序
+
+b2 list application
+
+查看DB2全部受支持的注册表变量列表
+
+db2set -lr
+
+更改DB2 UDB注册表变量的值
+
+db2set DB2COMM=TCPIP
+
+查看在服务器上已经设置的所有DB2概要文件注册表
+
+db2set -all
+
+导出
+
+db2 “export to teacher.txt of del select * from teacher”
+
+db2 “export to teacher_bak.txt of del modified by coldel| select * from teacher”
+
+导入数据到一个表中
+
+db2 “import from teacher.txt of del insert into teacher”
+
+db2 “import from teacher_bak.txt of del modified by coldel| insert into teacher”
+
+执行sql脚本
+
+db2 -tvf xxx。sql
+
+查看历史备份记录
+
+db2 list history backup all for
+
+读数据库管理程序配置
+
+db2 get dbm cfg
+
+db2 update dbm cfg using 参数名 参数值
+
+查看数据库的配置
+
+db2 get db cfg [ for  ]
+
+db2 update db cfg for  using 参数名 参数值

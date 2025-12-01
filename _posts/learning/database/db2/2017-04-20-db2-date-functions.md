@@ -1,0 +1,76 @@
+---
+layout: post
+title: db2日期函数
+slug: db2-date-functions
+type:
+  - note
+date: 2017-04-20
+tags:
+  - db2
+categories:
+  - db2
+author: deathwhispers
+created: 2017-04-20 11:45
+updated: 2017-04-20 22:17
+---
+# db2日期函数
+
+1.CURRENT DATE获取当前日期；CURRENT TIME获取当前时间；CURRENT TIMESTAMP获取当前时间戳（含年、月、日、时、分、秒）；YEAR（）获取年；MONTH（）获取月；DAY（）获取日； HOUR（）获取小时；MINUTE（）获取分钟；SECOND（）获取秒；DATE（）获取日期；TIME（）获取时间；TIMESTAMP（）获取时间戳。
+
+以上函数参数可以是日期时间类型，也可以为日期时间格式的字符串。
+
+注意：若为日期格式的字符串必须为对应符合的格式
+
+CURRENT DATE –当前日期
+
+CURRENT TIME —当前时间
+
+CURRENTTIMESTAMP –当前时间戳
+
+year(currenttimestamp) –获取当前年
+
+month(currenttimestamp) –获取当前月
+
+day(currenttimestamp) –获取当前日
+
+hour(currenttimestamp) –获取当前时
+
+minute(currenttimestamp) –获取当前分
+
+second(currenttimestamp) –获取当前秒
+
+microsecond(currenttimestamp) –获取当前毫秒
+
+2、DB2时间可以直接加减带单位的时间长度。
+
+TIMESTAMP(‘2016-1-06 12:18:12’)+**1**YEAR/month/day/hour/minute/second/microsecond
+
+3、通过days（）可以获取两个时间相差天数。
+
+DAYS(CURRENT DATE)-DAYS(CURRENT DATE-**1000**DAY);–1000
+
+4、通函数可以获取时间对应的周(月)。
+
+DAYNAME(currenttimestamp);–星期一
+
+DAYOFWEEK（）返回参数中的星期几，用范围在 1-7 的整数值表示，其中 1 代表星期日。
+
+DAYOFWEEK(currenttimestamp)
+
+DAYOFWEEK_ISO（）返回参数中的星期几，用范围在 1-7 的整数值表示，其中 1 代表星期一。
+
+DAYOFWEEK_ISO(currenttimestamp);
+
+DAYOFYEAR（）返回参数中一年中的第几天，用范围在 1-366 的整数值表示。
+
+valuesDAYOFYEAR(currenttimestamp);
+
+MONTHNAME（）对于参数的月部分的月份
+
+MONTHNAME(CURRENTTIMESTAMP)
+
+WEEK（）返回参数中一年的第几周，用范围在 1-54 的整数值表示。以星期日作为一周的开始。（参数可以为日期格式或者日期格式的字符串）
+
+WEEK_ISO（）返回参数中一年的第几周，用范围在 1-54 的整数值表示。以星期一作为一周的开始。（参数可以为日期格式或者日期格式的字符串）
+
+5、TIMESTAMPDIFF(n,CHAR(TIMESTAMP(‘2012-05-25 10:23:24’)-TIMESTAMP(‘2012-05-25 10:20:24’)))根据两个时间戳记之间的时差，返回由第一个参数定义的类型表示的估计时差。（整除部分，不会四舍五入）

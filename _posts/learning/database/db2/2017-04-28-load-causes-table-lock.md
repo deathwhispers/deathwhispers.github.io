@@ -1,0 +1,56 @@
+---
+layout: post
+title: load导致锁表
+slug: load-causes-table-lock
+type:
+  - note
+date: 2017-04-28
+tags:
+  - db2
+categories:
+  - db2
+author: deathwhispers
+created: 2017-04-28 11:45
+updated: 2017-04-28 22:17
+---
+# load导致锁表
+
+错误码：57016
+
+表不活动
+
+表状态为：load pending 装入暂挂
+
+DB2 SQL Error:SQLCODE=-668,SQLSTATE=57016错误的解决方法
+
+解决办法：
+
+1.reorg table tablename ;
+
+一般原因码为 “7”时，直接reorg可以解决，
+
+错误原因常为：修改表字段 ，alter table 。。。。
+
+修改表字段后应reorg table
+
+非命令行中执行：call sysproc.admin_cmd( ‘reorg table tablename’ )
+
+2.先前尝试load 此表失败，表状态为 “load pending”
+
+一般情况下，错误原因码为”3”
+
+错误原因多为：load数据时异常中断，语句不合法
+
+执行 db2 “load query table tablename” 查看表状态
+
+然后，db2 ” load from /dev/null of del terminate into tablename ” 此命令用来解决表暂挂状态
+
+3.恢复时候，没有指定过roll forward选项是数据库的原因，因load异常中断引起，可以使用 load …… terminate 或者restart 来解决
+
+先建一个空文件test.txt
+
+然后，
+
+db2 load from /…/test.txt of del terminate into tablename
+
+然后 reorg table tablename
