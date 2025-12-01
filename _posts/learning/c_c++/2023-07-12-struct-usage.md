@@ -1,0 +1,387 @@
+---
+layout: post
+title: 结构体(struct)的使用
+slug: struct-usage
+type:
+  - note
+date: 2023-07-12
+status: draft
+tags:
+  - C_C++
+  - struct
+categories:
+  - C_C++
+author: deathwhispers
+created: 2023-07-12 11:46
+updated: 2023-07-12 18:34
+---
+
+到目前为止，我们可以很方便的定义单种想要的数据类型（如int型等等），但是如果碰到这样的情况：实现一个手机通讯录，需要以人为单位，且每个人的内部信息由姓名、年龄、手机号、住址之类的不同类型数据组成。这个时候如果使用但类型的变量进行罗列，那么操作起来就不太方便，而这些功能使用结构体(struct)却可以很好的实现。结构体在很多场合中非常常用，可以将若干个不同的数据类型的变量或数组封装在一起，以储存自定义的数据结构，方便储存一些复合数据。
+
+## 1.结构体的定义
+
+定义一个结构体的基本格式：
+
+```c
+struct Name
+{
+    //一些基本的数据结构或者自定义的数据类型
+};
+```
+
+当需要将一些相关的变量放在一起储存是，只要依次写出他们的数据类型和变量名称。例如，需要储存一个学生的学号、性别、姓名和专业，就可以这样定义:
+
+```c
+struct studentInfo
+{
+    int id;
+    char gender; //\'F\' or \'M\'
+    char name[20];
+    char major[20];
+} Alice, Bob, stu[1000];
+```
+
+其中
+
+(1)studentInfo是这个结构体的类型名;
+
+(2)内部分布定义了id(学号)、gender(性别)、name(姓名)和major(专业)，这些就是单个学生的信息;
+
+(3)而在大括号外部定义了studentInfo型的Alice和Bob代表两个**结构体变量**；之后的stu[1000]就是当有很多学生定义的一个结构体数组可以放置1000个学生信息的数组（如果不在此处定义变量或者数组，则大括号外直接更上分号）。
+
+结构体变量和结构体数组除了可以像上面一样直接定义外，也可以按照基本数据类型（如int型），那样定义：
+
+```c
+studentInfo Alice;
+studentInfo stu[1000];
+```
+
+需要注意的是，结构体里面能够定义除了自己本身(因为这样会出现循环定义的问题)之外的任何数据类型。不过虽然不能够定义自己的本身，但是可以定义自身类型的指针变量。例如：
+
+```c
+struct node
+{
+    node n;      //错误不能定义自身 node类型变量
+    node *next; //正确可以定义node*型指针变量
+};
+```
+
+## **2.访问结构体内的元素**
+
+访问结构体内的元素有两种方法：“.”操作和”->“操作。现在吧studentInfo类型定义为如下：
+
+```c
+struct studentInfo
+{
+    int id;
+    char name[20];
+    studentInfo *next;
+} stu, *p;
+```
+
+这里studentInfo中多了一个**指针next**用来指向下一个学生的地址，且**结构体变量**中定义了普通变量stu和指针变量p。
+
+于是访问stu中的变量的写法如下：
+
+```c
+stu.id;
+stu.name;
+stu.next;
+```
+
+而访问指针变量p中元素的写法如下：
+
+```c
+(*p).id;
+(*p).name;
+(*p).next;
+```
+
+可以看到，对**结构体变量**和**结构体指针变量**内元素的访问方式其实是一样的，在变量名后面加上”.”然后跟上要访问的元素即可。但同时也会发现，对结构体指针变量中元素的访问写法略微复杂，所以C语言中又有一种访问结构体指针变量内元素的更加简洁的写法：
+
+```c
+p->id;
+p->name;
+p->next;
+```
+
+正如上面的写法，结构体指针变量内元素的访问只需要使用”->“跟上要访问的元素即可，且使用”*“或”->“访问结构体指针变量内元素的写法是完全等价的。
+
+注意：对于结构化指针变量有如下结论需要注意：
+
+结构体指针需要初始化
+
+```c
+#include <stdio.h>
+
+int main()
+{
+    struct studentInfo
+    {
+        int id;
+        char name[20];
+        char gender;
+        studentInfo *next;
+    } stu, *p;
+    scanf("%d %c", &p->id, &p->gender);
+    printf("%d %c", p->id, p->gender);
+    return 0;
+}
+```
+
+这样是无法输出的因为对结构体指针没有进行初始化操作。因此对p无法操作。只有定义了结构体指针变量后对其初始化，指向一个结构体变量后才可使用。
+
+```c
+#include <stdio.h>
+
+int main()
+{
+    struct studentInfo
+    {
+        int id;
+        char name[20];
+        char gender;
+        studentInfo *next;
+    } stu, *p;
+    p = &stu;
+    scanf("%d %c", &p->id, &p->gender);
+    printf("%d %c", p->id, p->gender);
+    return 0;
+}
+```
+
+输入
+
+```c
+1 M
+```
+
+输出
+
+```c
+1 M
+```
+
+当然可以给stu.id赋值或者吧stu.id赋值给其他变量：
+
+```c
+stu.id = 10086;
+int getId = stu.id;
+```
+
+## **3.结构体的初始化**
+
+说到初始化，读者自然可以先定义一个studentInfo stu的结构体变量，
+
+```c
+struct studentInfo
+{
+    int id;
+    char gender;
+} stu;
+```
+
+然后对其中的元素注意赋值，以达到初始化的目的。栗子如下：
+
+```c
+stu.id = 1;
+stu.gender = 'M';
+```
+
+或者在读入时进行赋值：
+
+```c
+scanf("%d %c", &stu.id, &stu.gender);
+```
+
+但是如果这样做，当结构体内变量有很多时并不方便，此处介绍一种使用“构造函数”的方法进行初始化。所谓**构造函数**就是用来初始化结构体的一种函数，他直接定义在结构体中，构造函数的一个特点就是它**不需要写返回类型，且函数名与结构体名相同。**
+
+一般来说，对于一个普通的结构体，其内部会生成一个默认的构造函数（但不可见）。例如下面例子中，“studentInfo(){}”就是默认生成的构造函数，可以看到：
+
+（1）这个构造函数的函数名和结构体类型名相同；
+
+（2）它没有返回类型，所以studentInfo前面没有写东西；
+
+（3）它没有参数，所以小括号内是空的；
+
+（4）它也没有参数所以小括号内也是空的
+
+（5）它也没有函数体，因此花括号内也是空的。
+
+由于这个构造函数的存在，才可以直接定义studentInfo类型的变量而不进行初始化（因为他没有让用户提供任何初始化参数）
+
+```cpp
+struct studentInfo
+{
+    int id;
+    char gender;
+    //默认生成的构造函数
+    studentInfo() {}
+};
+```
+
+那么，如果想要自己手动提供id和gender的初始化，应该这样做。只需要像下面一样提供初始化参数来对结构体内的变量进行赋值即可，其中id和_gender都是变量名。只要不和已有的变量冲突即可，用a、b或者其他变量名也是可以的
+
+```cpp
+struct studentInfo
+{
+    int id;
+    char gender;
+    studentInfo(int _id, char _gender)
+    {
+        //赋值
+        id = _id;
+        gender = _gender;
+    }
+};
+```
+
+当然构造函数也可以简化为一行：
+
+```cpp
+struct studentInfo
+{
+    int id;
+    char gender;
+    studentInfo(int _id, char _gender) : id(_id), gender(_gender) {}
+}; //这样就可以在需要的时候指甲对结构体变量进行赋值：
+#include <stdio.h>
+int main()
+{
+    struct studentInfo
+    {
+        int id;
+        char gender;
+        studentInfo(int _id, char _gender) : id(_id), gender(_gender) {}
+    };
+    studentInfo stu = studentInfo(10086, 'M');
+    printf("%d %c", stu.id, stu.gender);
+    return 0;
+}
+```
+
+输出
+
+```c
+10086 M
+```
+
+比较之前不使用构造函数时的赋值：
+
+```c
+#include <stdio.h>
+
+int main()
+{
+    struct studentInfo
+    {
+        int id;
+        char gender;
+    } stu;
+    stu.id = 10086;
+    stu.gender = 'M';
+    printf("%d %c", stu.id, stu.gender);
+    return 0;
+}
+```
+
+输出
+
+```c
+10086 M
+```
+
+此时需要定义的结构体需要在结构体后面命名很不方便。如果使用studentInfo stu构造stu会报错栗子：
+
+```c
+#include <stdio.h>
+
+int main()
+{
+    struct studentInfo
+    {
+        int id;
+        char name[20];
+    };
+    studentInfo stu;
+    stu.id = 1;
+    printf("%d", stu.id);
+    return 0;
+}
+```
+
+结果
+
+studentInfo stu;在C语言环境下会报错 在C++环境下可以使用但是
+
+没有使用构造函数，就不能随时构造函数。这就是使用构造函数的优点。
+
+注意：**如果自己重新定义了构造函数，则不能不经过初始化就定义结构体变量**，也就是说，默认生成的构造函数“studentInfo(){}”此时被覆盖了。为了既能不初始化就定义结构体变量，又更高享受初始化带来的边界，可以把“studentInfo(){}”手动加上。这意味着，只要参数个数和类型不完全相同，就可以定义任意多个构造函数，以适应不同的初始化场合。
+
+栗子：
+
+```cpp
+struct studentInfo
+{
+    int id;
+    char gender;
+    //用以不初始化就定义结构体变量
+    studentInfo() {}
+    //只初始化gender
+    studentInfo(char _gender)
+    {
+        gender = _gender;
+    }
+    //同时初始化id 和 gender
+    studentInfo(int _id, char _gender)
+    {
+        id = _id;
+        gender = _gender;
+    }
+};
+```
+
+下面是一个应用实例，其中结构体Point用于存放平面点的坐标x,y。
+
+```cpp
+#include <stdio.h>
+
+struct Point
+{
+    int x, y;
+    Point() {} //用以不经初始化地定义pt[10]
+    Point(int _x, int _y) : x(_x), y(_y) {} //用以提供x和y的初始化
+} pt[10];
+int main()
+{
+    int num = 0;
+    for (int i = 1; i <= 3; i++)
+    {
+        for (int j = 1; j <= 3; j++)
+        {
+            pt[num++] = Point(i, j); //直接使用构造函数
+        }
+    }
+    for (int i = 0; i < num; i++)
+    {
+        printf("%d,%d\n", pt[i].x, pt[i].y);
+    }
+    return 0;
+}
+```
+
+输出
+
+```plain text
+1,1
+1,2
+1,3
+2,1
+2,2
+2,3
+3,1
+3,2
+3,3
+```
+
+构造函数在结构体内元素比较多的时候会使得代码精炼，因为可以不需要临时变量就可以初始化一个结构体，而且整体代码更简洁。这就是构造函数的精妙之处。

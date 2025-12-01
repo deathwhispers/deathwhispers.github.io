@@ -1,0 +1,152 @@
+---
+layout: post
+title: C语言中输入与输出
+slug: c-input-and-output
+type:
+  - note
+date: 2023-06-13
+status: draft
+tags:
+  - C_C++
+categories:
+  - C_C++
+author: deathwhispers
+created: 2023-06-13 11:46
+updated: 2023-06-13 18:34
+---
+
+cin与cout是C++中输入与输出的函数，使用时需要添加头文件”#include“和”using namespace std;“才能使用。cin与cout不需要像C语言中scanf、printf函数那样指定函数的输入输出格式，也不需要使用取地址运算符&，而可以直接进行输入/输出，十分易用和方便。
+
+## 1.cin
+
+cin是c和in的合成词，采用输入运算符”>>“来进行输入。如果想要输入一个整数n，则可以按照如下的写法进行输入：
+
+```cpp
+#include<iostream>
+
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    return 0;
+}
+```
+
+可以发现，cin的输入并不指定格式，也不需要加取地址符&，直接写变量名称就可以了。于此同理，也可以知道读入double型浮点数db、char型字符c的方法也是一样的：
+
+```cpp
+cin >> db;
+cin >> c;
+```
+
+如果同时读入多个变量也是一样的写法，只需要往后面使用>>进行扩展即可。例如下面的代码读入了int型变量n、double型变量db、char型变量c、char型数组str[]：
+
+```cpp
+cin >> n >> db >> c >> str;
+```
+
+而如果想要读入一整行，则需要getline函数，例如下面的代码就把一整行都读入char型数组str[100]中：
+
+```cpp
+#include<iostream>
+
+using namespace std;
+
+int main() {
+    char str[100];
+    cin.getline(str, 100);
+    cout << str;
+    return 0;
+}
+```
+
+输入
+
+```plain text
+what a happy day！
+```
+
+输出
+
+```plain text
+what a happy day！
+```
+
+而如果是string容器，则需要试用线的方式输入：
+
+```cpp
+string str;
+getline(cin, str);
+```
+
+## 2.cout
+
+cout是c和out的合成词，其使用方法和cin几乎是一致的，只不过使用的是输出运算符<<。下面的代码输出了int型变量n、double型变量db、char型变量c、char型数组str[]：
+
+```cpp
+cout << n << db << c << str;
+```
+
+但是要注意的是，输出时**中间并没有加空格**，因此可以在每个变量之间加上空格：
+
+```cpp
+cout << n << " " << db << " " << c << " " << str;
+```
+
+当然，如果想要在中间输出字符串也是可以的：
+
+```cpp
+#include<iostream>
+
+using namespace std;
+
+int main() {
+    int n;
+    double db;
+    char c;
+    char str[100];
+    cin >> n >> db >> c >> str;
+    cout << n << "haha" << db << "heihei" << c << "wawa" << str;
+    return 0;
+}
+```
+
+输入
+
+```plain text
+100 3.14159 s 233333333heihei
+```
+
+输出
+
+```plain text
+100haha3.14159heiheiswawa233333333heihei
+```
+
+可见输出是没有空格隔开的。
+
+对于cout的换行有两种方式：
+
+- 第一种和C中相同，也就是使用；
+- 第二种方法是使用endl来表示换行(endl是 end line的缩写)：
+
+```cpp
+cout << n << "\n" << db << endl;
+```
+
+如果想要控制double型的精度，例如输出小数点后两位，那么需要在输出之前加上一些东西，并且要加上#include头文件。下面的代码会输出123.46:
+
+```cpp
+#include<iostream>
+#include<iomanip>
+
+using namespace std;
+
+int main() {
+    cout << setiosflags(ios::fixed) << setprecision(2) << 123.4567 << endl;
+    return 0;
+}
+```
+
+事实上，对于编程比赛来说，并不推荐使用cin与cout进行输入与输出，因为他们在输入/输出大量数据的情况下表现的很糟糕，有时候题目的数据还没输入完毕就已经Time Limit Error(超时)了。因此还是推荐大家使用C语言中的scanf与printf进行对数据的输入/输出。吱哟在非常必要的时候才是用cin与cout(如用到string 之后有机会会单独说明用法)。谢谢！

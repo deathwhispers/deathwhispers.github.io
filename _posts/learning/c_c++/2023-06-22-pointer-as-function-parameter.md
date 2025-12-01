@@ -1,0 +1,279 @@
+---
+layout: post
+title: 指针–使用指针变量作为函数参数
+slug: pointer-as-function-parameter
+type:
+  - note
+date: 2023-06-22
+status: draft
+tags:
+  - C_C++
+categories:
+  - C_C++
+author: deathwhispers
+created: 2023-06-22 11:46
+updated: 2023-06-22 18:34
+---
+
+
+# 指针–使用指针变量作为函数参数
+
+指针类型也可以作为函数参数的类型，这时**视为把变量的地址传入函数。**如果在函数中对这个地址中的元素进行改变，原先的数据也就会确实地被改变。栗子：
+
+```c
+#include <stdio.h>
+
+void change(int *p)
+{
+    *p = 2333;
+}
+int main()
+{
+    int a = 1;
+    int *p = &a;
+    change(p);
+    printf("%d\n", a);
+    return 0;
+}
+```
+
+```text
+2333
+```
+
+注意，`change(int* p)` 函数的形参是一个指针变量，因此调用时需要传入一个指针作为实参。在 `main` 函数中，应该使用 `change(p)` 而不是 `change(*p)`。`change(*p)` 传递的是指针 `p` 所指向的值，这会导致类型不匹配而报错。
+
+在代码中，`int*` 类型的指针变量 `p` 存储了变量 `a` 的地址。当 `p` 作为参数传递给 `change` 函数时，实际上传递的是 `a` 的地址。在 `change` 函数内部，通过 `*p` 可以直接修改 `a` 的值。这种方式称为**地址传递**。
+
+与**地址传递**不同的是**值传递**。值传递时，函数接收的是实参的一个副本，在函数内部对参数的修改不会影响到原始变量。地址传递通过操作内存地址，实现了在函数外部修改变量值的效果。
+
+看一个典型的例子：**使用指针作为参数交换两个数。**
+
+首先回顾如果交换两个数，一般来说，交换两个数需要借助中间变量，先令中间`<font style="color:rgb(26, 26, 26);">temp</font>`存放其中一个值`<font style="color:rgb(26, 26, 26);">a</font>`，再把另外一个数赋值给被转移的数据`<font style="color:rgb(26, 26, 26);">a</font>`，最后将现存`<font style="color:rgb(26, 26, 26);">a</font>`的中间变量赋值给`<font style="color:rgb(26, 26, 26);">b</font>`，完成交换：
+
+```c
+#include <stdio.h>
+
+int main()
+{
+    int a = 1, b = 2;
+    int temp = a;
+    a = b;
+    b = temp;
+    printf("a = %d, b = %d\n", a, b);
+    return 0;
+}
+```
+
+```c
+输出：
+a=2,b=1
+```
+
+上述代码很直观，接下来如果需要将交换功能写为函数，先提出一个代码方案：
+
+```c
+#include <stdio.h>
+
+void swap(int a, int b)
+{
+    int temp = a;
+    a = b;
+    b = temp;
+}
+int main()
+{
+    int a = 1, b = 2;
+    swap(a, b);
+    printf("a = %d, b = %d\n", a, b);
+    return 0;
+}
+```
+
+```c
+输出：
+a = 1, b = 2
+```
+
+可见这种写法并没有实现交换，因为函数在接受参数只是**单向一次性的值传递**，也就是说在调用swap(a, b)时只是把a和b的值传进去了，这相当于产生了一个**副本**，对于这个副本不会影响main中的a、b值。事实上你对这个函数进行取地址输出，会发现新a，b与main函数中的a b地址是不一样的。
+
+```c
+#include <stdio.h>
+
+void swap(int a, int b)
+{
+    int temp = a;
+    a = b;
+    b = temp;
+    printf("void address &a = %d, &b = %d\n", &a, &b);
+}
+int main()
+{
+    int a = 1, b = 2;
+    printf("main address &a = %d, &b = %d\n", &a, &b);
+    swap(a, b);
+    printf("a = %d, b = %d\n", a, b);
+    return 0;
+}
+```
+
+输出
+
+mainaddress**&**a**=**6356780,**&**b**=**6356776**void**address**&**a**=**6356752,**&**b**=**6356756a**=**1,b**=**2
+
+课件在void中值传递是新建了两个“a”“b”与main函数中的a,b并非是同一个地址的a,b。具体的地址值每个环境不同生成的不太一样。
+
+接下来介绍使用指针的情况。指针变量存放的是地址，使用指针变量作为参数时传进来的也是地址。**只有在获取地址的情况下对元素进行操作，才能够真正的修改变量。**为此，将代码修改为：
+
+```c
+#include <stdio.h>
+
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+int main()
+{
+    int a = 1, b = 2;
+    int *p1 = &a, *p2 = &b;
+    swap(p1, p2);
+    printf("a = %d, b = %d\n", a, b);
+    return 0;
+}
+```
+
+```c
+输出：
+a=2,b=1
+```
+
+这里代码中是将`<font style="color:rgb(26, 26, 26);">&a</font>`(a的地址)，`<font style="color:rgb(26, 26, 26);">&b</font>`(b的地址)作为参数传入，使得`<font style="color:rgb(26, 26, 26);">swap</font>`函数中`<font style="color:rgb(26, 26, 26);">int*</font>`型制造变量`<font style="color:rgb(26, 26, 26);">a</font>`存放的是`<font style="color:rgb(26, 26, 26);">&a</font>`、指针变量`<font style="color:rgb(26, 26, 26);">b</font>`存放的是`<font style="color:rgb(26, 26, 26);">&b</font>`。这个时候`<font style="color:rgb(26, 26, 26);">swap</font>`函数中`<font style="color:rgb(26, 26, 26);">a,b</font>`均为地址，而利用钥匙*取出房间内的值，`<font style="color:rgb(26, 26, 26);">*a</font>`与`<font style="color:rgb(26, 26, 26);">*b</font>`均为地址中存放的数据，可以“看成”为`<font style="color:rgb(26, 26, 26);">int</font>`型变量。接下来就按照正常的思路进行值的变换这个时候，就是直接对地址中存放的数据进行操作，交换的操作会改变`<font style="color:rgb(26, 26, 26);">main</font>`函数中`<font style="color:rgb(26, 26, 26);">ab</font>`的值交换，最后`<font style="color:rgb(26, 26, 26);">a</font>`与`<font style="color:rgb(26, 26, 26);">b</font>`交换数据。
+
+可以再来看一下输出的`<font style="color:rgb(26, 26, 26);">main</font>`函数中的`<font style="color:rgb(26, 26, 26);">a b</font>`地址与`<font style="color:rgb(26, 26, 26);">swap</font>`中参数的地址。
+
+```c
+#include <stdio.h>
+
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+    printf("void address a = %d, b = %d\n", a, b); //void参数a b 为main函数中a b 的地址。
+}
+int main()
+{
+    int a = 1, b = 2;
+    printf("main address &a = %d, &b = %d\n", &a, &b);
+    int *p1 = &a, *p2 = &b;
+    swap(p1, p2);
+    printf("a = %d, b = %d\n", a, b);
+    return 0;
+}
+```
+
+```c
+输出：
+mainaddress&a=6356772,&b=6356768voidaddressa=6356772,b=6356768a=2,b=1
+```
+
+可见地址直观可以看出是相同的，而且参数的含义不一样。一个main中ab为ab地址中数据，void中为ab的地址。仔细区分。
+
+下面指出两种常见错误
+
+错误写法一：
+
+```c
+void swap(int *a,int *b){    int *temp;    *temp=*a;    *a=*b;    *b=*temp;}
+```
+
+很多人会认为`<font style="color:rgb(26, 26, 26);">*temp</font>`、`<font style="color:rgb(26, 26, 26);">*a</font>`、`<font style="color:rgb(26, 26, 26);">*b</font>`都可以“看做”`<font style="color:rgb(26, 26, 26);">int</font>`型变量，那完全就可以像普通变量那样进行交换操作。这个想法其实没有问题，但是问题出在`<font style="color:rgb(26, 26, 26);">temp</font>`中。在定义`<font style="color:rgb(26, 26, 26);">int*</font>`型的指针变量`<font style="color:rgb(26, 26, 26);">temp</font>`时，`<font style="color:rgb(26, 26, 26);">temp</font>`没有被初始化，也就是说，指针变量`<font style="color:rgb(26, 26, 26);">temp</font>`中存放的地址是随机的，如果该随机地址指向的是系统工作的区间，那么就会出错（而且这样的概率特别的大）
+
+问题找到后很容易想到解决方法：既然因`<font style="color:rgb(26, 26, 26);">temp</font>`一开始没有被复制而产生了随机的地址。我们就可以给他赋初值，这样就不会有问题了。代码如下：
+
+```c
+void swap(int *a,int *b){    int x;    int *temp=&x;    *temp = *a;    *a = *b;    *b = *temp;}
+```
+
+注意这个temp只是int*类型的一个中间变量，其起到的作用也是中间变量而已。
+
+错误写法二：
+
+```c
+void swap(int *a,int *b){    int *temp = a;    a = b;    b = temp;}
+```
+
+这种写法需要好好体会一下，这种写法的思想是在于直接将两个地址进行交换，认为地址在交换之后元素就交换了。其实这种想法产生于很大的误区：swap函数里交换完地址后main函数中的a与b的地址也被交换。前面说过，**函数参数传递的方式是单向一次性的**，main函数传递给swap函数的“地址”其实是一个“无符号整形”的数字，其本身也就和普通变量一样只是“值传递”，swap函数对地址本身修改并不能对main函数里的地址修改，能够使得main函数里的数据进行变换，只能是swap函数中对地址指向的数据进行的修改，对地址本身进行修改其实和之前对传入的普通变量进行交换的函数是一样的作用，都是使用副本，没法对数据产生实际性的影响，即相当于将int*看做是一个整体，传入的a和b都只是地址的副本。
+
+如下代码可以体会一下：
+
+```c
+#include<stdio.h>void swap(int *a,int *b){    int *temp = a;    a = b;    b = temp;}int main(){    int a = 1,b = 2;    int *p1 = &a, *p2 = &b;    swap(p1,p2);    printf("a = %d, b = %d\n",a,b);    return 0;}
+```
+
+输出：
+
+```plain text
+a = 1, b = 2
+```
+
+加上地址的输出：
+
+```c
+#include<stdio.h>void swap(int *a,int *b){    int *temp = a;    a = b;    b = temp;    printf("void函数 a = %d b = %d\n",a,b);}int main(){    int a=1,b=2;    int *p1=&a, *p2=&b;    printf("main函数 &a = %d &b = %d\n",p1,p2);    swap(p1,p2);    printf("a = %d, b = %d\n",a,b);    return 0;}
+```
+
+输出
+
+```plain text
+main函数&a=6356772&b=6356768
+void函数a=6356768b=6356772
+a=1,b=2
+```
+
+实际上在void中只是进行的地址的数值交换。实际上只是副本的交换。
+
+```c
+#include<stdio.h>void swap(int *a,int *b){    int *temp = a;    a = b;    b = temp;    printf("void函数 a = %d b = %d\n", a, b);    printf("void函数 &a = %d &b = %d\n", &a, &b);}    int main(){    int a=1,b=2;    int *p1 = &a, *p2 = &b;    printf("main函数 &a = %d &b = %d\n",p1,p2);    swap(p1,p2);    printf("a = %d, b = %d\n",a,b);    return 0;}
+```
+
+输出
+
+```plain text
+main函数&a=6356772&b=6356768
+void函数a=6356768b=6356772
+void函数&a=6356752&b=6356756
+a=1,b=2
+```
+
+可见void函数副本的地址实际上是和main中ab的地址是不一样的。
+
+但地址的转换在main函数中直接做地址符号的转换是不可以的，直接改变了地址对数据的指向。大家要注意p1 p2在主函数中也只是新建了一个指向ab的地址，其中存放的内容是a b的地址。其本身的地址与ab的地址是不一样的。
+
+代码：
+
+```c
+#include<stdio.h>int main(){    int a=1,b=2;    int *p1=&a,*p2=&b;    int x;    printf("交换前 &a = %d &b = %d\n",&p1,&p2);    printf("交换前 p1 = %d p2 = %d\n",p1,p2);    int *temp=&x;    temp=p1;    p1=p2;    p2=temp;    printf("交换后 &p1 = %d &p2 = %d\n",&p1,&p2);    printf("交换前 p1 = %d p2 = %d\n",p1,p2);    printf("a = %d, b = %d\n",a,b);    return 0;}
+```
+
+输出
+
+```plain text
+交换前&a=6356768&b=6356764
+交换前p1=6356776p2=6356772
+交换后&p1=6356768&p2=6356764
+交换前p1=6356772p2=6356776
+a=1,b=2
+```
+
+可见交换p1p2指向只是改变对ab的指向。并不改变ab地址中存储的数据。大家可能有想到直接交换ab的地址。实际上是会报错的。
+
+```c
+#include<stdio.h>int main(){    int a=1,b=2;    int x;    printf("交换前 &a = %d &b = %d\n",&a,&b);    int *temp=&x;    temp = &a;    &a = &b;    &b = temp;    printf("交换后 &a = %d &b = %d\n",&a,&b);    printf("a = %d, b = %d\n",a,b);    return 0;}
+```
+
+原因在与&a = &b这句会有问题。如果这样赋值会导致计算机内存当中存在两个相同地址的单元，在计算机中是不允许这样的。所以这才是指针出现的意义，提供一个可以改变指向的中间桥梁变量。在堆栈的知识当中尤为突出这种便利。
+
+关键是理解地址与地址中的数据，函数与主函数之间的关系，才不会弄混其中的含义，希望可以帮助到大家对指针有更进一步的理解。谢谢！
