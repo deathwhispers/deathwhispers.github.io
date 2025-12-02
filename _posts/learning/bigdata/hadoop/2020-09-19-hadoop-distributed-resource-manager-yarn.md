@@ -11,12 +11,12 @@ tags:
   - Yarn
 categories:
   - BigData
-  - Yarn
+  - Hadoop
 mood:
 weather:
 author: deathwhispers
-created: 2025-01-09 11:45
-updated: 2025-03-12 18:27
+created: 2020-09-19 11:45
+updated: 2020-09-19 18:27
 ---
 
 

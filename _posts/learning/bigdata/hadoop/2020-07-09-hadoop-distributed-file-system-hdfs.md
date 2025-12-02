@@ -11,11 +11,12 @@ tags:
    - HDFS
 categories:
    - BigData
+   - Hadoop
 mood:
 weather:
 author: deathwhispers
-created: 2025-01-09T11:45:00
-updated: 2025-03-12T18:27:00
+created: 2020-07-09 11:45
+updated: 2020-07-09 18:27
 ---
 ## 一、介绍
 

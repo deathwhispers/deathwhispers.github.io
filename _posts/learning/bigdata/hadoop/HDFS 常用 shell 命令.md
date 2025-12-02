@@ -1,10 +1,20 @@
 ---
-base: "[[_posts/learning/文档中心/文档中心.base]]"
-created: 2025-01-09T11:45:00
-updated: 2025-03-12T18:27:00
-categories:
+title: HDFS 常用 shell 命令
+slug: hadoop-hdfs-common-shell-commands
+type:
+  - note
+date: 2020-08-26
+status: draft
+tags:
   - HDFS
+categories:
+  - BigData
+  - HDFS
+mood:
+weather:
 author: deathwhispers
+created: 2020-08-26 11:45
+updated: 2020-08-26 18:27
 ---
 **1. 显示当前目录结构**
 

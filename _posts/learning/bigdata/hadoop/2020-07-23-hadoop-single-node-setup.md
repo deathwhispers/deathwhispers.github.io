@@ -10,11 +10,12 @@ tags:
   - Hadoop
 categories:
   - BigData
+  - Hadoop
 mood:
 weather:
 author: deathwhispers
-created: 2024-01-09 11:45
-updated: 2024-03-12 18:33
+created: 2020-07-23 11:45
+updated: 2020-07-23 18:33
 ---
 
 

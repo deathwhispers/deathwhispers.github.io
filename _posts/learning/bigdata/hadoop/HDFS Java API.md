@@ -1,10 +1,20 @@
 ---
-base: "[[_posts/learning/文档中心/文档中心.base]]"
-created: 2025-01-09T11:45:00
-updated: 2025-03-12T18:27:00
-categories:
+title: HDFS Java API
+slug: hadoop-hdfs-java-api
+type:
+  - note
+date: 2020-08-21
+status: draft
+tags:
   - HDFS
+categories:
+  - BigData
+  - HDFS
+mood:
+weather:
 author: deathwhispers
+created: 2020-08-21 11:45
+updated: 2020-08-21 18:27
 ---
 ## 一、 简介
 

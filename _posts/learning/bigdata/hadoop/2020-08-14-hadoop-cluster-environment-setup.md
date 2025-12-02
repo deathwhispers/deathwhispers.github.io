@@ -10,11 +10,12 @@ tags:
    - Hadoop
 categories:
    - BigData
+   - Hadoop
 mood:
 weather:
 author: deathwhispers
-created: 2025-01-09 11:45
-updated: 2025-03-12 18:26
+created: 2020-08-14 11:45
+updated: 2020-08-14 18:26
 ---
 ## 一、集群规划
 

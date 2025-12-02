@@ -11,11 +11,12 @@ tags:
   - MapReduce
 categories:
   - BigData
+  - Hadoop
 mood:
 weather:
 author: deathwhispers
-created: 2025-01-09 11:46
-updated: 2025-03-12 18:27
+created: 2020-08-18 11:46
+updated: 2020-08-18 18:27
 ---
 
 ## 一、MapReduce概述
