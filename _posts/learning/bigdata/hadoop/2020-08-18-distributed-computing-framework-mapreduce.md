@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 分布式计算框架 MapReduce
-slug: distributed-computing-framework-mapreduce
+slug: hadoop-distributed-computing-framework-mapreduce
 type:
   - note
 date: 2020-08-18
