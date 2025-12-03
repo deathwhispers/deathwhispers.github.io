@@ -1,0 +1,33 @@
+---
+layout: post
+title: 二叉树的遍历
+slug: binary-tree-traversal
+type:
+  - note
+date: 2018-03-02
+status: draft
+tags:
+  - BinaryTree
+  - Traversal
+  - 二叉树
+categories:
+  - Algorithm
+author: deathwhispers
+updated: 2018-03-02 18:34
+created: 2018-03-02 11:45
+---
+# 二叉树的遍历
+
+二叉树的遍历方法：
+
+先序遍历：
+
+左序遍历：
+
+右树遍历：
+
+按照层次遍历：
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036678678-bafc2a16-2b1c-4703-8399-d2855c631d71.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036678856-2bdc6029-3764-4d1a-98e3-7be397db424d.png)

@@ -1,0 +1,58 @@
+---
+layout: post
+title: 线性表
+slug: linear-list
+type:
+  - note
+date: 2018-09-12
+status: draft
+tags:
+  - LinearList
+categories:
+  - Algorithm
+author: deathwhispers
+created: 2025-01-09 11:46
+updated: 2025-03-12 18:34
+---
+
+# 线性表
+
+线性表
+
+线性表是n个类型相同数据元素的有限序列，通常记作（a0,a1,…,an-1,an )
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036697558-fd5f7ecb-128f-47e3-a3ae-988868b7ceb3.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036697657-7aa6ccbc-3e22-47d4-849e-9cc30bbcf3f6.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036697848-ac255534-b314-4218-8466-b5e426765085.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036697949-ff5191ba-c882-443f-ba24-1e7455f13173.png)
+
+**链表**
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698027-d06e589b-f209-4fb9-acbd-2f964aca3a61.png)
+
+单链表
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698120-611bce76-6a65-4a71-9c15-44b88be91a30.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698204-60d42899-4973-4e78-ba5f-4a56c81edc02.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698293-5145b749-2240-46aa-93d3-7617a4ffec31.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698370-1d9b47e0-0b8e-4a58-85b8-67b02fc32d40.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698451-4eb41380-17e3-41d9-90b1-3eec48479718.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698534-eee57bbd-9f47-4fa7-8f69-e722327157f7.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698682-f363783c-eb7a-4d55-9ae1-aad474c9db09.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698776-6131a703-e368-41ea-aee7-2a2dd9cb4e96.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698875-0baaaaf8-9638-454d-bef9-229d4cd30d77.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036698987-c64499fb-9586-4311-a7c9-9acdf0523cc1.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036699070-818f81e6-4dbb-4fc3-a8a8-e01809b3c60f.png)

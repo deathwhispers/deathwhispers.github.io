@@ -1,0 +1,82 @@
+---
+layout: post
+title: 栈和队列
+slug: stack-and-queue
+type:
+  - note
+date: 2018-08-17
+status: draft
+tags:
+  - Stack
+  - Queue
+categories:
+  - Algorithm
+author: deathwhispers
+created: 2025-01-09 11:45
+updated: 2025-03-12 18:33
+---
+# 栈和队列
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036692234-f85d0f9c-03f1-4b82-a45e-331fe7de57a2.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036692325-697088c2-1e1c-416b-b07c-9c59f763f8a5.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036692413-1c4cd609-438e-4941-947e-cd129e63ecb0.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036692496-8ba128d0-729b-414c-b76c-d8d3221d4269.png)
+
+- *
+
+**
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036692581-1af64776-2227-4a4f-b6a2-576141518ff5.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036692665-2643f25b-d2dd-4071-bd83-27b67d474613.png)
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036692767-61853027-534d-4592-b9ed-950ecd39fe35.png)
+
+- *
+
+**
+
+![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698036692847-b46a77e7-f7f1-4f40-ad4b-9135141156d4.png)
+
+- *
+
+**
+
+- *
+
+**
+
+- *
+
+**
+
+- *
+
+**
+
+- *
+
+**
+
+- *
+
+**
+
+- *
+
+**
+
+- *
+
+**
+
+- *
+
+**
+
+- *
+
+**
