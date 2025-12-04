@@ -548,7 +548,7 @@ updated: 2025-11-28 09:57
 
 * [PaddlePaddle/PaddleHub](https://github.com/PaddlePaddle/PaddleHub) 基于PaddlePaddle的真棒预训练模型工具包。（400+模型，包括图像，文本，音频，视频和跨模态，易于推理和服务）
 
-* [streamlit/streamlit](https://github.com/streamlit/streamlit)  用 Python 构建数据应用程序的最快方法
+* [streamlit/streamlit](https://github.com/streamlit/streamlit)  用 Python 构建数据应用程序的最快方法
 
 * [huggingface/optimum](https://github.com/huggingface/optimum) 性能优化工具，AI 生态发展迅速，越来越多的专用硬件及其优化每天都在涌现,可实现在目标硬件上训练和运行模型的最高效率。
 

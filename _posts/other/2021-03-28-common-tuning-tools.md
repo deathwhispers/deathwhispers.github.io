@@ -26,7 +26,7 @@ GC日志详解
 打印GC日志的方法，在JVM参数里增加参数，%t表示时间
 
 ```plain text
-1 ‐Xloggc:./gc‐%t.log ‐XX:+PrintGCDetails ‐XX:+PrintGCDateStamps  ‐XX:+PrintGCTimeStamps ‐XX:+PrintGCCause
+1 ‐Xloggc:./gc‐%t.log ‐XX:+PrintGCDetails ‐XX:+PrintGCDateStamps  ‐XX:+PrintGCTimeStamps ‐XX:+PrintGCCause
 2 ‐XX:+UseGCLogFileRotation ‐XX:NumberOfGCLogFiles=10 ‐XX:GCLogFileSize=100M
 ```
 

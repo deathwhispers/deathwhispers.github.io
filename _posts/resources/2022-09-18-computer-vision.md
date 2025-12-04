@@ -143,7 +143,7 @@ updated: 2025-11-28 09:57
 
 [PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) 很棒的基于PaddlePaddle的多语言OCR工具包（实用的超轻量级OCR系统，支持80+语言识别，提供数据标注和合成工具，支持服务器、移动、嵌入式和物联网设备之间的训练和部署）
 
-[FudanVI/benchmarking-chinese-text-recognition](https://github.com/FudanVI/benchmarking-chinese-text-recognition) 该存储库包含用于对中文文本识别进行基准测试的数据集和基线。收集公开可用的场景数据集，包括**RCTW**、**ReCTS**、**LSVT**、**ArT**、**CTW** ，得到 636,455 个样本，这些样本被随机打乱，然后按 8:1:1 的比例划分，以构建训练、验证和测试数据集。六种具有代表性的方法作为基线:
+[FudanVI/benchmarking-chinese-text-recognition](https://github.com/FudanVI/benchmarking-chinese-text-recognition) 该存储库包含用于对中文文本识别进行基准测试的数据集和基线。收集公开可用的场景数据集，包括**RCTW**、**ReCTS**、**LSVT**、**ArT**、**CTW** ，得到 636,455 个样本，这些样本被随机打乱，然后按 8:1:1 的比例划分，以构建训练、验证和测试数据集。六种具有代表性的方法作为基线:
 
 - CRNN是典型的基于 CTC 的方法，在学术界和工业界得到广泛应用。它首先将文本图像发送到 CNN 以提取图像特征，然后采用两层 LSTM 对序列特征进行编码。最后，LSTM 的输出被馈送到 CTC解码器，以最大化所有路径通往基本事实的概率。
 
@@ -485,17 +485,17 @@ https://github.com/google-research/mixmatch 集成了自洽正则化的超强半
 
 [jackroos/VL-BERT](https://github.com/jackroos/VL-BERT) 用于视觉语言任务的简单而强大的可预训练通用表示。它在大规模字幕数据集和纯文本语料库上进行了预训练，可以针对各种下游视觉语言任务进行微调，例如视觉常识推理、视觉问答和参考表达理解。
 
-[ChenRocks/UNITER](https://github.com/ChenRocks/UNITER) 支持在 [NLVR2](http://lil.nlp.cornell.edu/nlvr/)、[VQA](https://visualqa.org/)、[VCR](https://visualcommonsense.com/)、 [SNLI-VE 、](https://github.com/necla-ml/SNLI-VE) [COCO](https://cocodataset.org/#home)和 [Flickr30k](http://shannon.cs.illinois.edu/DenotationGraph/)的图像文本检索以及 [引用表达式理解](https://github.com/lichengunc/refer)（RefCOCO、RefCOCO+ 和 RefCOCO-g）上微调 UNITER。UNITER-base 和 UNITER-large 的预训练检查点均已发布。还可以使用域内数据进行基于 UNITER 的预训练。
+[ChenRocks/UNITER](https://github.com/ChenRocks/UNITER) 支持在 [NLVR2](http://lil.nlp.cornell.edu/nlvr/)、[VQA](https://visualqa.org/)、[VCR](https://visualcommonsense.com/)、 [SNLI-VE 、](https://github.com/necla-ml/SNLI-VE) [COCO](https://cocodataset.org/#home)和 [Flickr30k](http://shannon.cs.illinois.edu/DenotationGraph/)的图像文本检索以及 [引用表达式理解](https://github.com/lichengunc/refer)（RefCOCO、RefCOCO+ 和 RefCOCO-g）上微调 UNITER。UNITER-base 和 UNITER-large 的预训练检查点均已发布。还可以使用域内数据进行基于 UNITER 的预训练。
 
 [ERNIE/ernie-vil](https://github.com/PaddlePaddle/ERNIE/tree/repro/ernie-vil) 视觉语言任务的知识增强联合表示，第一个引入结构化知识以增强视觉语言预训练的工作。利用从场景图中获得的结构化知识，ERNIE-ViL 构造了三个场景图预测任务，即对象预测、属性预测和关系预测任务。因此，可以学习更好的联合视觉语言表示，表征跨视觉和语言的详细语义的对齐。
 
 [Research/NLP/UNIMO](https://github.com/PaddlePaddle/Research/tree/master/NLP/UNIMO) UNIfied-MODal 预训练架构，即UNIMO，可以有效地适应单模态和多模态的理解和生成任务。利用大规模的自由文本语料库和图像集合来提高视觉和文本理解能力，并利用跨模态对比学习（CMCL）将文本和视觉信息对齐到图像语料库上的统一语义空间中。用相关图像和文本增强的文本对。在丰富的非配对单模态数据的帮助下，我们的模型能够通过允许文本知识和视觉知识在统一的语义空间中相互增强来学习更多的泛化表示。实验结果表明，大大提高了几个单模态和多模态下游任务的性能。
 
-[fairseq/examples/MMPT](https://github.com/facebookresearch/fairseq/tree/main/examples/MMPT) 用于多模态视频理解的工具包！包含两篇多模态视频理解论文[VideoCLIP](https://arxiv.org/pdf/2109.14084.pdf) (EMNLP, 2021) 和[VLM](https://aclanthology.org/2021.findings-acl.370.pdf) (ACL Findings, 2021) 的实现。VideoCLIP 是一种对比学习模型，用于将零样本迁移到检索/分类/序列标记样式任务。VLM 是一种掩码语言模型样式预训练，仅使用一个带有掩码模态模型 (MMM) 的编码器来执行检索/生成/序列标签样式任务。
+[fairseq/examples/MMPT](https://github.com/facebookresearch/fairseq/tree/main/examples/MMPT) 用于多模态视频理解的工具包！包含两篇多模态视频理解论文[VideoCLIP](https://arxiv.org/pdf/2109.14084.pdf) (EMNLP, 2021) 和[VLM](https://aclanthology.org/2021.findings-acl.370.pdf) (ACL Findings, 2021) 的实现。VideoCLIP 是一种对比学习模型，用于将零样本迁移到检索/分类/序列标记样式任务。VLM 是一种掩码语言模型样式预训练，仅使用一个带有掩码模态模型 (MMM) 的编码器来执行检索/生成/序列标签样式任务。
 
 [mczhuge/Kaleido-BERT](https://github.com/mczhuge/Kaleido-BERT) (CVPR2021) Kaleido-BERT：时尚领域的视觉语言预训练。
 
-[linjieli222/HERO](https://github.com/linjieli222/HERO) # 用于视频+语言全表示预训练的分层编码器 该存储库目前支持在 [TVR](https://tvr.cs.unc.edu/)、[TVQA](http://tvqa.cs.unc.edu/)、[TVC](https://tvr.cs.unc.edu/tvc.html)、 [VIOLIN](https://github.com/jimmy646/violin)、 [DiDeMo](https://github.com/LisaAnne/TemporalLanguageRelease)和 [MSR-VTT Retrieval](http://ms-multimedia-challenge.com/2017/challenge)上微调 HERO 。发布了最好的预训练检查点（在[HowTo100M](https://www.di.ens.fr/willow/research/howto100m/)和[TV](http://tvqa.cs.unc.edu/)数据集上）。还提供了在 TV 数据集上进行 HERO 预训练的代码。
+[linjieli222/HERO](https://github.com/linjieli222/HERO) # 用于视频+语言全表示预训练的分层编码器 该存储库目前支持在 [TVR](https://tvr.cs.unc.edu/)、[TVQA](http://tvqa.cs.unc.edu/)、[TVC](https://tvr.cs.unc.edu/tvc.html)、 [VIOLIN](https://github.com/jimmy646/violin)、 [DiDeMo](https://github.com/LisaAnne/TemporalLanguageRelease)和 [MSR-VTT Retrieval](http://ms-multimedia-challenge.com/2017/challenge)上微调 HERO 。发布了最好的预训练检查点（在[HowTo100M](https://www.di.ens.fr/willow/research/howto100m/)和[TV](http://tvqa.cs.unc.edu/)数据集上）。还提供了在 TV 数据集上进行 HERO 预训练的代码。
 
 [gabeur/mmt](https://github.com/gabeur/mmt) 用于视频检索的多模态变压器 提出的多模态转换器 (MMT) 从视频中聚合多模态特征序列（例如外观、运动、音频、OCR 等）。然后，它将聚合的多模式特征嵌入到带有文本的共享空间中以进行检索。它在 MSRVTT、ActivityNet 和 LSMDC 数据集上实现了最先进的性能。
 

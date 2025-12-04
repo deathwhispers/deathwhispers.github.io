@@ -44,12 +44,12 @@ updated: 2025-02-13 09:57
 ### **1. 确认系统要求**
 
 - **操作系统**：支持 Ubuntu、Debian、CentOS 等主流 Linux 发行版。
-- **依赖**：确保已安装 `curl` 和 `tar` 工具。
+- **依赖**：确保已安装 `curl` 和 `tar` 工具。
 
 ### **2. 下载 Ollama 安装包**
 
-1. 访问 Ollama 的官方网站或 GitHub 仓库，获取最新的 Linux 安装包（如 `.tar.gz` 或 `.deb` 文件）。
-2. 使用 `curl` 或 `wget` 下载安装包：
+1. 访问 Ollama 的官方网站或 GitHub 仓库，获取最新的 Linux 安装包（如 `.tar.gz` 或 `.deb` 文件）。
+2. 使用 `curl` 或 `wget` 下载安装包：
 
 ```bash
 curl -L https://ollama.com/download/ollama-linux-amd64.tgz -o ollama-linux-amd64.tgz
@@ -65,7 +65,7 @@ curl -L https://ollama.com/download/ollama-linux-amd64.tgz -o ollama-linux-amd64
 
 ### **3. 解压安装包**
 
-1. 使用 `tar` 解压下载的文件：
+1. 使用 `tar` 解压下载的文件：
 
 ```bash
 sudo tar -C /usr -xzf ollama-linux-amd64.tgz

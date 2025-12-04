@@ -233,7 +233,7 @@ updated: 2025-11-28 09:57
 
 * [chroblert/WindowsVulnScan](https://github.com/chroblert/WindowsVulnScan) 基于主机的漏洞扫描工具，采用多线程确保可以快速的请求数据，采用线程锁可以在向sqlite数据库中写入数据避免database is locked的错误，采用md5哈希算法确保数据不重复插入。
 
-* [greenbone/openvas-scanner](https://github.com/greenbone/openvas-scanner)  Greenbone 社区版的扫描仪组件 一个功能齐全的扫描引擎，可执行持续更新和扩展的漏洞测试 (VT) 馈送。
+* [greenbone/openvas-scanner](https://github.com/greenbone/openvas-scanner)  Greenbone 社区版的扫描仪组件 一个功能齐全的扫描引擎，可执行持续更新和扩展的漏洞测试 (VT) 馈送。
 
 * [d3ckx1/Fvuln](https://github.com/d3ckx1/Fvuln) Find-Vulnerability是为了自己工作方便专门编写的一款自动化工具，主要适用于日常安全服务、渗透测试人员和RedTeam红队人员，它集合的功能包括：存活IP探测、开放端口探测、web服务探测、web漏洞扫描、smb爆破、ssh爆破、ftp爆破、mssql爆破等其他数据库爆破工作以及大量web漏洞检测模块。
 
@@ -541,7 +541,7 @@ updated: 2025-11-28 09:57
 
 * [whydee86/PlayWithDefender](https://github.com/whydee86/PlayWithDefender) 禁用和启用 Windows 防御者保护的简单工具
 
-* [xiecat/fofax](https://github.com/xiecat/fofax) 基于[ofa.info](https://fofa.info/) API 的命令行查询工具
+* [xiecat/fofax](https://github.com/xiecat/fofax) 基于[ofa.info](https://fofa.info/) API 的命令行查询工具
 
 * [AntSwordProject/AntSword-Loader](https://github.com/AntSwordProject/AntSword-Loader) 蚁剑加载器
 

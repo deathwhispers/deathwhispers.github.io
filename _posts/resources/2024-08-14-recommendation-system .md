@@ -239,7 +239,7 @@ https://github.com/NLPWM-WHU/EDUA 多样性推荐的 EDUA 模型。其采用双�
 
 [sumitsidana/recsys_challenge_2020](https://github.com/sumitsidana/recsys_challenge_2020) 此存储库包含 2020 年 RecSys 挑战赛方法的第四名解决方案的代码。该挑战侧重于在动态环境中进行推文参与度预测的现实任务。目标是根据异构输入数据预测目标用户对一组推文的不同类型参与（点赞、回复、转推和转推）的概率。
 
-[ystdo/Codes-for-WSDM-CUP-Music-Rec-1st-place-solution](https://github.com/lystdo/Codes-for-WSDM-CUP-Music-Rec-1st-place-solution)  WSDM CUP 2018 音乐推荐挑战赛第一名解决方案的对应代码。预测 3 月订阅到期的用户中，哪些会流失。为解决该题，阿里巴巴使用了两层 Stacking Model，第一层采用逻辑回归、随机森林、XGBoost 算法，第二层又采用 XGBoost 算法把第一层的结果融合。流失用户预测，对有会员体系的业务场景都可以使用，其中会员付费为主要收入的业务就更为关键，比如像 Apple Music、虾米音乐。多层 Stacking Model 由 AliOS 神灯研发，极大提升了分类预测的准确率，已广泛应用于 AliOS 多项业务中。
+[ystdo/Codes-for-WSDM-CUP-Music-Rec-1st-place-solution](https://github.com/lystdo/Codes-for-WSDM-CUP-Music-Rec-1st-place-solution)  WSDM CUP 2018 音乐推荐挑战赛第一名解决方案的对应代码。预测 3 月订阅到期的用户中，哪些会流失。为解决该题，阿里巴巴使用了两层 Stacking Model，第一层采用逻辑回归、随机森林、XGBoost 算法，第二层又采用 XGBoost 算法把第一层的结果融合。流失用户预测，对有会员体系的业务场景都可以使用，其中会员付费为主要收入的业务就更为关键，比如像 Apple Music、虾米音乐。多层 Stacking Model 由 AliOS 神灯研发，极大提升了分类预测的准确率，已广泛应用于 AliOS 多项业务中。
 
 [DiligentPanda/Tencent_Ads_Algo_2018](https://github.com/DiligentPanda/Tencent_Ads_Algo_2018) 该仓库维护2018年腾讯广告算法大赛的代码。我们的代码在决赛中排名第三。基于 FFM 的注意力神经网络的平均值。在最终提交中，我们使用了 13 个这样的网络。但是这些网络只是在它们的随机种子上有所不同。 5 个这样的网络将给出几乎相同的结果。Lookalike 相似人群拓展
 
