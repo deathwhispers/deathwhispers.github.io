@@ -10,7 +10,7 @@ import yaml
 # ==========================================
 
 # 1. 默认扫描的目录路径 (可以是相对路径或绝对路径)
-DEFAULT_DIR = r"../../_posts/learning/bigdata/hive"
+DEFAULT_DIR = r"../../_posts/iot"
 
 # 2. 是否真正执行重命名？
 #    False = 仅预览 (Dry Run), 安全模式
