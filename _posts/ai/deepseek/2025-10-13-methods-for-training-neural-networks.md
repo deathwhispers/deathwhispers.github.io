@@ -33,7 +33,7 @@ updated: 2025-11-28 09:57
 
 ## 🎯 二、什么是过拟合？（附直观示意）
 
-![](/assets/images/deepseek/methods-for-training-neural-networks/a51bba293aac4046.webp)
+![](../../../assets/images/deepseek/methods-for-training-neural-networks/a6e456546848365ea1107d51fbf80768.webp)
 
 > 图：左为欠拟合，中为理想拟合，右为过拟合。
 
@@ -127,7 +127,7 @@ plt.show()
 
 当无法采集更多样本时，可以通过数据增强来“制造”新样本。
 
-![](/assets/images/deepseek/methods-for-training-neural-networks/7883dfc5cc4a4447.png)
+![](../../../assets/images/0b7b59c0c2e1ad7de6041dbcdd19a6de.png)
 
 > 图：图像任务中常用的数据增强方式，旋转、翻转、裁剪、加噪声等方式
 
@@ -185,7 +185,7 @@ $$
 
 - L2 正则化：抑制权重过大（更平滑）
 
-![](/assets/images/deepseek/methods-for-training-neural-networks/2416a65c866947e0.webp)
+![](../../../assets/images/deepseek/methods-for-training-neural-networks/917fc30109386c3cedc6182e32f399cc.webp)
 
 ### ✅ 代码实现（PyTorch）
 
@@ -203,7 +203,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
 
 为了防止模型依赖少数神经元，可以在训练时随机丢弃部分连接：
 
-![](/assets/images/deepseek/methods-for-training-neural-networks/57686c5ec17e44bf.webp)
+![](../../../assets/images/deepseek/methods-for-training-neural-networks/9c27fa470111c2bc8a20b7df8c85b806.webp)
 
 代码实现：
 

@@ -29,7 +29,7 @@ updated: 2025-11-28 09:57
 
 当网络刚开始只有少量节点时，我们可以直接用元素级公式写出每个神经元的输出。但随着层数和每层节点数增长，逐个写式子既繁琐又不利于数学推导与实现。用矩阵把这些运算“打包”起来既直观又高效。
 
-![](/assets/images/deepseek/from-matrices-to-cnns/6b370c37b42d4f1d.webp)
+![](../../../assets/images/deepseek/from-matrices-to-cnns/54a9f09c37fdfc1259ba7a2ec641aa35.webp)
 
 常见的一层前向传播（全连接）可以写成：
 
@@ -53,7 +53,7 @@ $$
 
 1. 高效并行：矩阵乘法可以很好利用 BLAS、cuBLAS 等库与 GPU 并行加速，训练与推理更快。
 
-![](/assets/images/deepseek/from-matrices-to-cnns/e0cf24f0eecc47e6.webp)
+![](../../../assets/images/deepseek/from-matrices-to-cnns/b800c7d5b4593fedf0d51d8939e0dd36.webp)
 
 ## 二、全连接层在图像任务上的天然问题
 
@@ -79,7 +79,7 @@ $$
 
 用户提供的图示正好展示了这些问题：节点与上一层所有节点相连（全连接），产生大量权重并忽略像素之间的位置信息。
 
-![](/assets/images/deepseek/from-matrices-to-cnns/d01f1c16961e491c.webp)
+![](../../../assets/images/deepseek/from-matrices-to-cnns/3187a8dd669f686dab10fde4724f6aa5.webp)
 
 ## 三、卷积运算：把“局部 + 共享”搬到网络里
 
@@ -89,7 +89,7 @@ kernel） 或称权重模板。
 
 简图如下（示意卷积核在图片上滑动并产生输出）：
 
-![](/assets/images/deepseek/from-matrices-to-cnns/6ac02ba4b0c44cc5.webp)
+![](../../../assets/images/deepseek/from-matrices-to-cnns/52290e49fb23a3f70f627fc136f348a7.webp)
 
 ### 卷积的三大核心思想（再次总结）
 
@@ -133,7 +133,7 @@ GPU（矩阵乘法的高速库）。因此，从“并行化”角度来看，�
 
 最终在网络后端仍可能接入若干 全连接层 做最终判别（例如类别预测）。整体结构示意：
 
-![](/assets/images/deepseek/from-matrices-to-cnns/d6481ad51fac4069.webp)
+![](../../../assets/images/deepseek/from-matrices-to-cnns/d5357b62d1741d233ae247e92fd45b5b.webp)
 
 ## 七、简单代码示例（PyTorch）——对比参数与输出形状
 
