@@ -102,7 +102,7 @@ theme_mode:
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar: /assets/images/avatar.png
+avatar: /assets/img/avatar.png
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
@@ -112,57 +112,76 @@ social_preview_image: # string, local or CORS resources
 toc: true
 
 comments:
-  # Global switch for the post-comment system. Keeping it empty means disabled.
-  provider: giscus # [disqus | utterances | giscus]
-  # The provider options are as follows:
+  # 配置评论系统，如果为空则禁用评论功能 [disqus | utterances | giscus]
+  provider: giscus
+  # Disqus 评论系统配置
   disqus:
-    shortname: # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
-  # utterances settings › https://utteranc.es/
+    # Disqus 评论系统短名，前往 Disqus 注册获取 › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
+    shortname:
+  # Giscus 评论系统配置 › https://utteranc.es/
   utterances:
-    repo: # <gh-username>/<repo>
-    issue_term: # < url | pathname | title | ...>
-  # Giscus options › https://giscus.app
+    # Utterances 评论系统仓库，格式为 <gh-username>/<repo>
+    repo: deathwhispers/deathwhispers.github.io
+    # Utterances 评论系统问题分类，可选值为 'url', 'pathname', 'title', 'og:title'，默认值为 'pathname'
+    issue_term:
+  # Giscus 评论系统配置 › https://giscus.app
   giscus:
-    repo: deathwhispers/deathwhispers.github.io # <gh-username>/<repo>
+    # Giscus 评论系统仓库，格式为 <gh-username>/<repo>
+    repo: deathwhispers/deathwhispers.github.io
+    # Giscus 评论系统仓库 ID，前往 Giscus 注册获取 › https://giscus.app
     repo_id: R_kgDOHCEyLA
+    # Giscus 评论系统分类，前往 Giscus 注册获取 › https://giscus.app
     category: General
+    # Giscus 评论系统分类 ID，前往 Giscus 注册获取 › https://giscus.app
     category_id: DIC_kwDOHCEyLM4Cv5_n
-    mapping: pathname # optional, default to 'pathname'
-    strict: 0 # optional, default to '0'
-    input_position: top # optional, default to 'bottom'
-    lang: # optional, default to the value of `site.lang`
-    reactions_enabled: # optional, default to the value of `1`
+    # Giscus 评论系统映射，可选值为 'url', 'pathname', 'title', 'og:title'，默认值为 'pathname'
+    mapping: pathname
+    # Giscus 评论系统严格模式，可选值为 '0' 或 '1'，默认值为 '0'
+    strict: 0
+    # Giscus 评论系统输入位置，可选值为 'top' 或 'bottom'，默认值为 'bottom'
+    input_position: top
+    # Giscus 评论系统语言，默认值为 `site.lang`
+    lang:
+    # Giscus 评论系统是否启用反应，可选值为 '0' 或 '1'，默认值为 '1'
+    reactions_enabled:
+    # Giscus 评论系统讨论分类，默认值为 '导航点击统计'
     discussion_category: '导航点击统计'
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:
   self_host:
-    enabled: # boolean, keep empty means false
-    # specify the Jekyll environment, empty means both
-    # only works if `assets.self_host.enabled` is 'true'
+    # 是否启用自托管静态资源，空值表示 false
+    enabled:
+    # 指定 Jekyll 环境，空值表示同时适用于开发和生产环境
+    # 仅在 `assets.self_host.enabled` 为 'true' 时生效
     env: # [development | production]
 
 pwa:
-  enabled: true # The option for PWA feature (installable)
+  # 是否启用 PWA 功能（可安装），默认值为 true
+  enabled: true
   cache:
-    enabled: true # The option for PWA offline cache
-    # Paths defined here will be excluded from the PWA cache.
-    # Usually its value is the `baseurl` of another website that
-    # shares the same domain name as the current website.
+    # 是否启用 PWA 离线缓存，默认值为 true
+    enabled: true
+    # 定义要排除在 PWA 缓存之外的路径。
+    # 通常其值为另一个共享相同域名的网站的 `baseurl`。
     deny_paths:
     # - "/example"  # URLs match `<SITE_URL>/example/*` will not be cached by the PWA
 
+# 分页设置，默认值为 10
 paginate: 10
 
-# The base URL of your site
+# 站点基础 URL，默认值为空
 baseurl: ""
 
 # ------------ The following options are not recommended to be modified ------------------
-
+# Kramdown 配置
 kramdown:
+  # 脚注返回链接
   footnote_backlink: "&#8617;&#xfe0e;"
+  # 语法高亮器，默认值为 rouge
   syntax_highlighter: rouge
-  syntax_highlighter_opts: # Rouge Options › https://github.com/jneen/rouge#full-options
+  # Rouge 语法高亮器选项 › https://github.com/jneen/rouge#full-options
+  syntax_highlighter_opts:
     css_class: highlight
     # default_lang: console
     span:
@@ -175,30 +194,30 @@ collections:
   tabs:
     output: true
     sort_by: order
+  articles:
+    output: true
 
 defaults:
   - scope:
-      path: "" # An empty string here means all files in the project
+      path: _posts
       type: posts
     values:
-      layout: post
-      toc: true # Display TOC column in posts.
-      comments: true # Enable comments in posts.
+      layout: post       # 所有文件默认使用 post 布局
+      toc: true          # 默认开启 TOC
+      comments: true     # 默认开启评论
       math: true
       mermaid: true
       render_with_liquid: false
-      # DO NOT modify the following parameter unless you are confident enough
-      # to update the code of all other post links in this project.
-      permalink: /posts/:title/
+      permalink: /posts/:year/:month/:day/:slug/
   - scope:
       path: _drafts
     values:
-      comments: false
+      comments: false # 覆盖上面的 comments: true
   - scope:
       path: ""
       type: tabs # see `site.collections`
     values:
-      layout: page
+      layout: page # 覆盖上面的 layout: post
       permalink: /:title/
 
 sass:
@@ -224,7 +243,6 @@ exclude:
   - "*.config.js"
   - "package*.json"
   - .obsidian
-  - Notion
 
 jekyll-archives:
   enabled: [ categories, tags ]
