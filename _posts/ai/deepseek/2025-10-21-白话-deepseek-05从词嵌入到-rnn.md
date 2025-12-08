@@ -25,11 +25,11 @@ updated: 2025-11-28 09:57
 
 那有没有能解决以上两种问题的方法呢？有的。这种方法就是词嵌入。
 
-![](../../../assets/images/deepseek/from-word-embeddings-to-rnns/b71a62a196c1b02214fa8fa445711c52.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-05从词嵌入到-rnn/b71a62a196c1b02214fa8fa445711c52.webp)
 
 把所有词向量组成一个大矩阵，这个大矩阵就叫做嵌入矩阵，每一列表示一个词向量。矩阵中的值由训练得到，比较经典的方法是word2vec，不展开讲解。虽然这样表示的维度比起one-hot已经大大下降，但是也超过了人能直接理解的二维、三维，我们管这些向量所在的空间叫做潜空间。我们无法理解潜空间中的位置关系，但是也有一些方法能够把潜空间降维至2-3维，方便我们直观看到词与词之间的关系。
 
-![](../../../assets/images/deepseek/from-word-embeddings-to-rnns/e6016a74c173007d594a9ec93a5710de.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-05从词嵌入到-rnn/e6016a74c173007d594a9ec93a5710de.webp)
 
 这样我们的第一个问题就算是解决了，我们可以用词嵌入的方法将文本转为数据，但这样就可以了吗？举个例子，在右上方的图中，左边的五个词转为5个词向量，每个词向量假设为300维度，那么输入层就要有1500个神经元，当然是可以的，但是有两个新问题：
 
@@ -39,15 +39,15 @@ updated: 2025-11-28 09:57
 
 回到经典的神经网络，但是不是一次输入一句话，而是输入一个词。当然这里的X、W都是矩阵，之后不再展开。
 
-![](../../../assets/images/deepseek/from-word-embeddings-to-rnns/b2086b2860b8d9045d8714323cca4e49.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-05从词嵌入到-rnn/b2086b2860b8d9045d8714323cca4e49.webp)
 
 可以发现在第二个词的计算过程中，完全没有让第一个词的任何信息参与进来，怎么办呢？可以像右图这样，先输出一个隐藏状态，然后再经过一次非线性变换，得到输出Y。这就是循环神经网络RNN。
 
-![](../../../assets/images/deepseek/from-word-embeddings-to-rnns/f9e997551ba2c702a97cf1b23aefc4c6.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-05从词嵌入到-rnn/f9e997551ba2c702a97cf1b23aefc4c6.webp)
 
 这个RNN模型就具备了理解词与词之间先后顺序的能力，可以判断一句话中各个单词的褒贬词性，还能给出一句话，不断生成下一个字，以及完成翻译等自然语言处理工作。
 
-![](../../../assets/images/deepseek/from-word-embeddings-to-rnns/60bc9eced4d3ff8c1c1b17989cc0f7e9.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-05从词嵌入到-rnn/60bc9eced4d3ff8c1c1b17989cc0f7e9.webp)
 
 那么RNN是否就完美了呢？当然不，RNN依旧存在两个问题：
 
@@ -113,7 +113,7 @@ updated: 2025-11-28 09:57
 
 可以用两个向量的点积或余弦相似度来表示向量之间的相关性，进而表示词语之间的相关性。
 
-![](../../../assets/images/deepseek/from-word-embeddings-to-rnns/b71a62a196c1b02214fa8fa445711c52.webp)
+![](assets/images/ai/deepseek/2025-10-21-白话-deepseek-05从词嵌入到-rnn/b71a62a196c1b02214fa8fa445711c52.webp)
 
 这样就将自然语言之间的联系转为可以用数学公式计算的方式。同时，一些数学上的计算结果可能反映出一些很微妙的关系，例如一个训练好的词嵌入矩阵，很可能使得桌子-椅子 =
 鼠标 - 键盘。
@@ -146,7 +146,7 @@ $$
 
 但通过降维（如 PCA、t-SNE），方法能够把潜空间降维至2-3维，方便我们直观看到词与词之间的关系。可以在二维平面上看到“语义结构”：
 
-![](../../../assets/images/deepseek/from-word-embeddings-to-rnns/e6016a74c173007d594a9ec93a5710de.webp)
+![](assets/images/ai/deepseek/2025-10-21-白话-deepseek-05从词嵌入到-rnn/e6016a74c173007d594a9ec93a5710de.webp)
 
 这就是语言的潜空间：
 
@@ -172,7 +172,7 @@ $$
 
 回到经典的神经网络，但是不是一次输入一句话，而是输入一个词。当然这里的X、W都是矩阵，之后不再展开。
 
-![](../../../assets/images/deepseek/from-word-embeddings-to-rnns/b2086b2860b8d9045d8714323cca4e49.webp)
+![](assets/images/ai/deepseek/2025-10-21-白话-deepseek-05从词嵌入到-rnn/b2086b2860b8d9045d8714323cca4e49.webp)
 
 它一次性处理所有输入，没有上下文依赖。
 
@@ -192,7 +192,7 @@ RNN 的核心思路是：
 
 还要考虑上一时刻的隐藏状态  $h_{t-1}$。
 
-![](../../../assets/images/deepseek/from-word-embeddings-to-rnns/f9e997551ba2c702a97cf1b23aefc4c6.webp)
+![](assets/images/ai/deepseek/2025-10-21-白话-deepseek-05从词嵌入到-rnn/f9e997551ba2c702a97cf1b23aefc4c6.webp)
 
 计算过程如下：
 

@@ -65,7 +65,7 @@ $$
 
 扩展示例：假设句子“The cat sat on the mat”。词嵌入后，每个词向量为$[0.1, 0.2, ...]$，位置0的PE可能为$[sin(0/10000^0), cos(0/10000^0), ...]$。添加后，第一个词“The”就有了独特的位置印记。
 
-![](../../../assets/images/deepseek/simple-yet-powerful-transformers/578c8a9c70ada98e940c48aca66c954e.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-06简单而强大的-transformer/578c8a9c70ada98e940c48aca66c954e.webp)
 
 图1：词嵌入通过线性变换（矩阵Wq, Wk, Wv）映射为查询（Q）、键（K）、值（V）。维度不变，通常d=512。这一步为什么重要？因为它允许后续计算词间相似度，而不直接用原始嵌入。
 
@@ -111,11 +111,11 @@ $$
 
 比喻深化：想象在一个大型“信息图书馆”里。你（Query）拿着一个借书证去匹配所有书籍的索引卡（Key）。匹配成功的程度（点积）决定了你对这本书的关注度。最终，你将所有被你关注的书籍的内容（Value）按关注度加权汇总，形成了你对整个图书馆知识的新理解。
 
-![](../../../assets/images/deepseek/simple-yet-powerful-transformers/60b86671badd64ed9369a9dcf5805260.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-06简单而强大的-transformer/60b86671badd64ed9369a9dcf5805260.webp)
 
 图2：点积相似度计算，权重与V相乘。为什么缩放？高维向量点积易爆炸，缩放保持数值稳定。
 
-![](../../../assets/images/deepseek/simple-yet-powerful-transformers/98092ee728bfd29952fc1a7ed538d296.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-06简单而强大的-transformer/98092ee728bfd29952fc1a7ed538d296.webp)
 
 图3：每个输出向量融合全句上下文。补充：可视化注意力热图（heatmap），亮度表示权重，帮助调试模型关注点。
 
@@ -143,11 +143,11 @@ $$
 
 比喻深化：这就像一个拥有八个摄像头的监控系统，每个摄像头（头）都从不同角度、不同焦距捕捉信息。将所有画面（头输出）拼接在一起，再进行最终处理（$W^O$ 投影），所得的综合视图显然比单一视角更加全面、细致。
 
-![](../../../assets/images/deepseek/simple-yet-powerful-transformers/21ab16ea80f996c9b6cbacf194a173d1.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-06简单而强大的-transformer/21ab16ea80f996c9b6cbacf194a173d1.webp)
 
 图4：多组QKV，提供多样学习机会。
 
-![](../../../assets/images/deepseek/simple-yet-powerful-transformers/7e84756ce05181e8c37098e495e6238c.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-06简单而强大的-transformer/7e84756ce05181e8c37098e495e6238c.webp)
 
 图5：头输出拼接，再线性变换。补充图片：多头注意力热图，展示不同头关注不同词对。
 
@@ -193,11 +193,11 @@ $$
 
 - Layer Normalization：在残差连接之后进行，对同一序列的不同特征维度进行归一化，进一步稳定模型的训练。
 
-![](../../../assets/images/deepseek/simple-yet-powerful-transformers/c1a94866608ae7786a4c801ec3098119.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-06简单而强大的-transformer/c1a94866608ae7786a4c801ec3098119.webp)
 
 图6：左编码器，右解码器。为什么残差重要？深层模型易梯度消失，残差允许直接流动。
 
-![](../../../assets/images/deepseek/simple-yet-powerful-transformers/b766ac69829732f1de8adf29b3c358e5.webp)
+![](/assets/images/ai/deepseek/白话-deepseek-06简单而强大的-transformer/b766ac69829732f1de8adf29b3c358e5.webp)
 
 图7：完整公式，包括softmax和缩放。补充：mask可视化，三角形矩阵表示因果遮挡。
 
