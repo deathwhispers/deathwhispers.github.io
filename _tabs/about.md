@@ -19,7 +19,7 @@ order: 10
 让代码、思考与生活在这里交汇，也希望能对同样在路上的你有所启发。
 
 [comment]: <> (![图片]&#40;https://raw.githubusercontent.com/deathwhispers/deathwhispers.github.io/main/images/avatar.png&#41;)
-![图片](/assets/images/avatar.png)
+![图片](/assets/img/avatar.png)
 
 ## 版权声明
 
