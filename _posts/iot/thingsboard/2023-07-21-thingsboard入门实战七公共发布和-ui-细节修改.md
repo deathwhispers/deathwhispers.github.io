@@ -29,31 +29,31 @@ GET到新技能了，想给兄弟们演示，需要给他们每个人一个账�
 
 如下图，路灯都是customerA的，
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038802029-6b328ba9-efe0-4556-af59-4f3a7fb31a6a.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-common-publishing-ui-details-modification/97386415c034d0a872e07d7830b22bb7.jpg)
 
 目前只有它和它的租户可以看到，其他人需要看就需要设为公有。
 
 如图操作：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038802201-28e7dd06-5588-4373-9ead-ff57780b2c97.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-common-publishing-ui-details-modification/1717e11fe5175cd24984b9f32bce5094.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038802327-1e948ce5-1cd4-41d4-b732-09c5e425a2dd.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-common-publishing-ui-details-modification/c43bd35c85a8e7e5c30d1cb4385de5fc.jpg)
 
 对于设备详情[仪表盘](https://so.csdn.net/so/search?q=%E4%BB%AA%E8%A1%A8%E7%9B%98&spm=1001.2101.3001.7020)，我们也需要设为公有，这样他们才能自由跳转。 这时候是看不到界面的，我们需要设置公共用户的设备：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038802437-3be3efcc-5e8f-4d4f-bce7-05eab062fd71.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-common-publishing-ui-details-modification/c27e92125b05bca757fc7d9be30ba283.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038802550-d44d8350-218d-43a9-8ca8-4287600e365d.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-common-publishing-ui-details-modification/621a08ecf34ffb6bfabf7dd8b1b4627b.jpg)
 
 搞定，现在路灯已经被公开了。
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038802658-f4ba6b9a-02dc-46d1-8cef-8524d4445d5c.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-common-publishing-ui-details-modification/3b09d20dc6aafa151e7fe2295041e2d2.jpg)
 
 复制仪表板的公有链接看一看：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038802760-cef96156-3acd-41ee-abfd-e1af9ecd8b1d.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-common-publishing-ui-details-modification/0accad2ff4cb29ea048c3657f084e097.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038802857-8806c98f-d718-459c-9d57-f91cf3d25683.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-common-publishing-ui-details-modification/17dba0e95cee5bb22a8430ae50d1dd25.jpg)
 
 不想公开了?
 

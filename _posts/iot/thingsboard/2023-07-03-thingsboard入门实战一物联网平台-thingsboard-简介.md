@@ -48,7 +48,7 @@ ThingBoard可以分为四个核心模块：
 - 规则引擎
 - 部件面板
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698038798714-1e60e958-de44-4b02-b38d-7f68f52ac4d3.png)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/a1f93f1cbf66c72a2aacd50523213f00.png)
 
 也就是说，ThingsBoard可用于:
 
@@ -68,12 +68,12 @@ ThingBoard可以分为四个核心模块：
 
 3. [官网](https://thingsboard.io/)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038798812-a8f65b71-7e47-44e2-bb2f-504ef844f85c.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/253b9106dfa13544308c066c7a7df171.jpg)
 
 4. [GitHub](https://github.com/thingsboard/thingsboard)
 5. [中文网](http://xn--thingsboard-b28qs24v2pyd/%20(ithingsboard.com))
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038799077-6c553ea1-a0a8-40f4-942f-37d0ee845603.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/109cbf1a19c53bac17061ea77a73d3ce.jpg)
 
 ## 二、安装
 
@@ -132,7 +132,7 @@ docker ps
 
 11. 查看ThingsBoard平台并修改密码 然后在浏览器中打开(例如http://localhost:9090)。
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038799218-61545c3f-5c71-4a5c-92fa-2e582e2578ee.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/6da7ebab4917b4d2d228d2f8609c95ba.jpg)
 
 默认用户名/密码如下：
 
@@ -144,11 +144,11 @@ docker ps
 
 安全起见，修改下密码： 主页右上角三个点 – 属性 – 更改密码
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038799322-c91c4c2e-aa9c-45bc-9d08-5970b5f40d00.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/26f7f46a27c41960eea9dfe56cd41fc1.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038799446-617209b2-55b1-4f3d-a1df-890c92a61854.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/29c94be87155ff93900736990984e37c.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038799565-200acf61-3e48-4b81-98cf-429bd0de6c0a.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/f34d079dccc65ff2d3b373637ae15868.jpg)
 
 ## 三、探索
 
@@ -158,29 +158,29 @@ docker ps
 
 **系统管理员**
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038799670-f568dfb1-c11e-4df6-b13a-e4bab8c50cab.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/789f7c67527051d1487edb4cc9b33715.jpg)
 
 **租户**
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038799790-9d0ab7af-e271-4e19-8b84-9aeb32f4c715.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/d4698cc32fccaaf7c8397a4774ee2ecf.jpg)
 
 **客户**
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038799911-6c763aa7-a56d-4464-b46e-ae3b1280dd21.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/483a16ea6a60be4822cda2b2b70e5dc8.jpg)
 
 显然租户才是实际上的掌控者~
 
 三者关系如下：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038800016-7a5b7f5b-458b-4b43-9c9e-37f0b1b5095f.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/d2b76b83dff124a9d31bc0625dfd7d15.jpg)
 
 可以看到，默认租户下面有三个客户
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038800120-88516038-15eb-47cb-884a-0c7a1d10323b.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/c26dde87599e089344a429fdf48e2174.jpg)
 
 客户A的用户有两个，我们刚使用的是这个叫customer的用户
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038800228-7502d322-2d65-42c6-b872-e41ec3f648f7.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/746b8d590bf2e1d0a25a74e49949a0d1.jpg)
 
 可见客户是一个抽象概念，也就是说客户用户才是真用户。
 
@@ -188,7 +188,7 @@ docker ps
 
 设备主要分属性和遥测，我们下一节会详细讲解，这里先看下最核心的遥测：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038800337-6f910675-a91e-48cb-abb5-67507e832b5c.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/e03e37eef1abad60aa3295a9a75e6a51.jpg)
 
 遥测也就是我们常说的设备测量状态，比如温度计的温度，灯的亮度等等， 由于是新设备，所以是没有遥测值的，我们可以用http协议发一个。
 
@@ -196,7 +196,7 @@ docker ps
 
 3.1 获取对接设备的访问令牌
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038800461-545c8db5-4902-4390-b8c5-20e4c15d34a8.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/f6e54aa53f9ee4e5d13f431fe833b2ed.jpg)
 
 这里使用默认的A1_TEST_TOKEN。
 
@@ -206,7 +206,7 @@ curl -v -X POST -d ‘{“turn”:“1”,“light”:“90”}’ http://103.44
 
 3.3 查看更新后的遥测值
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038800648-9effa5fe-d715-42fa-961d-3d6da56a63a2.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-introduction/f9cd8b38048596f751cc11558bea0977.jpg)
 
 ## 四、下一步
 

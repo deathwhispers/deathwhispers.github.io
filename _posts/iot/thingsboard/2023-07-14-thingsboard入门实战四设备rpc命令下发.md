@@ -42,15 +42,15 @@ ThingsBoard提供了RPC部件来帮助我们实现。
 
 选择一个可以用来开关的RPC控件
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038817356-81da4c22-be11-4952-aad0-6bde3eae6ee6.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-rpc-command/c85acd56424b2395a9bad1a9033ce459.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038817529-8977c8e3-2045-490e-bc58-add02b73e212.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-rpc-command/5f3c1a6bf2e70303228ec8c9ec629827.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038817659-0b14147c-6d26-4ba7-87f6-9f4deb350e21.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-rpc-command/6544b2a713c2262797d94f5bda4ba195.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038817754-582b4279-865a-42f6-a189-76a588e3c02d.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-rpc-command/a5267472bdf06392a015e08b3866c968.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038817874-70a8f4a9-90b4-4f56-a0bf-2e2288119967.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-rpc-command/5d1586085983ec268646b505e056211f.jpg)
 
 控件是有了，但是Request Timeout.是什么鬼？
 
@@ -62,7 +62,7 @@ ThingsBoard提供了RPC部件来帮助我们实现。
 
 刷新页面：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038817968-93d1c9cc-4183-4bb6-81d9-95cdc4ac9232.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-rpc-command/20510e0b35f3a14bc60d93e58d2a73cf.jpg)
 
 警告神奇的消失了！
 
@@ -72,11 +72,11 @@ ThingsBoard提供了RPC部件来帮助我们实现。
 
 用同样的方法，选择亮度控件：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038818059-fb6e9042-0e3b-4166-98aa-4e5f0b4c91ca.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-rpc-command/4aa8c3944a29a4d040924c36a3479374.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038818176-e5bd5388-92f3-482b-a0fc-952a9e1247ff.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-rpc-command/4d3c9a2e501efaabdaff1343326a25b6.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038818266-14a4cc94-7935-46e9-a945-f5aa087f2dd4.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-rpc-command/1fb6ce5de2a9ca86a4d2afae53c99162.jpg)
 
 在程序里加入RPC方法的实现：
 
@@ -84,7 +84,7 @@ ThingsBoard提供了RPC部件来帮助我们实现。
 
 成功对接，点击亮度条可调亮度，完美*2！
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038818356-4610b3d8-b461-4895-a030-48d2e19177df.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-rpc-command/8b7f562bd82def75d8f11e2fcd8068df.jpg)
 
 ## 三、下一步
 

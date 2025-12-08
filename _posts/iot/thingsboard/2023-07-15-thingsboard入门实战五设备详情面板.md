@@ -48,35 +48,35 @@ updated: 2023-06-07 18:33
 
 像往常一样，我们先找到地图部件包：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038810131-fd323480-fb0d-4c94-aaef-2f637fcfecf1.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/2ececd8246552380293909c0d9b134c4.jpg)
 
 ThingsBoard提供的地图控件比较丰富，我们先选个鹅厂的腾讯地图：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038810257-ca54fa96-7934-417c-bfdd-74e251126b3c.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/f4e1d5f7894b4c0a556aea2cc919e35d.jpg)
 
 选择实体做数据源：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038810391-ef0c297d-3d8b-4980-a890-4c07b4c6a270.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/cc05a0589f62e8756d6d4d863896002f.jpg)
 
 好了，看看图？
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038810507-2533a523-24fa-470d-a5da-a2d0e461c567.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/c9e7f93e103fff5ede60e22ff3b0c80b.jpg)
 
 ### 修改Marker图标
 
 这个**路灯**几乎看不见啊，亲先别差评，看我来改一改，加上个Marker图标：
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698038810640-e30164ca-b973-4b78-bbbe-34f9750ac4fb.png)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/7b027914b72264a5780314bee7e8c936.png)
 
 现在看一看，
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038810774-44ff16d3-35c8-43ab-a74f-a1603382cd18.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/dd8f0aa15f4f71f106aac6b4292907c3.jpg)
 
 不好看没关系，我们可以换自己的图：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038810898-9d316760-f021-4484-ae68-9be8450f8f9a.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/527228bd94a3a68cf563694cd7004ef0.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038811068-00c6d7ed-810f-44f5-9318-f0e9ad43d4f6.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/69ca3b5800dd79fcc4417c1fb825b491.jpg)
 
 找图标，认准 [iconfont 阿里巴巴矢量图标库](https://www.iconfont.cn/)
 
@@ -84,11 +84,11 @@ ThingsBoard提供的地图控件比较丰富，我们先选个鹅厂的腾讯地
 
 既然有了Marker，少不得要点一下，等等这个是啥？
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038811188-a11dc2de-e952-4c6a-91d7-2a658915563d.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/6c33381785fbc8a274d000d3b5419cf2.jpg)
 
 进入修改模式，看看设置，
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038811320-317b33c9-ad42-4ef3-9b04-b6b0bcd5a622.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/f16e1e4d00949029232ed59374289b50.jpg)
 
 发现代码
 
@@ -103,4 +103,4 @@ ThingsBoard提供的地图控件比较丰富，我们先选个鹅厂的腾讯地
 一个设备我写一个详情页，10个设备写10个？这个不能通用么？
 当然不是这样，ThingsBoard的操作太魔幻，下节课我们就直接放个大招解决这个问题~
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038811450-2f54ff20-a71b-418d-a0f4-23cf7ddd62db.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-details-panel/9e6ec5a76b41590c0e7630c211894772.jpg)

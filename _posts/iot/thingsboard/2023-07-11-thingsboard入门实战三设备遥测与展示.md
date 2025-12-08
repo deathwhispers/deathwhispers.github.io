@@ -32,7 +32,7 @@ updated: 2023-06-05 18:33
 - 关联：设备属于谁，在哪个资产上等等
 - 审计日志：谁在平台上对设备做了什么操作
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038804200-5adf0caf-754f-4f3a-9f75-58f0a1df845a.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/cb21fd165a4ea843f3f48dff7bdf3021.jpg)
 
 其中属性是**基础**，遥测是**核心**。
 
@@ -46,15 +46,15 @@ ThingsBoard能够给实体分配自定义属性并进行管理。
 
 - 客户端属性
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698038804307-52b6a473-6896-4af0-b394-aacc4a711ff4.png)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/92d77bc13cf45fe4b8561a771a711a5b.png)
 
 - 服务端属性
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698038804394-59341dd1-73d8-420a-be3b-fe2647391d58.png)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/ba563555ced97871036d70fc7b0554c5.png)
 
 - 共享属性
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698038804475-3528759a-294d-4892-9b21-3810a5db3f50.png)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/24e81f0c287b21a72dd4f10a070ef9a6.png)
 
 ## 三、遥测
 
@@ -71,7 +71,7 @@ ThingsBoard能够给实体分配自定义属性并进行管理。
 
 官方有个说明蓝图，一目了然：
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698038804561-36be732f-f126-466e-8d1f-f552cf6565d8.png)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/e4d6cbf1353abe4e4471da85af0ea8fd.png)
 
 ## 四、路灯设备定义
 
@@ -116,45 +116,45 @@ git clone git@github.com:thingsboard/thingsboard-python-client-sdk.git
 
 ### [仪表盘](https://so.csdn.net/so/search?q=%E4%BB%AA%E8%A1%A8%E7%9B%98&spm=1001.2101.3001.7020)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038804642-a589e306-acae-4f6f-b6c1-019ddac5edcc.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/cbd631228e52fd4a5efdf52d6782d437.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038804752-35c97ffc-9ed7-4049-8063-204138d67f14.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/0636a1a80d06b760374ccb12abdcb87b.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038804859-e18dd2f1-6fe7-471e-bf10-1d3f12787362.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/a352e3c6aa98a3b2e2c1a5f34ea7ba5a.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038804959-657e7985-40d1-4887-8f1c-d637029189ef.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/f721ec5ef64d237397d21065d7764528.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038805116-31bc6bbd-6925-45af-9788-c22cb85e5967.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/6fea6fccd9a171ca62934a39e6624539.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038805229-d13ad5e5-bc86-4624-9683-a124d8b46462.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/099aa38b2046a46de6738be2b4175d4a.jpg)
 
 ### 部件：电量展示
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038805332-0db3e433-8b82-48ee-ae28-827660e343f2.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/f0401a745c62577631b0c4eb6d061664.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038805440-06668920-8c92-49a5-8d2c-c3e3c5e602b4.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/1e171e03bdd33d3d731d752ace57397b.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038805544-298896b2-7dbf-4019-960d-67ceb8d025e5.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/c7bfb44643ba97b0de7a05812e59cdfa.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038805643-e0d2547a-d887-4071-8bd6-49c99f5ee083.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/ea0434677ec956280aaa0d0bd9ca307b.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038805764-937adfad-de41-4aee-a086-0bf4815cf448.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/51ec25701137d78a90d67597466b1523.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038805866-d9d4db5c-4979-4e27-9e46-1394287c8a84.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/8e6b8e281cc9a598f37ffd086b652e9c.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038805978-b1592193-7264-45cb-918a-eff2c24d95d3.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/739833c8172aaefab6a5a519e0070701.jpg)
 
 按图操作就好。
 
 ### 设为首页
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038806090-bab26e23-1cd3-4437-8ea7-385b0096bdc2.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/91b5d6f6a9a6dcfe4a4bb0a207b70ebc.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038806189-e9bf5a9d-b1c2-4726-b395-5e969afa4368.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/ed9fb0abb647b939fc1f7f3faa866d08.jpg)
 
 可以看到, 首页已经变成了设备的电量图示。
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038806287-6df3dcf0-606e-42cf-b26f-41fda477317b.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-telemetry-and-display/e05a6e4e76b5106448c2e783564777ce.jpg)
 
 ## 七、下一步
 

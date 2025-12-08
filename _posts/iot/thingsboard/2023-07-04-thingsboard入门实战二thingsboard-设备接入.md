@@ -29,37 +29,37 @@ updated: 2023-06-04 18:33
 
 **设备配置**听起来比较抽象，可以认为是设备类型或者是设备类型的配置。实际上，ThingsBoard 中很多时候让选择设备类型，就是选的这个。
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038807603-b6c13385-3675-4396-bd24-82b9c91278fb.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/4a7acdb16585621ee0c5b9e7a9e19982.jpg)
 
 按照提示填写待添加设备类型的信息，
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038807707-4e8e4532-2a7b-445e-969e-1a851a19b1b8.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/5bb4ba2d38f34a8bc96a4db4e6b88acb.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038807808-3e622985-ec9a-4685-bf63-c941e619ac71.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/a8d255e022644a5210a89db3019e53c2.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038807920-e31ff4c7-bf4a-4230-b80e-75b008978682.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/d061aff3594bde1660dce186dc18775e.jpg)
 
 设备类型路灯添加成功：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038808058-a443b0a4-9a71-445e-a701-8f8189177f88.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/e7a393851ee6e622744dc8498a6abeba.jpg)
 
 ## 二、设备
 
 接下来添加一个叫”路灯1”的设备：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038808196-54b9e658-b535-4a3d-b430-f6bbc5b8a96d.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/c55096403bb5b3781d6bcc6c6f53fa00.jpg)
 
 按照提示填写待添加设备的信息，
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038808329-aaca4923-726b-4f7f-a061-feb4a314f7c3.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/06360013861e1f45a426fbef7aa117aa.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038808441-fd758d9d-4c0a-4065-8cca-c26cac6c0675.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/5be94bd5224a3c2a321fb2f6ea490e18.jpg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038808553-95d05f7f-2628-4df1-8edf-1644bf86f7b3.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/162903b1173ca73a7b904f68b9aca23d.jpg)
 
 设备**路灯1**添加成功：
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038808653-d137556f-441b-4671-be4e-7935ae4672a6.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/7709c424d1ecb6e2e002e641bf250cd9.jpg)
 
 ## 三、设备接入
 
@@ -83,7 +83,7 @@ mqtt命令需要安装npm库mqtt，安装指令npm install mqtt -g 使用mqtt发
 
 mqtt pub -v -h “{SERVER_IP}” -p 1883 -t “v1/devices/me/telemetry” -u ‘A1_TEST_TOKEN’ -m ‘{“latitude”:“22.54845664”,“longitude”:“114.06455184”}’
 
-![](https://cdn.nlark.com/yuque/0/2023/jpg/29230873/1698038808782-2e80ddd7-a842-4d3e-aaa8-9a9551f3d2c4.jpg)
+![](/assets/images/iot/thingsboard/thingsboard-device-access/278222561ca4d54d6c56078d1feabd3d.jpg)
 
 **在实际工作中，选择一种协议就可以了。** 由于MQTT协议已经成为事实上的物联网标准，我们后面的操作都使用**MQTT协议**来进行。
 
