@@ -1,7 +1,9 @@
 import argparse
 import logging
+import re
 from datetime import date, datetime
 from pathlib import Path
+from typing import Dict, Any, Tuple
 
 import yaml
 
@@ -10,15 +12,13 @@ import yaml
 # ==========================================
 
 # 1. 默认扫描的目录路径 (可以是相对路径或绝对路径)
-DEFAULT_DIR = r"../../_posts/iot"
+DEFAULT_DIR = Path("_posts/")
 
 # 2. 是否真正执行重命名？
-#    False = 仅预览 (Dry Run), 安全模式
-#    True  = 实际修改文件
-DEFAULT_APPLY = True
+DEFAULT_APPLY = False  # 默认安全模式 (False = 仅预览 / True = 实际修改文件)
 
-# 3. 是否递归扫描子目录？ (True/False)
-DEFAULT_RECURSIVE = False
+# 3. 是否递归扫描子目录？
+DEFAULT_RECURSIVE = True
 
 # 4. 目标文件后缀
 DEFAULT_EXT = ".md"
@@ -32,73 +32,66 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
-def parse_args():
-    """解析命令行参数，如果未提供则使用上方的默认配置"""
-    parser = argparse.ArgumentParser(description="Markdown 文件批量重命名脚本")
-
-    parser.add_argument("--dir", type=str, default=DEFAULT_DIR, help="指定扫描目录")
-
-    # --apply / --no-apply 用于覆盖默认的 DEFAULT_APPLY
-    parser.add_argument("--apply", action='store_true', dest='apply', default=DEFAULT_APPLY, help="执行重命名操作")
-    parser.add_argument("--preview", action='store_false', dest='apply', help="仅预览（不修改文件）")
-
-    # --recursive / --no-recursive
-    parser.add_argument("--recursive", action='store_true', dest='recursive', default=DEFAULT_RECURSIVE,
-                        help="递归扫描子目录")
-
-    parser.add_argument("--ext", type=str, default=DEFAULT_EXT, help="文件后缀过滤")
-
-    return parser.parse_args()
+def slugify(text: str) -> str:
+    """将文本转换为 URL 和文件名友好的 slug。"""
+    text = str(text).lower()
+    text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r'[\s]+', '-', text)
+    text = re.sub(r'[-]+', '-', text)
+    return text.strip('-')
 
 
-def get_frontmatter(file_path):
+def get_frontmatter(file_path: Path) -> Tuple[Dict[str, Any], str | None]:
     """鲁棒的 Frontmatter 读取函数"""
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             first_line = f.readline()
-            if not first_line.startswith('---'):
-                return None, "无 YAML 头部"
-
+            if not first_line.startswith('---'): return {}, "无 YAML 头部"
             yaml_lines = []
             for line in f:
-                if line.strip() == '---':
-                    break
+                if line.strip() == '---': break
                 yaml_lines.append(line)
             else:
-                return None, "YAML 头部未闭合"
-
-            return yaml.safe_load("".join(yaml_lines)), None
+                return {}, "YAML 头部未闭合"
+            return yaml.safe_load("".join(yaml_lines)) or {}, None
     except Exception as e:
-        return None, str(e)
+        return {}, str(e)
 
 
-def format_date(date_obj):
+def format_date(date_obj) -> str | None:
     """标准化日期格式为 YYYY-MM-DD"""
     if not date_obj: return None
     try:
         if isinstance(date_obj, (datetime, date)):
             return date_obj.strftime('%Y-%m-%d')
-        # 处理字符串 "2023-01-01 10:00" -> "2023-01-01"
         return str(date_obj).split(' ')[0]
     except:
         return None
+
+
+def parse_args():
+    """解析命令行参数"""
+    parser = argparse.ArgumentParser(description="Markdown 文件重命名脚本 (date-slug)")
+    parser.add_argument("--dir", type=str, default=DEFAULT_DIR, help="指定扫描目录")
+    parser.add_argument("--apply", action='store_true', dest='apply', default=DEFAULT_APPLY, help="执行重命名操作")
+    parser.add_argument("--preview", action='store_false', dest='apply', help="仅预览（不修改文件）")
+    parser.add_argument("--recursive", action='store_true', dest='recursive', default=DEFAULT_RECURSIVE,
+                        help="递归扫描子目录")
+    parser.add_argument("--ext", type=str, default=DEFAULT_EXT, help="文件后缀过滤")
+    return parser.parse_args()
 
 
 def main():
     args = parse_args()
     root_dir = Path(args.dir)
 
-    # 1. 检查目录
     if not root_dir.exists():
         logger.error(f"目录不存在: {root_dir}")
         return
 
-    # 2. 确定运行模式
     mode_str = "【执行模式】" if args.apply else "【预览模式 - 不会修改文件】"
     logger.info(f"{mode_str} 正在扫描: {root_dir}")
-    logger.info(f"配置: 递归={args.recursive}, 后缀={args.ext}")
 
-    # 3. 扫描文件
     pattern = f"**/*{args.ext}" if args.recursive else f"*{args.ext}"
     files = list(root_dir.glob(pattern))
 
@@ -106,20 +99,24 @@ def main():
 
     for file_path in files:
         try:
-            # --- 提取信息 ---
-            metadata, err = get_frontmatter(file_path)
-            if err:
-                logger.debug(f"跳过 {file_path.name}: {err}") # 只有调试时开启，避免刷屏
-                stats['skip'] += 1
-                continue
+            metadata, _ = get_frontmatter(file_path)
 
-            if not isinstance(metadata, dict) or 'date' not in metadata or 'slug' not in metadata:
-                logger.debug(f"跳过 {file_path.name}: 无日期或 Slug 字段")
+            # 检查 Date 和 Slug/Title
+            if 'date' not in metadata:
+                logger.debug(f"跳过 {file_path.name}: 无日期字段")
                 stats['skip'] += 1
                 continue
 
             date_str = format_date(metadata['date'])
-            slug = str(metadata['slug']).strip()
+
+            # 优先使用 slug，其次使用 title 并进行 slugify
+            raw_slug = metadata.get('slug') or metadata.get('title')
+            if not raw_slug:
+                logger.warning(f"跳过 {file_path.name}: 无 slug 或 title 字段")
+                stats['skip'] += 1
+                continue
+
+            slug = slugify(str(raw_slug))
 
             if not date_str or not slug:
                 logger.warning(f"跳过 {file_path.name}: 日期或 Slug 无效")
@@ -153,7 +150,6 @@ def main():
             logger.error(f"处理 {file_path.name} 时出错: {e}")
             stats['error'] += 1
 
-    # 4. 总结
     logger.info("-" * 30)
     logger.info(f"处理结束: 成功/预览 {stats['success']} 个, 跳过 {stats['skip']} 个, 错误 {stats['error']} 个")
 
