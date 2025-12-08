@@ -36,7 +36,7 @@ MapReduce 作业通过将输入的数据集拆分为独立的块，这些块由 
 
 这里以词频统计为例进行说明，MapReduce 处理的流程如下：
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029255767-c3fc1003-e0eb-4995-bee5-bf24027b6bc7.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/a5cb197b6969808a62074a2fa00e9926.png)
 
 1. **input**
    : 读取文本文件；
@@ -80,7 +80,7 @@ MapReduce 这个称呼的来源。
 
 ## 三、combiner & partitioner
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029255869-5b100f73-165c-4452-b66a-ac6911219de8.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/2d67bbd437c841b930c9f42ee5a132da.png)
 
 ### 3.1 InputFormat & RecordReaders
 
@@ -100,11 +100,11 @@ combiner，但是做平均值计算则不能使用 combiner。
 
 不使用 combiner 的情况：
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029255972-7eba0352-e5f1-4bdc-9157-3b93a574a480.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/150b162366f30be2932005cbb2085769.png)
 
 使用 combiner 的情况：
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029256070-95ae54e3-c51d-4824-8546-d8015ccc66ef.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/89713531d5759d73d915d849b01380e2.png)
 
 可以看到使用 combiner 的时候，需要传输到 reducer 中的数据由 12keys，降低到 10keys。降低的幅度取决于你 keys
 的重复率，下文词频统计案例会演示用 combiner 降低数百倍的传输量。
@@ -173,7 +173,7 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritabl
 
 WordCountMapper 对应下图的 Mapping 操作：
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029256159-80b9841c-5858-4a8e-9339-c28af8c1bdcd.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/b7665fa06514ac9df6d779aff2ced19b.png)
 
 WordCountMapper 继承自 Mapper 类，这是一个泛型类，定义如下：
 
@@ -237,7 +237,7 @@ public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritab
 
 如下图，shuffling 的输出是 reduce 的输入。这里的 key 是每个单词，values 是一个可迭代的数据类型，类似 (1,1,1,…)。
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029256247-f03c7ea6-77be-498f-9e01-2e7604bbf41c.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/2b0993548bd34e64b85255d698730b2f.png)
 
 ### 4.4 WordCountApp
 
@@ -277,7 +277,7 @@ hadoop fs -ls /wordcount/output/WordCountApp
 hadoop fs -cat /wordcount/output/WordCountApp/part-r-00000
 ```
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029256353-a3e99d70-dc05-45e1-a8ba-6c0bef91947b.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/bf3948a00a09c6c7f8f69b309eac7147.png)
 
 ## 五、词频统计案例进阶之Combiner
 
@@ -295,11 +295,11 @@ hadoop fs -cat /wordcount/output/WordCountApp/part-r-00000
 
 没有加入 combiner 的打印日志：
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029256445-273346e7-e6cf-4a1b-8992-f4f08f007b2c.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/5ddff8a247f71da323842c1206d54870.png)
 
 加入 combiner 后的打印日志如下：
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029256539-17c5f1a3-74bf-4949-97fc-49de6afaa5af.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/262ade5977bc11eac2243802a59c8707.png)
 
 这里我们只有一个输入文件并且小于 128M，所以只有一个 Map 进行处理。可以看到经过 combiner 后，records 由 3519 降低为 6(
 样本中单词种类就只有 6 种)，在这个用例中 combiner 就能极大地降低需要传输的数据量。
@@ -344,7 +344,7 @@ public class CustomPartitioner extends Partitioner<Text, IntWritable> {
 
 执行结果如下，分别生成 6 个文件，每个文件中为对应单词的统计结果：
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029256626-49094787-7a53-4fc8-9cdf-efb124f0e62f.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/1d0fdcb7f78d6d4313bea56df75a9e85.png)
 
 ## 参考资料
 

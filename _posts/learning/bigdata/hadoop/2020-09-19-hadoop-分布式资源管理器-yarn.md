@@ -24,11 +24,11 @@ updated: 2020-09-19 18:27
 
 **Apache YARN** (Yet Another Resource Negotiator) 是 hadoop 2.0 引入的集群资源管理系统。用户可以将各种服务框架部署在 YARN 上，由 YARN 进行统一地管理和资源分配。
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029258006-34fcc386-7729-4cc6-aa7b-09ab3dc7695b.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-resource-manager-yarn/2a251e96ca36246b99740001218dd569.png)
 
 ## 二、YARN架构
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029258116-bd986cab-6314-47e1-9c62-699fa5bec11a.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-resource-manager-yarn/9708dc5262e6f9e94a202b21cc3da3a1.png)
 
 ### 1. ResourceManager
 
@@ -71,7 +71,7 @@ Container 是 YARN 中的资源抽象，它封装了某个节点上的多维度�
 
 ## 三、YARN工作原理简述
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029258210-71bec0e6-1696-402f-a935-00ddf6b3023d.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-resource-manager-yarn/7ad302c426137e038258a8672bc07642.png)
 
 1. Client
 提交作业到 YARN 上；
@@ -96,7 +96,7 @@ Container
 
 ## 四、YARN工作原理详述
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029258294-c6c4b2dc-de52-4422-9015-b798c3ad490a.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-resource-manager-yarn/b52f8e2972b9c63ef33a99e0c4478b49.png)
 
 ### 1. 作业提交
 

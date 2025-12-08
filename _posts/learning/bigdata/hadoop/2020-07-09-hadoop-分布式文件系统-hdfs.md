@@ -24,7 +24,7 @@ updated: 2020-07-09 18:27
 
 ## 二、HDFS 设计原理
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029251531-b040bd57-a78d-4bef-8ea2-4c5c9616e450.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/1254b66f01ef90599d73c5376de8c77e.png)
 
 ### 2.1 HDFS 架构
 
@@ -45,7 +45,7 @@ HDFS 的 文件系统命名空间 的层次结构与大多数文件系统类似 
 
 由于 Hadoop 被设计运行在廉价的机器上，这意味着硬件是不可靠的，为了保证容错性，HDFS 提供了数据复制机制。HDFS 将每一个文件存储为一系列**块**，每个块由多个副本来保证容错，块的大小和复制因子可以自行配置（默认情况下，块大小是 128M，默认复制因子是 3）。
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029251630-ca1b435a-e22d-4348-889b-7e65813d74e4.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/d5e0a7e6b876615b8117999fb4c713d7.png)
 
 ### 2.4 数据复制的实现原理
 
@@ -53,7 +53,7 @@ HDFS 的 文件系统命名空间 的层次结构与大多数文件系统类似 
 
 在写入程序位于 datanode 上时，就优先将写入文件的一个副本放置在该 datanode 上，否则放在随机 datanode 上。之后在另一个远程机架上的任意一个节点上放置另一个副本，并在该机架上的另一个节点上放置最后一个副本。此策略可以减少机架间的写入流量，从而提高写入性能。
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029251725-704b9ace-b152-49ed-8814-0ec95471db69.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/baa9966e4d57ea3f53b332da07f5628c.png)
 
 如果复制因子大于 3，则随机确定第 4 个和之后副本的放置位置，同时保持每个机架的副本数量低于上限，上限值通常为 （复制系数 - 1）/机架数量 + 2，需要注意的是不允许同一个 dataNode 上具有同一个块的多个副本。
 
@@ -109,33 +109,33 @@ HDFS 具有良好的跨平台移植性，这使得其他大数据计算框架都
 
 ### 1. HDFS写数据原理
 
-![](https://cdn.nlark.com/yuque/0/2023/jpeg/29230873/1698650452266-317e0a70-3844-4d6b-bc2f-1da45e90e7d7.jpeg)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/cded7a203d87ca4c351102520aea87f7.jpeg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpeg/29230873/1698650472874-35e2093e-2202-4196-a7cc-235d20606e8f.jpeg)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/00c178623fbeaf470d696a670d90d2b4.jpeg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpeg/29230873/1698650498527-d53970a1-f01c-4672-ab15-44c48f151492.jpeg)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/2dd7507bf6489715cf57e6eec3107366.jpeg)
 
 ### 2. HDFS读数据原理
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029252179-b6079fb3-b577-4190-88da-f988a8f32334.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/4541fd737e4ae36026ef46df1f6b9c3f.png)
 
 ### 3. HDFS故障类型和其检测方法
 
-![](https://cdn.nlark.com/yuque/0/2023/jpeg/29230873/1698650532698-e9acb1d8-cd87-4a5b-b15e-973642831274.jpeg)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/879d48707c5be82fc795b75bfd1b279f.jpeg)
 
-![](https://cdn.nlark.com/yuque/0/2023/jpeg/29230873/1698650554856-6e06b66b-eb21-4b37-9fc3-943978b3bd44.jpeg)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/3c7805186aad92fb5f7a73a0da989e08.jpeg)
 
 **第二部分：读写故障的处理**
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029252528-29aa14ce-3793-4044-b079-b50023e37e45.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/9aea881b599387424c59e910811ba6ce.png)
 
 **第三部分：DataNode 故障处理**
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029252654-3caae005-8217-4cd4-896c-a672f771d34d.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/020f70893ad8b855960ed7f912b10bec.png)
 
 **副本布局策略**：
 
-![](https://cdn.nlark.com/yuque/0/2023/png/29230873/1698029252774-3c9a8403-7be2-4bf1-ba5f-9f8311f8620d.png)
+![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-file-system-hdfs/cbb3840bfd5b28d3efc5fe78e1c68e28.png)
 
 ## 参考资料
 
