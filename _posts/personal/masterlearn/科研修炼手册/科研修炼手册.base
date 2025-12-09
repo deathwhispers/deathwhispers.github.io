@@ -1,0 +1,20 @@
+filters:
+  and:
+    - note["base"] == link("科研修炼手册.base")
+properties:
+  file.name:
+    displayName: 名称
+  创建时间:
+    displayName: 创建时间
+  日期:
+    displayName: 日期
+  标签:
+    displayName: 标签
+views:
+  - type: table
+    name: Table View
+    order:
+      - file.name
+      - 创建时间
+      - 日期
+      - 标签

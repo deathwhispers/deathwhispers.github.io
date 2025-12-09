@@ -1,0 +1,22 @@
+# New database
+
+filters:
+  and:
+    - note["base"] == link("New database.base")
+properties:
+  file.name:
+    displayName: 作用
+  卷积核:
+    displayName: 卷积核
+  文件:
+    displayName: 文件
+  卷积后图像:
+    displayName: 卷积后图像
+views:
+  - type: table
+    name: Table View
+    order:
+      - file.name
+      - 卷积核
+      - 文件
+      - 卷积后图像
