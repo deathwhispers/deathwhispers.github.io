@@ -33,3 +33,4 @@ mvnw.cmd
 # Obsidian
 .obsidian
 00 inbond/
+.DS_Store
