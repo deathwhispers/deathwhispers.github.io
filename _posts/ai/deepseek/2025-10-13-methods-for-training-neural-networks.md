@@ -1,0 +1,652 @@
+---
+layout: post
+title: "白话 DeepSeek 03｜调教神经网络的方法"
+date: 2025-10-13
+tags:
+  - DeepSeek
+  - 神经网络
+categories:
+  - DeepSeek
+  - 白话 DeepSeek 系列
+comments: true
+math: true
+mermaid: true
+author: deathwhispers
+---
+
+> 全文总结于 [Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！](https://www.bilibili.com/video/BV1NCgVzoEG9?spm_id_from=333.788.videopod.sections&vd_source=1ce32605a59581a6ec6d48f9eaa72d66&p=3)
+
+# 🧠 神经网络训练中的问题与解决方法
+
+——从过拟合到正则化的全面解析
+
+> “训练一个模型不难，难的是让它在没见过的数据上依然聪明。”
+
+## 🌱 一、从成功到困惑：模型为何“记住”了数据？
+
+假设我们用数千张图片训练了一个神经网络，训练损失迅速下降，准确率高得惊人。
+
+然而，当我们在新图片上测试时，模型的表现却一塌糊涂。
+
+这时我们才发现——模型并没有理解图片中的规律，而是**死记硬背了训练集**。
+
+这就是深度学习中最常见也最棘手的问题：**过拟合（Overfitting）**。
+
+## 🎯 二、什么是过拟合？（附直观示意）
+
+![](https://i0.hdslb.com/bfs/note/856c558d572dac7a6a798fb7d3ab4a308fd8cd7b.png@806w_!web-note.webp)
+
+> 图：左为欠拟合，中为理想拟合，右为过拟合。
+
+过拟合的核心特征是：
+
+- **训练集误差低**
+
+- **测试集误差高**
+
+简单来说，它在熟悉的数据上“聪明绝顶”，但在陌生数据面前“智商骤降”。
+
+## 🧩 三、为什么会过拟合？
+
+| 原因 | 说明 |
+| --- | --- |
+| 模型过于复杂 | 参数多、层深、自由度太高，能轻易记住样本 |
+| 数据太少 | 样本无法覆盖真实分布，模型“记忆”数据 |
+| 训练时间太长 | 持续优化导致模型学习了噪声 |
+
+## ⚙️ 四、实验：过拟合长什么样？
+
+我们来用一个简单的 PyTorch 实验看看“过拟合”的真实曲线。
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from sklearn.datasets import make_moons
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+
+# 生成数据集
+X, y = make_moons(n_samples=300, noise=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+
+# 转换为 tensor
+X_train, y_train = torch.tensor(X_train, dtype=torch.float32), torch.tensor(y_train, dtype=torch.long)
+X_test, y_test = torch.tensor(X_test, dtype=torch.float32), torch.tensor(y_test, dtype=torch.long)
+
+# 定义一个较复杂的模型
+model = nn.Sequential(
+    nn.Linear(2, 64),
+    nn.ReLU(),
+    nn.Linear(64, 64),
+    nn.ReLU(),
+    nn.Linear(64, 2)
+)
+
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.01)
+
+train_losses, test_losses = [], []
+
+# 训练过程
+for epoch in range(200):
+    model.train()
+    optimizer.zero_grad()
+    output = model(X_train)
+    loss = criterion(output, y_train)
+    loss.backward()
+    optimizer.step()
+
+    train_losses.append(loss.item())
+
+    model.eval()
+    with torch.no_grad():
+        test_output = model(X_test)
+        test_loss = criterion(test_output, y_test)
+        test_losses.append(test_loss.item())
+
+# 绘制训练/测试损失对比
+plt.plot(train_losses, label="Train Loss")
+plt.plot(test_losses, label="Test Loss")
+plt.legend()
+plt.title("过拟合曲线示意")
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.show()
+
+```
+
+> 💡 运行结果：
+
+## 🧠 五、如何避免过拟合？
+
+### 1️⃣ 降低模型复杂度
+
+- 减少神经元数量或层数
+
+- 使用更简单的结构（例如小卷积核或较浅的网络）
+
+> ⚖️ 原理：降低模型的“表达能力”，防止记忆噪声。
+
+### 2️⃣ 增加数据量或使用数据增强（Data Augmentation）
+
+**数据越多，模型越难过拟合。**
+
+当无法采集更多样本时，可以通过数据增强来“制造”新样本。
+
+![](/assets/images/deepseek/methods-for-training-neural-networks/712a815307314cb0.png)
+
+> 图：图像任务中常用的数据增强方式，旋转、翻转、裁剪、加噪声等方式
+
+示例代码：
+
+```python
+from torchvision import transforms
+
+transform = transforms.Compose([
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(15),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2),
+    transforms.ToTensor()
+])
+```
+
+> 💬 思考：
+
+### 3️⃣ 提前停止（Early Stopping）
+
+当验证集损失开始上升时，说明模型已开始过拟合。
+
+此时应**提前终止训练**。
+
+示例实现：
+
+```python
+best_loss = float('inf')
+patience, wait = 10, 0
+
+for epoch in range(200):
+    # ... 训练代码略 ...
+    val_loss = test_losses[-1]
+    if val_loss < best_loss:
+        best_loss = val_loss
+        wait = 0
+    else:
+        wait += 1
+        if wait >= patience:
+            print(f"早停触发：在第 {epoch} 轮停止训练")
+            break
+```
+
+### 4️⃣ 正则化（Regularization）：控制参数的“野性增长”
+
+### ✅ 原理
+
+在损失函数中加入惩罚项，限制参数过大或过多：
+
+$$
+L' = L + \lambda \sum w_i^2
+$$
+
+- **L1 正则化**：使部分参数变为 0（特征选择）
+
+- **L2 正则化**：抑制权重过大（更平滑）
+
+![](https://i0.hdslb.com/bfs/note/849cc303fcfd54fcf98430411b3e3f835193a750.png@1540w_!web-note.webp)
+
+### ✅ 代码实现（PyTorch）
+
+```python
+optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
+```
+
+> 💡 weight_decay 就是 L2 正则化系数，值越大惩罚越强。
+
+### 🔍 实验效果
+
+> 图：添加正则化后，训练损失略高，但测试集表现明显更稳健。
+
+### 5️⃣ Dropout：让神经元“轮流下岗”
+
+为了防止模型依赖少数神经元，可以在训练时随机丢弃部分连接：
+
+![](https://i0.hdslb.com/bfs/note/cb375f83196f431c072dcfb1cb979be5487e8fc2.png@1656w_!web-note.webp)
+
+代码实现：
+
+```python
+model = nn.Sequential(
+    nn.Linear(2, 64),
+    nn.ReLU(),
+    nn.Dropout(0.5),
+    nn.Linear(64, 64),
+    nn.ReLU(),
+    nn.Dropout(0.5),
+    nn.Linear(64, 2)
+)
+```
+
+> 每次训练时，约 50% 的神经元被随机屏蔽。
+
+> 图：Dropout 后，模型的泛化能力提升，测试误差下降。
+
+## 💡 六、对比：不同策略对模型的影响
+
+| 方法 | 训练集表现 | 测试集表现 | 特点 |
+| --- | --- | --- | --- |
+| 无正则化 | 准确率 99% | 准确率 75% | 严重过拟合 |
+| L2 正则化 | 准确率 96% | 准确率 88% | 稳定提升 |
+| Dropout | 准确率 94% | 准确率 90% | 泛化显著增强 |
+| Early Stopping | 准确率 95% | 准确率 89% | 训练时间短、性能稳定 |
+
+## 🧭 七、总结与启示
+
+| 问题 | 解决方案 | 原理 |
+| --- | --- | --- |
+| 模型太复杂 | 降低网络规模 | 限制模型容量 |
+| 数据不足 | 数据增强 | 扩展样本多样性 |
+| 训练过久 | Early Stopping | 动态停止过拟合趋势 |
+| 参数过大 | 正则化 | 惩罚权重过大 |
+| 依赖特定神经元 | Dropout | 增强模型冗余性 |
+
+## ✨ 结语：控制“聪明”的度
+
+> 模型就像学生：
+
+## 示例代码
+
+```python
+#!/usr/bin/env python3
+# coding: utf-8
+"""
+pytorch_overfitting_experiment.py
+
+演示：用一个简单的二分类 toy 数据集（make_moons）来复现并对比
+- Baseline（无正则化）
+- L2 正则化（通过 optimizer.weight_decay）
+- Dropout（在网络中加入 Dropout 层）
+- Early Stopping（在验证损失上触发早停）
+- Combined（L2 + Dropout + EarlyStopping）
+
+输出：
+- 每个实验的训练/验证损失曲线（保存在本目录）
+- 终端打印每个模型在训练集和测试集的准确率
+
+依赖：
+- torch, torchvision (可选), sklearn, matplotlib, numpy
+"""
+
+# ---------------------------
+# 导入必要库
+# ---------------------------
+import os
+import copy
+import math
+import random
+from typing import Dict, List, Tuple
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import TensorDataset, DataLoader
+
+from sklearn.datasets import make_moons
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# ---------------------------
+# 可配置项（运行前可以修改）
+# ---------------------------
+SEED = 42                # 随机种子，便于复现实验结果
+N_SAMPLES = 300          # 数据总样本数
+TEST_SIZE = 0.3          # 测试集占比
+BATCH_SIZE = 32          # minibatch 大小
+LR = 1e-2                # 学习率
+MAX_EPOCHS = 300         # 最大训练轮数（EarlyStopping 会提前终止）
+PATIENCE = 20            # EarlyStopping 的 patience
+FIG_DIR = "figures"      # 保存图片的目录
+
+# ---------------------------
+# 环境准备与随机种子（确保可复现）
+# ---------------------------
+# 如果可用则使用 GPU，否则使用 CPU
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# 固定 Python, numpy, torch 的随机性以提高实验可复现性
+def set_seed(seed: int):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    # 当有 GPU 时也固定 GPU 计算的随机种子
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    # 使 cudnn 行为更可复现（可能降低性能）
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+set_seed(SEED)
+
+# 确保图片保存目录存在
+os.makedirs(FIG_DIR, exist_ok=True)
+
+# ---------------------------
+# 数据准备：make_moons（二分类 toy 数据）
+# ---------------------------
+def prepare_data(n_samples: int, test_size: float, seed: int) -> Tuple[DataLoader, DataLoader, np.ndarray, np.ndarray]:
+    """
+    生成 make_moons 数据，并返回训练/测试 DataLoader 以及原始 X_test, y_test（用于最终评价）
+    """
+    # 生成一个带噪声的两类数据集（常用于可视化与实验）
+    X, y = make_moons(n_samples=n_samples, noise=0.2, random_state=seed)
+
+    # 划分训练集和测试集，保证随机性可复现
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
+
+    # 转为 torch tensor（float32 输入，long 标签）
+    X_train_t = torch.tensor(X_train, dtype=torch.float32)
+    y_train_t = torch.tensor(y_train, dtype=torch.long)
+    X_test_t = torch.tensor(X_test, dtype=torch.float32)
+    y_test_t = torch.tensor(y_test, dtype=torch.long)
+
+    # 使用 TensorDataset 和 DataLoader 便于批训练
+    train_ds = TensorDataset(X_train_t, y_train_t)
+    test_ds = TensorDataset(X_test_t, y_test_t)
+
+    train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
+    test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False)
+
+    return train_loader, test_loader, X_test, y_test
+
+train_loader, test_loader, X_test_np, y_test_np = prepare_data(N_SAMPLES, TEST_SIZE, SEED)
+
+# ---------------------------
+# 模型定义
+# ---------------------------
+class SimpleMLP(nn.Module):
+    """
+    一个简单的 MLP，用于演示过拟合问题。
+    - 可选择在隐藏层之间加入 dropout（通过 dropout_rate 参数）
+    - 结构：Linear -> ReLU -> (Dropout) -> Linear -> ReLU -> (Dropout) -> Linear
+    """
+    def __init__(self, input_dim=2, hidden_dim=64, output_dim=2, dropout_rate: float = 0.0):
+        super().__init__()
+        # 第1个全连接层（输入 -> 隐层）
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        # 第2个全连接层（隐层 -> 隐层）
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim)
+        # 输出层（隐层 -> 类别数）
+        self.fc3 = nn.Linear(hidden_dim, output_dim)
+        # 非线性激活函数
+        self.relu = nn.ReLU()
+        # Dropout 层（训练时随机丢弃神经元）
+        self.dropout = nn.Dropout(dropout_rate)
+
+    def forward(self, x):
+        # 第一层前向：线性 -> 激活 -> dropout（如果 dropout_rate>0）
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.dropout(x)
+
+        # 第二层前向：线性 -> 激活 -> dropout
+        x = self.fc2(x)
+        x = self.relu(x)
+        x = self.dropout(x)
+
+        # 输出层（未做 softmax，交叉熵损失内部会处理）
+        x = self.fc3(x)
+        return x
+
+# ---------------------------
+# 训练与验证函数
+# ---------------------------
+def evaluate(model: nn.Module, loader: DataLoader, device: torch.device) -> Tuple[float, float]:
+    """
+    在数据加载器 loader 上评估模型：
+    - 返回 (avg_loss, accuracy)
+    """
+    model.eval()  # 切换到评估模式（Dropout/BatchNorm 等行为改变）
+    criterion = nn.CrossEntropyLoss()
+    total_loss = 0.0
+    all_preds = []
+    all_labels = []
+
+    # 禁止梯度计算以节省显存与时间
+    with torch.no_grad():
+        for X_batch, y_batch in loader:
+            X_batch = X_batch.to(device)
+            y_batch = y_batch.to(device)
+
+            logits = model(X_batch)                   # 前向计算 logits
+            loss = criterion(logits, y_batch)         # 计算交叉熵损失
+            total_loss += loss.item() * X_batch.size(0)  # 累计（按样本数加权）
+
+            preds = torch.argmax(logits, dim=1)       # 取最大概率索引为预测类别
+            all_preds.append(preds.cpu().numpy())
+            all_labels.append(y_batch.cpu().numpy())
+
+    # 将分批的预测与标签拼接为完整数组
+    all_preds = np.concatenate(all_preds, axis=0)
+    all_labels = np.concatenate(all_labels, axis=0)
+    avg_loss = total_loss / len(loader.dataset)     # 计算平均损失
+    acc = accuracy_score(all_labels, all_preds)     # 计算准确率
+    return avg_loss, acc
+
+def train_one_epoch(model: nn.Module, loader: DataLoader, optimizer, device: torch.device) -> float:
+    """
+    在训练集上跑一轮训练，并返回本轮平均损失
+    """
+    model.train()  # 切换到训练模式（打开 Dropout）
+    criterion = nn.CrossEntropyLoss()
+    running_loss = 0.0
+    for X_batch, y_batch in loader:
+        X_batch = X_batch.to(device)
+        y_batch = y_batch.to(device)
+
+        optimizer.zero_grad()            # 清除上一轮的梯度
+        logits = model(X_batch)          # 前向计算
+        loss = criterion(logits, y_batch)  # 计算损失
+        loss.backward()                  # 反向传播（计算梯度）
+        optimizer.step()                 # 参数更新（应用梯度）
+
+        running_loss += loss.item() * X_batch.size(0)  # 按样本数累计损失
+
+    avg_loss = running_loss / len(loader.dataset)
+    return avg_loss
+
+# ---------------------------
+# EarlyStopping 辅助类
+# ---------------------------
+class EarlyStopping:
+    """
+    简单的 EarlyStopping 实现：
+    - 当验证损失在 patience 次 epoch 内没有得到改善时，触发停止
+    - 保持一份最佳模型的拷贝（基于验证损失）
+    """
+    def __init__(self, patience: int = 20, min_delta: float = 1e-6):
+        self.patience = patience
+        self.min_delta = min_delta
+        self.best_loss = float('inf')
+        self.counter = 0
+        self.best_state = None
+        self.early_stop = False
+
+    def step(self, current_loss: float, model: nn.Module):
+        # 如果当前验证损失较之前最优降低超过 min_delta，则认为是改善
+        if current_loss + self.min_delta < self.best_loss:
+            self.best_loss = current_loss
+            self.best_state = copy.deepcopy(model.state_dict())  # 复制模型参数作为最佳模型
+            self.counter = 0
+            self.early_stop = False
+        else:
+            self.counter += 1
+            if self.counter >= self.patience:
+                self.early_stop = True
+
+# ---------------------------
+# 实验运行函数：负责构建模型、训练、验证并记录历史
+# ---------------------------
+def run_experiment(name: str,
+                   dropout_rate: float = 0.0,
+                   weight_decay: float = 0.0,
+                   use_early_stopping: bool = False,
+                   max_epochs: int = MAX_EPOCHS) -> Dict[str, List[float]]:
+    """
+    运行一个完整的实验并返回训练历史数据（train_loss_list, val_loss_list, train_acc_list, val_acc_list）
+    参数：
+    - name: 实验名称（用于打印与图像命名）
+    - dropout_rate: dropout 比例（0 表示不使用 Dropout）
+    - weight_decay: 优化器的 weight_decay（用于 L2 正则）
+    - use_early_stopping: 是否启动 EarlyStopping
+    - max_epochs: 最大训练轮数
+    """
+    # 每次实验重新初始化随机种子以保证可比性（可选）
+    set_seed(SEED)
+
+    # 实例化模型并移动到设备
+    model = SimpleMLP(dropout_rate=dropout_rate).to(DEVICE)
+
+    # Adam 优化器，weight_decay 参数会在更新参数时实现 L2 惩罚
+    optimizer = optim.Adam(model.parameters(), lr=LR, weight_decay=weight_decay)
+
+    # EarlyStopping 对象（如果需要）
+    es = EarlyStopping(patience=PATIENCE) if use_early_stopping else None
+
+    # 用于记录训练曲线与精度
+    history = {
+        "train_loss": [],
+        "val_loss": [],
+        "train_acc": [],
+        "val_acc": []
+    }
+
+    # 使用与外部相同的数据加载器（全局变量）
+    for epoch in range(1, max_epochs + 1):
+        # 训练阶段：进行一次完整的训练 epoch
+        train_loss = train_one_epoch(model, train_loader, optimizer, DEVICE)
+        # 在训练集和测试集上评估当前模型
+        train_loss_eval, train_acc = evaluate(model, train_loader, DEVICE)
+        val_loss_eval, val_acc = evaluate(model, test_loader, DEVICE)
+
+        # 保存到历史记录中
+        history["train_loss"].append(train_loss_eval)
+        history["val_loss"].append(val_loss_eval)
+        history["train_acc"].append(train_acc)
+        history["val_acc"].append(val_acc)
+
+        # 打印每隔若干轮的训练信息，便于观察
+        if epoch % 10 == 0 or epoch == 1:
+            print(f"[{name}] Epoch {epoch:03d} | train_loss={train_loss_eval:.4f} val_loss={val_loss_eval:.4f} | "
+                  f"train_acc={train_acc:.4f} val_acc={val_acc:.4f}")
+
+        # 早停逻辑：基于验证损失
+        if es is not None:
+            es.step(val_loss_eval, model)
+            if es.early_stop:
+                print(f"[{name}] Early stopping triggered at epoch {epoch}")
+                # 恢复到最佳模型参数
+                if es.best_state is not None:
+                    model.load_state_dict(es.best_state)
+                break
+
+    # 最终在训练集与测试集上计算准确率并打印
+    final_train_loss, final_train_acc = evaluate(model, train_loader, DEVICE)
+    final_val_loss, final_val_acc = evaluate(model, test_loader, DEVICE)
+    print(f"[{name}] Final -> train_acc={final_train_acc:.4f}, val_acc={final_val_acc:.4f}")
+
+    return history
+```
+
+```python
+# ---------------------------
+# 运行多组实验并绘图比较
+# ---------------------------
+def plot_histories(histories: Dict[str, Dict[str, List[float]]], filename_prefix: str = "comparison"):
+    """
+    给定多组历史记录（每组包含 train_loss, val_loss 等），绘制并保存对比图
+    - histories: {"name": history_dict, ...}
+    """
+    # 绘制损失对比图（train & val）
+    plt.figure(figsize=(10, 6))
+    for name, h in histories.items():
+        # 绘制验证损失（更关注泛化），使用实线表示
+        plt.plot(h["val_loss"], label=f"{name} val_loss")
+        # 绘制训练损失（虚线）
+        plt.plot(h["train_loss"], linestyle="--", label=f"{name} train_loss")
+
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training vs Validation Loss Comparison")
+    plt.legend()
+    plt.grid(True)
+    loss_path = os.path.join(FIG_DIR, f"{filename_prefix}_loss.png")
+    plt.savefig(loss_path)  # 保存图片到磁盘
+    plt.close()
+    print(f"Saved loss comparison figure to: {loss_path}")
+
+    # 绘制准确率对比图
+    plt.figure(figsize=(10, 6))
+    for name, h in histories.items():
+        plt.plot(h["val_acc"], label=f"{name} val_acc")
+        plt.plot(h["train_acc"], linestyle="--", label=f"{name} train_acc")
+
+    plt.xlabel("Epoch")
+    plt.ylabel("Accuracy")
+    plt.title("Training vs Validation Accuracy Comparison")
+    plt.legend()
+    plt.grid(True)
+    acc_path = os.path.join(FIG_DIR, f"{filename_prefix}_acc.png")
+    plt.savefig(acc_path)
+    plt.close()
+    print(f"Saved accuracy comparison figure to: {acc_path}")
+
+# ---------------------------
+# 主程序：定义并运行一组实验
+# ---------------------------
+def main():
+    # 定义要跑的实验配置
+    experiments = {
+        # Baseline：无 dropout、无 weight decay、无 early stopping
+        "Baseline": {"dropout_rate": 0.0, "weight_decay": 0.0, "use_early_stopping": False},
+        # L2：只使用 weight_decay（L2 正则）
+        "L2_Regularization": {"dropout_rate": 0.0, "weight_decay": 1e-4, "use_early_stopping": False},
+        # Dropout：使用 dropout（0.5）
+        "Dropout": {"dropout_rate": 0.5, "weight_decay": 0.0, "use_early_stopping": False},
+        # EarlyStopping：使用早停（没有其他显式正则）
+        "EarlyStopping": {"dropout_rate": 0.0, "weight_decay": 0.0, "use_early_stopping": True},
+        # Combined：L2 + Dropout + EarlyStopping
+        "Combined": {"dropout_rate": 0.5, "weight_decay": 1e-4, "use_early_stopping": True},
+    }
+
+    # 存放所有实验的历史记录
+    all_histories = {}
+
+    # 逐个运行实验
+    for name, cfg in experiments.items():
+        print("\n" + "=" * 70)
+        print(f"Starting experiment: {name}")
+        print("=" * 70 + "\n")
+        history = run_experiment(name,
+                                 dropout_rate=cfg["dropout_rate"],
+                                 weight_decay=cfg["weight_decay"],
+                                 use_early_stopping=cfg["use_early_stopping"],
+                                 max_epochs=MAX_EPOCHS)
+        all_histories[name] = history
+
+    # 绘制并保存对比图（train/val loss 与 train/val acc）
+    plot_histories(all_histories, filename_prefix="overfitting_comparison")
+
+    # 打印最终每个实验在测试集上的最终准确率作为摘要
+    print("\n" + "#" * 40)
+    print("Final summary (validation accuracy):")
+    for name, h in all_histories.items():
+        final_val_acc = h["val_acc"][-1]
+        print(f"- {name}: val_acc = {final_val_acc:.4f}")
+    print("#" * 40 + "\n")
+
+if __name__ == "__main__":
+    main()
+
+```
