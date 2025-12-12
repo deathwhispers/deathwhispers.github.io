@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "基于 MybatisPlus 的动态 sql 构建器"
+slug: dynamic-sql-builder-based-on-mybatisplus
 date: 2025-07-26
 tags:
   - MybatisPlus

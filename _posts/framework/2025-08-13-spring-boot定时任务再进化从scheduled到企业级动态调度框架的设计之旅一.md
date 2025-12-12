@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（一）"
+slug: from-scheduled-to-enterprise-level-dynamic-scheduling-framework-design-tour-1
 date: 2025-08-13
 tags:
   - Spring Scheduling
