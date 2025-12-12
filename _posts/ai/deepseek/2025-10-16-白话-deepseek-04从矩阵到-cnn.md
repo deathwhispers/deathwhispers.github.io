@@ -1,10 +1,11 @@
 ---
 layout: post
 title: "白话 DeepSeek 04｜从矩阵到 CNN"
+slug: deepseek-04-from-matrix-to-cnn
 date: 2025-10-16
 tags:
   - DeepSeek
-  - 神经网络
+  - CNN
 categories:
   - DeepSeek
   - 白话 DeepSeek 系列

@@ -1,10 +1,11 @@
 ---
 layout: post
 title: "白话 DeepSeek 06｜简单而强大的 Transformer"
+slug: deepseek-06-simple-and-powerful-transformer
 date: 2025-10-22
 tags:
   - DeepSeek
-  - 神经网络
+  - Transformer
 categories:
   - DeepSeek
   - 白话 DeepSeek 系列

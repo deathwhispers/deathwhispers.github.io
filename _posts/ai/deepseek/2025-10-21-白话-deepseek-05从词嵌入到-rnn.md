@@ -1,10 +1,12 @@
 ---
 layout: post
 title: "白话 DeepSeek 05｜从词嵌入到 RNN"
+slug: deepseek-05-from-word-embedding-to-rnn
 date: 2025-10-21
 tags:
   - DeepSeek
-  - 神经网络
+  - RNN
+  - embedding
 categories:
   - DeepSeek
   - 白话 DeepSeek 系列
