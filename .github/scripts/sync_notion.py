@@ -26,7 +26,8 @@ from dotenv import load_dotenv
 # ================== 全局配置 ==================
 ROOT_DIR = os.environ.get("GITHUB_WORKSPACE", Path(__file__).resolve().parents[2])
 DEFAULT_POSTS_DIR = "_posts"
-DEFAULT_IMAGES_DIR = os.path.join("assets", "images")
+IMAGE_ASSET_PREFIX = os.path.join("assets", "images")  # /assets/images
+FILE_ASSET_PREFIX = os.path.join("assets", "files")  # /assets/files
 
 # ================== 加载本地 .env ==================
 # 1. 判断是否在 GitHub Actions 环境中
@@ -75,7 +76,7 @@ def safe_slugify(text: str) -> str:
     text = "".join(c for c in text if not unicodedata.combining(c))
     text = re.sub(r"[^\w\s\u4e00-\u9fff\-]", " ", text)
     text = re.sub(r"[\s_]+", "-", text)
-    slug = text.strip("-").lower()
+    slug = text.strip("-")
     return slug if slug else "post"
 
 
@@ -103,12 +104,15 @@ def normalize_path(user_path: str | None, default_base: str) -> str:
         return base_abs
 
     p = user_path.strip().lstrip("/").rstrip("/")
+    # 确保没有上级目录穿越
     if ".." in p:
         mkdir_safe(base_abs)
         return base_abs
 
-    if p.startswith(DEFAULT_IMAGES_DIR) or p.startswith(DEFAULT_POSTS_DIR):
+    # 尝试构建绝对路径，如果用户路径以标准目录开头，则直接拼接
+    if p.startswith(IMAGE_ASSET_PREFIX) or p.startswith(DEFAULT_POSTS_DIR):
         abs_path = os.path.join(ROOT_DIR, p)
+    # 否则，相对于 default_base 拼接
     else:
         abs_path = os.path.join(ROOT_DIR, default_base, p)
 
@@ -121,17 +125,16 @@ def normalize_path(user_path: str | None, default_base: str) -> str:
 
 
 # ================== 图片下载 ==================
-def download_image_to_dir(url: str, target_dir: str, slug: str) -> str | None:
+def download_image_to_dir(url: str, target_dir_abs: str) -> str | None:
     """
-    下载图片到指定目录（子目录为 slug），返回绝对路径或 None
+    下载图片到指定绝对目录，返回绝对路径或 None
+    - target_dir_abs 已经是最终的 assets/images/{dir_structure}/{slug} 路径
     - 使用全局缓存避免重复下载
     """
     if url in _download_cache and os.path.exists(_download_cache[url]):
         return _download_cache[url]
 
-    slug_safe = safe_slugify(slug) if slug else "post"
-    target_dir = os.path.join(target_dir, slug_safe)
-    mkdir_safe(target_dir)
+    mkdir_safe(target_dir_abs)
 
     # 提取文件扩展名
     ext = os.path.splitext(url.split("?")[0])[1] or ".png"
@@ -139,18 +142,30 @@ def download_image_to_dir(url: str, target_dir: str, slug: str) -> str | None:
         ext = ".png"
 
     # 生成唯一文件名
+    abs_path = ""
     for _ in range(5):
         filename = uuid.uuid4().hex[:16] + ext
-        abs_path = os.path.join(target_dir, filename)
+        abs_path = os.path.join(target_dir_abs, filename)
         if not os.path.exists(abs_path):
             break
 
-    headers = {}
+    # 添加默认的伪装浏览器头部
+    default_headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        'Referer': 'https://www.bilibili.com/'  # 针对 bilibili 的图片，最好伪造一个 Referer
+    }
+
+    headers = default_headers.copy()
+
+    # 如果是 Notion 托管的图片，添加授权头
     if "notion.so" in url and NOTION_API_KEY and "amazonaws.com" not in url:
         headers["Authorization"] = f"Bearer {NOTION_API_KEY}"
+        # 注意：对于 notion.so 的图片，可能不需要 default_headers 中的 Referer
 
     for attempt in range(1, REQUEST_RETRY + 1):
         try:
+            # 使用合并后的 headers 发送请求
             resp = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT, stream=True)
             resp.raise_for_status()
             with open(abs_path, "wb") as f:
@@ -162,7 +177,6 @@ def download_image_to_dir(url: str, target_dir: str, slug: str) -> str | None:
             print(f"⚠️ Attempt {attempt} failed for {url}: {e}")
             time.sleep(1)
 
-    # 下载失败
     try:
         if os.path.exists(abs_path) and os.path.getsize(abs_path) == 0:
             os.remove(abs_path)
@@ -278,6 +292,7 @@ def _escape_liquid(s: str) -> str:
     """
     return s.replace("{{", "{ {").replace("}}", "} }")
 
+
 def _normalize_equation_for_inline(expr: str) -> str:
     """
     把公式适配为行内形式：
@@ -297,6 +312,7 @@ def _normalize_equation_for_inline(expr: str) -> str:
     if "$" in expr:
         return expr
     return f"${expr}$"
+
 
 def text_from_rich_text(rich_list: list[dict]) -> str:
     """
@@ -462,25 +478,49 @@ def page_to_markdown(page_id: str) -> str:
 
 # ================== Front Matter ==================
 def format_front_matter(fm: dict) -> str:
-    """生成严格的 front matter"""
+    """
+    根据输入字典 (fm) 的键顺序动态生成 front matter，格式化规则基于值类型。
+    fm: 传入的字典，键的顺序即为输出的顺序。
+    """
     lines = ["---"]
-    lines.append(f'layout: {fm.get("layout", "post")}')
-    lines.append(f'title: "{fm.get("title", "")}"')
-    lines.append(f'date: {fm.get("date", "")}')
 
-    for key in ["tags", "categories"]:
-        vals = fm.get(key, [])
-        if isinstance(vals, str):
-            vals = [vals] if vals else []
-        lines.append(f"{key}:")
-        if vals:
-            lines.extend([f"  - {v}" for v in vals])
+    # 定义特殊字段的默认值（仅用于值为 None 或空字符串时填充）
+    default_values = {
+        "layout": "post",
+        "author": "deathwhispers"
+    }
+
+    # 遍历输入的字典，使用其顺序
+    for key, val in fm.items():
+        if val is None:
+            val = default_values.get(key)
+        if val is None or (isinstance(val, str) and val.strip() == ""):
+            continue
+        if isinstance(val, (list, tuple)):
+            vals = val
+            lines.append(f"{key}:")
+            if vals:
+                for v in vals:
+                    # 列表元素如果包含空格或特殊字符，最好用引号包裹
+                    if isinstance(v, str) and (' ' in v or ':' in v):
+                        lines.append(f"  - \"{v}\"")
+                    else:
+                        lines.append(f"  - {v}")
+            else:
+                lines.append("  []")
+        # 布尔值处理 (Boolean)
+        elif isinstance(val, bool):
+            # YAML 约定布尔值应小写
+            lines.append(f"{key}: {str(val).lower()}")
+
+        # 字符串/数字/日期处理 (String, Number, Date)
         else:
-            lines.append("  []")
+            output_val = val
 
-    for key in ["comments", "math", "mermaid"]:
-        lines.append(f"{key}: {str(fm.get(key, True)).lower()}")
-    lines.append(f'author: {fm.get("author", "unknown")}')
+            # 对于字符串值，如果包含空格或 YAML 特殊字符 (如:冒号)，最好用双引号包裹
+            if isinstance(val, str) and (' ' in val or ':' in val):
+                output_val = f'"{val}"'
+            lines.append(f"{key}: {output_val}")
     lines.append("---\n")
     return "\n".join(lines)
 
@@ -509,20 +549,49 @@ def save_page_markdown(page: dict) -> str:
         print(f"⚪ Skipped (Draft): {title}")
         return ""
 
-    image_dir_field = get_property_with_aliases(page, ["ImageDir", "Image Dir", "图片目录"], default=None)
-    image_dir_abs = normalize_path(image_dir_field, DEFAULT_IMAGES_DIR)
-    post_image_dir = os.path.join(image_dir_abs, slug)
-
+    # 1. 获取文章保存的绝对目录
     save_dir_field = get_property_with_aliases(page, ["SaveDir", "保存目录", "Save Dir"], default=None)
     save_dir_abs = normalize_path(save_dir_field, DEFAULT_POSTS_DIR)
     mkdir_safe(save_dir_abs)
-    file_path = os.path.join(save_dir_abs, f"{date}-{slug}.md")
 
+    # 2. 提取文章目录结构 (例如 'ai/deepseek')
+    # a. 获取 save_dir_abs 相对于 ROOT_DIR 的相对路径
+    save_dir_rel = os.path.relpath(save_dir_abs, ROOT_DIR).replace("\\", "/")
+    # b. 移除默认的 _posts/ 前缀（如果存在）
+    posts_prefix = DEFAULT_POSTS_DIR.replace("\\", "/") + "/"
+    if save_dir_rel.startswith(posts_prefix):
+        # 提取出用户定义的目录部分（例如 'ai/deepseek'）
+        article_dir_structure = save_dir_rel[len(posts_prefix):].rstrip("/")
+    else:
+        # 如果 save_dir_rel 不是以 _posts 开头 (非常规情况)，则用空字符串
+        article_dir_structure = ""
+
+    # 3. 构造标准化图片目录路径
+    # 路径结构: ROOT_DIR / assets/images / {article_dir_structure} / {slug}
+    # 确保使用 / 分隔符，以便在路径拼接时与 os.path.join 配合
+    image_base_abs = os.path.join(ROOT_DIR, IMAGE_ASSET_PREFIX)
+    # post_image_dir 是图片的最终绝对路径
+    post_image_dir = os.path.join(image_base_abs, article_dir_structure, slug)
+
+    # 文件名使用 date-title 格式 (根据您上一个请求的修改)
+    file_title_safe = safe_slugify(title)
+    file_path = os.path.join(save_dir_abs, f"{date}-{file_title_safe}.md")
+
+    # Republish 逻辑
     if status == "Republish":
-        print(f"⚪ Update (Republish): {get_property_with_aliases(page, ['Title', '标题'], 'Untitled')}")
+        print(f"⚪ Update (Republish): {title}")
+
+        # 尝试删除旧文件（date-slug 和 date-title 两种格式）
+        old_slug_file_path = os.path.join(save_dir_abs, f"{date}-{slug}.md")
+
         if os.path.exists(file_path):
             os.remove(file_path)
-            print(f"🗑 Deleted old file: {file_path}")
+            print(f"🗑 Deleted existing file: {file_path}")
+        if os.path.exists(old_slug_file_path) and old_slug_file_path != file_path:
+            os.remove(old_slug_file_path)
+            print(f"🗑 Deleted old slug-based file: {old_slug_file_path}")
+
+        # 删除旧图片目录
         if os.path.exists(post_image_dir):
             shutil.rmtree(post_image_dir)
             print(f"🗑 Deleted old images: {post_image_dir}")
@@ -534,27 +603,19 @@ def save_page_markdown(page: dict) -> str:
     page_id = page.get("id")
     md_content = page_to_markdown(page_id)
 
-    tags = get_property_with_aliases(page, ["Tags", "标签"], default=[])
-    categories = get_property_with_aliases(page, ["Categories", "Category", "分类"], default=[])
-    author = get_property_with_aliases(page, ["Author", "作者"], default="unknown")
-    comments = get_property_with_aliases(page, ["Comments", "comments"], default=True)
-    math = get_property_with_aliases(page, ["Math", "math"], default=True)
-    mermaid = get_property_with_aliases(page, ["Mermaid", "mermaid"], default=True)
-
     fm = {
         "layout": "post",
         "title": title,
+        "slug": slug,
+        "status": status,
         "date": date,
-        "tags": tags,
-        "categories": categories,
-        "comments": comments,
-        "math": math,
-        "mermaid": mermaid,
-        "author": author
+        "tags": get_property_with_aliases(page, ["Tags", "标签"], default=[]),
+        "categories": get_property_with_aliases(page, ["Categories", "Category", "分类"], default=[]),
+        "author": get_property_with_aliases(page, ["Author", "作者"], default="unknown")
     }
     new_content = format_front_matter(fm) + "\n" + md_content
 
-    # 图片处理
+    # 图片处理逻辑 - 下载到新的标准化路径
     image_urls = re.findall(r'!\[.*?\]\((https?://[^\)\s]+)\)', md_content)
     if image_urls:
         mkdir_safe(post_image_dir)
@@ -563,8 +624,12 @@ def save_page_markdown(page: dict) -> str:
             url = match.group(1)
             if not url or url.startswith("data:"):
                 return match.group(0)
-            local_path = download_image_to_dir(url, image_dir_abs, slug)
+
+            # download_image_to_dir 使用 post_image_dir (已包含 article_dir_structure)
+            local_path = download_image_to_dir(url, post_image_dir)
+
             if local_path:
+                # 构造相对路径：/assets/images/{article_dir_structure}/{slug}/filename.ext
                 rel = os.path.relpath(local_path, ROOT_DIR).replace("\\", "/")
                 return f"![](/" + rel + ")"
             return match.group(0)
