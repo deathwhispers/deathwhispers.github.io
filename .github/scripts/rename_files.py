@@ -12,7 +12,7 @@ import yaml
 # ==========================================
 
 # 1. 默认扫描的目录路径 (可以是相对路径或绝对路径)
-DEFAULT_DIR = Path("_posts/")
+DEFAULT_DIR = Path("../../_posts/")
 
 # 2. 是否真正执行重命名？
 DEFAULT_APPLY = False  # 默认安全模式 (False = 仅预览 / True = 实际修改文件)
