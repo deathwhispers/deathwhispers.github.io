@@ -232,7 +232,7 @@ nginx网络服务器将继续在该端口上的容器中运行，直到您停止
 
 为此，请搜索PowerShell，右键单击，然后选择以管理员身份运行。
 
-![](/assets/images/learning/docker/docker-for-windows-intro/1698206032072-cbdc971e-bd66-42fe-8cc1-655d8ba85195.png)
+![](../../../assets/images/learning/docker/docker-for-windows-intro/e836527f710a6ebf22547e600178e9db.png)
 
 当系统询问您是否允许此应用更改您的设备时，单击是。
 

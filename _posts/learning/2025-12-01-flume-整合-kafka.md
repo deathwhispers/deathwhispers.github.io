@@ -4,15 +4,15 @@ title: Flume 整合 Kafka
 slug: flume-integrate-kafka
 type:
   - note
-date: 2025-12-01
+date: 2021-12-01
 week: 2025-W48
 status: draft
 tags:
   - Flume
   - Kafka
 author: deathwhispers
-created: 2025-12-01 10:00
-updated: 2025-12-01 10:00
+created: 2021-12-01 10:00
+updated: 2021-12-01 10:00
 ---
 ## 一、背景
 

@@ -19,7 +19,7 @@ updated: 2023-11-01 22:08
 
 # CDC介绍
 
-![953aa7f22bd8ee7f9db7b6501c7bbf7e](/assets/images/learning/database/sql-server-cdc-data-migration-and-extraction-features-introduction/953aa7f22bd8ee7f9db7b6501c7bbf7e.png)
+![953aa7f22bd8ee7f9db7b6501c7bbf7e](../../../assets/images/learning/database/sql-server-cdc-data-migration-and-extraction-features-introduction/953aa7f22bd8ee7f9db7b6501c7bbf7e.png)
 
 为了满足数据迁移和数据抽取的业务需要，使得有机会在数据库层面上直接实现增量抽取功能，ORACLE综合性能和场景需要，在数据库引擎层面直接集成了CDC功能，由于提供了类似API的功能接口，变更数据捕获和更改跟踪均不要求在源中进行任何架构更改或使用触发器，所以比第三方工具具有一定的优势。利用CDC捕获变更有以下特点：
 
@@ -35,7 +35,7 @@ updated: 2023-11-01 22:08
 2. 不能同时使用内存优化表（SQL Server2014或以上版本才有的功能）。否则会出现以下错误：
 ```
 
-![6f244bebf6be3082d786071db0455d44](/assets/images/learning/database/sql-server-cdc-data-migration-and-extraction-features-introduction/6f244bebf6be3082d786071db0455d44.png)
+![6f244bebf6be3082d786071db0455d44](../../../assets/images/learning/database/sql-server-cdc-data-migration-and-extraction-features-introduction/6f244bebf6be3082d786071db0455d44.png)
 
 5. @SERVERNAME、serverproperty(‘servername’)两者（本地服务器名和服务器实例的属性必须一致）必须一致。下面脚本可将两者调整成一致。如果执行后两者仍不一致，需要重启SQL Server服务。
 

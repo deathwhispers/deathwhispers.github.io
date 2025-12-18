@@ -7,7 +7,7 @@ tags:
 ---
 ## 一、局部特征聚合模块
 
-![](/assets/images/personal/masterlearn/科研修炼手册/点云语义分割randla-net解读/1699275142573-20ea69b6-b9c5-447d-91e7-fb2bba6795b3.png)
+![](../../../../assets/images/personal/masterlearn/科研修炼手册/点云语义分割randla-net解读/5ae6b199026a0fd53a0a6f1134462256.png)
 
 ### 1.1、局部空间编码(Local Spatial Encoding)
 

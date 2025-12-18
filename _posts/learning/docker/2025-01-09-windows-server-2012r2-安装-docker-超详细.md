@@ -32,37 +32,37 @@ updated: 2025-01-09 11:48
 
 前提：Docker 在 window 上需要你的 Cpu 支持虚拟化，怎么查看是否支持或者打开？打开任务管理器，选择性能就可以查看，如图
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206043406-f8d5cb5b-f754-49a0-b046-1ced8e9da4ff.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/b4e13f32d50cb2cf3dd4d8401f3f47f6.png)
 
 支持虚拟化
 
 ### 安装 Docker Toolbox
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206043508-48cbe0a0-5703-4d2d-90c2-a01884221d87.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/4924e28c581f9c990977f28634db2cc9.png)
 
 默认选择下一步
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206043601-8fa3144d-0120-4415-9ecb-3db09c2d134c.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/40b29e9dfd482b7c10534d65b3c03ac5.png)
 
 默认选择下一步
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206043686-936ff43f-c191-4282-97e9-3c77dc86c182.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/ebf18f90a2cb9146bba537ee191d9f4c.png)
 
 默认选择下一步
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206043771-d0f4fd7f-d46f-429e-8c55-f364d8c56968.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/d507b6989441b7a12af33ff17291a5db.png)
 
 在这里需要选择最下面一个打上勾，因为有可能会装不上
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206043843-f8ed5216-5669-44ca-9900-7f8ef72d8713.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/ede4d288707a673bfa9b4be14097cfeb.png)
 
 默认点击安装
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206043925-5495e408-21cf-4e29-afac-771c2b6a7000.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/0f8e4196ce8d7633c6258d4e421f001e.png)
 
 安装完成
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206044011-b42ea8ba-61ae-4778-b4eb-ff412868eacf.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/fc4df424345b61ac658dcd6f7a5735c4.png)
 
 此刻桌面有三个图标
 
@@ -70,25 +70,25 @@ updated: 2025-01-09 11:48
 
 然后就显示了 error one 的错误，查看下面的错误列表，解决后继续打开。后面有可能会出现error two 的错误在次打开就继续等待安装好
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206044089-a2bbf25c-b5d6-4039-a1d0-2956f30f7c73.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/2138e39fae6f5c9c2a70e7c45abdbaad.png)
 
 安装完成，与官网一致
 
 测试一下，打开 cmd，输入 docker -v
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206044292-f56b7ef3-7d0f-4ae2-ad23-455c3ed0606a.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/917260f17b75d1d5f50d351b244e26ee.png)
 
 版本显示出来了，成功
 
 在测试一下镜像，运行 hello-world
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206044379-b88990a5-fb44-44b5-a27a-770493629091.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/e363cc4c9f6f929661039014584ec081.png)
 
 运行 hello-world 镜像成功
 
 ### error One：
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206044474-c00fb76c-4f52-493f-a346-c6956d4d5ebc.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/5cf894584f5076aa87a2693d551a5edc.png)
 
 错误显示虚拟化没有打开
 
@@ -98,13 +98,13 @@ updated: 2025-01-09 11:48
 
 ### 解决方案
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206044552-808d2688-bcf6-4b90-9328-3d8474ec6e48.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/6bf284d821a492cc8d1768d52e347cc6.png)
 
 image.png
 
 ### error Two：
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206044655-f952e84c-150c-4662-9931-7429e7491606.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/b0e2973b016ab333a337ef93387c7b68.png)
 
 image.png
 
@@ -116,11 +116,11 @@ image.png
 
 也可以在文章开头下载，会快很多。打开下面的路径：
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206044732-88f597c0-7218-49f2-80a1-54e4fba97e9c.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/14eaa02115808e50712ee5a31aaad3b2.png)
 
 找到这个路径
 
-![](/assets/images/learning/docker/windows-server-2012r2-docker-install/1698206044805-86154e7b-c314-4e4f-b60f-5f92dd9e5567.png)
+![](../../../assets/images/learning/docker/windows-server-2012r2-docker-install/262f2599b75d0e535c2fa4765599fdfa.png)
 
 复制进去
 

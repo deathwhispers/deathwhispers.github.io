@@ -4,15 +4,17 @@ title: Linux 下 Flume 的安装
 slug: flume-installation-on-linux
 type:
   - note
-date: 2025-12-01
+date: 2025-11-15
 week: 2025-W48
 status: draft
 tags:
   - Flume
 author: deathwhispers
-created: 2025-12-01 10:00
-updated: 2025-12-01 10:00
+created: 2025-11-15 10:00
+updated: 2025-11-15 10:00
 ---
+
+
 ## 一、前置条件
 
 Flume 需要依赖 JDK 1.8+，JDK 安装方式见本仓库：

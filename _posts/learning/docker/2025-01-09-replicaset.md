@@ -78,7 +78,7 @@ ReplicaSet也可以作为 [Horizontal Pod Autoscalers (HPA)](https://kubernetes.
 
 [hpa-rs.yaml](https://raw.githubusercontent.com/kubernetes/kubernetes.github.io/master/docs/concepts/workloads/controllers/hpa-rs.yaml)
 
-![](/assets/images/learning/docker/replicaset/copycode.svg)
+![](../../../assets/images/learning/docker/replicaset/b6d54e217130858448902546cff85028.svg)
 
 ```yaml
 apiVersion: autoscaling/v1kind: HorizontalPodAutoscalermetadata:  name: frontend-scalerspec:  scaleTargetRef:    kind: ReplicaSet    name: frontend  minReplicas: 3  maxReplicas: 10  targetCPUUtilizationPercentage: 50

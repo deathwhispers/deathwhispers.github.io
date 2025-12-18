@@ -28,7 +28,7 @@ Optional的所有方法如下图所示,这些API大致可以分为4类:
 3. 转换API: 将Optional对象里包装的值转换成一个新的值; 如: map(), flatMap();
 4. 判断API: 对Optional对象里包装的值做一些判断; 如: filter(), isPresent(), ifPresent();
 
-![](/assets/images/learning/java/java8-optional-usage-details/22ccb2122c4b77503ab6f605a9bf3291.png)
+![](../../../assets/images/learning/java/java8-optional-usage-details/22ccb2122c4b77503ab6f605a9bf3291.png)
 
 API使用方法
 

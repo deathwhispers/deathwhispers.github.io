@@ -25,7 +25,7 @@ HTTP 协议作为应用层协议，构建于 TCP/IP 或 UDP 等传输层协议�
 
 **Keep-Alive** 机制通过减少 TCP 连接的建立次数，降低了 `TIME_WAIT` 状态的连接数量，从而提高了服务器的性能和吞吐量（更少的 TCP 连接意味着更少的系统内核调用，如 `accept()` 和 `close()`）。
 
-![短链接与长连接示意图](/assets/images/iot/connection-reuse-strategy-connection-keep-alive-strategy/1698038930834-6e0244e9-e865-4d1a-867c-0d11f9c0e006.png)
+![短链接与长连接示意图](../../assets/images/iot/connection-reuse-strategy-connection-keep-alive-strategy/f81458d0dd71b2290169688479fda320.png)
 
 #### 连接管理
 

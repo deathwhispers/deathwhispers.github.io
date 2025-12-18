@@ -29,9 +29,9 @@ macOS 的 DPI 机制和 Windows 下不一样，比如 1080p 的屏幕在 Windows
 
 设置：
 
-![](/assets/images/macos-one-key-hidpi/e61c6275bc5a4630.png)
+![](../assets/images/macos-one-key-hidpi/efd61c0f182d4d25c33e9bd0671c760b.png)
 
-![](/assets/images/macos-one-key-hidpi/589a8fd65a894998.png)
+![](../assets/images/macos-one-key-hidpi/477ad12cdc643637f7cde1c851a2711a.png)
 
 ## 使用方法
 
@@ -43,7 +43,7 @@ bash -c "$(curl -fsSL <https://raw.githubusercontent.com/xzhih/one-key-hidpi/mas
 
 2.本地模式: 下载项目解压,双击 `hidpi.command` 运行
 
-![](/assets/images/macos-one-key-hidpi/c582b669d0cf4f05.png)
+![](../assets/images/macos-one-key-hidpi/a2553a5fb21d98c37f67a53234537d3f.png)
 
 ## 恢复
 

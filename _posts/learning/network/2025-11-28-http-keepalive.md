@@ -26,7 +26,7 @@ updated: 2025-11-28 09:57
 
 http请求示意图:
 
-![](/assets/images/learning/network/http-keepalive/8cf9825323be5b736b1e84f9ab89fa2d.png)
+![](../../../assets/images/learning/network/http-keepalive/8cf9825323be5b736b1e84f9ab89fa2d.png)
 
 场景一
 
@@ -49,13 +49,13 @@ Thread.sleep(10000);
 
 - 4.使用wireshark抓包
 
-![](/assets/images/learning/network/http-keepalive/3b81ec7ad17f47c8e8b1ce06bd5195fe.png)
+![](../../../assets/images/learning/network/http-keepalive/3b81ec7ad17f47c8e8b1ce06bd5195fe.png)
 
 ```plain text
 从图中可以看到：第一次请求的端口是64360，并且在5秒之后，由服务端主动发送fin包关闭连接。而第二次请求显然已经不能复用连接了，使用的新的端口64361重新连接服务器，后续的行为基本和第一次请求一样。
 ```
 
-![](/assets/images/learning/network/http-keepalive/382e083a1b3e847cfbfb4fe05924266b.png)
+![](../../../assets/images/learning/network/http-keepalive/382e083a1b3e847cfbfb4fe05924266b.png)
 
 ```plain text
 请求中带有keepalive头，HTTP1.1之后默认都是开启keepalive，即使是不带keepalive参数。后面将通过close头关闭keepalive看看效果。
@@ -63,7 +63,7 @@ Thread.sleep(10000);
 
 - 5.查看本地的端口状态
 
-![](/assets/images/learning/network/http-keepalive/af616d95233b83f763c2ad0df51953cc.png)
+![](../../../assets/images/learning/network/http-keepalive/af616d95233b83f763c2ad0df51953cc.png)
 
 ```plain text
 可以看到服务端8080端口进入了FIN_WAIT_2状态，参照文中刚开始的第一张图，这显然是主动关闭方才会有的状态，同样64360进入了CLOSE_WAIT状态，说明client端是被动关闭的。
@@ -79,7 +79,7 @@ httpGet.addHeader(“Connection”, “Close”);
 
 2.wireshark抓包
 
-![](/assets/images/learning/network/http-keepalive/9799c440611fe63e33ca72d2eb044fe8.png)
+![](../../../assets/images/learning/network/http-keepalive/9799c440611fe63e33ca72d2eb044fe8.png)
 
 可以看到，主动关闭方还是服务器端，并且立刻关闭，并没有等待keepalive时间到达。
 
@@ -91,7 +91,7 @@ response.setHeader(“Connection”, “Close”);
 
 2.wireshark抓包
 
-![](/assets/images/learning/network/http-keepalive/24ca0fb465f5a8510af4299a062383ce.png)
+![](../../../assets/images/learning/network/http-keepalive/24ca0fb465f5a8510af4299a062383ce.png)
 
 从图中看出，主动关闭方是客户端。如果客户端不是httpclient，是telnet，客户端会主动关闭？后面实验一下。
 

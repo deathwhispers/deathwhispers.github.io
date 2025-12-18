@@ -26,7 +26,7 @@ http1.0默认为短链接,http1.1版本支持keep-alive,可以维持长连接(�
 
 webSocket 是一个新的协议, 跟HTTP协议基本没有关系，只是为了兼容现有浏览器的握手规范而已，也就是说它是HTTP协议上的一种补充可以通过这样一张图理解
 
-![](/assets/images/learning/network/websocket-principle/03d1acb85b923fa93eb3d5cb72fe092d.png)
+![](../../../assets/images/learning/network/websocket-principle/03d1acb85b923fa93eb3d5cb72fe092d.png)
 
 有交集，但是并不是全部。
 

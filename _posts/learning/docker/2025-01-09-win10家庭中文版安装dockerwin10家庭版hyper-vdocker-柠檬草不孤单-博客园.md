@@ -55,7 +55,7 @@ c.必须在BIOS设置中启用BIOS级硬件虚拟化支持。
 
 1.Docker软件：Docker Desktop Stable 2.3.0.22.Win10 64位3.已开启虚拟化Ctrl+Alt+Delete打开任务管理器，性能窗口可以查看虚拟化已开启，如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206038158-7722ee48-317c-4fb5-867e-ab2220bced03.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/45ce9edada14d5dab856f6a3d4809a58.png)
 
 ### 三，更新Windows系统
 
@@ -63,13 +63,13 @@ c.必须在BIOS设置中启用BIOS级硬件虚拟化支持。
 
 Windows徽标键+R，弹出运行窗口，键入winver，点击“确定”，查看系统当前版本，如图:
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206038635-32ce73cd-6c24-4476-bc19-0b71937f614e.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/ce41b0a3e2ebd3f915df4e6c8ca6d8f8.png)
 
 ### 3.2 更新系统版本至2004
 
 当前版本为1909，点击【开始菜单】->【设置】->【Windows更新】，检测更新，选择立即更新，更新至2004版本。更新完毕，再次查看系统版本，确认是版本2004，如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206038727-17689458-f8d7-43d5-89e6-b37b30f9e95f.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/d806d0ddc1d33ad403e529e066a9f643.png)
 
 ### 四，启用Hyper-v
 
@@ -77,7 +77,7 @@ Win10家庭中文版无Hyper-v，可以通过以下方式添加：
 
 1.桌面新建一个Hyper-V.bat文件。
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206038809-3ddf7015-2ef3-4bb8-ad74-af6a77a48a87.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/65e86a4af3925715455990393b9c2ab5.png)
 
 2.将以下内容拷贝到文件中，如下：
 
@@ -95,15 +95,15 @@ Dism /online /enable-feature /featurename:Microsoft-Hyper-V-All /LimitAccess /AL
 
 3.鼠标右键选中“以管理员身份运行”，窗口运行执行代码，直到运行结束，显示提示是否重启，输入Y，重启电脑，如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206038898-7d8b2d98-9512-477e-b536-563f61d67777.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/ed64a10e09b8e90480aa501a48c8014f.png)
 
 4.重启完毕，打开控制面板控->程序->程序和功能,点击“启用和关闭Windows功能”，弹出窗口，可看到Hyper-V已添加，如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206038980-46301ba8-640c-44e4-af6a-29e38dfd8286.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/dd49325b05bca370bd47289e975d7928.png)
 
 5.另外也可以以管理员身份运行cmd，输入systeminfo，若显示截图标红字段，表示Hyper-v已启用，如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039057-20fbfb8a-20a3-47f4-91a7-37de9f0a6691.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/891644793dbab7aaf252e2666815457c.png)
 
 ### 五，下载Docker Desktop Installer
 
@@ -111,21 +111,21 @@ Dism /online /enable-feature /featurename:Microsoft-Hyper-V-All /LimitAccess /AL
 
 点击“Get Docker Desktop for Windows(Stable）”，下载保存到本地，如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039154-53c72c13-1e44-4b53-938b-97212d94816a.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/8910a841851943d96a311ea7812f2461.png)
 
 ### 六，安装Docker Desktop Installer
 
 本地选中软件Docker Desktop Installer，右键安装，进入安装首页，取消勾选“Enable WSL 2 Windows Features”，点击【ok】,如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039230-b3b1969f-17e8-4ae1-920f-699097c37228.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/70b21ed3c3d3096ba2cc4adc0aa602aa.png)
 
 安装完成，点击【Close and log out】，注销账户，如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039307-7d215613-f2b9-4022-9a08-135918c9504d.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/f049da8701d3b3ee9216e6747a4582fd.png)
 
 重新登录系统，可以看到桌面多了一个Docker Desktop的鲸鱼图标,如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039391-5556de64-e171-4064-82a6-01355d1a49aa.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/1b127cbaf249c6a4d6687868c3ce685b.png)
 
 ### 七，修改注册表伪装成Win10专业版
 
@@ -141,11 +141,11 @@ WIN10安装Docker有两种方案，Win10专业版+Hyper-V+Containers Windows+Doc
 REG ADD "HKEY_LOCAL_MACHINE\software\Microsoft\Windows NT\CurrentVersion" /v EditionId /T REG_EXPAND_SZ /d Professional /F
 ```
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039481-ba57d910-425e-4553-a485-a3f8ca01c64c.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/17280a50acd470c69d1e8a7dc19fff2d.png)
 
 执行完毕，运行窗口输入”regedit”,打开注册表，定位到HKEY_LOCAL_MACHINENT，点击current version，在右侧找到EditionId，查看其已经更新为Professional。
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039553-3760f35b-164d-4637-bd73-7b1fd4bd39ce.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/cafcbd406dc772dd2811fd9761e41997.png)
 
 **需要注意的一点是，这种方式修改注册表，在下次重启之后不会自动还原。**
 
@@ -153,7 +153,7 @@ REG ADD "HKEY_LOCAL_MACHINE\software\Microsoft\Windows NT\CurrentVersion" /v Edi
 
 直接在注册表修改，运行窗口输入”regedit”,打开注册表，定位到HKEY_LOCAL_MACHINENT，点击current version，在右侧找到EditionId，如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039625-a32895dd-dfdb-4744-af07-3026fcb0c5a7.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/a482c9a20ea85f56ea7554a77118223f.png)
 
 右键点击EditionId 选择“修改“，在弹出的对话框中将第二项”数值数据”的内容改为Professional，点击确定。
 
@@ -173,7 +173,7 @@ Enable-WindowsOptionalFeature -Online -FeatureName $("VirtualMachinePlatform", "
 
 如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039695-0f9cce5e-9d86-45d9-8e28-e0c6c6c33ab7.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/9eea9dbaa7b3c124e906267ee7368f68.png)
 
 ### 八，运行Docker
 
@@ -183,11 +183,11 @@ Enable-WindowsOptionalFeature -Online -FeatureName $("VirtualMachinePlatform", "
 
 1.桌面选中Docker Desktop的鲸鱼图标，右键选择以管理员身份运行，系统托盘新增一个鲸鱼的小图标，点击后展示菜单，选择“About Docker Desktop”,可查看Docker版本，如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039778-5d9e76e5-318a-4813-baa6-432f9f92355d.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/d03f3d8a556763f52ad8197fb8ec7658.png)
 
 版本信息，如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039873-6f55be21-9c71-426b-8cee-d9b83851e302.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/1e7ec456d17826e6041cd31a79206da1.png)
 
 2.启动Docker Desktop，以管理员身份打开Windows PowerShell,运行输入命令
 
@@ -199,7 +199,7 @@ Enable-WindowsOptionalFeature -Online -FeatureName $("VirtualMachinePlatform", "
 
 如图：
 
-![](/assets/images/learning/docker/win10-home-docker-install/1698206039973-08736eb3-5489-485c-ac5d-54a601fc2a97.png)
+![](../../../assets/images/learning/docker/win10-home-docker-install/7912cdb00b27b117a8e650e2eeb7795a.png)
 
 备注：第一次输入ps时报错“Error response from daemon: open ._engine_linux: The system cannot find the file specified.”，输入命令即可：
 

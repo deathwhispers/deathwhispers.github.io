@@ -38,9 +38,9 @@ Docker Desktop for Windows 是 Docker 公司为 Windows 用户提供的官方产
 3.  点击 **“启用或关闭 Windows 功能”**。
 4.  在弹出的窗口中，确保勾选 **`Hyper-V`** 和 **`容器`** 复选框，然后点击 **“确定”**。
 
-    ![启用 Hyper-V 和容器功能](/assets/images/learning/docker/windows-docker-install-tutorial/1698206041757-06217096-ddac-4b6b-a3d9-25c20eefd1db.gif)
+    ![启用 Hyper-V 和容器功能](../../../assets/images/learning/docker/windows-docker-install-tutorial/5c67f5f2f7c951d93fd133ed32954b8b.gif)
 
-    ![功能安装过程](/assets/images/learning/docker/windows-docker-install-tutorial/1698206041833-a328c270-8b21-4e96-a2e9-f06778904d22.gif)
+    ![功能安装过程](../../../assets/images/learning/docker/windows-docker-install-tutorial/2b7e58639b9b1fb4af410d6972af51fe.gif)
 
 > [!NOTE]
 > “容器”功能仅在 Windows 10 Anniversary Update (Build 14393) 及以上版本中可用。完成此步骤后，系统会提示您重启计算机，请务必重启以使设置生效。
@@ -103,7 +103,7 @@ C:\Program Files\Docker\Docker\resources> .\SwitchDaemon.ps1 -Windows
 
 如果此时没有开启 Windows 容器特性，系统会给出提示。
 
-![切换容器提示](/assets/images/learning/docker/windows-docker-install-tutorial/1698206041911-d026cebc-cb2a-4667-8464-29b753f4be77.gif)
+![切换容器提示](../../../assets/images/learning/docker/windows-docker-install-tutorial/7d552b1cab891ce02a42d0870cbab377.gif)
 
 切换成功后，再次运行 `docker version`，您会看到 `Server` 的 `OS/Arch` 变成了 `windows/amd64`。
 
