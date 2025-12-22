@@ -37,7 +37,7 @@ def slugify(text: str) -> str:
     # 保留字母、数字、中文、空格、连字符，其余替换为空
     text = re.sub(r'[^\w\s\-]', '', text)
     # 将连续空白或连字符转为单个 '-'
-    text = re.sub(r'[\s\-]+', '-', text)
+    # text = re.sub(r'[\s\-]+', '-', text)
     return text.strip('-')
 
 
