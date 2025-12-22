@@ -4,14 +4,14 @@ title: Master-Worker模式
 slug: master-worker-pattern
 type:
   - note
-date: 2025-12-01
-week: 2025-W48
+date: 2021-04-11
+week: 2021-W19
 status: draft
 tags:
   - 系统设计
 author: deathwhispers
-created: 2025-12-01 10:00
-updated: 2025-12-01 10:00
+created: 2021-04-11 10:00
+updated: 2021-04-11 10:00
 ---
 
 
