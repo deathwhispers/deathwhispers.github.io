@@ -69,15 +69,16 @@ _download_cache: dict[str, str] = {}
 
 # ================== 工具函数 ==================
 def safe_slugify(text: str) -> str:
-    """生成 URL/文件安全 slug，保留中文、字母、数字，其余字符替换为 '-'"""
+    """将标题转换为 URL/文件名友好的 slug"""
     if not text:
         return "untitled"
-    text = unicodedata.normalize("NFD", text)
-    text = "".join(c for c in text if not unicodedata.combining(c))
-    text = re.sub(r"[^\w\s\u4e00-\u9fff\-]", " ", text)
-    text = re.sub(r"[\s_]+", "-", text)
-    slug = text.strip("-")
-    return slug if slug else "post"
+    text = str(text).strip()
+    # 保留字母、数字、中文、空格、连字符，其余替换为空
+    text = re.sub(r'[^\w\s\-]', '', text)
+    # 将连续空白或连字符转为单个 '-'
+    # text = re.sub(r'[\s\-]+', '-', text)
+    return text.strip('-')
+
 
 
 def mkdir_safe(abs_path: str):
