@@ -4,15 +4,17 @@ title: Spring事务-@Transactional使用
 slug: spring-transactional-usage
 type:
   - note
-date: 2025-12-01
-week: 2025-W48
+date: 2017-12-01
+week: 2017-W48
 status: draft
 tags:
   - 事务
 author: deathwhispers
-created: 2025-12-01 10:00
-updated: 2025-12-01 10:00
+created: 2017-12-01 10:00
+updated: 2017-12-01 10:00
 ---
+
+
 事务是指逻辑上的一组操作,组成这组操作的各个单元,要么全部成功,要么全部失败
 
 事务的基本要素

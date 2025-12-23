@@ -4,16 +4,18 @@ title: Spring与ehcache整合
 slug: spring-ehcache-integration
 type:
   - note
-date: 2025-12-01
-week: 2025-W48
+date: 2020-06-06
+week: 2020-W23
 status: draft
 tags:
   - Spring
   - ehcache
 author: deathwhispers
-created: 2025-12-01 10:00
-updated: 2025-12-01 10:00
+created: 2020-06-06 10:00
+updated: 2020-06-06 10:00
 ---
+
+
 1.添加依赖：
 
 ```xml

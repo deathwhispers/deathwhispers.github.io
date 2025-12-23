@@ -4,16 +4,19 @@ title: Spring中BeanFactory和FactoryBean有何区别
 slug: spring-beanfactory-factorybean-difference
 type:
   - note
-date: 2025-12-01
-week: 2025-W48
+date: 2020-03-23
+week: 2020-W13
 status: draft
 tags:
   - BeanFactory
   - FactoryBean
 author: deathwhispers
-created: 2025-12-01 10:00
-updated: 2025-12-01 10:00
+created: 2020-03-23 10:00
+updated: 2020-03-23 10:00
 ---
+
+
+
 其实从名字上就能看出来个一二
 
 - BeanFactory 是 Factory

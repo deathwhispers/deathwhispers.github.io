@@ -4,16 +4,18 @@ title: Spring IOC容器
 slug: spring-ioc-container
 type:
   - note
-date: 2025-12-01
-week: 2025-W48
+date: 2019-03-15
+week: 2019-W12
 status: draft
 tags:
   - Spring
   - IOC
 author: deathwhispers
-created: 2025-01-09 11:43
-updated: 2025-03-12 18:37
+created: 2019-03-15 10:00
+updated: 2019-03-15 10:00
 ---
+
+
 Spring实现IOC的多种方式
 
 原文地址：

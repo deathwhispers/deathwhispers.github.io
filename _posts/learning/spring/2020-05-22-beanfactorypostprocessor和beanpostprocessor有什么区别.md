@@ -5,14 +5,15 @@ slug: beanfactorypostprocessor-and-beanpostprocessor-difference
 type:
   - note
 date: 2020-05-22
+week: 2020-W21
 status: draft
 tags:
   - Spring 框架
 mood:
 weather:
 author: deathwhispers
-created: 2025-01-09 11:45
-updated: 2025-03-12 18:26
+created: 2020-05-22 10:00
+updated: 2020-05-22 10:00
 ---
 1. 区别
 

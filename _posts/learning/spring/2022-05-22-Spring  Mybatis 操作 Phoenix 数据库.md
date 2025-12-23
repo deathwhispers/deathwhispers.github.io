@@ -4,7 +4,8 @@ title: Spring + Mybatis 操作 Phoenix 数据库
 slug: spring-mybatis-phoenix
 type:
   - note
-date: 2020-05-22
+date: 2022-05-22
+week: 2022-W21
 status: draft
 tags:
   - Spring
@@ -14,8 +15,8 @@ categories:
 mood:
 weather:
 author: deathwhispers
-created: 2025-01-09 11:45
-updated: 2025-03-12 18:26
+created: 2022-05-22 10:00
+updated: 2022-05-22 10:00
 ---
 
 
