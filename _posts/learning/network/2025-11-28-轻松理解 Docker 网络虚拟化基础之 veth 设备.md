@@ -4,14 +4,14 @@ title: 轻松理解 Docker 网络虚拟化基础之 veth 设备！
 slug: docker-veth-device
 type:
   - note
-date: 2025-11-28
-week: 2025-W48
+date: 2019-10-04
+week: 2019-W44
 status: draft
 tags:
   - 计算机网络
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2019-10-04 09:57
+updated: 2019-10-04 09:57
 ---
 
 # 轻松理解 Docker 网络虚拟化基础之 veth 设备！

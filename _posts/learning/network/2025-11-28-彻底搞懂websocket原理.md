@@ -4,14 +4,14 @@ title: 彻底搞懂WebSocket原理
 slug: websocket-principle
 type:
   - note
-date: 2025-11-28
-week: 2025-W48
+date: 2020-04-19
+week: 2020-W16
 status: draft
 tags:
   - 计算机网络
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2020-04-19 09:57
+updated: 2020-04-19 09:57
 ---
 
 # 彻底搞懂WebSocket原理
