@@ -4,14 +4,14 @@ title: Spring Boot 防抖动
 slug: spring-boot-debounce
 type:
   - note
-date: 2025-11-28
-week: 2025-W48
+date: 2019-07-11
+week: 2019-W29
 status: draft
 tags:
   - Spring Boot
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2019-07-11 09:57
+updated: 2019-07-11 09:57
 ---
 ## [前言](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
 

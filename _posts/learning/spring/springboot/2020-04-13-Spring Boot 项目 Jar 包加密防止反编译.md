@@ -4,14 +4,14 @@ title: Spring Boot 项目 Jar 包加密，防止反编译
 slug: spring-boot-jar-encrypt
 type:
   - note
-date: 2025-11-28
-week: 2025-W48
+date: 2020-04-13
+week: 2020-W15
 status: draft
 tags:
   - Spring Boot
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2020-04-13 09:57
+updated: 2020-04-13 09:57
 ---
 ## [1 场景](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247487551&idx=1&sn=18f64ba49f3f0f9d8be9d1fdef8857d9&scene=21#wechat_redirect)
 

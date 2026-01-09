@@ -4,14 +4,14 @@ title: Spring Boot 参数校验 Validation 入门
 slug: spring-boot-validation-getting-started
 type:
   - note
-date: 2025-11-28
-week: 2025-W48
+date: 2018-04-18
+week: 2018-W16
 status: draft
 tags:
   - Spring Boot
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2018-04-18 09:57
+updated: 2018-04-18 09:57
 ---
 # 1. 概述
 

@@ -4,14 +4,14 @@ title: Spring Boot WebSocket 入门
 slug: spring-boot-websocket-getting-started
 type:
   - note
-date: 2025-11-28
-week: 2025-W48
+date: 2019-05-15
+week: 2019-W21
 status: draft
 tags:
   - Spring Boot
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2019-05-15 09:57
+updated: 2019-05-15 09:57
 ---
 # 1. 概述
 

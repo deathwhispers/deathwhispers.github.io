@@ -4,14 +4,14 @@ title: Spring Boot常用注解
 slug: spring-boot-common-annotations
 type:
   - note
-date: 2025-11-28
-week: 2025-W48
+date: 2020-12-04
+week: 2020-W48
 status: draft
 tags:
   - Spring Boot
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2020-12-04 09:57
+updated: 2020-12-04 09:57
 ---
 ## 一、注解(annotations)列表
 
