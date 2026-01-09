@@ -1,18 +1,21 @@
 ---
 layout: post
-title: @Valid 与 @Validated 的使用与区别
+title: SpringBoot @Valid 与 @Validated 的使用与区别
 slug: valid-validated-difference
 type:
-  - note
+- note
 date: 2019-02-28
 week: 2019-W09
 status: draft
 tags:
-  - Spring Boot
+- Spring Boot
 author: deathwhispers
 created: 2019-02-28 09:57
 updated: 2019-02-28 09:57
 ---
+
+
+
 ### @Valid：
 
 @Valid注解用于校验，所属包为：javax.validation.Valid。
