@@ -2,7 +2,7 @@
 layout: post
 title: Kafka direct和receiver
 slug: kafka-direct-receiver
-date: 2025-01-09
+date: 2020-05-20
 type:
   - note
 tags:
@@ -10,8 +10,8 @@ tags:
 categories:
   - Kafka
 author: deathwhispers
-created: 2025-01-09 11:48
-updated: 2025-01-09 11:48
+created: 2020-05-20 11:48
+updated: 2020-05-20 11:48
 ---
 
 

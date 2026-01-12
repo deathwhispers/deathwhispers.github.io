@@ -2,7 +2,7 @@
 layout: post
 title: Kubernetes核心概念之Volume存储数据卷详解
 slug: kubernetes-volume
-date: 2025-01-09
+date: 2020-05-24
 type:
   - note
 tags:
@@ -10,8 +10,8 @@ tags:
 categories:
   - Kubernetes
 author: deathwhispers
-created: 2025-01-09 11:48
-updated: 2025-01-09 11:48
+created: 2020-05-24 11:48
+updated: 2020-05-24 11:48
 ---
 
 

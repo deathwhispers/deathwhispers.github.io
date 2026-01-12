@@ -2,7 +2,7 @@
 layout: post
 title: Replication Controller
 slug: replication-controller
-date: 2025-01-09
+date: 2020-06-09
 type:
   - note
 tags:
@@ -10,8 +10,8 @@ tags:
 categories:
   - Kubernetes
 author: deathwhispers
-created: 2025-01-09 11:48
-updated: 2025-01-09 11:48
+created: 2020-06-09 11:48
+updated: 2020-06-09 11:48
 ---
 
 

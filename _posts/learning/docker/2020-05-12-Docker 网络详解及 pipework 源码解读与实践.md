@@ -2,7 +2,7 @@
 layout: post
 title: Docker 网络详解及 pipework 源码解读与实践
 slug: docker-network-pipework
-date: 2025-01-09
+date: 2020-05-12
 type:
   - note
 tags:
@@ -10,8 +10,8 @@ tags:
 categories:
   - Docker
 author: deathwhispers
-created: 2025-01-09 11:48
-updated: 2025-01-09 11:48
+created: 2020-05-12 11:48
+updated: 2020-05-12 11:48
 ---
 
 

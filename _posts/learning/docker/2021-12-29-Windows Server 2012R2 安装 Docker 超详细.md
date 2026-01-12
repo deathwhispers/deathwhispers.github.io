@@ -2,7 +2,7 @@
 layout: post
 title: Windows Server 2012R2 安装 Docker 超详细
 slug: windows-server-2012r2-docker-install
-date: 2025-01-09
+date: 2021-12-29
 type:
   - note
 tags:
@@ -10,8 +10,8 @@ tags:
 categories:
   - Docker
 author: deathwhispers
-created: 2025-01-09 11:48
-updated: 2025-01-09 11:48
+created: 2021-12-29 11:48
+updated: 2021-12-29 11:48
 ---
 
 
