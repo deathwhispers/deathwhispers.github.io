@@ -1,6 +1,6 @@
 ---
 layout: post
-title: @Valid 注解的使用
+title: Spring 中 @Valid 注解的使用
 slug: valid-annotation-usage
 type:
   - note
