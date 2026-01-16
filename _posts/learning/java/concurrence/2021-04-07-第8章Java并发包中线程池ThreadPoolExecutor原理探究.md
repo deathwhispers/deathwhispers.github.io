@@ -4,7 +4,7 @@ title: 第8章：Java并发包中线程池ThreadPoolExecutor原理探究
 slug: java-thread-pool-executor-principle-pursuit
 type:
   - note
-date: 2025-11-28
+date: 2021-04-07
 week: 2025-W48
 status: draft
 tags:
@@ -12,8 +12,8 @@ tags:
 categories:
   - Java
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2021-04-07 13:33
+updated: 2021-04-07 13:33
 ---
 
 ## 类图结构

@@ -4,7 +4,7 @@ title: synchronized关键字的基本语义
 slug: java-synchronized-keyword-semantics
 type:
   - note
-date: 2025-11-28
+date: 2019-09-01
 week: 2025-W48
 status: draft
 tags:
@@ -12,8 +12,8 @@ tags:
 categories:
   - Java
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2019-09-01 16:22
+updated: 2019-09-01 16:22
 ---
 # synchronized关键字的基本语义
 

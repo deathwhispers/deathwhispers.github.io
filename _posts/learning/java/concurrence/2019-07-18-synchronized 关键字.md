@@ -4,7 +4,7 @@ title: synchronized 关键字
 slug: java-synchronized-keyword
 type:
   - note
-date: 2025-11-28
+date: 2019-07-18
 week: 2025-W48
 status: draft
 tags:
@@ -12,8 +12,8 @@ tags:
 categories:
   - Java
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2019-07-18 16:37
+updated: 2019-07-18 16:37
 ---
 
 # synchronized

@@ -4,7 +4,7 @@ title: 第9章：Java并发包中ScheduledThreadPoolExecutor原理探究
 slug: java-scheduled-thread-pool-executor-principle-pursuit
 type:
   - note
-date: 2025-11-28
+date: 2021-06-02
 week: 2025-W48
 status: draft
 tags:
@@ -12,8 +12,8 @@ tags:
 categories:
   - Java
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2021-06-02 17:22
+updated: 2021-06-02 17:22
 ---
 
 ## 类图结构

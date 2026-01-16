@@ -4,7 +4,7 @@ title: 第3章：Java并发包中的ThreadLocalRandom类原理剖析
 slug: java-thread-local-random-principle-analysis
 type:
   - note
-date: 2025-11-28
+date: 2020-01-01
 week: 2025-W48
 status: draft
 tags:
@@ -12,8 +12,8 @@ tags:
 categories:
   - Java
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2020-01-01 18:32
+updated: 2020-01-01 18:32
 ---
 ## Random类及其局限性
 
