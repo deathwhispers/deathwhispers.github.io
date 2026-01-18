@@ -4,7 +4,7 @@ title: Disruptor 术语说明
 slug: disruptor-terminology
 type:
   - note
-date: 2025-11-28
+date: 2021-09-16
 week: 2025-W48
 status: draft
 tags:
@@ -12,8 +12,8 @@ tags:
 categories:
   - Java
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2021-09-16 19:45
+updated: 2021-09-16 19:45
 ---
 # Disruptor
 

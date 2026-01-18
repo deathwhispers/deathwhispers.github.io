@@ -4,7 +4,7 @@ title: 同步框架AbstractQueuedSynchronizer
 slug: java-abstractqueuedsynchronizer
 type:
   - note
-date: 2025-11-28
+date: 2020-12-09
 week: 2025-W48
 status: draft
 tags:
@@ -12,8 +12,8 @@ tags:
 categories:
   - Java
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2020-12-09 22:51
+updated: 2020-12-09 22:51
 ---
 
 

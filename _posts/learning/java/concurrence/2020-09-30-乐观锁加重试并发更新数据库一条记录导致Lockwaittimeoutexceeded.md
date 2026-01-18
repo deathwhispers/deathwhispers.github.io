@@ -4,7 +4,7 @@ title: 乐观锁加重试，并发更新数据库一条记录导致：Lockwaitti
 slug: java-optimistic-lock-retry-lock-wait-timeout-exceeded
 type:
   - note
-date: 2025-11-28
+date: 2020-09-30
 week: 2025-W48
 status: draft
 tags:
@@ -12,8 +12,8 @@ tags:
 categories:
   - Java
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2020-09-30 12:19
+updated: 2020-09-30 12:19
 ---
 # 乐观锁加重试，并发更新数据库一条记录导致：Lock wait timeout exceeded
 
