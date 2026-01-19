@@ -4,14 +4,14 @@ title: JVM学习笔记 New doc
 slug: jvm-learning-notes-new-doc
 type:
   - note
-date: 2025-11-28
+date: 2018-09-04
 week: 2025-W48
 status: draft
 tags:
   - JVM
 author: deathwhispers
-created: 2025-11-28 09:57
-updated: 2025-11-28 09:57
+created: 2018-09-04 13:44
+updated: 2018-09-04 13:44
 ---
 
 
