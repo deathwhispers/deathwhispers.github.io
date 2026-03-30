@@ -1,4 +1,5 @@
 ---
+layout: post
 title: HDFS Java API
 slug: hadoop-hdfs-java-api
 type:

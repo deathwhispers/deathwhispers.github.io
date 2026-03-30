@@ -1,17 +1,17 @@
 ---
 layout: post
-title: HttpRequestRetryHandler
-slug: http-request-retry-handler
+title: HTTP keepalive
+slug: http-keepalive
 type:
   - note
-date: 2019-03-11
-week: 2019-W14
+date: 2025-11-28
+week: 2025-W48
 status: draft
 tags:
   - 计算机网络
 author: deathwhispers
-created: 2019-03-11 09:57
-updated: 2019-03-11 09:57
+created: 2025-11-28 09:57
+updated: 2025-11-28 09:57
 ---
 
 # HttpRequestRetryHandler

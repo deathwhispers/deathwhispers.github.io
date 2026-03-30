@@ -18,7 +18,7 @@ keywords: "Docker, Docker Desktop, Windows, 安装教程, Hyper-V, WSL 2, 容器
 
 Docker Desktop for Windows 是 Docker 公司为 Windows 用户提供的官方产品，它使得在 Windows 10 上搭建 Docker 环境变得简单快捷。本教程将通过图文并茂的方式，带您一步步完成安装和配置。
 
-> [!NOTE]
+> **注意**
 > Docker Desktop for Windows 是一个社区版（Community Edition, CE）应用，主要面向开发和测试环境，并非为生产环境设计。新特性可能会延迟发布，以确保其稳定性。
 
 ## 1. 环境要求
@@ -42,7 +42,7 @@ Docker Desktop for Windows 是 Docker 公司为 Windows 用户提供的官方产
 
     ![功能安装过程](../../../assets/images/learning/docker/windows-docker-install-tutorial/2b7e58639b9b1fb4af410d6972af51fe.gif)
 
-> [!NOTE]
+> **注意**
 > “容器”功能仅在 Windows 10 Anniversary Update (Build 14393) 及以上版本中可用。完成此步骤后，系统会提示您重启计算机，请务必重启以使设置生效。
 
 ## 3. 下载并安装 Docker Desktop
@@ -84,7 +84,7 @@ Server:
   Experimental:     false
 ```
 
-> [!TIP]
+> **提示**
 > 注意 `Server` 部分的 `OS/Arch` 属性显示为 `linux/amd64`。这是因为默认情况下，Docker Daemon 运行在一个基于 Hyper-V 的轻量级 Linux 虚拟机中。在此模式下，您只能运行 Linux 容器。
 
 ## 5. 切换容器模式
@@ -124,7 +124,7 @@ Server:
   Experimental:     true
 ```
 
-> [!NOTE]
+> **注意**
 > Windows 容器目前仍是一个实验性特性，因此 `Experimental` 属性为 `true`。
 
 ## 6. 检查组件版本

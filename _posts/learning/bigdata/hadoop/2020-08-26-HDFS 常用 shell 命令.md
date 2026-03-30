@@ -1,4 +1,5 @@
 ---
+layout: post
 title: HDFS 常用 shell 命令
 slug: hadoop-hdfs-common-shell-commands
 type:

@@ -40,7 +40,7 @@ Apache POI 是一个非常流行的 Java 库，专门用于处理 Microsoft Offi
 </dependency>
 ```
 
-> [!NOTE]
+> **注意**
 > *   `poi` 模块提供了 `HSSFWorkbook` 类，用于操作 `.xls` 文件。
 > *   `poi-ooxml` 模块提供了 `XSSFWorkbook` 类，用于操作 `.xlsx` 文件。
 
@@ -136,7 +136,7 @@ public class ExcelParser {
 }
 ```
 
-> [!TIP]
+> **提示**
 > *   **处理 `.xlsx` 文件**：只需将代码中的 `HSSFWorkbook` 全部替换为 `XSSFWorkbook` 即可。
 > *   **Web 应用集成**：在 Spring 等 Web 框架中，通常会将文件流写入 `HttpServletResponse` 的 `getOutputStream()`，从而实现文件下载功能，而不是直接写入服务器的本地磁盘。
 > *   **资源管理**：始终使用 `try-with-resources` 语句或在 `finally` 块中确保关闭所有的 I/O 流，以防止资源泄漏。
