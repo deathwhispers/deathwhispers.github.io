@@ -1,0 +1,32 @@
+windows:
+  - pattern: "2021秋季课程表|秋季课程表"
+    start: "2021-09"
+    end: "2021-12"
+
+  - pattern: "2022年春季课程表|春季课程表"
+    start: "2022-02"
+    end: "2022-06"
+
+  - pattern: "考研经验"
+    start: "2021-12"
+    end: "2022-12"
+
+  - pattern: "工程数学基础"
+    start: "2022-09"
+    end: "2023-01"
+
+  - pattern: "数据仓库与数据挖掘"
+    start: "2023-02"
+    end: "2023-08"
+
+  - pattern: "研究生科学道德与学术规范"
+    start: "2023-03"
+    end: "2023-10"
+
+  - pattern: "科研修炼手册"
+    start: "2023-05"
+    end: "2024-04"
+
+  - pattern: "/learning/netty/|Netty"
+    start: "2024-02"
+    end: "2024-04"

@@ -1,0 +1,55 @@
+name: 内容守门检查
+
+on:
+  pull_request:
+    paths:
+      - '_posts/**'
+      - '_tabs/**'
+      - '_data/**'
+      - 'scripts/**'
+      - '.github/scripts/**'
+      - '.codex/skills/**'
+      - '.github/workflows/agent-guardrails.yml'
+      - 'AGENTS.md'
+      - '_config.yml'
+  push:
+    branches: [ main, master ]
+    paths:
+      - '_posts/**'
+      - '_tabs/**'
+      - '_data/**'
+      - 'scripts/**'
+      - '.github/scripts/**'
+      - '.codex/skills/**'
+      - '.github/workflows/agent-guardrails.yml'
+      - 'AGENTS.md'
+      - '_config.yml'
+
+jobs:
+  guardrails:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 配置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 配置 Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: 安装 Python 依赖
+        run: pip install pyyaml requests python-dotenv
+
+      - name: 执行守门检查
+        run: bash scripts/run_guardrails.sh --full
