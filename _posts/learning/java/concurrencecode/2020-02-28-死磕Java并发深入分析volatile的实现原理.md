@@ -9,16 +9,25 @@ week: 2025-W48
 status: draft
 tags:
   - Java并发源码分析
+  - volatile
 categories:
   - Java
+  - 并发
 author: deathwhispers
 created: 2020-02-28 12:59
-updated: 2020-02-28 12:59
+updated: 2026-04-20 19:30
 ---
 
 
 
 [https://www.iocoder.cn/JUC/sike/volatile/](https://www.iocoder.cn/JUC/sike/volatile/)
+
+## 入门速记（并入整理）
+
+- `volatile` 的核心价值是**可见性**，并提供一定的**有序性**保障（禁止部分重排序）。  
+- `volatile` **不保证复合操作原子性**（如 `i++`）。  
+- `volatile` 不能替代 `synchronized` 的互斥能力。  
+- 当仅需“一个线程写、多个线程读”的状态发布时，`volatile` 往往足够。  
 
 通过前面一章，我们了解了 synchronized 是一个重量级的锁，虽然 JVM 对它做了很多优化。而下面介绍的 volatile ，则是**轻量级**的 synchronized ，它在多线程开发中保证了共享变量的“**可见性**”。如果一个变量使用 volatile ，则它比使用 synchronized 的成本更加低，**因为它不会引起线程上下文的切换和调度**。
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ThreadLocal的底层原理
+title: ThreadLocal 的底层原理（整合版）
 slug: threadlocal-underlying-principle
 type:
   - note
@@ -8,18 +8,73 @@ date: 2020-06-22
 week: 2025-W48
 status: draft
 tags:
-  - threadlocal
+  - Java并发
+  - ThreadLocal
+categories:
+  - Java
+  - 并发
 author: deathwhispers
 created: 2020-06-22 22:58
-updated: 2020-06-22 22:58
+updated: 2026-04-20 18:30
 ---
-# ThreadLocal的底层原理
 
-1. ThreadLocal是Java中所提供的线程本地存储机制，可以利用该机制将数据缓存在某个线程内部，该线程可以在任意时刻、任意方法中获取缓存的数据
-2. ThreadLocal底层通过ThreadLocalMap来实现的，每个Thread对象（并不是ThreadLocal对象）中都存在一个ThreadLocalMap，Map的key为ThreadLocal对象，Map的value为需要缓存的值。
-3. 如果在线程池中使用ThreadLocal会造成内存泄露，因为当ThreadLocal对象使用完之后，应该要把设置的key、value（也就是Entry对象）进行回收，但是线程池中的线程不会回收，而线程对象是通过强引用指向ThreadLocalMap，ThreadLocalMap也是通过强引用指向Entry对象，线程不被回收，Entry对象也就不会回收，从而出现内存泄露，解决办法是：在使用ThreadLocal对象之后，手动调用ThreadLocal的remove方法，手动清除对象
-4. ThreadLocal经典的应用场景就是连接管理（一个线程持有一个连接，该连接对象可以在不同的方法之间进行传递，线程之间不共享同一个连接）
+本文整合了 `ThreadLocal的底层原理` 与 `threadlocal` 两篇笔记。
 
-![f591d91451ccaf344f3791c3ab3ddcb9](/assets/images/learning/java/threadlocal-underlying-principle/f591d91451ccaf344f3791c3ab3ddcb9.png)
+## 1. ThreadLocal 是什么
 
-%0A1.%20ThreadLocal%E6%98%AFJava%E4%B8%AD%E6%89%80%E6%8F%90%E4%BE%9B%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%88%A9%E7%94%A8%E8%AF%A5%E6%9C%BA%E5%88%B6%E5%B0%86%E6%95%B0%E6%8D%AE%E7%BC%93%E5%AD%98%E5%9C%A8%E6%9F%90%E4%B8%AA%E7%BA%BF%E7%A8%8B%E5%86%85%E9%83%A8%EF%BC%8C%E8%AF%A5%E7%BA%BF%E7%A8%8B%E5%8F%AF%E4%BB%A5%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%97%B6%E5%88%BB%E3%80%81%E4%BB%BB%E6%84%8F%E6%96%B9%E6%B3%95%E4%B8%AD%E8%8E%B7%E5%8F%96%E7%BC%93%E5%AD%98%E7%9A%84%E6%95%B0%E6%8D%AE%0A2.%20ThreadLocal%E5%BA%95%E5%B1%82%E9%80%9A%E8%BF%87ThreadLocalMap%E6%9D%A5%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%8C%E6%AF%8F%E4%B8%AAThread%E5%AF%B9%E8%B1%A1%EF%BC%88%E5%B9%B6%E4%B8%8D%E6%98%AFThreadLocal%E5%AF%B9%E8%B1%A1%EF%BC%89%E4%B8%AD%E9%83%BD%E5%AD%98%E5%9C%A8%E4%B8%80%E4%B8%AAThreadLocalMap%EF%BC%8CMap%E7%9A%84key%E4%B8%BAThreadLocal%E5%AF%B9%E8%B1%A1%EF%BC%8CMap%E7%9A%84value%E4%B8%BA%E9%9C%80%E8%A6%81%E7%BC%93%E5%AD%98%E7%9A%84%E5%80%BC%E3%80%82%0A3.%20%E5%A6%82%E6%9E%9C%E5%9C%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E4%BD%BF%E7%94%A8ThreadLocal%E4%BC%9A%E9%80%A0%E6%88%90%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%EF%BC%8C%E5%9B%A0%E4%B8%BA%E5%BD%93ThreadLocal%E5%AF%B9%E8%B1%A1%E4%BD%BF%E7%94%A8%E5%AE%8C%E4%B9%8B%E5%90%8E%EF%BC%8C%E5%BA%94%E8%AF%A5%E8%A6%81%E6%8A%8A%E8%AE%BE%E7%BD%AE%E7%9A%84key%E3%80%81value%EF%BC%88%E4%B9%9F%E5%B0%B1%E6%98%AFEntry%E5%AF%B9%E8%B1%A1%EF%BC%89%E8%BF%9B%E8%A1%8C%E5%9B%9E%E6%94%B6%EF%BC%8C%E4%BD%86%E6%98%AF%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B%E4%B8%8D%E4%BC%9A%E5%9B%9E%E6%94%B6%EF%BC%8C%E8%80%8C%E7%BA%BF%E7%A8%8B%E5%AF%B9%E8%B1%A1%E6%98%AF%E9%80%9A%E8%BF%87%E5%BC%BA%E5%BC%95%E7%94%A8%E6%8C%87%E5%90%91ThreadLocalMap%EF%BC%8CThreadLocalMap%E4%B9%9F%E6%98%AF%E9%80%9A%E8%BF%87%E5%BC%BA%E5%BC%95%E7%94%A8%E6%8C%87%E5%90%91Entry%E5%AF%B9%E8%B1%A1%EF%BC%8C%E7%BA%BF%E7%A8%8B%E4%B8%8D%E8%A2%AB%E5%9B%9E%E6%94%B6%EF%BC%8CEntry%E5%AF%B9%E8%B1%A1%E4%B9%9F%E5%B0%B1%E4%B8%8D%E4%BC%9A%E5%9B%9E%E6%94%B6%EF%BC%8C%E4%BB%8E%E8%80%8C%E5%87%BA%E7%8E%B0%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%EF%BC%8C%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95%E6%98%AF%EF%BC%9A%E5%9C%A8%E4%BD%BF%E7%94%A8ThreadLocal%E5%AF%B9%E8%B1%A1%E4%B9%8B%E5%90%8E%EF%BC%8C%E6%89%8B%E5%8A%A8%E8%B0%83%E7%94%A8ThreadLocal%E7%9A%84remove%E6%96%B9%E6%B3%95%EF%BC%8C%E6%89%8B%E5%8A%A8%E6%B8%85%E9%99%A4%E5%AF%B9%E8%B1%A1%0A4.%20ThreadLocal%E7%BB%8F%E5%85%B8%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E5%B0%B1%E6%98%AF%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%E6%8C%81%E6%9C%89%E4%B8%80%E4%B8%AA%E8%BF%9E%E6%8E%A5%EF%BC%8C%E8%AF%A5%E8%BF%9E%E6%8E%A5%E5%AF%B9%E8%B1%A1%E5%8F%AF%E4%BB%A5%E5%9C%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E6%96%B9%E6%B3%95%E4%B9%8B%E9%97%B4%E8%BF%9B%E8%A1%8C%E4%BC%A0%E9%80%92%EF%BC%8C%E7%BA%BF%E7%A8%8B%E4%B9%8B%E9%97%B4%E4%B8%8D%E5%85%B1%E4%BA%AB%E5%90%8C%E4%B8%80%E4%B8%AA%E8%BF%9E%E6%8E%A5%EF%BC%89%0A%0A%0A!%5Bf591d91451ccaf344f3791c3ab3ddcb9.png%5D(en-resource%3A%2F%2Fdatabase%2F2640%3A0)%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A
+`ThreadLocal` 提供“线程本地变量”能力：同一个 `ThreadLocal` 对象，在不同线程里读到的是各自独立的数据副本。
+
+它的目标不是线程共享，而是线程隔离。
+
+## 2. 底层结构
+
+很多同学容易误解为：`ThreadLocal -> Map<Thread, Value>`。
+
+更准确是：
+
+- 每个 `Thread` 对象内部有一个 `ThreadLocalMap`。
+- `ThreadLocalMap` 的 key 是 `ThreadLocal`（弱引用）。
+- value 是线程保存的业务数据。
+
+## 3. 为什么可能内存泄漏
+
+在线程池场景，线程会复用且长期存活：
+
+- `ThreadLocal` key 可能被回收（弱引用失效）。
+- value 仍可能挂在 `ThreadLocalMap` 里，直到后续清理逻辑触发。
+- 如果不手动 `remove()`，脏数据和内存占用会累积。
+
+## 4. 正确使用姿势
+
+```java
+private static final ThreadLocal<String> TRACE_ID = new ThreadLocal<>();
+
+public void handle() {
+    try {
+        TRACE_ID.set(generateTraceId());
+        // 业务逻辑
+    } finally {
+        TRACE_ID.remove();
+    }
+}
+```
+
+关键点：`set` 和 `remove` 成对出现，尤其在 web 容器线程池、MQ 消费线程池中。
+
+## 5. 常见应用场景
+
+- 请求链路追踪（TraceId）
+- 数据库连接/事务上下文绑定
+- 用户上下文、租户上下文
+- 非线程安全对象的线程封闭缓存
+
+## 6. 不建议的场景
+
+- 在线程间传递业务数据（应使用参数传递或上下文对象）
+- 异步线程池链路中直接依赖父线程 `ThreadLocal`（可能丢失）
+
+## 相关阅读
+
+- [Java 并发学习索引](/posts/java-concurrency-study-index/)
+- [线程通信-等待通知机制（整合版）](/posts/thread-communication-wait-notify/)
+- [第3章：Java并发包中的ThreadLocalRandom类原理剖析](/posts/java-thread-local-random-principle-analysis/)

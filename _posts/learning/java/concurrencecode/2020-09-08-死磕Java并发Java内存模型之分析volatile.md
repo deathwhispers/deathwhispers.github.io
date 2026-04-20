@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 死磕Java并发：Java内存模型之分析volatile
-slug: concurrent-source-code-volatile
+slug: concurrent-source-code-jmm-volatile
 type:
   - note
 date: 2020-09-08

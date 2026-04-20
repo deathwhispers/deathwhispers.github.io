@@ -9,11 +9,13 @@ week: 2025-W48
 status: draft
 tags:
   - Java并发源码分析
+  - AQS
 categories:
   - Java
+  - 并发
 author: deathwhispers
 created: 2021-01-10 15:56
-updated: 2021-01-10 15:56
+updated: 2026-04-20 19:30
 ---
 摘要: 原创出处 [http://cmsblogs.com/?p=2174](http://cmsblogs.com/?p=2174) 「小明哥」欢迎转载，保留摘要，谢谢！
 
@@ -24,6 +26,16 @@ updated: 2021-01-10 15:56
 Java 的内置锁一直都是备受争议的，在 JDK 1.6 之前，synchronized 这个重量级锁其性能一直都是较为低下，虽然在 1.6 后，进行大量的锁优化策略（[《【死磕 Java 并发】—– 深入分析 synchronized 的实现原理》](http://www.iocoder.cn/JUC/sike/synchronized)），但是与 Lock 相比 synchronized 还是存在一些**缺陷**的：虽然 synchronized 提供了便捷性的隐式获取锁释放锁机制（基于JVM机制），但是它却缺少了获取锁与释放锁的可操作性，可中断、超时获取锁，且它为独占式在高并发场景下性能大打折扣。
 
 在介绍 Lock 之前，我们需要先熟悉一个非常重要的组件，掌握了该组件 J.U.C 包下面很多问题都不在是问题了。该组件就是 **AQS** 。
+
+## 一页速记（并入整理）
+
+`java.util.concurrent` 的很多同步器都建立在 AQS 之上。  
+
+- 共享模式：如 `Semaphore`、`CountDownLatch`。  
+- 独占模式：如 `ReentrantLock`。  
+- 常见能力：排队、阻塞、唤醒、CAS 更新同步状态。  
+
+AQS 本身不直接提供业务语义，而是给同步器实现者提供统一框架。
 
 # 1. 简介
 
