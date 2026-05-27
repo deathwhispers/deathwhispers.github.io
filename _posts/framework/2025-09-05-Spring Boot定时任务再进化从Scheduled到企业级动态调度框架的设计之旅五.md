@@ -1,13 +1,12 @@
 ---
 layout: post
-title: "Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（五）"
+title: Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（五）
 date: 2025-09-05
 tags:
-  - Spring Scheduling
-  - Task Scheduling
+- Spring
 categories:
-  - Framework
-  - Spring Boot定时任务
+- Framework
+- Backend
 author: deathwhispers
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
@@ -168,4 +167,3 @@ sequenceDiagram
 
 但光有“眼睛”和“仪表盘”还不够，强大的系统还得有“动手干预”的能力。下一章，咱就给框架装“遥控器”，聊聊咋靠RESTful
 API实时控制任务：启停、临时触发，甚至动态创建、删除任务，真正做到“坐在后台，掌控所有任务”。
-

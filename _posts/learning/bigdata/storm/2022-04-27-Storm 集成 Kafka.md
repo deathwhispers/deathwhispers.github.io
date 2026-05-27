@@ -3,20 +3,23 @@ layout: post
 title: Storm 集成 Kafka
 slug: storm-integration-kafka
 type:
-  - note
+- note
 date: 2022-04-27
 status: draft
 tags:
-  - Storm
-  - Kafka
+- Storm
+- BigData
+- Kafka
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---
+
 ## 一、整合说明
 
 Storm 官方对 Kafka 的整合分为两个版本，官方说明文档分别如下：

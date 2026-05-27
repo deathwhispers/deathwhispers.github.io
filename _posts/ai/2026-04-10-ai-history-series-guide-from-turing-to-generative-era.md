@@ -1,17 +1,17 @@
 ---
 layout: post
-title: "AI 发展史系列导览：跟着讲解员穿越七十年智能革命"
+title: AI 发展史系列导览：跟着讲解员穿越七十年智能革命
 slug: ai-history-series-guide-from-turing-to-generative-era
 status: Published
 date: 2026-04-10
 mermaid: true
 tags:
-  - AI
-  - AI发展史
-  - 大模型
+- AI
+- AIHistory
+- LargeModel
 categories:
-  - AI
-  - AI发展史系列
+- AI
+- General
 author: deathwhispers
 ---
 

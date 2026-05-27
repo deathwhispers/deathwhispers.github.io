@@ -3,19 +3,21 @@ layout: post
 title: happens-before
 slug: concurrent-source-code-happens-before
 type:
-  - note
+- note
 date: 2020-05-25
 week: 2025-W48
 status: draft
 tags:
-  - Java并发源码分析
-  - Java并发系列
+- Java
+- Concurrency
 categories:
-  - Java
+- Learning
+- Java
 author: deathwhispers
 created: 2020-05-25 11:55
 updated: 2020-05-25 11:55
 ---
+
 [https://www.iocoder.cn/JUC/sike/happens-before/](https://www.iocoder.cn/JUC/sike/happens-before/)
 
 在上篇博客（《【死磕 Java 并发】—– 深入分析 volatile 的实现原理》）中，LZ 提到过由于存在线程本地内存和主内存的原因，再加上重排序，会导致多线程环境下存在可见性的问题。那么我们正确使用同步、锁的情况下，线程 A 修改了变量 a ，何时对线程 B 可见？

@@ -3,21 +3,24 @@ layout: post
 title: Storm 集成 HDFS 和 HBase
 slug: storm-integration-hdfs-and-hbase
 type:
-  - note
+- note
 date: 2022-04-24
 status: draft
 tags:
-  - Storm
-  - HDFS
-  - HBase
+- HBase
+- Storm
+- BigData
+- HDFS
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---
+
 ## 一、Storm集成HDFS
 
 ### 1.1 项目结构

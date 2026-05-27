@@ -3,17 +3,19 @@ layout: post
 title: Master-Worker模式
 slug: master-worker-pattern
 type:
-  - note
+- note
 date: 2021-04-11
 week: 2021-W19
 status: draft
 tags:
-  - 系统设计
+- SystemDesign
 author: deathwhispers
 created: 2021-04-11 10:00
 updated: 2021-04-11 10:00
+categories:
+- Learning
+- SystemDesign
 ---
-
 
 # Master-Worker模式
 

@@ -3,13 +3,13 @@ layout: post
 title: 享元模式 (Flyweight Pattern) 深度解析
 slug: design-pattern-flyweight-pattern
 type:
-  - note
+- note
 date: 2019-10-03
 tags:
-  - designPatterns
-  - flyweightPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
@@ -91,7 +91,7 @@ public class Circle implements Shape {
     @Override
     public void draw(int x, int y, int radius) {
         // 这里的 x, y, radius 是外部状态，由客户端在运行时传入
-        System.out.println("Circle: Draw() [Color : " + color 
+        System.out.println("Circle: Draw() [Color : " + color
                 + ", x : " + x + ", y :" + y + ", radius :" + radius + "]");
     }
 }
@@ -179,15 +179,15 @@ class FlyweightFactory:
 # 4. 客户端代码
 if __name__ == "__main__":
     factory = FlyweightFactory()
-    
+
     # 模拟请求多个对象
     keys = ["A", "B", "A", "C", "B", "A"]
-    
+
     for key in keys:
         flyweight = factory.get_flyweight(key)
         # 传入外部状态 (例如随机数)
         flyweight.operation(random.randint(1, 100))
-        
+
     print(f"\nTotal objects created in memory: {factory.get_count()}")
     # 输出结果将显示实际内存中只有 3 个对象 (A, B, C)
 ```
@@ -241,4 +241,3 @@ if __name__ == "__main__":
 -----
 
 **总结**：享元模式是**用时间换空间**的经典模式。它通过复杂的工厂逻辑和状态分离，换取了内存占用的极大降低。在处理大规模细粒度对象的系统中，它是必不可少的优化手段。
-

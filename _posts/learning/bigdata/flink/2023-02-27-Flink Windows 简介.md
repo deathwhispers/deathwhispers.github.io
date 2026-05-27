@@ -3,16 +3,17 @@ layout: post
 title: Flink Windows 简介
 slug: flink-windows-introduction
 type:
-   - note
+- note
 date: 2023-02-27
 status: draft
 tags:
-  - Flink
-  - Windows
+- Flink
+- BigData
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2024-01-09 11:45
 updated: 2024-03-12 18:33

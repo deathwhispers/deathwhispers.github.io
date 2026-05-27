@@ -1,18 +1,18 @@
 ---
 layout: post
-title: "CRA 行业与工作系列导览：从入行到进阶的全景地图"
+title: CRA 行业与工作系列导览：从入行到进阶的全景地图
 slug: cra-career-series-guide-industry-and-work-map
 status: Published
 date: 2026-01-01
 mermaid: true
 tags:
-  - CRA
-  - 临床研究
-  - 职业发展
-  - GCP
+- Tooling
+- Career
+- ClinicalResearch
+- GCP
 categories:
-  - 临床研究
-  - CRA系列
+- Other
+- General
 author: deathwhispers
 ---
 

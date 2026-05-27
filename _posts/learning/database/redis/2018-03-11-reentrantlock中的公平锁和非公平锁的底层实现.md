@@ -3,12 +3,14 @@ layout: post
 title: ReentrantLock中的公平锁和非公平锁的底层实现
 slug: reentrantlock-fair-lock-and-non-fair-lock-implementation
 type:
-  - note
+- note
 date: 2018-03-11
 tags:
-  - Redis
+- Redis
+- Database
 categories:
-  - Redis
+- Learning
+- Database
 author: deathwhispers
 created: 2019-05-11 11:45
 updated: 2019-05-11 22:17

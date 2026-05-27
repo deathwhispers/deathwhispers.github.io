@@ -3,16 +3,21 @@ layout: post
 title: Spring Boot常用注解
 slug: spring-boot-common-annotations
 type:
-  - note
+- note
 date: 2020-12-04
 week: 2020-W48
 status: draft
 tags:
-  - Spring Boot
+- Spring
+- SpringBoot
 author: deathwhispers
 created: 2020-12-04 09:57
 updated: 2020-12-04 09:57
+categories:
+- Learning
+- Spring
 ---
+
 ## 一、注解(annotations)列表
 
 @SpringBootApplication：包含了@ComponentScan、@Configuration和@EnableAutoConfiguration注解。其中@ComponentScan让spring Boot扫描到Configuration类并把它加入到程序上下文。

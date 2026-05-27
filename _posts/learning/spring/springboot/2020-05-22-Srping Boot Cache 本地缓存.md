@@ -3,17 +3,22 @@ layout: post
 title: Srping Boot Cache 本地缓存
 slug: srping-boot-cache-local-cache
 type:
-  - note
+- note
 date: 2020-05-22
 status: draft
 tags:
-  - Spring Boot
-mood:
-weather:
+- Spring
+- SpringBoot
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:46
 updated: 2025-03-12 18:41
+categories:
+- Learning
+- Spring
 ---
+
 针对某些读写比很高的场景，使用本地缓存可以极大提高访问效率。
 
 springboot中对cache做了很好的支持

@@ -1,17 +1,17 @@
 ---
 layout: post
-title: "LLM 发展历程：从 Transformer 到 Agent 化时代"
+title: LLM 发展历程：从 Transformer 到 Agent 化时代
 slug: llm-evolution-history-from-transformer-to-agentic-ai
 status: Published
 date: 2026-04-09
 tags:
-  - AI
-  - LLM
-  - NLP
-  - Transformer
-  - Agent
+- AI
+- LLM
+- Agent
+- Transformer
 categories:
-  - AI
+- AI
+- General
 author: deathwhispers
 ---
 

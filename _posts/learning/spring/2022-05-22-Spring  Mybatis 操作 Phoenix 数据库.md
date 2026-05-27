@@ -3,22 +3,22 @@ layout: post
 title: Spring + Mybatis 操作 Phoenix 数据库
 slug: spring-mybatis-phoenix
 type:
-  - note
+- note
 date: 2022-05-22
 week: 2022-W21
 status: draft
 tags:
-  - Spring
-  - Mybatis
+- Spring
+- MyBatis
 categories:
-  - Spring
-mood:
-weather:
+- Learning
+- Spring
+mood: null
+weather: null
 author: deathwhispers
 created: 2022-05-22 10:00
 updated: 2022-05-22 10:00
 ---
-
 
 ## 一、前言
 

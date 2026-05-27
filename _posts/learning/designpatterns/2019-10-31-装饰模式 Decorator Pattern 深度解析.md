@@ -3,18 +3,17 @@ layout: post
 title: 装饰模式 (Decorator Pattern) 深度解析
 slug: design-pattern-decorator-pattern
 type:
-  - note
+- note
 date: 2019-10-31
 tags:
-  - designPatterns
-  - decoratorPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 🎁 装饰模式 (Decorator Pattern) 深度解析
 
@@ -82,11 +81,11 @@ public class Circle implements Shape {
 public abstract class ShapeDecorator implements Shape {
    // 组合关系：持有抽象构件的引用
    protected Shape decoratedShape;
-   
+
    public ShapeDecorator(Shape decoratedShape){
       this.decoratedShape = decoratedShape;
    }
-   
+
    // 默认实现：委托给被包装的对象
    @Override
    public void draw(){
@@ -96,20 +95,20 @@ public abstract class ShapeDecorator implements Shape {
 
 // --- 4. 具体装饰类 (ConcreteDecorator) ---
 public class RedShapeDecorator extends ShapeDecorator {
-   
+
    public RedShapeDecorator(Shape decoratedShape) {
       super(decoratedShape);
    }
-   
+
    @Override
    public void draw() {
       // 1. 委托给原有构件执行核心功能
       decoratedShape.draw();
-      
+
       // 2. 增加额外职责
       setRedBorder(decoratedShape);
    }
-   
+
    private void setRedBorder(Shape decoratedShape){
       System.out.println("Decoration: Border Color set to Red");
    }
@@ -120,16 +119,16 @@ public class DecoratorPatternDemo {
    public static void main(String[] args) {
       // 原始对象
       Shape circle = new Circle();
-      
+
       // 动态地增加职责：用装饰器包装原始对象
       Shape redCircle = new RedShapeDecorator(circle);
-      
+
       System.out.println("--- Normal Circle ---");
       circle.draw();
-      
+
       System.out.println("\n--- Decorated Red Circle ---");
       redCircle.draw(); // 客户端使用一致的接口
-      
+
       // 链式装饰：可以在外部再套一层，例如：
       Shape doubleDecoratedCircle = new RedShapeDecorator(redCircle);
       System.out.println("\n--- Double Decorated Circle (Red + Red) ---");
@@ -159,7 +158,7 @@ class Coffee(ABC):
 class SimpleCoffee(Coffee):
     def get_cost(self):
         return 5.0
-    
+
     def get_ingredients(self):
         return "Coffee"
 
@@ -172,7 +171,7 @@ class CoffeeDecorator(Coffee):
     # 默认委托给被包装对象
     def get_cost(self):
         return self._decorated_coffee.get_cost()
-    
+
     def get_ingredients(self):
         return self._decorated_coffee.get_ingredients()
 
@@ -180,7 +179,7 @@ class CoffeeDecorator(Coffee):
 class MilkDecorator(CoffeeDecorator):
     def get_cost(self):
         return super().get_cost() + 1.5 # 增加成本
-    
+
     def get_ingredients(self):
         return super().get_ingredients() + ", Milk" # 增加职责
 
@@ -188,21 +187,21 @@ class MilkDecorator(CoffeeDecorator):
 class SugarDecorator(CoffeeDecorator):
     def get_cost(self):
         return super().get_cost() + 0.5 # 增加成本
-    
+
     def get_ingredients(self):
         return super().get_ingredients() + ", Sugar" # 增加职责
 
 # --- 6. 客户端调用 (Client) ---
 if __name__ == "__main__":
-    
+
     # 原始咖啡
     coffee = SimpleCoffee()
     print(f"Base: {coffee.get_ingredients()} | Cost: ${coffee.get_cost()}")
-    
+
     # 装饰 1: 加牛奶 (MilkDecorator 包装 SimpleCoffee)
     coffee_with_milk = MilkDecorator(coffee)
     print(f"With Milk: {coffee_with_milk.get_ingredients()} | Cost: ${coffee_with_milk.get_cost()}")
-    
+
     # 装饰 2: 再加糖 (SugarDecorator 包装 MilkDecorator)
     coffee_with_milk_sugar = SugarDecorator(coffee_with_milk)
     print(f"Full: {coffee_with_milk_sugar.get_ingredients()} | Cost: ${coffee_with_milk_sugar.get_cost()}")

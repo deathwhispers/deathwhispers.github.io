@@ -3,13 +3,13 @@ layout: post
 title: 单例模式 (Singleton Pattern) 深度解析
 slug: design-pattern-singleton-pattern
 type:
-  - note
+- note
 date: 2019-02-15
 tags:
-  - designPatterns
-  - singletonPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
@@ -79,10 +79,10 @@ updated: 2019-03-12 22:17
 public class SingletonEager {
     // 静态成员变量在类加载时即被初始化
     private static SingletonEager instance = new SingletonEager();
-    
+
     // 私有构造函数
     private SingletonEager (){}
-    
+
     public static SingletonEager getInstance() {
         return instance;
     }
@@ -97,9 +97,9 @@ public class SingletonEager {
 public class SingletonDCL {
     // 必须使用 volatile 关键字，防止指令重排序
     private volatile static SingletonDCL instance;
-    
+
     private SingletonDCL (){}
-    
+
     public static SingletonDCL getInstance() {
         // 第一次检查：若已创建，则无需进入同步块
         if (instance == null) {
@@ -124,12 +124,12 @@ public class SingletonDCL {
 ```java
 public class SingletonHolder {
     private SingletonHolder(){}
-    
+
     // 静态内部类：只有显式调用 getInstance() 时，才会被虚拟机装载
     private static class SingletonHolderInner {
         private static final SingletonHolder INSTANCE = new SingletonHolder();
     }
-    
+
     public static final SingletonHolder getInstance() {
         // 利用 ClassLoader 机制保证初始化 INSTANCE 时只有一个线程
         return SingletonHolderInner.INSTANCE;
@@ -144,7 +144,7 @@ public class SingletonHolder {
 ```java
 public enum SingletonEnum {
     INSTANCE;
-    
+
     public void whateverMethod() {
         // ... 业务方法
     }
@@ -169,7 +169,7 @@ Singleton::Singleton(){} // 私有构造函数
 
 // 析构函数中释放资源 (需要注意 Singleton 类的生命周期管理)
 Singleton::~Singleton(){
-    delete instance; 
+    delete instance;
 }
 
 Singleton* Singleton::getInstance(){
@@ -190,7 +190,7 @@ Python 中实现单例通常通过**装饰器 (Decorator)** 或修改类的 **`_
 ```python
 class SingletonPython:
     _instance = None
-    
+
     def __new__(cls, *args, **kwargs):
         # 覆盖默认的 __new__ 方法
         if cls._instance is None:

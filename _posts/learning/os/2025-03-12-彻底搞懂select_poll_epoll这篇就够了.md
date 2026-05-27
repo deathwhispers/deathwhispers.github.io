@@ -3,27 +3,24 @@ layout: post
 title: 彻底搞懂select_poll_epoll，这篇就够了
 slug: select-poll-epoll
 type:
-  - note
+- note
 date: 2025-03-12
 week: 2025-W12
 status: draft
 tags:
-  - poll
-  - epoll
-  - select
-categories: 
-  - 操作系统
-mood: 
-weather: 
+- OperatingSystem
+categories:
+- Learning
+- OperatingSystem
+mood: null
+weather: null
 comments: true
-math: true  
+math: true
 mermaid: true
 author: deathwhispers
 created: 2025-03-12 21:59
 updated: 2025-03-12 21:59
 ---
-
-
 
 之前已经把网络 I/O 相关要点都盘了，还剩 select/poll/epoll 这几个区别没说，这篇就来搞搞它们，并且是从完全理解原理的角度来区分它们。
 
@@ -106,8 +103,6 @@ epoll 主要就是基于上面两点做了优化。
 然后和 select 类似，每个 socket 的睡眠队列里都会加个 entry，当每个 socket 来数据之后，同样也会调用 entry 对应的 callback。
 
 与 select 不同的是，引入了一个 ready_list 双向链表，callback 里面会把当前的 socket 加入到 ready_list 然后唤醒 epoll。
-
-
 
 这样被唤醒的 epoll 只需要遍历 ready_list 即可，这个链表里一定是有数据可读的 socket，相比于 select 就不会做无用的遍历了。
 

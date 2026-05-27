@@ -3,19 +3,21 @@ layout: post
 title: CountDownLatch 原理
 slug: concurrent-source-code-countdownlatch
 type:
-  - note
+- note
 date: 2022-04-04
 week: 2025-W48
 status: draft
 tags:
-  - Java并发源码分析
-  - Java并发系列
+- Java
+- Concurrency
 categories:
-  - Java
+- Learning
+- Java
 author: deathwhispers
 created: 2022-04-04 20:39
 updated: 2022-04-04 20:39
 ---
+
 [https://www.iocoder.cn/JUC/sike/CountDownLatch/](https://www.iocoder.cn/JUC/sike/CountDownLatch/)
 
 # 1. 简介

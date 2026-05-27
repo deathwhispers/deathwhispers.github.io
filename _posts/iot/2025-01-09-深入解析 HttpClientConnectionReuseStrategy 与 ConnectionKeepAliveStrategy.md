@@ -1,16 +1,16 @@
 ---
 layout: post
-title: "深入解析 HttpClient：ConnectionReuseStrategy 与 ConnectionKeepAliveStrategy"
+title: 深入解析 HttpClient：ConnectionReuseStrategy 与 ConnectionKeepAliveStrategy
 slug: connection-reuse-strategy-connection-keep-alive-strategy
 date: 2025-01-09
 type:
-  - note
+- note
 tags:
-  - httpclient
-  - keep-alive
-  - http
+- IoT
+- HttpClient
 categories:
-  - IoT
+- IoT
+- General
 author: deathwhispers
 ---
 

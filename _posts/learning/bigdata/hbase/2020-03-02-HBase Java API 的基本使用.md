@@ -3,19 +3,22 @@ layout: post
 title: HBase Java API 的基本使用
 slug: hbase-java-api-basic-usage
 type:
-  - note
+- note
 date: 2020-03-02
 status: draft
 tags:
-  - HBase
+- HBase
+- BigData
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---
+
 ## 一、简述
 
 截至到目前 (2019.04)，HBase 有两个主要的版本，分别是 1.x 和 2.x ，两个版本的 Java API 有所不同，1.x 中某些方法在 2.x 中被标识为 @deprecated 过时。所以下面关于 API 的样例，我会分别给出 1.x 和 2.x 两个版本。完整的代码见本仓库：
@@ -83,7 +86,6 @@ public class HBaseUtils {
         return true;
     }
 
-
     /**
      * 删除 hBase 表
      *
@@ -124,7 +126,6 @@ public class HBaseUtils {
         return true;
     }
 
-
     /**
      * 插入数据
      *
@@ -146,7 +147,6 @@ public class HBaseUtils {
         return true;
     }
 
-
     /**
      * 根据 rowKey 获取指定行的数据
      *
@@ -163,7 +163,6 @@ public class HBaseUtils {
         }
         return null;
     }
-
 
     /**
      * 获取指定行指定列 (cell) 的最新版本的数据
@@ -192,7 +191,6 @@ public class HBaseUtils {
         return null;
     }
 
-
     /**
      * 检索全表
      *
@@ -208,7 +206,6 @@ public class HBaseUtils {
         }
         return null;
     }
-
 
     /**
      * 检索表中指定数据
@@ -269,7 +266,6 @@ public class HBaseUtils {
         }
         return true;
     }
-
 
     /**
      * 删除指定行的指定列
@@ -333,7 +329,6 @@ public class HBaseUtilsTest {
         HBaseUtils.putRow(TABLE_NAME, "rowKey3", STUDENT, pairs3);
     }
 
-
     @Test
     public void getRow() {
         Result result = HBaseUtils.getRow(TABLE_NAME, "rowKey1");
@@ -360,7 +355,6 @@ public class HBaseUtilsTest {
             scanner.close();
         }
     }
-
 
     @Test
     public void getScannerWithFilter() {
@@ -461,7 +455,6 @@ public class HBaseUtils {
         return true;
     }
 
-
     /**
      * 删除 hBase 表
      *
@@ -502,7 +495,6 @@ public class HBaseUtils {
         return true;
     }
 
-
     /**
      * 插入数据
      *
@@ -524,7 +516,6 @@ public class HBaseUtils {
         return true;
     }
 
-
     /**
      * 根据 rowKey 获取指定行的数据
      *
@@ -541,7 +532,6 @@ public class HBaseUtils {
         }
         return null;
     }
-
 
     /**
      * 获取指定行指定列 (cell) 的最新版本的数据
@@ -570,7 +560,6 @@ public class HBaseUtils {
         return null;
     }
 
-
     /**
      * 检索全表
      *
@@ -586,7 +575,6 @@ public class HBaseUtils {
         }
         return null;
     }
-
 
     /**
      * 检索表中指定数据
@@ -647,7 +635,6 @@ public class HBaseUtils {
         }
         return true;
     }
-
 
     /**
      * 删除指定行指定列

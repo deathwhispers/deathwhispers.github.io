@@ -3,19 +3,17 @@ layout: post
 title: 观察者模式 (Observer Pattern) 深度解析
 slug: observer-pattern
 type:
-  - note
+- note
 date: 2019-11-18
 tags:
-  - designPatterns
-  - observerPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
-
 
 # 📢 观察者模式 (Observer Pattern) 深度解析
 
@@ -73,7 +71,7 @@ import java.util.List;
 public abstract class Observer {
     protected Subject subject;
     // 抽象更新方法，通常包含对 Subject 的引用以获取最新状态
-    public abstract void update(); 
+    public abstract void update();
 }
 
 // --- 2. 具体目标 (ConcreteSubject) ---
@@ -95,7 +93,7 @@ public class Subject {
     public void attach(Observer observer) {
         observers.add(observer);
         // 通常在 attach 时执行一次初始化更新
-        observer.update(); 
+        observer.update();
     }
 
     public void detach(Observer observer) {
@@ -139,14 +137,14 @@ public class HexaObserver extends Observer {
 public class ObserverPatternDemo {
     public static void main(String[] args) {
         Subject subject = new Subject();
-        
+
         // 注册观察者
         new BinaryObserver(subject);
         new HexaObserver(subject);
-        
+
         // 第一次状态改变
         subject.setState(15);
-        
+
         // 第二次状态改变
         subject.setState(10);
     }
@@ -205,22 +203,22 @@ class DBSyncer(Observer):
 
 # --- 5. 客户端调用 (Client) ---
 if __name__ == "__main__":
-    
+
     publisher = ConcreteSubject()
-    
+
     # 创建并注册观察者
     logger = ConsoleLogger()
     syncer = DBSyncer()
-    
+
     publisher.attach(logger)
     publisher.attach(syncer)
-    
+
     # 状态改变，自动触发通知
     publisher.set_state(42)
-    
+
     # 移除一个观察者
     publisher.detach(logger)
-    
+
     # 状态再次改变，只有剩下的观察者收到通知
     publisher.set_state(100)
 ```

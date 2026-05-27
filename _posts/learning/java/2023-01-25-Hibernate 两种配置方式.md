@@ -3,16 +3,20 @@ layout: post
 title: Hibernate 两种配置方式
 slug: hibernate-two-configuration-methods
 type:
-  - note
+- note
 date: 2023-01-25
 week: 2025-W48
 status: draft
 tags:
-  - Hibernate
+- Java
 author: deathwhispers
 created: 2023-01-25 10:47
 updated: 2023-01-25 10:47
+categories:
+- Learning
+- Java
 ---
+
 ## Hibernate 两种配置方式
 
 hibernate有两种配置方式，分别是[*.hbm.xml 配置方式](https://how2j.cn/k/hibernate/hibernate-tutorial/31.html#step66) 和[注解方式](https://how2j.cn/k/hibernate/hibernate-annotation/1052.html#step4010)。 虽然方式不一样，但是都是用于解决如下问题：1. 当前类是否实体类2. 对应的表名称3. 主键对应哪个属性， 自增长策略是什么，对应字段名称是什么4. 非主键属性对应字段名称是什么

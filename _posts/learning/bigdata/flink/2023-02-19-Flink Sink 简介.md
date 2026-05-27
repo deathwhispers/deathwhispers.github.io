@@ -3,21 +3,21 @@ layout: post
 title: Flink Sink 简介
 slug: flink-sink-introduction
 type:
-   - note
+- note
 date: 2023-02-19
 status: draft
 tags:
-  - Flink
-  - Data Sink
+- Flink
+- BigData
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2024-01-09 11:45
 updated: 2024-03-12 18:33
 ---
-
 
 ## 一、Data Sinks
 

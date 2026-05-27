@@ -3,19 +3,22 @@ layout: post
 title: HBase 常用 Shell 命令
 slug: hbase-common-shell-commands
 type:
-  - note
+- note
 date: 2020-03-20
 status: draft
 tags:
-  - HBase
+- HBase
+- BigData
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:25
 ---
+
 ## 一、基本命令
 
 打开 Hbase Shell：

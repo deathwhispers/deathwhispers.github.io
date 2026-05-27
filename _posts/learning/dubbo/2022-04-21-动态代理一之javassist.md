@@ -3,19 +3,21 @@ layout: post
 title: 动态代理（一）之Javassist
 slug: dubbo-proxy-javassist
 type:
-  - note
+- note
 date: 2022-04-21
 status: draft
 tags:
-  - Dubbo
+- Dubbo
 categories:
-  - Dubbo
-mood:
-weather:
+- Learning
+- Dubbo
+mood: null
+weather: null
 author: deathwhispers
 created: 2022-04-26 11:50
 updated: 2022-04-26 18:33
 ---
+
 本文基于 Dubbo 2.6.1 版本，望知悉。
 
 # 1. 概述

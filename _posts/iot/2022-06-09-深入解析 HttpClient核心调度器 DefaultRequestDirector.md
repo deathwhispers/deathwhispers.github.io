@@ -1,19 +1,18 @@
 ---
 layout: post
-title: "深入解析 HttpClient：核心调度器 DefaultRequestDirector"
+title: 深入解析 HttpClient：核心调度器 DefaultRequestDirector
 slug: default-request-director
 date: 2022-06-09
 type:
-  - note
+- note
 tags:
-  - httpclient
-  - http
-  - source-code
+- IoT
+- HttpClient
 categories:
-  - IoT
+- IoT
+- General
 author: deathwhispers
 ---
-
 
 ## 1. `DefaultRequestDirector` 的作用
 
@@ -506,4 +505,3 @@ public void openConnection(...) throws IOException {
 - `handleResponse()` 检查响应，如果需要重定向，它会创建一个新的 `RoutedRequest` 对象，触发 `while (!done)` 循环的下一次迭代。
 
 如果连接被重用，`HttpEntity.consumeContent()` 会被调用以确保响应体被完全读取，从而使连接可以干净地用于下一个请求。如果连接不重用，则会被关闭。
-

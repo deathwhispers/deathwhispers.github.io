@@ -1,17 +1,15 @@
 ---
 layout: post
-title: "AI 发展史大事件 05：1997 Deep Blue 击败卡斯帕罗夫"
+title: AI 发展史大事件 05：1997 Deep Blue 击败卡斯帕罗夫
 slug: ai-history-event-deep-blue-vs-kasparov-1997
 status: Published
 date: 2026-04-10
 tags:
-  - AI
-  - AI发展史
-  - Deep Blue
-  - 计算机博弈
+- AI
+- AIHistory
 categories:
-  - AI
-  - AI发展史系列
+- AI
+- General
 author: deathwhispers
 ---
 

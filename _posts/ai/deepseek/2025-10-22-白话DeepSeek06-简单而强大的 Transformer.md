@@ -1,15 +1,16 @@
 ---
 layout: post
-title: "白话DeepSeek06-简单而强大的 Transformer"
+title: 白话DeepSeek06-简单而强大的 Transformer
 slug: simple-yet-powerful-transformers
 status: Published
 date: 2025-10-22
 tags:
-  - DeepSeek
-  - 神经网络
+- AI
+- DeepSeek
+- NeuralNetwork
 categories:
-  - DeepSeek
-  - "白话 DeepSeek 系列"
+- AI
+- DeepSeek
 author: deathwhispers
 ---
 

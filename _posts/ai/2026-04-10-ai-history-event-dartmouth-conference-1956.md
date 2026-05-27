@@ -1,16 +1,15 @@
 ---
 layout: post
-title: "AI 发展史大事件 02：1956 达特茅斯会议，人工智能学科诞生"
+title: AI 发展史大事件 02：1956 达特茅斯会议，人工智能学科诞生
 slug: ai-history-event-dartmouth-conference-1956
 status: Published
 date: 2026-04-10
 tags:
-  - AI
-  - AI发展史
-  - 达特茅斯
+- AI
+- AIHistory
 categories:
-  - AI
-  - AI发展史系列
+- AI
+- General
 author: deathwhispers
 ---
 

@@ -3,16 +3,21 @@ layout: post
 title: Spring Boot 防抖动
 slug: spring-boot-debounce
 type:
-  - note
+- note
 date: 2019-07-11
 week: 2019-W29
 status: draft
 tags:
-  - Spring Boot
+- Spring
+- SpringBoot
 author: deathwhispers
 created: 2019-07-11 09:57
 updated: 2019-07-11 09:57
+categories:
+- Learning
+- Spring
 ---
+
 ## [前言](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
 
 作为一名老码农，在开发后端Java业务系统，包括各种管理后台和小程序等。在这些项目中，我设计过单/多租户体系系统，对接过许多开放平台，也搞过消息中心这类较为复杂的应用，但幸运的是，我至今还没有遇到过线上系统由于代码崩溃导致资损的情况。这其中的原因有三点：一是业务系统本身并不复杂；二是我一直遵循某大厂代码规约，在开发过程中尽可能按规约编写代码；三是经过多年的开发经验积累，我成为了一名熟练工，掌握了一些实用的技巧。

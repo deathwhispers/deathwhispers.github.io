@@ -1,19 +1,18 @@
 ---
 layout: post
-title: "CRA 核查全流程实务：步骤、时点、条件、补救与预案"
+title: CRA 核查全流程实务：步骤、时点、条件、补救与预案
 slug: cra-monitoring-checklist-and-capa-playbook
 status: Published
 date: 2026-02-26
 mermaid: true
 tags:
-  - CRA
-  - 临床试验
-  - GCP
-  - 监查
-  - CAPA
+- Tooling
+- CAPA
+- ClinicalMonitoring
+- ClinicalTrial
 categories:
-  - 临床研究
-  - 质量管理
+- Other
+- General
 author: deathwhispers
 ---
 

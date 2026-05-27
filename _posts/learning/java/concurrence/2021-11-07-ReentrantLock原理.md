@@ -2,8 +2,8 @@
 layout: post
 base: '[文档中心](_posts/learning/文档中心/文档中心.base)'
 categories:
-  - Java
-  - 并发
+- Learning
+- Java
 created: 2021-11-07 21:48
 author: deathwhispers
 date: 2021-11-07
@@ -11,8 +11,10 @@ updated: 2021-11-07 21:48
 title: ReentrantLock 原理
 slug: concurrent-source-code-reentrantlock
 tags:
-  - Java并发系列
+- Java
+- Concurrency
 ---
+
 [https://www.iocoder.cn/JUC/sike/ReentrantLock/](https://www.iocoder.cn/JUC/sike/ReentrantLock/)
 
 # 1. 简介
@@ -291,9 +293,7 @@ public ReentrantLock(boolean fair) {
 
 Acquires the lock if it is not held by another thread and * returns immediately with the value {@code true}, setting the * lock hold count to one. Even when this lock has been set to use a * fair ordering policy, a call to {@code tryLock()} *will* * immediately acquire the lock if it is available, whether or not * other threads are currently waiting for the lock. * This "barging" behavior can be useful in certain * circumstances, even though it breaks fairness. If you want to honor * the fairness setting for this lock, then use * {@link #tryLock(long, TimeUnit) tryLock(0, TimeUnit.SECONDS) } * which is almost equivalent (it also detects interruption). * *
 
-
 If the current thread already holds this lock then the hold * count is incremented by one and the method returns {@code true}. * *
-
 
 If the lock is held by another thread then this method will return * immediately with the value {@code false}. * * @return {@code true} if the lock was free and was acquired by the * current thread, or the lock was already held by the current * thread; and {@code false} otherwise */ @Override public boolean tryLock() { return sync.nonfairTryAcquire(1); }
 

@@ -3,17 +3,17 @@ layout: post
 title: 基于Kafka+Debezium+Flink的SQLServer实时增量同步方案
 slug: sqlserver-real-time-incremental-synchronization-using-kafka-debezium-flink
 type:
-   - note
+- note
 date: 2024-01-09
 status: draft
 tags:
-   - Flink
-   - 大数据
-   - 流式计算
+- Flink
+- BigData
 categories:
-   - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2024-01-09 11:45
 updated: 2024-03-12 18:33
@@ -26,7 +26,6 @@ updated: 2024-03-12 18:33
 ```plain text
 http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz?_ga=2.215682399.93673590.1629776859-1065619546.1629776859
 
-
 1
 ```
 
@@ -34,7 +33,6 @@ http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz?_ga=2.21568239
 
 ```plain text
 tar confluent-hub-client-latest.tar -C /opt/module/confluent-hub
-
 
 1
 ```

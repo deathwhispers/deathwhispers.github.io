@@ -3,14 +3,14 @@ layout: post
 title: Redis 数据结构：String 篇
 slug: redis-string-deep-dive
 type:
-  - note
+- note
 date: 2018-03-11
 tags:
-  - Redis
-  - Database
-  - String
+- Redis
+- Database
 categories:
-  - Redis
+- Learning
+- Database
 author: deathwhispers
 created: 2019-05-11 11:45
 updated: 2023-10-28 22:17

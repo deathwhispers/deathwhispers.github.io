@@ -3,19 +3,21 @@ layout: post
 title: 过滤器（二）之ContextFilter
 slug: dubbo-filter-context
 type:
-  - note
+- note
 date: 2022-05-14
 status: draft
 tags:
-  - Dubbo
+- Dubbo
 categories:
-  - Dubbo
-mood:
-weather:
+- Learning
+- Dubbo
+mood: null
+weather: null
 author: deathwhispers
 created: 2022-05-14 11:52
 updated: 2022-05-14 18:33
 ---
+
 本文基于 Dubbo 2.6.1 版本，望知悉。
 
 # 1. 概述

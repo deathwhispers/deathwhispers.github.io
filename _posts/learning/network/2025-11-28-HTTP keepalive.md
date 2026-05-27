@@ -3,15 +3,18 @@ layout: post
 title: HTTP keepalive
 slug: http-keepalive
 type:
-  - note
+- note
 date: 2025-11-28
 week: 2025-W48
 status: draft
 tags:
-  - 计算机网络
+- Network
 author: deathwhispers
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
+categories:
+- Learning
+- Network
 ---
 
 # HttpRequestRetryHandler
@@ -60,47 +63,47 @@ public boolean retryRequest(
     if (context == null) {
         throw new IllegalArgumentException("HTTP context may not be null");
     }
-    
+
     // 如果重试次数大于 retryCount（默认为3次），则返回false，execute方法会抛出对应异常
     if (executionCount > this.retryCount) {
         // Do not retry if over max retry count
         return false;
     }
-    
+
     // NoHttpResponseException 是一种可以重试的异常
     if (exception instanceof NoHttpResponseException) {
         // Retry if the server dropped connection on us
         return true;
     }
-    
+
     // InterruptedIOException 是一种不可以重试的异常
     if (exception instanceof InterruptedIOException) {
         // Timeout
         return false;
     }
-    
+
     // UnknownHostException 是一种不可以重试的异常
     if (exception instanceof UnknownHostException) {
         // Unknown host
         return false;
     }
-    
+
     // SSLHandshakeException 是一种不可以重试的异常
     if (exception instanceof SSLHandshakeException) {
         // SSL handshake exception
         return false;
     }
-    
+
     Boolean b = (Boolean)
         context.getAttribute(ExecutionContext.HTTP_REQ_SENT);
     boolean sent = (b != null && b.booleanValue());
-    
+
     if (!sent || this.requestSentRetryEnabled) {
         // Retry if the request has not been sent fully or
         // if it's OK to retry methods that have been sent
         return true;
     }
-    
+
     // otherwise do not retry
     return false;
 }

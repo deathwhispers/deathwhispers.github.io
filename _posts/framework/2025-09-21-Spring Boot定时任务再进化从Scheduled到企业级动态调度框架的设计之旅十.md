@@ -1,18 +1,16 @@
 ---
 layout: post
-title: "Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（十）"
+title: Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（十）
 date: 2025-09-21
 tags:
-  - Spring Scheduling
-  - Task Scheduling
+- Spring
 categories:
-  - Framework
-  - Spring Boot定时任务
+- Framework
+- Backend
 author: deathwhispers
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
 ---
-
 
 ## 引言
 
@@ -122,5 +120,3 @@ graph TD
 这个系列到这就结束了，但`hadoken-scheduler`的故事才刚开始。它不只是我一个人的作品，更希望能变成大家一起维护的项目——如果你用的时候发现BUG，或者有更好的想法，欢迎提Issue、贡献代码。
 
 毕竟，技术圈最酷的事，从来都是“咱们一起把东西做得更牛”。谢谢大家一路看完！
-
-

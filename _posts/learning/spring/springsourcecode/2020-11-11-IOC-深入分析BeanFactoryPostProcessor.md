@@ -3,17 +3,22 @@ layout: post
 title: IOC-深入分析BeanFactoryPostProcessor
 slug: ioc-deep-dive-into-bean-factory-post-processor
 type:
-  - note
+- note
 date: 2020-11-11
 status: draft
 tags:
-  - Spring 源码解析
-mood:
-weather:
+- Spring
+- SpringSourceCode
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-11-11 09:00
 updated: 2020-11-11 18:00
+categories:
+- Learning
+- Spring
 ---
+
 **本文主要基于 Spring 5.0.6.RELEASE**
 
 摘要: 原创出处 [http://cmsblogs.com/?p=todo](http://cmsblogs.com/?p=todo) 「小明哥」，谢谢！

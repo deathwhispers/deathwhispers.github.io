@@ -3,17 +3,18 @@ layout: post
 title: 精尽 Redisson 源码分析 —— 可重入分布式锁 ReentrantLock
 slug: redisson-reentrant-lock-source-code-analysis
 type:
-  - note
+- note
 date: 2018-03-11
 tags:
-  - Redis
+- Redis
+- Database
 categories:
-  - Redis
+- Learning
+- Database
 author: deathwhispers
 created: 2019-05-11 11:45
 updated: 2019-05-11 22:17
 ---
-
 
 # 1. 概述
 
@@ -693,4 +694,3 @@ plain // RedissonLock.java  void cancelExpirationRenewal(Long threadId) {     //
 ```plain text
 plain // RedissonLock.java  @Override public Condition newCondition() {     // TODO implement     throw new UnsupportedOperationException(); }  @Override public boolean isLocked() {     return isExists(); }  @Override public RFuture<Boolean> isLockedAsync() {     return isExistsAsync(); }  @Override public RFuture<Boolean> isExistsAsync() {     return commandExecutor.writeAsync(getName(), codec, RedisCommands.EXISTS, getName()); }  @Override public boolean isHeldByCurrentThread() {     return isHeldByThread(Thread.currentThread().getId()); }  @Override public boolean isHeldByThread(long threadId) {     RFuture<Boolean> future = commandExecutor.writeAsync(getName(), LongCodec.INSTANCE, RedisCommands.HEXISTS, getName(), getLockName(threadId));     return get(future); }  private static final RedisCommand<Integer> HGET = new RedisCommand<Integer>("HGET", ValueType.MAP_VALUE, new IntegerReplayConvertor(0));  public RFuture<Integer> getHoldCountAsync() {     return commandExecutor.writeAsync(getName(), LongCodec.INSTANCE, HGET, getName(), getLockName(Thread.currentThread().getId())); }  @Override public int getHoldCount() {     return get(getHoldCountAsync()); }
 ```
-

@@ -1,15 +1,16 @@
 ---
 layout: post
-title: "白话DeepSeek04-从矩阵到 CNN"
+title: 白话DeepSeek04-从矩阵到 CNN
 slug: from-matrices-to-cnns
 status: Published
 date: 2025-10-16
 tags:
-  - DeepSeek
-  - 神经网络
+- AI
+- DeepSeek
+- NeuralNetwork
 categories:
-  - DeepSeek
-  - "白话 DeepSeek 系列"
+- AI
+- DeepSeek
 author: deathwhispers
 ---
 

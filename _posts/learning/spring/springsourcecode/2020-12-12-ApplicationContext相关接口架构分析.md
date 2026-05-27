@@ -3,17 +3,22 @@ layout: post
 title: ApplicationContext相关接口架构分析
 slug: applicationcontext-interface-architecture-analysis
 type:
-  - note
+- note
 date: 2020-12-12
 status: draft
 tags:
-  - Spring 源码解析
-mood:
-weather:
+- Spring
+- SpringSourceCode
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-12-12 09:00
 updated: 2020-12-12 18:00
+categories:
+- Learning
+- Spring
 ---
+
 **本文主要基于 Spring 5.0.6.RELEASE**
 
 摘要: 原创出处[http://cmsblogs.com/?p=todo](http://cmsblogs.com/?p=todo)「小明哥」，谢谢！

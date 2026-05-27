@@ -3,21 +3,19 @@ layout: post
 title: 中介者模式 (Mediator Pattern) 深度解析
 slug: design-pattern-mediator-pattern
 type:
-  - note
+- note
 date: 2019-10-01
 tags:
-  - designPatterns
-  - mediatorPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
 
-
 # 🧑‍🤝‍🧑 中介者模式 (Mediator Pattern) 深度解析
-
 
 ## 1\. 模式动机：解决“蜘蛛网”式的复杂交互
 
@@ -80,7 +78,7 @@ int main(int argc, char *argv[])
     ConcreteColleagueA * pa = new ConcreteColleagueA();
     ConcreteColleagueB * pb = new ConcreteColleagueB();
     ConcreteMediator * pm = new ConcreteMediator();
-    
+
     // 注册同事对象
     pm->registered(1,pa);
     pm->registered(2,pb);
@@ -125,7 +123,6 @@ void ConcreteMediator::operation(int nWho,string str){
     pc->receivemsg(str); // 转发消息给目标同事
 }
 
-
 void ConcreteMediator::registered(int nWho,Colleague * aColleague){
     m_mpColleague.insert(make_pair(nWho,aColleague));
     // 同时将中介类暴露给colleague，建立双向引用（Colleague需知晓Mediator才能发送消息）
@@ -149,7 +146,7 @@ using namespace std;
 void ConcreteColleagueA::sendmsg(int toWho,string str){
     cout << "send msg from colleagueA,to:" << toWho << endl;
     // 核心：通过中介者进行操作
-    m_pMediator->operation(toWho,str); 
+    m_pMediator->operation(toWho,str);
 }
 
 void ConcreteColleagueA::receivemsg(string str){
@@ -228,7 +225,6 @@ class Mediator:
     def notify(self, sender, event):
         pass
 
-
 class ConcreteMediator(Mediator):
     """具体中介者：协调同事之间的交互"""
 
@@ -246,13 +242,11 @@ class ConcreteMediator(Mediator):
             print("Mediator reacts to D and triggers A's action.")
             self.colleague1.do_c()
 
-
 class Colleague:
     """抽象同事类"""
 
     def __init__(self, mediator=None):
         self.mediator = mediator
-
 
 class ConcreteColleague1(Colleague):
     """具体同事类 1"""
@@ -265,7 +259,6 @@ class ConcreteColleague1(Colleague):
     def do_c(self):
         print("Colleague 1 does C.")
 
-
 class ConcreteColleague2(Colleague):
     """具体同事类 2"""
 
@@ -276,7 +269,6 @@ class ConcreteColleague2(Colleague):
         print("Colleague 2 does D.")
         # 委托给中介者
         self.mediator.notify(self, "D")
-
 
 # 客户端代码
 c1 = ConcreteColleague1()
@@ -311,6 +303,5 @@ c2.do_d()
 * 系统中对象之间存在**复杂的引用关系**，相互依赖关系结构混乱且难以理解。
 * 一个对象直接引用并与其他**很多对象通信**，导致难以复用该对象。
 * 想通过一个**中间类来封装多个类中的行为**，从而集中管理和控制这些交互。
-
 
 **总结：** 中介者模式通过引入一个中介者对象，成功地将同事对象之间的网状耦合关系解开，转化为以中介者为中心的松耦合星形结构，简化了对象间的交互，是迪米特法则的典型应用。

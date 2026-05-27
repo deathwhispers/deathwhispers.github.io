@@ -3,18 +3,19 @@ layout: post
 title: Spring与ehcache整合
 slug: spring-ehcache-integration
 type:
-  - note
+- note
 date: 2020-06-06
 week: 2020-W23
 status: draft
 tags:
-  - Spring
-  - ehcache
+- Spring
 author: deathwhispers
 created: 2020-06-06 10:00
 updated: 2020-06-06 10:00
+categories:
+- Learning
+- Spring
 ---
-
 
 1.添加依赖：
 

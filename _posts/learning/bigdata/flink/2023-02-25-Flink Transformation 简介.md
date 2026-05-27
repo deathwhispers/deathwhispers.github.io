@@ -3,16 +3,17 @@ layout: post
 title: Flink Transformation 简介
 slug: flink-transformation-introduction
 type:
-   - note
+- note
 date: 2023-02-25
 status: draft
 tags:
-  - Flink
-  - Transformation
+- Flink
+- BigData
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2024-01-09 11:45
 updated: 2024-03-12 18:33

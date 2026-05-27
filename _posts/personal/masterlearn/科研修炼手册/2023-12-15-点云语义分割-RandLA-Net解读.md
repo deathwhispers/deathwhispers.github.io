@@ -1,15 +1,13 @@
 ---
 layout: post
-title: "一、局部特征聚合模块"
+title: 一、局部特征聚合模块
 date: 2023-12-15
 tags:
-  - "语义分割"
-  - "点云配准"
+- MasterLearn
 categories:
-  - "personal"
-  - "masterlearn"
-  - "科研修炼手册"
-author: "deathwhispers"
+- Personal
+- MasterLearn
+author: deathwhispers
 ---
 
 ## 一、局部特征聚合模块

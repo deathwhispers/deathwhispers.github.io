@@ -3,16 +3,21 @@ layout: post
 title: Spring Boot 参数校验 Validation 入门
 slug: spring-boot-validation-getting-started
 type:
-  - note
+- note
 date: 2018-04-18
 week: 2018-W16
 status: draft
 tags:
-  - Spring Boot
+- Spring
+- SpringBoot
 author: deathwhispers
 created: 2018-04-18 09:57
 updated: 2018-04-18 09:57
+categories:
+- Learning
+- Spring
 ---
+
 # 1. 概述
 
 在想标题的时候，到底应该叫**数据**校验，还是**参数**校验时，我纠结了，而且非常。
@@ -164,7 +169,7 @@ Bean Validation 提供的 @Valid 注解，因为没有分组校验的属性，�
 
 在 [pom.xml](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-22/lab-22-validation-01/pom.xml) 文件中，引入相关依赖。
 
-  org.springframework.boot spring-boot-starter-parent 2.1.3.RELEASE    4.0.0 lab-22-validation-01    org.springframework.boot spring-boot-starter-web    org.springframework spring-aspects    org.springframework.boot spring-boot-starter-test test  
+  org.springframework.boot spring-boot-starter-parent 2.1.3.RELEASE    4.0.0 lab-22-validation-01    org.springframework.boot spring-boot-starter-web    org.springframework spring-aspects    org.springframework.boot spring-boot-starter-test test
 
 - [spring-boot-starter-web](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web) 依赖里，已经默认引入 [hibernate-validator](https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator) 依赖，所以本示例使用的是 Hibernate Validator 作为 Bean Validation 的实现框架。
 

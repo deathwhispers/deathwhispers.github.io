@@ -3,16 +3,21 @@ layout: post
 title: Spring Boot 启动过程（生命周期及事件）概述
 slug: spring-boot-startup-lifecycle-events
 type:
-  - note
+- note
 date: 2019-06-15
 week: 2019-W24
 status: draft
 tags:
-  - Spring Boot
+- Spring
+- SpringBoot
 author: deathwhispers
 created: 2019-06-15 09:57
 updated: 2019-06-15 09:57
+categories:
+- Learning
+- Spring
 ---
+
 总结：
 
 ![f95fb74df31df5925fd9a14f57eac631](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/f95fb74df31df5925fd9a14f57eac631.png)
@@ -89,12 +94,12 @@ webApplicationType
         - 给字段initializers赋值：拿到SPI方式配置的
 ApplicationContextInitializer
 上下文初始化器
-            - 
+            -
 ![d5af3fb8c6d1cedf3dc7cf1eb8582f3b](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/d5af3fb8c6d1cedf3dc7cf1eb8582f3b.png)
         - 给字段listeners赋值：拿到SPI方式配置的
 ApplicationListener
 应用监听器
-            - 
+            -
 ![d5e8fc8b0226ce66530dd4bc198c01fd](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/d5e8fc8b0226ce66530dd4bc198c01fd.png)
     - 注意：在此阶段(早期阶段)不要过多地使用它的内部状态，因为它可能在生命周期的后期被修改（话外音：使用时需谨慎）
 - 此时，
@@ -382,7 +387,7 @@ ReactiveWebServerInitializedEvent
 WebServer
 已启动完成，所以已经有了监听的端口号
     - 该监听器做的事有两个：
-    - 
+    -
 “local.” + getName(context.getServerNamespace()) + “.port”
 作为key（默认值是
 local.server.port

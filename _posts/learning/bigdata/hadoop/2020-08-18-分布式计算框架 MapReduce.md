@@ -3,17 +3,17 @@ layout: post
 title: 分布式计算框架 MapReduce
 slug: hadoop-distributed-computing-framework-mapreduce
 type:
-  - note
+- note
 date: 2020-08-18
 status: draft
 tags:
-  - Hadoop
-  - MapReduce
+- Hadoop
+- BigData
 categories:
-  - BigData
-  - Hadoop
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-08-18 11:46
 updated: 2020-08-18 18:27

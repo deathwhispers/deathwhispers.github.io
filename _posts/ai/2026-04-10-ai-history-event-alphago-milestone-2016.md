@@ -1,17 +1,16 @@
 ---
 layout: post
-title: "AI 发展史大事件 07：2016 AlphaGo 时刻，AI 进入大众视野"
+title: AI 发展史大事件 07：2016 AlphaGo 时刻，AI 进入大众视野
 slug: ai-history-event-alphago-milestone-2016
 status: Published
 date: 2026-04-10
 tags:
-  - AI
-  - AI发展史
-  - AlphaGo
-  - 强化学习
+- AI
+- AIHistory
+- LearningMethod
 categories:
-  - AI
-  - AI发展史系列
+- AI
+- General
 author: deathwhispers
 ---
 

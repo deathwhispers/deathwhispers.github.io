@@ -1,11 +1,12 @@
 ---
 layout: post
-title: "swagger2 升级到 springdoc"
+title: swagger2 升级到 springdoc
 date: 2025-07-17
 tags:
-  - SpringDoc
-categories: 
-  - SpringDoc
+- EngineeringPractice
+categories:
+- Practicing
+- General
 comments: true
 author: deathwhispers
 created: 2025-07-17 09:57
@@ -21,7 +22,7 @@ updated: 2025-07-17 09:57
 - 适配 Spring Boot 3.3.x 及后续版本
 - 使用现代化的 API 文档工具
 - 提升文档生成效率与维护性
- 
+
 我们决定将项目中的 **Swagger2（Springfox）迁移至 SpringDoc OpenAPI**。
 
 # 二、升级的必要性
@@ -33,7 +34,6 @@ updated: 2025-07-17 09:57
 | **SpringDoc 活跃维护** | SpringDoc OpenAPI 是目前最活跃、兼容性最强的 OpenAPI 工具 |
 | **支持 OpenAPI 3.x 规范** | 提供更丰富的文档结构和交互式 UI（Swagger UI + ReDoc） |
 
-
 ## 三、当前痛点分析
 
 在升级过程中，我们遇到的主要痛点如下：
@@ -44,7 +44,6 @@ updated: 2025-07-17 09:57
 | **无成熟迁移工具** | Springfox 注解无法自动转换为 SpringDoc 注解 |
 | **手动替换效率低、易出错** | 一个项目可能有上百个 Controller 和 Model，手动修改成本高 |
 | **缺乏统一的替换规范** | 团队协作时容易出现注解使用不一致的问题 |
-
 
 ## 四、解决方案：脚本化批量替换
 
@@ -75,10 +74,8 @@ PROJECT_ROOT = './src/main'
 OLD_SWAGGER_IMPORT_PREFIX = 'import io.swagger.annotations.'
 NEW_SWAGGER_IMPORT_PREFIX = 'import io.swagger.v3.oas.annotations.'
 
-
 # --- 辅助函数：通用正则模式 ---
 GENERIC_PAREN_CONTENT_REGEX = r'(?:[^()]|"[^"]*"|\((?:[^()]|"[^"]*")*\))*?'
-
 
 # --- 主要正则表达式定义 ---
 ANNOTATION_REGEX = re.compile(
@@ -105,7 +102,6 @@ API_IMPLICIT_PARAM_INNER_REGEX = re.compile(
     r'\((?:[^()]|"[^"]*"|.)*?\)' # 匹配其参数括号
     r')' # 必须有一个参数块
 )
-
 
 # --- 辅助函数：从注解字符串中提取属性 (key=value) ---
 def extract_annotation_attrs(attrs_str):
@@ -146,7 +142,6 @@ def _format_attrs_string(attrs_dict):
         parts.append(f"{key} = {val}")
     return ", ".join(parts)
 
-
 # --- 通用属性处理逻辑 (必须在具体的注解处理器之前定义) ---
 def _handle_common_attrs(extracted_attrs, attr_map, attrs_to_remove, final_attrs_dict, new_imports_needed=None, old_annotation_name=""):
     for old_key, new_key in attr_map.items():
@@ -167,7 +162,6 @@ def _handle_common_attrs(extracted_attrs, attr_map, attrs_to_remove, final_attrs
     for key, val in extracted_attrs.items():
         if key not in attrs_to_remove:
             pass
-
 
 # --- 注解处理器函数定义 (必须在 ANNOTATION_MAP 之前定义) ---
 def _handle_api_model(old_attrs_content, mapping_config):
@@ -190,7 +184,6 @@ def _handle_api_model(old_attrs_content, mapping_config):
             final_attrs_dict[key] = val
 
     return (f"@Schema({_format_attrs_string(final_attrs_dict)})", new_imports_needed)
-
 
 def _handle_api(old_attrs_content, mapping_config):
     new_imports_needed = set()
@@ -240,7 +233,6 @@ def _handle_api(old_attrs_content, mapping_config):
 
     return (f"@Tag({_format_attrs_string(final_attrs_dict)})", new_imports_needed)
 
-
 def _handle_api_operation(old_attrs_content, mapping_config):
     new_imports_needed = set()
     extracted_attrs = extract_annotation_attrs(old_attrs_content)
@@ -260,7 +252,6 @@ def _handle_api_operation(old_attrs_content, mapping_config):
             final_attrs_dict[key] = val
 
     return (f"@Operation({_format_attrs_string(final_attrs_dict)})", new_imports_needed)
-
 
 def _handle_api_responses(old_attrs_content, mapping_config):
     new_imports_needed = set()
@@ -299,7 +290,6 @@ def _handle_api_responses(old_attrs_content, mapping_config):
     attrs_string = f"{{ {', '.join(transformed_inner_responses)} }}"
     return (f"@ApiResponses({attrs_string})", new_imports_needed)
 
-
 def _handle_api_response(old_attrs_content, mapping_config):
     new_imports_needed = set()
     extracted_attrs = extract_annotation_attrs(old_attrs_content)
@@ -313,11 +303,9 @@ def _handle_api_response(old_attrs_content, mapping_config):
 
     return (f"@ApiResponse({_format_attrs_string(final_attrs_dict)})", new_imports_needed)
 
-
 def _handle_api_ignore(old_attrs_content, mapping_config):
     new_imports_needed = set()
     return (f"@Hidden()", new_imports_needed)
-
 
 def _handle_api_param(old_attrs_content, mapping_config):
     new_imports_needed = set()
@@ -331,7 +319,6 @@ def _handle_api_param(old_attrs_content, mapping_config):
             final_attrs_dict[key] = val
 
     return (f"@Parameter({_format_attrs_string(final_attrs_dict)})", new_imports_needed)
-
 
 def _handle_api_implicit_param_inner(old_attrs_content, mapping_config):
     new_imports_needed = set()
@@ -355,7 +342,6 @@ def _handle_api_implicit_param_inner(old_attrs_content, mapping_config):
 
     return (f"@Parameter({_format_attrs_string(final_attrs_dict)})", new_imports_needed)
 
-
 def _handle_api_implicit_params(old_attrs_content, mapping_config):
     new_imports_needed = set()
     new_name = mapping_config['new_name'] # 通常是 '@Parameters'
@@ -366,7 +352,6 @@ def _handle_api_implicit_params(old_attrs_content, mapping_config):
 
     # 返回 @Parameters() 格式的字符串，不包含任何参数
     return (f"{new_name}()", new_imports_needed)
-
 
 def _handle_api_model_property(old_attrs_content, mapping_config):
     new_imports_needed = set()
@@ -396,7 +381,6 @@ def _handle_api_model_property(old_attrs_content, mapping_config):
             final_attrs_dict[key] = val
 
     return (f"@Schema({_format_attrs_string(final_attrs_dict)})", new_imports_needed)
-
 
 # --- 注解映射表 (必须在所有处理器函数之后定义) ---
 # 映射表现在包含处理器函数的引用，以及每个注解的特定配置
@@ -431,13 +415,11 @@ ANNOTATION_MAP = {
                           'attrs_to_remove': ['position', 'readOnly', 'hidden', 'allowableValues']},
 }
 
-
 # --- build_new_annotation_string 调度器 (保持简洁) ---
 # 它是所有注解转换的入口点，根据注解名调用对应的处理器函数。
 def build_new_annotation_string(old_annotation_name, old_attrs_content, mapping_config):
     handler_func = mapping_config['handler']
     return handler_func(old_attrs_content, mapping_config)
-
 
 # --- 主要文件处理逻辑 (整合了 Jakarta EE 升级) ---
 def process_java_file(filepath):
@@ -704,14 +686,11 @@ http://localhost:8080/swagger-ui.html
 
 > ps: 最终效果只能说差强人意，适配范围不够广，还是有很多情况无法替换，而且对于@ApiImplicitParam的处理一直解决不了，存在一些问题，还是需要再手动处理。
 > 不过也能解决绝大部分的问题了，能省点事。
-> 
+>
 > 希望有大佬能搞个完美的解决方案，这个在升级中还是很有用的。
-
 
 ## 参考文档
 1. http://blog.csdn.net/javaDeveloper2010/article/details/129119489
 2. https://blog.csdn.net/luostudent/article/details/131903001
 3. https://www.cnblogs.com/xiezhr/p/18253311
 4. https://v1.ballcat.cn/guide/other/swagger2ToOpenApi3.html
-
-

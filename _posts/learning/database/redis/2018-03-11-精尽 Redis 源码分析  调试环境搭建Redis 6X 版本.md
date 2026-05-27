@@ -3,14 +3,15 @@ layout: post
 title: 精尽 Redis 源码分析 —— 调试环境搭建（Redis 6.X 版本）
 slug: redisson-redlock-source-code-analysis-debug-environment-setup-redis-6-x
 type:
-  - note
+- note
 date: 2018-03-11
 tags:
-  - Redis
-  - Redisson
-  - 分布式锁
+- Concurrency
+- Redis
+- Database
 categories:
-  - Redis
+- Learning
+- Database
 author: deathwhispers
 created: 2019-05-11 11:45
 updated: 2019-05-11 22:17
@@ -156,4 +157,3 @@ Redis 源码是使用 C 实现的，对于 Java 程序员的我们来说，还�
 ③ [《Redis源码剖析与实战》](assets/images/learning/database/redis/redisson-redlock-source-code-analysis-debug-environment-setup-redis-6-x/184d59981e2b62d539ae6e4732a8badb.jpg)，针对 Redis 版本不详，极客时间 2021 年出的，可能是 Redis 6.X 版本。
 
 这个专栏，目前还在更新，艿艿准备养肥之后，花 1-2 周撸一撸，嘿嘿！作者（蒋德钧）之前出的[《Redis核心技术与实战》](assets/images/learning/database/redis/redisson-redlock-source-code-analysis-debug-environment-setup-redis-6-x/bc2c20a873b8d016029fb615f96fcd1e.jpg) 非常不错，我大飞哥好评连连！
-

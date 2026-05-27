@@ -3,13 +3,13 @@ layout: post
 title: 模板方法模式 (Template Method Pattern) 深度解析
 slug: design-pattern-template-method-pattern
 type:
-  - note
+- note
 date: 2019-08-27
 tags:
-  - designPatterns
-  - templateMethodPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
@@ -64,30 +64,30 @@ updated: 2019-03-12 22:17
 ```java
 // --- 1. 抽象类 (AbstractClass) ---
 public abstract class Game {
-    
+
     // 抽象方法：必须由子类实现
     protected abstract void initialize();
     protected abstract void startPlay();
     protected abstract void endPlay();
-    
+
     // 模板方法：定义算法骨架，使用 final 关键字防止结构被修改
     public final void play(){
         // 1. 初始化游戏
-        this.initialize(); 
-        
+        this.initialize();
+
         // 2. 开始游戏 (钩子方法示例：可以在这里加入条件判断)
-        if (this.shouldStart()) { 
+        if (this.shouldStart()) {
             this.startPlay();
         }
-        
+
         // 3. 结束游戏
         this.endPlay();
     }
-    
+
     // 钩子方法 (Hook Method)：提供默认实现，子类可选重写
     protected boolean shouldStart() {
         // 默认总是开始
-        return true; 
+        return true;
     }
 }
 
@@ -120,12 +120,12 @@ public class Football extends Game {
     protected void endPlay() {
         System.out.println("Football Game Finished!");
     }
-    
+
     // 重写钩子方法，改变了默认行为
     @Override
     protected boolean shouldStart() {
         System.out.println("Checking weather conditions...");
-        return true; 
+        return true;
     }
 }
 
@@ -135,7 +135,7 @@ public class TemplatePatternDemo {
         Game cricket = new Cricket();
         System.out.println("--- Playing Cricket ---");
         cricket.play();
-        
+
         System.out.println("\n--- Playing Football ---");
         Game football = new Football();
         football.play();
@@ -186,7 +186,7 @@ class Chess(Game):
 
     def end_play(self):
         print("Chess game finished: King checked.")
-        
+
     # 重写钩子方法
     def hook_log(self):
         print("Chess tournament log started.")
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     chess = Chess()
     print("--- Playing Chess ---")
     chess.play()
-    
+
 # Output:
 # --- Playing Chess ---
 # Chess game setup: Board ready.

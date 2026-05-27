@@ -3,16 +3,17 @@ layout: post
 title: ThingsBoard入门实战（四）：设备RPC命令下发
 slug: thingsboard-device-rpc-command
 type:
-  - note
+- note
 date: 2023-07-14
 status: draft
 tags:
-  - ThingsBoard
+- IoT
+- ThingsBoard
 categories:
-  - IoT
-  - ThingsBoard
-mood:
-weather:
+- IoT
+- ThingsBoard
+mood: null
+weather: null
 author: deathwhispers
 created: 2023-06-06 11:45
 updated: 2023-06-06 18:33

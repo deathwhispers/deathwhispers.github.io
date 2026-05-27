@@ -3,18 +3,17 @@ layout: post
 title: 原型模式 (Prototype Pattern) 深度解析
 slug: design-pattern-prototype-pattern
 type:
-  - note
+- note
 date: 2019-09-29
 tags:
-  - designPatterns
-  - prototypePattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 🧬 原型模式 (Prototype Pattern) 深度解析
 
@@ -108,7 +107,7 @@ import java.util.Hashtable;
 public abstract class Shape implements Cloneable {
    private String id;
    protected String type;
-   
+
    abstract void draw();
 
    // 实现克隆操作（默认是浅拷贝）
@@ -116,13 +115,13 @@ public abstract class Shape implements Cloneable {
       Object clone = null;
       try {
          // 调用 Object 类的原生 clone 方法
-         clone = super.clone(); 
+         clone = super.clone();
       } catch (CloneNotSupportedException e) {
          e.printStackTrace();
       }
       return clone;
    }
-   
+
    // 省略 Getter/Setter
 }
 
@@ -140,14 +139,14 @@ public class Rectangle extends Shape {
 // 3. 原型缓存/工厂类 (ShapeCache)
 public class ShapeCache {
    private static Hashtable<String, Shape> shapeMap = new Hashtable<>();
-   
+
    // 核心方法：获取并返回克隆对象
    public static Shape getShape(String shapeId) {
       Shape cachedShape = shapeMap.get(shapeId);
       // 返回对象的克隆，而不是原始对象
-      return (Shape) cachedShape.clone(); 
+      return (Shape) cachedShape.clone();
    }
-   
+
    // 加载原型缓存（模拟从数据库加载）
    public static void loadCache() {
       Rectangle rectangle = new Rectangle();
@@ -190,7 +189,7 @@ prototype = PrototypePython("Original", [1, 2])
 
 # --- 浅拷贝测试 ---
 shallow = prototype.shallow_copy()
-shallow.name = "Shallow Copy" 
+shallow.name = "Shallow Copy"
 shallow.data_list.append(3) # 修改引用成员
 
 print(f"Original List ID: {id(prototype.data_list)}")
@@ -204,7 +203,7 @@ deep.data_list.append(4)
 
 print(f"\nOriginal List ID: {id(prototype.data_list)}") # 此时已经带了 [3]
 print(f"Deep List ID:     {id(deep.data_list)}") # ID 不同，独立了
-print(f"Original List: {prototype.data_list}") 
+print(f"Original List: {prototype.data_list}")
 # Output: Original List: [1, 2, 3] (未被深拷贝修改)
 ```
 
@@ -218,7 +217,7 @@ class Shape {
 public:
     virtual ~Shape() {}
     // 关键：声明虚函数 clone，返回自身的指针
-    virtual Shape* clone() const = 0; 
+    virtual Shape* clone() const = 0;
     virtual void draw() = 0;
 };
 
@@ -228,12 +227,12 @@ private:
     int radius;
 public:
     Circle(int r) : radius(r) {}
-    
+
     // 实现克隆操作：返回一个新创建的、与自身状态相同的对象
-    Circle* clone() const override { 
+    Circle* clone() const override {
         return new Circle(*this); // 使用拷贝构造函数实现浅拷贝
     }
-    
+
     void draw() override {
         std::cout << "Drawing Circle with radius " << radius << std::endl;
     }
@@ -242,7 +241,7 @@ public:
 // 客户端使用
 Circle* original = new Circle(10);
 // 通过克隆方法创建新对象
-Circle* cloned = original->clone(); 
+Circle* cloned = original->clone();
 
 // 原始对象和克隆对象是不同的实例
 // if (original != cloned) // True

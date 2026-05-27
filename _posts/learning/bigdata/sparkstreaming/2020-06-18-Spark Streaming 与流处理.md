@@ -3,21 +3,22 @@ layout: post
 title: Spark Streaming 与流处理
 slug: spark-streaming-and-stream-processing
 type:
-  - note
+- note
 date: 2020-06-18
 status: draft
 tags:
-  - Spark
-  - Spark Streaming
+- Spark
+- BigData
+- SparkStreaming
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---
-
 
 ## 一、流处理
 

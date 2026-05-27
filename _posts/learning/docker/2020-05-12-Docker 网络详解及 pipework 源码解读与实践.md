@@ -4,16 +4,16 @@ title: Docker 网络详解及 pipework 源码解读与实践
 slug: docker-network-pipework
 date: 2020-05-12
 type:
-  - note
+- note
 tags:
-  - Docker
+- Docker
 categories:
-  - Docker
+- Learning
+- Docker
 author: deathwhispers
 created: 2020-05-12 11:48
 updated: 2020-05-12 11:48
 ---
-
 
 Docker 作为目前最火的轻量级容器技术，有很多令人称道的功能，如 Docker 的镜像管理。然而，Docker 同样有着很多不完善的地方，网络方面就是 Docker 比较薄弱的部分。因此，我们有必要深入了解 Docker 的网络知识，以满足更高的网络需求。本文首先介绍了 Docker 自身的 4 种网络工作方式，然后通过 3 个样例 —— 将 Docker 容器配置到本地网络环境中、单主机 Docker 容器的 VLAN 划分、多主机 Docker 容器的 VLAN 划分，演示了如何使用[pipework](https://github.com/jpetazzo/pipework)帮助我们进行复杂的网络设置，以及 pipework 是如何工作的。
 

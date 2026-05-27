@@ -1,13 +1,14 @@
 ---
 layout: post
-title: "一键开启 MacOS HiDPI"
+title: 一键开启 MacOS HiDPI
 slug: macos-one-key-hidpi
 status: Published
 date: 2024-06-20
 tags:
-  - MacOS
+- Tooling
 categories:
-  []
+- Misc
+- General
 author: deathwhispers
 ---
 

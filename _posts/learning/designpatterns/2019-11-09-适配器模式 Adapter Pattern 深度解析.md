@@ -3,13 +3,13 @@ layout: post
 title: 适配器模式 (Adapter Pattern) 深度解析
 slug: design-pattern-adapter-pattern
 type:
-  - note
+- note
 date: 2019-11-09
 tags:
-  - designPatterns
-  - adapterPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
@@ -203,7 +203,7 @@ class AdvancedMediaPlayer(ABC):
 class VlcPlayer(AdvancedMediaPlayer):
     def play_vlc(self, fileName):
         print(f"Playing vlc file. Name: {fileName}")
-    
+
     def play_mp4(self, fileName):
         pass # 不实现
 

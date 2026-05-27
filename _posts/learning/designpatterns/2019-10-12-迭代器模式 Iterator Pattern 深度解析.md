@@ -3,13 +3,13 @@ layout: post
 title: 迭代器模式 (Iterator Pattern) 深度解析
 slug: design-pattern-iterator-pattern
 type:
-  - note
+- note
 date: 2019-10-12
 tags:
-  - designPatterns
-  - iteratorPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
@@ -82,18 +82,18 @@ public interface Container {
 // --- 3. 具体聚合器 (NameRepository) ---
 public class NameRepository implements Container {
    public String[] names = {"Robert" , "John" ,"Julie" , "Lora"};
-   
+
    @Override
    public Iterator getIterator() {
       // 聚合器负责创建并返回一个具体迭代器
       return new NameIterator();
    }
-   
+
    // --- 4. 具体迭代器 (NameIterator) ---
    // 通常作为具体聚合器的内部类，以便访问其内部数据
    private class NameIterator implements Iterator {
       int index;
-      
+
       @Override
       public boolean hasNext() {
          if(index < names.length){
@@ -101,12 +101,12 @@ public class NameRepository implements Container {
          }
          return false;
       }
-      
+
       @Override
       public Object next() {
          if(this.hasNext()){
             // 返回元素，并更新游标位置
-            return names[index++]; 
+            return names[index++];
          }
          return null;
       }
@@ -117,7 +117,7 @@ public class NameRepository implements Container {
 public class IteratorPatternDemo {
    public static void main(String[] args) {
       NameRepository namesRepository = new NameRepository();
-      
+
       // 客户端通过统一的 getIterator() 方法获取迭代器
       for(Iterator iter = namesRepository.getIterator(); iter.hasNext();){
          String name = (String)iter.next();
@@ -157,26 +157,26 @@ class NameIterator:
             return item
         else:
             raise StopIteration
-            
+
     def __iter__(self):
         # 迭代器对象通常返回自身
         return self
 
 # --- 3. 客户端调用 (Client) ---
 if __name__ == "__main__":
-    
+
     namesRepository = NameRepository(["Robert" , "John" ,"Julie" , "Lora"])
-    
+
     # 客户端使用标准的 for...in 循环，底层调用 __iter__ 和 __next__
     print("--- Standard Iteration ---")
     for name in namesRepository:
         print("Name : " + name)
-        
+
     # Python 推荐的另一种简单实现方式 (使用生成器)
     class SimpleRepository:
         def __init__(self, items):
             self._items = items
-            
+
         def __iter__(self):
             # 这是一个更简洁的实现，直接返回一个生成器迭代器
             for item in self._items:

@@ -3,16 +3,17 @@ layout: post
 title: DataStream API 简介
 slug: datastream-api-introduction
 type:
-   - note
+- note
 date: 2024-03-14
 status: draft
 tags:
-  - Flink
-  - DataStream API
+- Flink
+- BigData
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2024-01-09 11:45
 updated: 2024-03-12 18:33

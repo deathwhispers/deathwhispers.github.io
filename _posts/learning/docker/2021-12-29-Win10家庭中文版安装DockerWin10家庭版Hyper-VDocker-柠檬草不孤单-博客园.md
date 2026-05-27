@@ -4,16 +4,16 @@ title: Win10家庭中文版安装Docker(Win10家庭版+Hyper-V+Docker）-柠檬�
 slug: win10-home-docker-install
 date: 2021-12-29
 type:
-  - note
+- note
 tags:
-  - Docker
+- Docker
 categories:
-  - Docker
+- Learning
+- Docker
 author: deathwhispers
 created: 2021-12-29 11:48
 updated: 2021-12-29 11:48
 ---
-
 
 ### 前言介绍：
 

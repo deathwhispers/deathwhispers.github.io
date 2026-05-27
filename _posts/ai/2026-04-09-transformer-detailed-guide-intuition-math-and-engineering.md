@@ -1,18 +1,18 @@
 ---
 layout: post
-title: "Transformer 详解：原理、公式、图解与工程实践"
+title: Transformer 详解：原理、公式、图解与工程实践
 slug: transformer-detailed-guide-intuition-math-and-engineering
 status: Published
 date: 2026-04-09
 mermaid: true
 tags:
-  - AI
-  - LLM
-  - Transformer
-  - Attention
-  - 深度学习
+- AI
+- LLM
+- Transformer
+- DeepLearning
 categories:
-  - AI
+- AI
+- General
 author: deathwhispers
 ---
 

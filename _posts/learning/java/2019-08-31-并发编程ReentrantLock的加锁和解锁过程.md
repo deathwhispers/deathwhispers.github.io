@@ -3,16 +3,20 @@ layout: post
 title: 并发编程：ReentrantLock的加锁和解锁过程
 slug: reentrantlock-lock-unlock-process
 type:
-  - note
+- note
 date: 2019-08-31
 week: 2025-W48
 status: draft
 tags:
-  - Java8
+- Java
 author: deathwhispers
 created: 2019-08-31 14:55
 updated: 2019-08-31 14:55
+categories:
+- Learning
+- Java
 ---
+
 # 并发编程：ReentrantLock的加锁和解锁过程
 
 # ReentrantLock

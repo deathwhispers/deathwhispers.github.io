@@ -1,18 +1,15 @@
 ---
 layout: post
-title: "Get Shit Done（GSD）实战使用文档：从安装到交付"
+title: Get Shit Done（GSD）实战使用文档：从安装到交付
 slug: gsd-get-shit-done-usage-guide
 status: Published
 date: 2026-04-10
 mermaid: true
 tags:
-  - AI
-  - Claude Code
-  - Codex
-  - 工程效率
-  - GSD
+- AI
 categories:
-  - AI
+- AI
+- General
 author: deathwhispers
 ---
 

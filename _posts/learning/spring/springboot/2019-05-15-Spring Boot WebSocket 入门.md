@@ -3,16 +3,21 @@ layout: post
 title: Spring Boot WebSocket 入门
 slug: spring-boot-websocket-getting-started
 type:
-  - note
+- note
 date: 2019-05-15
 week: 2019-W21
 status: draft
 tags:
-  - Spring Boot
+- Spring
+- SpringBoot
 author: deathwhispers
 created: 2019-05-15 09:57
 updated: 2019-05-15 09:57
+categories:
+- Learning
+- Spring
 ---
+
 # 1. 概述
 
 相比 HTTP 协议来说，WebSocket 协议对大多数后端开发者是比较陌生的。相比来说，WebSocket 协议**重点**是提供了服务端主动向客户端发送数据的能力，这样我们就可以完成**实时性**较高的需求。例如说，聊天 IM 即使通讯功能、消息订阅服务、网页游戏等等。
@@ -60,7 +65,7 @@ updated: 2019-05-15 09:57
 
 在 [pom.xml](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-25/lab-websocket-25-01/pom.xml) 文件中，引入相关依赖。
 
-  org.springframework.boot spring-boot-starter-parent 2.1.10.RELEASE    4.0.0 lab-25-01    org.springframework.boot spring-boot-starter-websocket    com.alibaba fastjson 1.2.62  
+  org.springframework.boot spring-boot-starter-parent 2.1.10.RELEASE    4.0.0 lab-25-01    org.springframework.boot spring-boot-starter-websocket    com.alibaba fastjson 1.2.62
 
 具体每个依赖的作用，胖友自己认真看下艿艿添加的所有注释噢。
 

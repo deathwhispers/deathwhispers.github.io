@@ -3,20 +3,20 @@ layout: post
 title: 注册中心（二）之Zookeeper
 slug: dubbo-registry-zookeeper
 type:
-  - note
+- note
 date: 2022-04-14
 status: draft
 tags:
-  - Dubbo
+- Dubbo
 categories:
-  - Dubbo
-mood:
-weather:
+- Learning
+- Dubbo
+mood: null
+weather: null
 author: deathwhispers
 created: 2022-04-23 11:52
 updated: 2022-04-23 18:33
 ---
-
 
 本文基于 Dubbo 2.6.1 版本，望知悉。
 

@@ -3,19 +3,21 @@ layout: post
 title: ReentrantReadWriteLock 原理
 slug: concurrent-source-code-reentrantreadwritelock
 type:
-  - note
+- note
 date: 2022-10-27
 week: 2025-W48
 status: draft
 tags:
-  - Java并发源码分析
-  - Java并发系列
+- Java
+- Concurrency
 categories:
-  - Java
+- Learning
+- Java
 author: deathwhispers
 created: 2022-10-27 18:33
 updated: 2022-10-27 18:33
 ---
+
 [https://www.iocoder.cn/JUC/sike/ReentrantReadWriteLock/](https://www.iocoder.cn/JUC/sike/ReentrantReadWriteLock/)
 
 # 1. 简介
@@ -263,7 +265,6 @@ protected ReadLock(ReentrantReadWriteLock lock) {
 
 Acquires the read lock if the write lock is not held by * another thread and returns immediately with the value * {@code true}. Even when this lock has been set to use a * fair ordering policy, a call to {@code tryLock()} * *will* immediately acquire the read lock if it is * available, whether or not other threads are currently * waiting for the read lock. This "barging" behavior * can be useful in certain circumstances, even though it * breaks fairness. If you want to honor the fairness setting * for this lock, then use {@link #tryLock(long, TimeUnit) * tryLock(0, TimeUnit.SECONDS) } which is almost equivalent * (it also detects interruption). * *
 
-
 If the write lock is held by another thread then * this method will return immediately with the value * {@code false}. * * @return {@code true} if the read lock was acquired */ @Override public boolean tryLock() { return sync.tryReadLock(); }
 
 - 详细的说明，胖友可以看上面的英文注释。实际上，原因和 [《【死磕 Java 并发】—– J.U.C 之重入锁：ReentrantLock》](http://www.iocoder.cn/JUC/sike/ReentrantLock?self=) 的 [「4.4 tryLock」](https://www.iocoder.cn/JUC/sike/ReentrantReadWriteLock/#) 相同。
@@ -340,9 +341,7 @@ protected ReadLock(ReentrantReadWriteLock lock) {
 
 Acquires the write lock if neither the read nor write lock * are held by another thread * and returns immediately with the value {@code true}, * setting the write lock hold count to one. Even when this lock has * been set to use a fair ordering policy, a call to * {@code tryLock()} *will* immediately acquire the * lock if it is available, whether or not other threads are * currently waiting for the write lock. This "barging" * behavior can be useful in certain circumstances, even * though it breaks fairness. If you want to honor the * fairness setting for this lock, then use {@link * #tryLock(long, TimeUnit) tryLock(0, TimeUnit.SECONDS) } * which is almost equivalent (it also detects interruption). * *
 
-
 If the current thread already holds this lock then the * hold count is incremented by one and the method returns * {@code true}. * *
-
 
 If the lock is held by another thread then this method * will return immediately with the value {@code false}. * * @return {@code true} if the lock was free and was acquired * by the current thread, or the write lock was already held * by the current thread; and {@code false} otherwise. */ @Override public boolean tryLock( ) { return sync.tryWriteLock(); }
 

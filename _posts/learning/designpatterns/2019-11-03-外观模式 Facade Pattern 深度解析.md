@@ -3,13 +3,13 @@ layout: post
 title: 外观模式 (Facade Pattern) 深度解析
 slug: design-pattern-facade-pattern
 type:
-  - note
+- note
 date: 2019-11-03
 tags:
-  - designPatterns
-  - facadePattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
@@ -80,23 +80,23 @@ public class Rectangle implements Shape {
 public class ShapeMaker {
    private Shape circle;
    private Shape rectangle;
-   
+
    public ShapeMaker() {
       // 外观对象负责实例化子系统组件
       this.circle = new Circle();
       this.rectangle = new Rectangle();
    }
-   
+
    // 提供统一的简化接口
    public void drawCircle() {
       // 外观对象负责协调子系统内部的调用顺序和逻辑
       circle.draw();
    }
-   
+
    public void drawRectangle() {
       rectangle.draw();
    }
-   
+
    // 复杂操作的简化接口：例如，绘制一个组合图形
    public void drawComplexShape() {
        System.out.println("Facade: Starting complex drawing sequence.");
@@ -110,11 +110,11 @@ public class ShapeMaker {
 public class FacadeDemo {
    public static void main(String[] args) {
       ShapeMaker shapeMaker = new ShapeMaker();
-      
+
       // 客户端只需要调用外观对象，无需关心 Circle 和 Rectangle 的存在
       shapeMaker.drawCircle();
       shapeMaker.drawComplexShape();
-      
+
       // 输出结果：
       // SubSystem: Drawing Circle...
       // Facade: Starting complex drawing sequence.
@@ -166,7 +166,7 @@ class HomeTheaterFacade:
         self.proj.wide_screen_mode()
         self.dvd.on()
         self.dvd.play(movie)
-    
+
     # 简化接口：一键关闭
     def end_movie(self):
         print("\n===== SHUTTING DOWN HOME THEATER =====")
@@ -179,10 +179,10 @@ if __name__ == "__main__":
     amp = Amplifier()
     dvd = DvdPlayer()
     proj = Projector()
-    
+
     # 客户端实例化外观对象
     home_theater = HomeTheaterFacade(amp, dvd, proj)
-    
+
     # 客户端只需调用一个方法，隐藏了 7 步复杂操作
     home_theater.watch_movie("Inception")
     # home_theater.end_movie()

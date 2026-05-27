@@ -3,13 +3,13 @@ layout: post
 title: 组合模式 (Composite Pattern) 深度解析
 slug: design-pattern-composite-pattern
 type:
-  - note
+- note
 date: 2019-10-25
 tags:
-  - designPatterns
-  - compositePattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
@@ -145,7 +145,7 @@ public class CompositePatternDemo {
     public static void main(String[] args) {
         // 创建组合结构
         Manager ceo = new Manager("John", "CEO");
-        
+
         Manager salesHead = new Manager("Robert", "Head Sales");
         BasicEmployee salesStaff1 = new BasicEmployee("Richard");
         salesHead.add(salesStaff1);
@@ -153,7 +153,7 @@ public class CompositePatternDemo {
         Manager marketingHead = new Manager("Michel", "Head Marketing");
         BasicEmployee marketingStaff1 = new BasicEmployee("Laura");
         marketingHead.add(marketingStaff1);
-        
+
         ceo.add(salesHead);
         ceo.add(marketingHead);
 
@@ -209,24 +209,24 @@ class Folder(FileSystemComponent):
 
 # --- 4. 客户端调用 (Client) ---
 if __name__ == "__main__":
-    
+
     # 建立文件系统树
     root = Folder("Root")
-    
+
     docs_folder = Folder("Documents")
     docs_folder.add(File("Resume.pdf"))
     docs_folder.add(File("Notes.txt"))
-    
+
     images_folder = Folder("Images")
     images_folder.add(File("Sunset.jpg"))
     images_folder.add(File("Logo.png"))
-    
+
     root.add(docs_folder)
     root.add(images_folder)
     root.add(File("README.md")) # 直接在根目录下添加文件
 
     # 客户端使用统一的 display 接口处理整个结构
-    root.display() 
+    root.display()
 ```
 
 ## 4\. 模式优点与缺点

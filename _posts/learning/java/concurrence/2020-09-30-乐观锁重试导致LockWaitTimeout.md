@@ -3,19 +3,21 @@ layout: post
 title: 乐观锁重试导致 Lock Wait Timeout
 slug: java-optimistic-lock-retry-lock-wait-timeout-exceeded
 type:
-  - note
+- note
 date: 2020-09-30
 week: 2025-W48
 status: draft
 tags:
-  - 并发编程
-  - Java并发系列
+- Java
+- Concurrency
 categories:
-  - Java
+- Learning
+- Java
 author: deathwhispers
 created: 2020-09-30 12:19
 updated: 2020-09-30 12:19
 ---
+
 # 乐观锁加重试，并发更新数据库一条记录导致：Lock wait timeout exceeded
 
 ## 背景：
@@ -25,43 +27,41 @@ mysql数据库，用户余额表有一个version（版本号）字段，作为�
 @Transactional(rollbackFor = Exception.class)
 ```
 
-
 - 更新时，比对版本号，如果版本号不一致，则更新失败。
 - 有重试机制，如果更新失败，则查询最新版本号，再次更新，重试超过5次，报错退出。
 - 更新的核心方法：
 ```java
-public boolean updateUserAccount(Long userId, int amount) { 
-	boolean retryable; 
+public boolean updateUserAccount(Long userId, int amount) {
+	boolean retryable;
 	int attemptNumber = 0;
 	do {
-		// 查询最新版本号 
+		// 查询最新版本号
 		UserAccount userAccount = accountMapper.selectByPrimaryKey(userId);
-		long oldVersion = userAccount.getVersion(); 
+		long oldVersion = userAccount.getVersion();
 		// 更新
 		boolean success = accountMapper.updateBalance(amount, new Date(), userId, oldVersion) > 0;
-		if (success) { 
-			return true; 
-		} else { 
-			attemptNumber++; 
-			retryable = attemptNumber < 5; 
-			if (attemptNumber == 5) { 
-				log.error(“超过最大重试次数”); 
-				break; 
-			} 
-			try { 
+		if (success) {
+			return true;
+		} else {
+			attemptNumber++;
+			retryable = attemptNumber < 5;
+			if (attemptNumber == 5) {
+				log.error(“超过最大重试次数”);
+				break;
+			}
+			try {
 				Thread.sleep(300);
 			} catch (InterruptedException e) {
-				log.error(e); 
-			} 
-		} 
-	} while (retryable); 
-	return false; 
+				log.error(e);
+			}
+		}
+	} while (retryable);
+	return false;
 }
 ```
 
-
 ```sql
-UPDATE user_account SET balance = balance - #{amount,jdbcType=INTEGER}, update_time = #{updateTime,jdbcType=TIMESTAMP}, version = #{version,jdbcType=BIGINT} + 1 WHERE balance > #{amount,jdbcType=INTEGER} AND user_id = #{userId,jdbcType=BIGINT} AND version = #{version,jdbcType=BIGINT}; 
+UPDATE user_account SET balance = balance - #{amount,jdbcType=INTEGER}, update_time = #{updateTime,jdbcType=TIMESTAMP}, version = #{version,jdbcType=BIGINT} + 1 WHERE balance > #{amount,jdbcType=INTEGER} AND user_id = #{userId,jdbcType=BIGINT} AND version = #{version,jdbcType=BIGINT};
 ```
 
 在并发更新时，报异常：Lock wait timeout exceeded=

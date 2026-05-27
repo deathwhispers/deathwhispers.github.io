@@ -4,16 +4,15 @@ title: 一文看透 Apache HttpClient 的底层请求执行与 Socket 连接建�
 slug: apache-httpclient-under-the-hood
 date: 2022-01-09
 type:
-  - note
+- note
 tags:
-  - httpclient
-  - keep-alive
-  - http
+- IoT
+- HttpClient
 categories:
-  - IoT
+- IoT
+- General
 author: deathwhispers
 ---
-
 
 # ✅ 一文看透 Apache HttpClient 的底层请求执行与 Socket 连接建立流程（源码级解析）
 

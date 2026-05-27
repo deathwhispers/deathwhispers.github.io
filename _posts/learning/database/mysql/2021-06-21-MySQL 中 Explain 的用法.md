@@ -3,17 +3,18 @@ layout: post
 title: MySQL 中 Explain 的用法
 slug: mysql-explain-usage
 type:
-  - note
+- note
 date: 2021-06-21
 tags:
-  - mysql
+- MySQL
+- Database
 categories:
-  - mysql
+- Learning
+- Database
 author: deathwhispers
 created: 2021-06-21 11:45
 updated: 2021-06-21 22:17
 ---
-
 
 ## Explain中的列
 

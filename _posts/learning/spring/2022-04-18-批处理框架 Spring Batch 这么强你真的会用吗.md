@@ -3,15 +3,18 @@ layout: post
 title: 批处理框架 Spring Batch 这么强，你真的会用吗？
 slug: spring-batch-strong-but-you-dont-know-how-to-use-it
 type:
-  - note
+- note
 date: 2022-04-18
 week: 2022-W16
 status: draft
 tags:
-  - Spring 框架
+- Spring
 author: deathwhispers
 created: 2022-04-18 10:00
 updated: 2022-04-18 10:00
+categories:
+- Learning
+- Spring
 ---
 
 ## [前言](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247487551&idx=1&sn=18f64ba49f3f0f9d8be9d1fdef8857d9&scene=21#wechat_redirect)

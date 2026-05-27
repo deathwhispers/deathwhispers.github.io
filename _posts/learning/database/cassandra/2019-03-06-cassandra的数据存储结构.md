@@ -3,19 +3,19 @@ layout: post
 title: Cassandra的数据存储结构
 slug: cassandra-data-storage-structure
 type:
-  - note
+- note
 date: 2019-03-06
 status: draft
 tags:
-  - cassandra
-  - compression
-categories: 
-  - cassandra
+- Database
+- Cassandra
+categories:
+- Learning
+- Database
 author: deathwhispers
 created: 2019-03-06 11:46
 updated: 2019-03-06 18:34
 ---
-
 
 # Cassandra的数据存储结构
 

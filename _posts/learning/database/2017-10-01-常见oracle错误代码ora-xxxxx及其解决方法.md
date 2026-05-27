@@ -3,17 +3,17 @@ layout: post
 title: 常见oracle错误代码ORA-xxxxx及其解决方法
 slug: common-oracle-error-code-ora-xxxx-and-solution
 type:
-  - note
+- note
 date: 2017-10-01
 tags:
-  - Oracle
+- Database
 categories:
-  - Database
+- Learning
+- Database
 author: deathwhispers
 created: 2017-10-01 22:08
 updated: 2017-10-01 22:08
 ---
-
 
 ORA-00001: 违反唯一约束条件 (.)
 

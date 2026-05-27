@@ -1,17 +1,17 @@
 ---
 layout: post
-title: "CRA 系列 06：常见风险与避坑清单，如何少走弯路"
+title: CRA 系列 06：常见风险与避坑清单，如何少走弯路
 slug: cra-risk-management-and-common-pitfalls
 status: Published
 date: 2026-02-18
 tags:
-  - CRA
-  - 风险管理
-  - 临床研究
-  - CAPA
+- Tooling
+- CAPA
+- ClinicalResearch
+- RiskManagement
 categories:
-  - 临床研究
-  - CRA系列
+- Other
+- General
 author: deathwhispers
 ---
 

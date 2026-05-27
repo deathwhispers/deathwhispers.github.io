@@ -3,18 +3,17 @@ layout: post
 title: 桥接模式 (Bridge Pattern) 深度解析
 slug: design-pattern-bridge-pattern
 type:
-  - note
+- note
 date: 2019-10-08
 tags:
-  - designPatterns
-  - bridgePattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 🌉 桥接模式 (Bridge Pattern) 深度解析
 
@@ -93,26 +92,26 @@ public class GreenCircle implements DrawAPI {
 // 维度 A：形状
 public abstract class Shape {
     protected DrawAPI drawAPI; // 持有实现部分的引用，建立桥接
-    
+
     // 通过构造函数注入实现部分
     protected Shape(DrawAPI drawAPI) {
         this.drawAPI = drawAPI;
     }
-    
+
     public abstract void draw();
 }
 
 // --- 4. 扩充抽象类 (RefinedAbstraction) ---
 public class Circle extends Shape {
     private int x, y, radius;
-    
+
     public Circle(int x, int y, int radius, DrawAPI drawAPI) {
         super(drawAPI);
         this.x = x;
         this.y = y;
         this.radius = radius;
     }
-    
+
     @Override
     public void draw() {
         // 调用实现类的方法完成具体操作
@@ -125,12 +124,12 @@ public class BridgePatternDemo {
     public static void main(String[] args) {
         // 红色圆形：形状(Circle) + 颜色(RedCircle)
         Shape redCircle = new Circle(100, 100, 10, new RedCircle());
-        redCircle.draw(); 
-        
+        redCircle.draw();
+
         // 绿色圆形：形状(Circle) + 颜色(GreenCircle)
         Shape greenCircle = new Circle(100, 100, 10, new GreenCircle());
         greenCircle.draw();
-        
+
         // 假设新增 Rectangle 形状和 BlueCircle 颜色，均不影响现有代码。
     }
 }
@@ -156,7 +155,7 @@ class ConcreteImplementorB(Implementor):
 class Abstraction:
     def __init__(self, implementor: Implementor):
         self._implementor = implementor
-        
+
     def operation(self):
         # 抽象类的高层操作委托给实现类完成
         self._implementor.operation_imp()
@@ -165,7 +164,7 @@ class Abstraction:
 class RefinedAbstraction(Abstraction):
     def __init__(self, implementor: Implementor):
         super().__init__(implementor)
-        
+
     def operation(self):
         print("Refined Abstraction doing something extra...")
         self._implementor.operation_imp() # 委托给实现类
@@ -175,7 +174,7 @@ if __name__ == "__main__":
     # 抽象化角色与实现化角色可以独立变化并动态组合
     imp_a = ConcreteImplementorA()
     abs_a = RefinedAbstraction(imp_a)
-    abs_a.operation() 
+    abs_a.operation()
 
     imp_b = ConcreteImplementorB()
     abs_b = RefinedAbstraction(imp_b)

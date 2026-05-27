@@ -1,13 +1,12 @@
 ---
 layout: post
-title: "Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（八）"
+title: Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（八）
 date: 2025-09-17
 tags:
-  - Spring Scheduling
-  - Task Scheduling
+- Spring
 categories:
-  - Framework
-  - Spring Boot定时任务
+- Framework
+- Backend
 author: deathwhispers
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
@@ -230,7 +229,7 @@ graph TD
         subgraph "后端服务"
             B[SchedulerController 任务生命周期管理];
             F[SchedulerLogController 日志管理];
-        end        
+        end
     end
     B -- 框架核心，实际干活 --> G[TaskManager];
     F -- 查日志（存在Redis里） --> H[TaskLogStore];
@@ -257,5 +256,3 @@ graph TD
 这种“服务化”的思路，能让咱的系统更灵活——不管是加数据源、改调度规则，还是换存储方式，都不用大改代码，轻松应对业务变化。
 
 下一章，咱聊点高级玩法：比如自己写持久化实现（不用Redis/MySQL，用MongoDB）、跟配置中心联动（改配置自动更任务），把框架的潜力再挖一挖。
-
-

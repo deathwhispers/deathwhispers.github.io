@@ -3,22 +3,21 @@ layout: post
 title: Hadoop 分布式资源管理器 YARN
 slug: hadoop-distributed-resource-manager-yarn
 type:
-  - note
+- note
 date: 2020-09-19
 status: draft
 tags:
-  - Hadoop
-  - Yarn
+- Hadoop
+- BigData
 categories:
-  - BigData
-  - Hadoop
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-09-19 11:45
 updated: 2020-09-19 18:27
 ---
-
 
 ## 一、hadoop yarn 简介
 

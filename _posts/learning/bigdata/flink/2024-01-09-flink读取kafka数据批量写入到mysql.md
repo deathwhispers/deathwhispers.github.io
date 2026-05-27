@@ -3,18 +3,18 @@ layout: post
 title: Flink读取Kafka数据批量写入到MySQL
 slug: flink-read-kafka-data-batch-write-to-mysql
 type:
-   - note
+- note
 date: 2024-01-09
 status: draft
 tags:
-   - Flink
-   - MySQL
-   - 大数据
-   - 流式计算
+- MySQL
+- Flink
+- BigData
 categories:
-   - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2024-01-09 11:45
 updated: 2024-03-12 18:33

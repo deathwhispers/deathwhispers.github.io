@@ -1,18 +1,19 @@
 ---
 layout: post
-title: "让Google搜索到搭建在Github Pages上的博客"
+title: 让Google搜索到搭建在Github Pages上的博客
 date: 2025-04-24
-tags: 
-  - GitHub Pages
-  - Google Search Console
-categories: 
-  - Life
+tags:
+- EngineeringPractice
+- GitHubPages
+- GoogleSearchConsole
+categories:
+- Practicing
+- General
 comments: true
 author: deathwhispers
 created: 2025-04-24 09:57
 updated: 2025-04-24 09:57
 ---
-
 
 使用 Github Pages 来搭建博客是一种很不错的选择，但是如果仅仅搭建完毕是无法通过搜索引擎查询到的，
 因为搜索引擎不会去检索你的Github仓库，遇到这个问题怎么办呢？本文教你在Github Pages上搭建的博客如何能被Google搜索到。

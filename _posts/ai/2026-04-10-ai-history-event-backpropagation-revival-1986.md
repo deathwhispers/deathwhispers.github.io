@@ -1,17 +1,16 @@
 ---
 layout: post
-title: "AI 发展史大事件 04：1986 反向传播复兴，神经网络重获生命"
+title: AI 发展史大事件 04：1986 反向传播复兴，神经网络重获生命
 slug: ai-history-event-backpropagation-revival-1986
 status: Published
 date: 2026-04-10
 tags:
-  - AI
-  - AI发展史
-  - 反向传播
-  - 神经网络
+- AI
+- AIHistory
+- NeuralNetwork
 categories:
-  - AI
-  - AI发展史系列
+- AI
+- General
 author: deathwhispers
 ---
 

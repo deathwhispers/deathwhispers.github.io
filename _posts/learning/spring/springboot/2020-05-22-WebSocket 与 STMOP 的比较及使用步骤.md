@@ -3,16 +3,20 @@ layout: post
 title: WebSocket 与 STMOP 的比较及使用步骤
 slug: websocket-stmop-comparison-and-usage-steps
 type:
-  - note
+- note
 date: 2020-05-22
 status: draft
 tags:
-  - Spring Boot
-mood:
-weather:
+- Spring
+- SpringBoot
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:46
 updated: 2025-03-12 18:41
+categories:
+- Learning
+- Spring
 ---
 
 # **前言**

@@ -1,13 +1,14 @@
 ---
 layout: post
-title: "GitHub Actions 简单入门-原理、使用方法与 YAML 详解"
+title: GitHub Actions 简单入门-原理、使用方法与 YAML 详解
 slug: github-actions-intro-principles-usage-and-yaml-details
 status: Published
 date: 2025-11-07
 tags:
-  []
+- Tooling
 categories:
-  []
+- Misc
+- General
 author: deathwhispers
 ---
 

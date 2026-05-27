@@ -3,18 +3,17 @@ layout: post
 title: 简单工厂模式 (Simple Factory Pattern) 深度解析
 slug: design-pattern-simple-factory-pattern
 type:
-  - note
+- note
 date: 2019-07-05
 tags:
-  - designPatterns
-  - simpleFactoryPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 🛠️ 简单工厂模式 (Simple Factory Pattern) 深度解析
 
@@ -88,15 +87,15 @@ public class ShapeFactory {
         if (shapeType == null) {
             return null;
         }
-        
+
         // 核心：集中了所有产品创建的判断逻辑
         if (shapeType.equalsIgnoreCase("CIRCLE")) {
             return new Circle();
         } else if (shapeType.equalsIgnoreCase("RECTANGLE")) {
             return new Rectangle();
-        } 
+        }
         // 增加新产品必须修改这里的逻辑！
-        
+
         throw new IllegalArgumentException("Unknown shape type: " + shapeType);
     }
 }
@@ -106,8 +105,8 @@ public class SimpleFactoryDemo {
     public static void main(String[] args) {
         // 客户端无需关心具体类名，只需传入参数
         Shape shape1 = ShapeFactory.createShape("CIRCLE");
-        shape1.draw(); 
-        
+        shape1.draw();
+
         Shape shape2 = ShapeFactory.createShape("rectangle");
         shape2.draw();
     }
@@ -135,7 +134,7 @@ class ConcreteProductB(Product):
 
 # --- 3. 工厂角色 (Factory) ---
 class SimpleFactory:
-    
+
     # 使用字典映射集中创建逻辑
     _product_map = {
         "A": ConcreteProductA,
@@ -153,7 +152,7 @@ class SimpleFactory:
 if __name__ == "__main__":
     prod_a = SimpleFactory.create_product("A")
     prod_a.use()
-    
+
     prod_b = SimpleFactory.create_product("B")
     prod_b.use()
 ```

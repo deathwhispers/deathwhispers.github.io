@@ -3,19 +3,17 @@ layout: post
 title: 抽象工厂模式 (Abstract Factory Pattern) 深度解析
 slug: design-pattern-abstract-factory-pattern
 type:
-  - note
+- note
 date: 2019-10-05
 tags:
-  - designPatterns
-  - abstractFactoryPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
-
 
 # 🔩 抽象工厂模式 (Abstract Factory Pattern) 深度解析
 
@@ -124,15 +122,15 @@ public class AbstractFactoryDemo {
         AbstractFactory factory = new WinFactory();
         AbstractButton btn = factory.createButton();
         AbstractTextField txt = factory.createTextField();
-        
+
         System.out.println("--- Using Windows Theme ---");
         btn.paint();   // Win Button painted.
         txt.display(); // Win TextField displayed.
-        
+
         factory = new MacFactory(); // 切换产品族
         btn = factory.createButton();
         txt = factory.createTextField();
-        
+
         System.out.println("\n--- Using macOS Theme ---");
         btn.paint();   // Mac Button painted.
         txt.display(); // Mac TextField displayed.

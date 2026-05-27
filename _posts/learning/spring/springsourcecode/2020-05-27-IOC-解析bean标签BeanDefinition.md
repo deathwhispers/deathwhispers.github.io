@@ -3,18 +3,21 @@ layout: post
 title: IOC-解析bean标签：BeanDefinition
 slug: ioc-parse-bean-tag-bean-definition
 type:
-  - note
+- note
 date: 2020-05-27
 status: draft
 tags:
-  - Spring 源码解析
-mood:
-weather:
+- Spring
+- SpringSourceCode
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-05-27 09:00
 updated: 2020-05-27 18:00
+categories:
+- Learning
+- Spring
 ---
-
 
 **本文主要基于 Spring 5.0.6.RELEASE**
 

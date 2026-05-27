@@ -1,17 +1,15 @@
 ---
 layout: post
-title: "AI 发展史大事件 03：1969 感知机之争与第一次 AI 冬天"
+title: AI 发展史大事件 03：1969 感知机之争与第一次 AI 冬天
 slug: ai-history-event-perceptron-controversy-and-first-ai-winter
 status: Published
 date: 2026-04-10
 tags:
-  - AI
-  - AI发展史
-  - 感知机
-  - AI冬天
+- AI
+- AIHistory
 categories:
-  - AI
-  - AI发展史系列
+- AI
+- General
 author: deathwhispers
 ---
 

@@ -1,13 +1,14 @@
 ---
 layout: post
-title: "基于 MybatisPlus 的动态 sql 构建器"
+title: 基于 MybatisPlus 的动态 sql 构建器
 slug: dynamic-sql-builder-based-on-mybatisplus
 date: 2025-07-26
 tags:
-  - MybatisPlus
+- Spring
+- MyBatisPlus
 categories:
-  - Framework
-  - DynamicSqlBuilder
+- Framework
+- Backend
 author: deathwhispers
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
@@ -50,7 +51,6 @@ classDiagram
     DynamicSqlBuilder ..> QueryConditionMetadata
     DynamicSqlBuilder ..> RelationMetadata
 ```
-
 
 ```java
 // com.example.report.core.sql.DynamicSqlBuilder

@@ -1,18 +1,18 @@
 ---
 layout: post
-title: "多模态大模型如何实现：从原理到架构的深度拆解"
+title: 多模态大模型如何实现：从原理到架构的深度拆解
 slug: multimodal-llm-how-it-works-architecture-training-and-systems
 status: Published
 date: 2026-04-10
 mermaid: true
 tags:
-  - AI
-  - LLM
-  - 多模态
-  - Transformer
-  - VLM
+- AI
+- LLM
+- Transformer
+- Multimodal
 categories:
-  - AI
+- AI
+- General
 author: deathwhispers
 ---
 

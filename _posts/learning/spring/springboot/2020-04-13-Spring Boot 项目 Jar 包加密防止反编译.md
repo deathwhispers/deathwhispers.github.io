@@ -3,16 +3,21 @@ layout: post
 title: Spring Boot 项目 Jar 包加密，防止反编译
 slug: spring-boot-jar-encrypt
 type:
-  - note
+- note
 date: 2020-04-13
 week: 2020-W15
 status: draft
 tags:
-  - Spring Boot
+- Spring
+- SpringBoot
 author: deathwhispers
 created: 2020-04-13 09:57
 updated: 2020-04-13 09:57
+categories:
+- Learning
+- Spring
 ---
+
 ## [1 场景](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247487551&idx=1&sn=18f64ba49f3f0f9d8be9d1fdef8857d9&scene=21#wechat_redirect)
 
 最近项目要求部署到其他公司的服务器上，但是又不想将源码泄露出去。要求对正式环境的启动包进行安全性处理，防止客户直接通过反编译工具将代码反编译出来。

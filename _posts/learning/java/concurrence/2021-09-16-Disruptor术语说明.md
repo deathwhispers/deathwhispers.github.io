@@ -3,19 +3,21 @@ layout: post
 title: Disruptor 术语说明
 slug: disruptor-terminology
 type:
-  - note
+- note
 date: 2021-09-16
 week: 2025-W48
 status: draft
 tags:
-  - 并发编程
-  - Java并发系列
+- Java
+- Concurrency
 categories:
-  - Java
+- Learning
+- Java
 author: deathwhispers
 created: 2021-09-16 19:45
 updated: 2021-09-16 19:45
 ---
+
 # Disruptor
 
 Disruptor 术语说明：

@@ -3,16 +3,17 @@ layout: post
 title: Structured API 基本使用
 slug: structured-api-basic-usage
 type:
-  - note
+- note
 date: 2020-05-21
 status: draft
 tags:
-  - Spark
-  - Structured API
+- Spark
+- BigData
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
@@ -101,7 +102,6 @@ val rddToDS = spark.sparkContext
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
 
-
 // 1.定义每个列的列类型
 val fields = Array(StructField("deptno", LongType, nullable = true),
                    StructField("dname", StringType, nullable = true),
@@ -113,7 +113,6 @@ val schema = StructType(fields)
 // 3.创建 RDD
 val deptRDD = spark.sparkContext.textFile("/usr/file/dept.txt")
 val rowRDD = deptRDD.map(_.split("\t")).map(line => Row(line(0).toLong, line(1), line(2)))
-
 
 // 4.将 RDD 转换为 dataFrame
 val deptDF = spark.createDataFrame(rowRDD, schema)

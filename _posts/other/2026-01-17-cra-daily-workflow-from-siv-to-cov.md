@@ -1,18 +1,18 @@
 ---
 layout: post
-title: "CRA 系列 02：日常工作全流程，从 SIV 到 COV"
+title: CRA 系列 02：日常工作全流程，从 SIV 到 COV
 slug: cra-daily-workflow-from-siv-to-cov
 status: Published
 date: 2026-01-17
 mermaid: true
 tags:
-  - CRA
-  - 监查
-  - 临床试验
-  - GCP
+- Tooling
+- ClinicalMonitoring
+- ClinicalTrial
+- GCP
 categories:
-  - 临床研究
-  - CRA系列
+- Other
+- General
 author: deathwhispers
 ---
 

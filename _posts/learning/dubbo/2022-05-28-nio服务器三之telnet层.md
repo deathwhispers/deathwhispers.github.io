@@ -3,20 +3,20 @@ layout: post
 title: NIO服务器（三）之Telnet层
 slug: dubbo-nio-server-telnet
 type:
-  - note
+- note
 date: 2022-05-28
 status: draft
 tags:
-  - Dubbo
+- Dubbo
 categories:
-  - Dubbo
-mood:
-weather:
+- Learning
+- Dubbo
+mood: null
+weather: null
 author: deathwhispers
 created: 2022-05-28 11:49
 updated: 2022-05-28 18:33
 ---
-
 
 本文基于 Dubbo 2.6.1 版本，望知悉。
 

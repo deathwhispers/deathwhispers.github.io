@@ -1,14 +1,13 @@
 ---
 layout: post
-title: "Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（一）"
+title: Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（一）
 slug: from-scheduled-to-enterprise-level-dynamic-scheduling-framework-design-tour-1
 date: 2025-08-13
 tags:
-  - Spring Scheduling
-  - Task Scheduling
+- Spring
 categories:
-  - Framework
-  - Spring Boot定时任务
+- Framework
+- Backend
 author: deathwhispers
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
@@ -89,5 +88,3 @@ public void generateDailyReport() {
 这一章咱们把原生`@Scheduled`的毛病说透了——**不够灵活、集群里会乱、看不见状态、没法动态调**，这四个问题凑到一起，其实就是在提醒咱们：**定时任务方案，该升级了**。咱们需要一个新方案：既要像`@Scheduled`这么简单好用，又能解决它在企业级项目里的那些坑。
 
 下一章，咱们就开始解决这些问题，聊聊我第一次尝试的方案——看着挺简单，结果一头撞上了“南墙”。不过也多亏了这次失败，才让咱们后来找对了方向。
-
-

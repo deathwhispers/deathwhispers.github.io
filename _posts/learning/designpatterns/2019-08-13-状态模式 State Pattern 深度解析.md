@@ -3,13 +3,13 @@ layout: post
 title: 状态模式 (State Pattern) 深度解析
 slug: design-pattern-state-pattern
 type:
-  - note
+- note
 date: 2019-08-13
 tags:
-  - designPatterns
-  - statePattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
@@ -114,7 +114,7 @@ public class Context {
         this.currentState = newState;
         System.out.println("State Changed to: " + newState);
     }
-    
+
     // 委托给当前状态对象处理
     public void pressPlayPause() {
         System.out.print("Current State [" + currentState + "]: ");
@@ -179,7 +179,7 @@ class PlayingState(PlayerState):
 class Context:
     def __init__(self):
         # 初始状态
-        self._state = StoppedState() 
+        self._state = StoppedState()
         self.log_state_change()
 
     @property
@@ -189,7 +189,7 @@ class Context:
     @state.setter
     def state(self, new_state):
         self._state = new_state
-    
+
     def log_state_change(self):
         print(f"[Context]: State changed to {self._state.__class__.__name__}")
 
@@ -203,13 +203,13 @@ class Context:
 # --- 4. 客户端调用 (Client) ---
 if __name__ == "__main__":
     player = Context()
-    
+
     print("\n--- Interaction 1 ---")
     player.press_play_pause() # Stopped -> Playing
-    
+
     print("\n--- Interaction 2 ---")
     player.press_play_pause() # Playing -> Stopped
-    
+
     print("\n--- Interaction 3 ---")
     player.press_stop()       # Already Stopped, no change.
 ```

@@ -3,19 +3,21 @@ layout: post
 title: ThreadLocalRandom 原理剖析
 slug: java-thread-local-random-principle-analysis
 type:
-  - note
+- note
 date: 2020-01-01
 week: 2025-W48
 status: draft
 tags:
-  - 并发编程
-  - Java并发系列
+- Java
+- Concurrency
 categories:
-  - Java
+- Learning
+- Java
 author: deathwhispers
 created: 2020-01-01 18:32
 updated: 2020-01-01 18:32
 ---
+
 ## Random类及其局限性
 
 一般情况下，我们都会使用java.util.Random来生成随机数（Math.random()也是使用Random实例生成随机数）。

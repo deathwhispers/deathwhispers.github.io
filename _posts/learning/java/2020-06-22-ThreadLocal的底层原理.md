@@ -3,16 +3,16 @@ layout: post
 title: ThreadLocal 的底层原理（整合版）
 slug: threadlocal-underlying-principle
 type:
-  - note
+- note
 date: 2020-06-22
 week: 2025-W48
 status: draft
 tags:
-  - Java并发
-  - ThreadLocal
+- Java
+- Concurrency
 categories:
-  - Java
-  - 并发
+- Learning
+- Java
 author: deathwhispers
 created: 2020-06-22 22:58
 updated: 2026-04-20 18:30

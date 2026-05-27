@@ -3,17 +3,19 @@ layout: post
 title: Linux 下 Flume 的安装
 slug: flume-installation-on-linux
 type:
-  - note
+- note
 date: 2025-11-15
 week: 2025-W48
 status: draft
 tags:
-  - Flume
+- EngineeringPractice
 author: deathwhispers
 created: 2025-11-15 10:00
 updated: 2025-11-15 10:00
+categories:
+- Learning
+- General
 ---
-
 
 ## 一、前置条件
 

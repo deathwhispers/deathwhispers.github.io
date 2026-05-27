@@ -3,20 +3,20 @@ layout: post
 title: synchronized 实现原理
 slug: concurrent-source-code-synchronized
 type:
-  - note
+- note
 date: 2020-01-22
 week: 2025-W48
 status: draft
 tags:
-  - Java并发源码分析
-  - Java并发系列
+- Java
+- Concurrency
 categories:
-  - Java
+- Learning
+- Java
 author: deathwhispers
 created: 2020-01-22 18:53
 updated: 2020-01-22 18:53
 ---
-
 
 [https://www.iocoder.cn/JUC/sike/synchronized/](https://www.iocoder.cn/JUC/sike/synchronized/)
 

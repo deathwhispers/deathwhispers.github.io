@@ -1,13 +1,12 @@
 ---
 layout: post
-title: "Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（九）"
+title: Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（九）
 date: 2025-09-20
 tags:
-  - Spring Scheduling
-  - Task Scheduling
+- Spring
 categories:
-  - Framework
-  - Spring Boot定时任务
+- Framework
+- Backend
 comments: true
 author: deathwhispers
 created: 2025-11-28 09:57
@@ -87,12 +86,12 @@ graph TD
     D ---> E{框架的taskStore（）方法执行}
     E ---> F{@ConditionalOnMissingBean检查}
     F --|失败！容器里已有TaskStore|---> G[框架默认Bean跳过]
-    
+
     C --|否|---> H[框架的taskStore（）方法执行]
     H ---> I{@ConditionalOnMissingBean检查}
     I --|通过！容器里没TaskStore|---> J[按配置创建默认Bean（比如RedisTaskStore）]
     J ---> K[注册默认TaskStore]
-    
+
     style G fill:#fbb,stroke:#f00,stroke-width:2px
     style J fill:#bbf,stroke:#333,stroke-width:2px
 ```

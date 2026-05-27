@@ -3,19 +3,21 @@ layout: post
 title: 服务调用（九）之远程调用（Memcached）
 slug: dubbo-invocation-memcached
 type:
-  - note
+- note
 date: 2022-05-09
 status: draft
 tags:
-  - Dubbo
+- Dubbo
 categories:
-  - Dubbo
-mood:
-weather:
+- Learning
+- Dubbo
+mood: null
+weather: null
 author: deathwhispers
 created: 2022-05-09 11:51
 updated: 2022-05-09 18:33
 ---
+
 本文基于 Dubbo 2.6.1 版本，望知悉。
 
 # 1. 概述

@@ -3,17 +3,22 @@ layout: post
 title: IOC-注册BeanDefinitions
 slug: ioc-register-bean-definitions
 type:
-  - note
+- note
 date: 2020-06-27
 status: draft
 tags:
-  - Spring 源码解析
-mood:
-weather:
+- Spring
+- SpringSourceCode
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-06-27 09:00
 updated: 2020-06-27 18:00
+categories:
+- Learning
+- Spring
 ---
+
 **本文主要基于 Spring 5.0.6.RELEASE**
 
 摘要: 原创出处 [http://cmsblogs.com/?p=2697](http://cmsblogs.com/?p=2697) 「小明哥」，谢谢！

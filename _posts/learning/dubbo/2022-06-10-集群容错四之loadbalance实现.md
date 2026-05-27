@@ -3,19 +3,21 @@ layout: post
 title: 集群容错（四）之LoadBalance实现
 slug: dubbo-cluster-fault-tolerance-loadbalance-impl
 type:
-  - note
+- note
 date: 2022-06-10
 status: draft
 tags:
-  - Dubbo
+- Dubbo
 categories:
-  - Dubbo
-mood:
-weather:
+- Learning
+- Dubbo
+mood: null
+weather: null
 author: deathwhispers
 created: 2022-06-06 11:53
 updated: 2022-06-06 18:33
 ---
+
 本文基于 Dubbo 2.6.1 版本，望知悉。
 
 # 1. 概述
@@ -108,7 +110,7 @@ plain static int calculateWarmupWeight(int uptime, int warmup, int weight) {    
 ```
 
 … …
-* 如果 provider 运行了 10 分钟，那么 weight 为 100，即只有最终需要承担的 100% 流量； 
+* 如果 provider 运行了 10 分钟，那么 weight 为 100，即只有最终需要承担的 100% 流量；
 + “weight” 配置项，默认为 100 。
 + “warmup” 配置项，默认为 10  60  1000 = 10 分钟。
 

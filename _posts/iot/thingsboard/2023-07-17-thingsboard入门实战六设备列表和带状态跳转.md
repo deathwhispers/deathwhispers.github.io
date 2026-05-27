@@ -3,20 +3,22 @@ layout: post
 title: ThingsBoard入门实战（六）：设备列表和带状态跳转
 slug: thingsboard-device-list-and-status-jump
 type:
-  - note
+- note
 date: 2023-07-17
 status: draft
 tags:
-  - ThingsBoard
+- IoT
+- ThingsBoard
 categories:
-  - IoT
-  - ThingsBoard
-mood:
-weather:
+- IoT
+- ThingsBoard
+mood: null
+weather: null
 author: deathwhispers
 created: 2023-06-07 11:45
 updated: 2023-06-07 18:33
 ---
+
 # ThingsBoard入门实战（六）：设备列表和带状态跳转
 
 # 设备列表和带状态跳转

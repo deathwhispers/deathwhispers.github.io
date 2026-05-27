@@ -3,28 +3,24 @@ layout: post
 title: 从文件read_write一个字节的过程和所发生的磁盘IO
 slug: read-write-io
 type:
-  - note
+- note
 date: 2025-03-12
 week: 2025-W12
 status: draft
 tags:
-  - poll
-  - epoll
-  - select
-categories: 
-  - 操作系统
-mood: 
-weather: 
+- OperatingSystem
+categories:
+- Learning
+- OperatingSystem
+mood: null
+weather: null
 comments: true
-math: true  
+math: true
 mermaid: true
 author: deathwhispers
 created: 2025-03-12 21:59
 updated: 2025-03-12 21:59
 ---
-
-
-
 
 # [从文件read/write一个字节的过程和所发生的磁盘IO](https://www.cnblogs.com/z-sm/p/15163921.html)
 
@@ -395,4 +391,3 @@ static long wb_check_background_flush(struct bdi_writeback *wb)
 如果对以上配置不满意，你可以自己通过修改/etc/sysctl.conf来调整，修改完了别忘了执行sysctl -p。
 
 最后我们要认识到，这套write pagecache+回写的机制第一目标是性能，不是保证不丢失我们写入的数据的。如果这时候掉电，脏页时间未超过dirty_expire_centisecs的就真的丢了。如果你做的是和钱相关非常重要的业务，必须保证落盘完成才能返回，那么你就可能需要考虑使用fsync。
-

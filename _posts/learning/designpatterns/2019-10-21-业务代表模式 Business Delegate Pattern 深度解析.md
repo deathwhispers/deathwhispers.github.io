@@ -3,18 +3,17 @@ layout: post
 title: 业务代表模式 (Business Delegate Pattern) 深度解析
 slug: design-pattern-business-delegate-pattern-tutorial
 type:
-  - note
+- note
 date: 2019-10-21
 tags:
-  - designPatterns
-  - businessDelegatePattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 📝 业务代表模式 (Business Delegate Pattern) 深度解析
 
@@ -86,7 +85,7 @@ public class JMSService implements BusinessService {
 
 ```java
 public class BusinessLookUp {
-   
+
    /**
     * 根据服务类型获取具体的业务服务实例
     */
@@ -112,21 +111,21 @@ public class BusinessDelegate {
    private BusinessLookUp lookupService = new BusinessLookUp();
    private BusinessService businessService;
    private String serviceType;
-   
+
    /**
     * 设置客户端想要使用的服务类型
     */
    public void setServiceType(String serviceType){
       this.serviceType = serviceType;
    }
-   
+
    /**
     * 客户端调用的统一入口方法
     */
    public void doTask(){
       // 1. 使用 LookUp Service 查找具体的业务服务
       businessService = lookupService.getBusinessService(serviceType);
-      
+
       // 2. 委托给具体的业务服务进行处理
       if (businessService != null) {
           businessService.doProcessing();
@@ -142,11 +141,11 @@ public class BusinessDelegate {
 ```java
 public class Client {
    BusinessDelegate businessService;
-   
+
    public Client(BusinessDelegate businessService){
       this.businessService  = businessService;
    }
-   
+
    /**
     * 客户端执行任务，通过业务代表进行委托
     */
@@ -163,11 +162,11 @@ public class BusinessDelegatePatternDemo {
    public static void main(String[] args) {
       BusinessDelegate businessDelegate = new BusinessDelegate();
       Client client = new Client(businessDelegate);
-      
+
       // 客户端要求使用 EJB 服务
       businessDelegate.setServiceType("EJB");
-      client.doTask(); 
-      
+      client.doTask();
+
       // 客户端要求使用 JMS 服务
       businessDelegate.setServiceType("JMS");
       client.doTask();

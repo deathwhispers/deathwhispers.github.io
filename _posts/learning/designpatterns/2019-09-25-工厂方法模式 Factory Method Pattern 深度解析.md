@@ -3,18 +3,17 @@ layout: post
 title: 工厂方法模式 (Factory Method Pattern) 深度解析
 slug: design-pattern-factory-method-pattern
 type:
-  - note
+- note
 date: 2019-09-25
 tags:
-  - designPatterns
-  - factoryMethodPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 🏭 工厂方法模式 (Factory Method Pattern) 深度解析
 
@@ -87,7 +86,7 @@ public class DatabaseLogger implements Logger {
 // --- 3. 抽象工厂 (Factory) ---
 public interface LoggerFactory {
     // 声明工厂方法，返回抽象产品类型
-    Logger createLogger(); 
+    Logger createLogger();
 }
 
 // --- 4. 具体工厂 (ConcreteFactory) ---
@@ -95,7 +94,7 @@ public class FileLoggerFactory implements LoggerFactory {
     @Override
     public Logger createLogger() {
         // 负责创建具体产品
-        return new FileLogger(); 
+        return new FileLogger();
     }
 }
 
@@ -110,7 +109,7 @@ public class DatabaseLoggerFactory implements LoggerFactory {
 public class FactoryMethodDemo {
     public static void main(String[] args) {
         // 客户端只需要关心所需的工厂，并使用抽象类型进行操作
-        LoggerFactory factory = new FileLoggerFactory(); 
+        LoggerFactory factory = new FileLoggerFactory();
         Logger logger = factory.createLogger();
         logger.writeLog("System started.");
         // Output: LOG to File: System started.

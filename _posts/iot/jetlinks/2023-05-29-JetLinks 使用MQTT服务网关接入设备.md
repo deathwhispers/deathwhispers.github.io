@@ -3,16 +3,17 @@ layout: post
 title: JetLinks 使用MQTT服务网关接入设备
 slug: jetlinks-mqtt-connection
 type:
-  - note
+- note
 date: 2023-05-29
 status: draft
 tags:
-  - JetLinks
+- IoT
+- JetLinks
 categories:
-  - IoT
-  - JetLinks
-mood:
-weather:
+- IoT
+- JetLinks
+mood: null
+weather: null
 author: deathwhispers
 created: 2023-05-29 11:45
 updated: 2023-05-29 18:33

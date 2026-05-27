@@ -1,12 +1,14 @@
 ---
 layout: post
-title: "尝试使用 Github pages 搭建个人博客"
+title: 尝试使用 Github pages 搭建个人博客
 date: 2024-08-28
 tags:
-  - Geek
-  - Blog
+- EngineeringPractice
+- Blog
+- Geek
 categories:
-  - Life
+- Practicing
+- General
 comments: true
 author: deathwhispers
 created: 2024-08-28 09:57
@@ -17,9 +19,7 @@ updated: 2024-08-28 09:57
 
 现在就开始尝试写写博客记录一下吧。 从零开始
 
-
 <!-- more -->
-
 
 ## 搭建个人博客
 
@@ -32,4 +32,3 @@ updated: 2024-08-28 09:57
 ## 致谢
 
 感谢 [lemonchann](https://github.com/lemonchann/lemonchann.github.io) 提供博客模板，为我这种懒人省去了不少功夫，很轻易的就搭建了自己的博客。
-

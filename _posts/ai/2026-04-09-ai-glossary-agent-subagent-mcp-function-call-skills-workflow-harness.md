@@ -1,17 +1,17 @@
 ---
 layout: post
-title: "AI 常用名词入门：从 Agent 到 Harness"
+title: AI 常用名词入门：从 Agent 到 Harness
 slug: ai-glossary-agent-to-harness
 status: Published
 date: 2026-04-09
 tags:
-  - AI
-  - Agent
-  - MCP
-  - LLM
-  - Workflow
+- AI
+- LLM
+- Agent
+- MCP
 categories:
-  - AI
+- AI
+- General
 author: deathwhispers
 ---
 

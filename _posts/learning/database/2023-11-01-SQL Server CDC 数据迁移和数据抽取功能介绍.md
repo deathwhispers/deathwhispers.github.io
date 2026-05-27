@@ -3,17 +3,17 @@ layout: post
 title: SQL Server CDC 数据迁移和数据抽取功能介绍
 slug: sql-server-cdc-data-migration-and-extraction-features-introduction
 type:
-  - note
+- note
 date: 2023-11-01
 tags:
-  - Sql Server
+- Database
 categories:
-  - Database
+- Learning
+- Database
 author: deathwhispers
 created: 2023-11-01 22:08
 updated: 2023-11-01 22:08
 ---
-
 
 简介：CDC介绍 cdc.png 为了满足数据迁移和数据抽取的业务需要，使得有机会在数据库层面上直接实现增量抽取功能，ORACLE综合性能和场景需要，在数据库引擎层面直接集成了CDC功能，由于提供了类似API的功能接口，变更数据捕获和更改跟踪均不要求在源中进行任何架构更改或使用触发器，所以比第三方工具具有一定的优势。
 

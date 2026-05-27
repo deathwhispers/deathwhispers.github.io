@@ -3,19 +3,19 @@ layout: post
 title: Cassandra框架
 slug: cassandra-framework
 type:
-  - note
+- note
 date: 2019-03-11
 status: draft
 tags:
-  - cassandra
-  - compression
-categories: 
-  - cassandra
+- Database
+- Cassandra
+categories:
+- Learning
+- Database
 author: deathwhispers
 created: 2019-03-22 11:46
 updated: 2019-03-22 18:34
 ---
-
 
 # Cassandra框架
 

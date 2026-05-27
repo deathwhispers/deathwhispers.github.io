@@ -3,15 +3,19 @@ layout: post
 title: Spring @Value 注入 map 和 list
 slug: spring-value-inject-map-list
 type:
-  - note
+- note
 date: 2019-02-28
 week: 2019-W09
 status: draft
 tags:
-  - Spring Boot
+- Spring
+- SpringBoot
 author: deathwhispers
 created: 2019-02-28 09:57
 updated: 2019-02-28 09:57
+categories:
+- Learning
+- Spring
 ---
 
 **EL表达式+JSON写法**

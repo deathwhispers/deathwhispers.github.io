@@ -3,15 +3,18 @@ layout: post
 title: 彻底搞懂WebSocket原理
 slug: websocket-principle
 type:
-  - note
+- note
 date: 2020-04-19
 week: 2020-W16
 status: draft
 tags:
-  - 计算机网络
+- Network
 author: deathwhispers
 created: 2020-04-19 09:57
 updated: 2020-04-19 09:57
+categories:
+- Learning
+- Network
 ---
 
 # 彻底搞懂WebSocket原理
@@ -197,7 +200,6 @@ ajax轮询 需要服务器有很快的处理速度和资源。（速度）long p
 服务端：月线正忙，请稍后再试（503 Server Unavailable）
 客户端：。。。。好吧，啦啦啦，有新信息么？
 服务端：月线正忙，请稍后再试（503 Server Unavailable）
-
 
 客户端：然后服务端在一旁忙的要死：冰箱，我要更多的冰箱！更多。。更多。。（我错了。。这又是梗。。）
 ```

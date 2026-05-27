@@ -1,21 +1,20 @@
 ---
 layout: post
-title: "Java使用Apache POI实现Excel的生成与解析"
+title: Java使用Apache POI实现Excel的生成与解析
 slug: java-poi-excel-generation-parsing
 date: 2018-05-13
 week: 2018-W20
 type:
-  - note
+- note
 tags:
-  - Java
-  - POI
-  - Excel
+- Java
+- Spring
 categories:
-  - Spring
-  - Java
+- Learning
+- Spring
 author: deathwhispers
-description: "本笔记介绍了如何使用 Apache POI 库在 Java 中快速生成和解析 Excel（.xls）文件，包含创建工作簿、工作表、单元格以及读取数据的核心代码示例。"
-keywords: "Java, Apache POI, Excel, HSSFWorkbook, XSSFWorkbook, Excel导出, Excel解析"
+description: 本笔记介绍了如何使用 Apache POI 库在 Java 中快速生成和解析 Excel（.xls）文件，包含创建工作簿、工作表、单元格以及读取数据的核心代码示例。
+keywords: Java, Apache POI, Excel, HSSFWorkbook, XSSFWorkbook, Excel导出, Excel解析
 ---
 
 Apache POI 是一个非常流行的 Java 库，专门用于处理 Microsoft Office 格式的文件，尤其是 Excel。本笔记将通过简单的代码示例，展示如何使用 POI 快速生成和解析一个 Excel 文件。
@@ -66,7 +65,7 @@ public class ExcelGenerator {
 
             // 3. 创建表头行 (Row)
             Row headerRow = sheet.createRow(0);
-            
+
             // 4. 创建单元格 (Cell) 并设置表头值
             headerRow.createCell(0).setCellValue("姓名");
             headerRow.createCell(1).setCellValue("年龄");
@@ -80,7 +79,7 @@ public class ExcelGenerator {
 
             // 6. 将工作簿内容写入文件
             wb.write(fileOut);
-            
+
             System.out.println("Excel 文件生成成功！");
 
         } catch (IOException e) {
@@ -120,7 +119,7 @@ public class ExcelParser {
                 // 4. 读取每个单元格的内容
                 String name = row.getCell(0).getStringCellValue();
                 // 数字类型建议使用 getNumericCellValue()，避免类型转换异常
-                double age = row.getCell(1).getNumericCellValue(); 
+                double age = row.getCell(1).getNumericCellValue();
                 // 如果手机号是纯数字，Excel 可能将其存为数字格式，需要做相应处理
                 row.getCell(2).setCellType(CellType.STRING);
                 String phone = row.getCell(2).getStringCellValue();

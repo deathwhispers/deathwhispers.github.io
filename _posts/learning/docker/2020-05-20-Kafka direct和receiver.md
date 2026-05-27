@@ -4,16 +4,17 @@ title: Kafka direct和receiver
 slug: kafka-direct-receiver
 date: 2020-05-20
 type:
-  - note
+- note
 tags:
-  - Kafka
+- Docker
+- Kafka
 categories:
-  - Kafka
+- Learning
+- Docker
 author: deathwhispers
 created: 2020-05-20 11:48
 updated: 2020-05-20 11:48
 ---
-
 
 # Kafka direct和receiver
 

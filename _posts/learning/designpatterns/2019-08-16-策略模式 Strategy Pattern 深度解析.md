@@ -3,18 +3,17 @@ layout: post
 title: 策略模式 (Strategy Pattern) 深度解析
 slug: design-pattern-strategy-pattern
 type:
-  - note
+- note
 date: 2019-08-16
 tags:
-  - designPatterns
-  - strategyPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 🎯 策略模式 (Strategy Pattern) 深度解析
 
@@ -94,7 +93,7 @@ public class Context {
     public void setStrategy(Strategy strategy) {
         this.strategy = strategy;
     }
-    
+
     // 算法执行：将请求委托给当前策略对象
     public int executeStrategy(int num1, int num2) {
         System.out.println("Executing strategy: " + strategy.getClass().getSimpleName());
@@ -157,14 +156,14 @@ class ShoppingCart:
 
 # --- 5. 客户端调用 (Client) ---
 if __name__ == "__main__":
-    
+
     # 客户端选择策略 A
     cart = ShoppingCart(CreditCardPayment())
     cart.set_amount(150.75)
     cart.checkout()
-    
+
     print("\n--- Switching Strategy ---")
-    
+
     # 客户端选择策略 B (运行时切换)
     cart._payment_strategy = AlipayPayment()
     cart.set_amount(99.00)

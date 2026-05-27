@@ -3,20 +3,22 @@ layout: post
 title: HDFS 常用 shell 命令
 slug: hadoop-hdfs-common-shell-commands
 type:
-  - note
+- note
 date: 2020-08-26
 status: draft
 tags:
-  - HDFS
+- BigData
+- HDFS
 categories:
-  - BigData
-  - HDFS
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-08-26 11:45
 updated: 2020-08-26 18:27
 ---
+
 **1. 显示当前目录结构**
 
 ```plain text

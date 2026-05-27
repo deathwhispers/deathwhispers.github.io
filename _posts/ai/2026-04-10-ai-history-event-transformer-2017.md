@@ -1,17 +1,17 @@
 ---
 layout: post
-title: "AI 发展史大事件 08：2017 Transformer，开启大模型时代底座"
+title: AI 发展史大事件 08：2017 Transformer，开启大模型时代底座
 slug: ai-history-event-transformer-2017
 status: Published
 date: 2026-04-10
 tags:
-  - AI
-  - AI发展史
-  - Transformer
-  - 大模型
+- AI
+- Transformer
+- AIHistory
+- LargeModel
 categories:
-  - AI
-  - AI发展史系列
+- AI
+- General
 author: deathwhispers
 ---
 

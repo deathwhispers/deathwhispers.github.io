@@ -3,19 +3,21 @@ layout: post
 title: 并发 List 与 CopyOnWrite 源码剖析
 slug: java-concurrent-list-source-code-analysis
 type:
-  - note
+- note
 date: 2020-05-20
 week: 2025-W48
 status: draft
 tags:
-  - 并发编程
-  - Java并发系列
+- Java
+- Concurrency
 categories:
-  - Java
+- Learning
+- Java
 author: deathwhispers
 created: 2020-05-20 13:09
 updated: 2020-05-20 13:09
 ---
+
 ## 介绍
 
 JUC包中的并发List只有CopyOnWriteArrayList。CopyOnWriteArrayList是一个线程安全的ArrayList，使用了写时复制策略，对其进行的修改操作都是在底层的一个复制的数组上进行的。
@@ -227,20 +229,20 @@ public class CopyListTest {
 
 典型特征：
 
-- 线程安全、高并发下性能优于传统同步容器。  
-- `key` 与 `value` 不允许为 `null`。  
-- 设计目标是降低锁竞争（历史实现有分段锁思路，JDK 8 以后实现细节有演进）。  
+- 线程安全、高并发下性能优于传统同步容器。
+- `key` 与 `value` 不允许为 `null`。
+- 设计目标是降低锁竞争（历史实现有分段锁思路，JDK 8 以后实现细节有演进）。
 
 ### ConcurrentSkipListMap / ConcurrentSkipListSet
 
-- 底层基于跳表（SkipList）。  
-- 有序容器，支持范围查询。  
-- 通常比 `ConcurrentHashMap` 在纯哈希场景稍慢，但换来有序能力。  
+- 底层基于跳表（SkipList）。
+- 有序容器，支持范围查询。
+- 通常比 `ConcurrentHashMap` 在纯哈希场景稍慢，但换来有序能力。
 
 ### CopyOnWrite 适用场景总结
 
-- 读多写少：白名单、黑名单、配置快照。  
-- 写时复制会产生额外内存与复制开销，不适合高频写。  
+- 读多写少：白名单、黑名单、配置快照。
+- 写时复制会产生额外内存与复制开销，不适合高频写。
             @Override
             public void run() {
                 arrayList.set(0, "hello");

@@ -3,17 +3,21 @@ layout: post
 title: Flume 整合 Kafka
 slug: flume-integrate-kafka
 type:
-  - note
+- note
 date: 2021-12-01
 week: 2025-W48
 status: draft
 tags:
-  - Flume
-  - Kafka
+- EngineeringPractice
+- Kafka
 author: deathwhispers
 created: 2021-12-01 10:00
 updated: 2021-12-01 10:00
+categories:
+- Learning
+- General
 ---
+
 ## 一、背景
 
 先说一下，为什么要使用 Flume + Kafka？

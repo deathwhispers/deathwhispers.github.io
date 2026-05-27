@@ -3,20 +3,22 @@ layout: post
 title: JetLinks 使用websocket订阅平台相关消息
 slug: jetlinks-websocket-subscribe
 type:
-  - note
+- note
 date: 2023-06-09
 status: draft
 tags:
-  - JetLinks
+- IoT
+- JetLinks
 categories:
-  - IoT
-  - JetLinks
-mood:
-weather:
+- IoT
+- JetLinks
+mood: null
+weather: null
 author: deathwhispers
 created: 2023-05-29 11:45
 updated: 2023-05-29 18:33
 ---
+
 # 使用websocket订阅平台相关消息
 
 在1.1版本后提供websocket方式订阅平台消息的功能. 可以通过websocket来订阅设备,规则引擎,设备告警等相关消息.
@@ -283,4 +285,3 @@ event说明
     "type": "result" //为comlete是则表示同步完成.
 }
 ```
-

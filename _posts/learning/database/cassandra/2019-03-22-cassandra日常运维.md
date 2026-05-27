@@ -3,19 +3,19 @@ layout: post
 title: Cassandra日常运维
 slug: cassandra-daily-ops
 type:
-  - note
+- note
 date: 2019-03-22
 status: draft
 tags:
-  - cassandra
-  - compression
-categories: 
-  - cassandra
+- Database
+- Cassandra
+categories:
+- Learning
+- Database
 author: deathwhispers
 created: 2019-03-22 11:46
 updated: 2019-03-22 18:34
 ---
-
 
 # Cassandra 日常运维
 
@@ -94,25 +94,17 @@ Cassandra 日常运维: OpsCenter
 ```plain text
 读取压缩文件：zgrep 'Unlogged batch covering [0-9][0-9][0-9] partitions' cassandra/logs/system.log*
 
-
 查看当前文件：
 cat cassandra/logs/system.log | grep `date +%Y-%m-%d` | grep 'GC in [0-9][0-9][0-9][0-9][0-9]'
 
-
 cat cassandra/logs/system.log | grep `date +%Y-%m-%d` | grep 'Unlogged batch covering [0-9][0-9][0-9] partitions'
 
-
 cat cassandra/logs/system.log | grep `date +%Y-%m-%d` | grep 'live and [0-9][0-9][0-9][0-9] tombstone cells'
-
-
-
 
 #按照小时统计长时间GC的次数
 grep 'GC' /usr/install/cassandra/logs/system.log | awk '{print $4":"substr($5,0,2)}' | sort | uniq -c | awk '{print $2" "$1}'
 
-
 zgrep 'GC in [0-9][0-9][0-9][0-9][0-9]ms' /usr/install/cassandra/logs/system.log.1.zip | awk '{print $4":"substr($5,0,2)}' | sort | uniq -c | awk '{print $2" "$1}'
-
 
 zgrep 'GC in [0-9][0-9][0-9][0-9][0-9]ms' /usr/install/cassandra/logs/system.log.1.zip | awk '{print $4}' | sort | uniq -c | awk '{print $2" "$1}'
 ```
@@ -158,14 +150,8 @@ home=`echo $CASSANDRA_HOME` #Cassandra安装路径
 host=$(getIP)
 command=$1
 
-
-
-
 nodetoolCMD=`echo $command|cut -d"|" -f1`
 otherCMD=`echo $command|cut -d"|" -s -f2-`
-
-
-
 
 if [ "$otherCMD" == "" ]; then
   $home/bin/nodetool -h $host status|grep UN|awk '{print $2}'| while read ip; do echo $ip; $home/bin/nodetool -h $ip $command; done
@@ -180,25 +166,13 @@ fi
 jstat -gc -h 10 `jps | grep CassandraDaemon |awk '{print $1}'` 1000 |
 awk '{printf("%10st%10st%10st%10st%10st%10st%10st%10st%10st%10stn",$1,$5,$3,$4,$6,$8,$11,$12,$13,$14)}'
 
-
-
-
 jstat -gcutil `jps | grep CassandraDaemon |awk '{print $1}'` 1000
 jstat -gc -h 10 `jps | grep CassandraDaemon |awk '{print $1}'` 500
-
-
-
 
 jstat -gc -h 10 `jps | grep CassandraDaemon |awk '{print $1}'` 500 |
 awk '{printf("%10st%10st%10st%10st%10st%10st%10st%10st%10st%10st%10stn",$1,$3,$4,$5,$6,$7,$8,$11,$12,$13,$14)}'
 
-
-
-
 jmap -dump:format=b,file=/home/qihuang.zheng/0428.dat `jps | grep CassandraDaemon |awk '{print $1}'`
-
-
-
 
 S0C S0U S1U EC EU OC OU YGC YGCT FGC FGCT
 419392.0 419392.0 419392.0 3355520.0 3355520.0 12582912.0 11641724.1 995186 39005.793 1951 810.868
@@ -208,9 +182,6 @@ S0C S0U S1U EC EU OC OU YGC YGCT FGC FGCT
 
 ```plain text
 ps -ef|grep cassandra | grep -v grep | awk '{print $2}'
-
-
-
 
 /usr/install/cassandra/bin/nodetool flush &&
 kill -9 `jps | grep CassandraDaemon |awk '{print $1}'`
@@ -224,7 +195,6 @@ ps -ef|grep cassandra
 ```plain text
 ./pssh.sh ip_forseti.txt "cat /var/log/cassandra/system.log | grep '2015-11-05' | grep 'tombstone'"
 
-
 ./pssh.sh ip_forseti.txt "cat /var/log/cassandra/system.log | grep '2015-11-05' | grep 'messages dropped in last 5000ms'"
 ```
 
@@ -232,9 +202,6 @@ ps -ef|grep cassandra
 
 ```plain text
 ./pssh.sh ip_all.txt '/usr/install/cassandra/bin/nodetool getstreamthroughput'
-
-
-
 
 iftop
 ./pssh.sh ip_all.txt '/usr/install/cassandra/bin/nodetool setstreamthroughput -- 200'
@@ -246,11 +213,6 @@ iftop
 cid=166766
 top -Hp $cid | head -8 | tail -1 | awk '{print $1}'
 
-
-
-
-
-
 top -Hp `jps | grep CassandraDaemon |awk '{print $1}'` | head -8 | tail -1 | awk '{print $1}'
 id1=`printf '%xn' 23518`
 jstack `jps | grep CassandraDaemon |awk '{print $1}'` | grep $id1
@@ -260,9 +222,6 @@ jstack `jps | grep CassandraDaemon |awk '{print $1}'` | grep $id1
 
 ```plain text
 ./pssh.sh ip_forseti.txt '/usr/install/cassandra/bin/nodetool cfstats forseti.velocity | head -3'
-
-
-
 
 ./pssh.sh ip_fp.txt '/usr/install/cassandra/bin/nodetool cfstats forseti_fp.android_device_session_temp | head -3'
 ./pssh.sh ip_fp.txt '/usr/install/cassandra/bin/nodetool cfstats forseti_fp.ios_device_session | head -3'
@@ -280,9 +239,6 @@ jstack `jps | grep CassandraDaemon |awk '{print $1}'` | grep $id1
 select * from velocity where attribute='111111' and partner_code='koudai' and app_name='weidian_cross' and type='accountLogin'
 order by partner_code desc, app_name desc, type desc, timestamp desc limit 1000;
 
-
-
-
 /usr/install/cassandra/bin/cqlsh -e "desc table forseti_fp.android_device_session_temp;" 192.168.47.227
 ```
 
@@ -292,13 +248,7 @@ order by partner_code desc, app_name desc, type desc, timestamp desc limit 1000;
 /usr/install/cassandra/bin/cqlsh -e "truncate forseti_fp.android_device_session_temp;" 192.168.47.227
 nodetool -h 192.168.47.227 status |grep RAC|awk '{print $2}' | while read ip; do echo $ip; nodetool -h $ip clearsnapshot forseti_fp; done
 
-
-
-
 nodetool -h 192.168.47.202 status |grep RAC|awk '{print $2}' | while read ip; do echo $ip; nodetool -h $ip clearsnapshot md5; done
-
-
-
 
 /usr/install/cassandra/bin/cqlsh -e "truncate forseti.velocity;" 192.168.47.202
 nodetool -h 192.168.47.202 status |grep RAC|awk '{print $2}' | while read ip; do echo $ip; nodetool -h $ip clearsnapshot forseti; done
@@ -313,9 +263,6 @@ Cassandra配置: SSD, 8CPU, 32G内存, 3.5T
 一个节点, 2.5亿keys, ttl=3M, 占用500G.
 ttl=1Y, 需要2T. 182亿条keys, 需要145.6T
 一条activity会有大概十几条velocity. 182亿的activity,对应velocity需要1456T.
-
-
-
 
 10Nodes, 3M 25亿velocity 2.5亿activity 500G*10=5T
          6M                            5T*2=10T
@@ -351,9 +298,6 @@ ln -s /usr/install/apache-cassandra-2.0.15 /usr/install/cassandra
 swapoff -a
 vi /etc/fstab
 
-
-
-
 sed -i 's/^(.*swap)/#1/' /etc/fstab
 echo "vm.swappiness = 1" > /etc/sysctl.d/swappiness.conf
 sysctl -p /etc/sysctl.d/swappiness.conf
@@ -377,15 +321,9 @@ sysctl -p /etc/sysctl.d/swappiness.conf
 ```plain text
 ll /home/admin/cassandra/data/forseti_fp/android_device_session -rSh|grep Data|tail
 
-
-
-
 du --max-depth=1 /home/admin/cassandra/data/forseti -h
 du /home/admin/cassandra/data/forseti/* -sh *
 cd /home/admin/cassandra/data/forseti && for i in $(ls -l |grep '^d' |du -s * |sort -nr|awk '{print $2}');do du -sh $i;done | head -10
-
-
-
 
 cd /home/admin/cassandra/data/forseti_fp && for i in $(ls -l |grep '^d' |du -s * |sort -nr|awk '{print $2}');do du -sh $i;done
 ```
@@ -395,19 +333,11 @@ cd /home/admin/cassandra/data/forseti_fp && for i in $(ls -l |grep '^d' |du -s *
 ```plain text
 find /home/admin/cassandra/data/forseti/activity_detail -type f -mtime +90 -exec ls -lrth {} ; | grep Data
 
-
 find /home/admin/cassandra/data/forseti/activity_detail -type f -mtime +90 -exec rm {} ;
-
 
 find /home/admin/cassandra/data/forseti_fp/android_device_session -type f -mtime +30 -exec rm {} ;
 
-
-
-
-
-
 find /home/admin/data/data/forseti_fp/android_device_session* -type f -mtime +25 -exec ls -lrth {} ; | grep Data
-
 
 find /home/admin/data/data/forseti_fp/android_device_session* -type f -mtime +20 -exec rm {} ;
 ```
@@ -437,7 +367,6 @@ rm -rf /home/admin/cassandra && mkdir /home/admin/cassandra && chown admin:admin
 ll /home/admin/cassandra/data/forseti/velocity_app -rth | grep Data |
 awk '{count[$6$7]++;}END{for (i in count) {print i"t"count[i]}}' | sort -k 2 -t t
 
-
 for filename in /home/admin/cassandra/data/forseti/velocity_app/*; do if [ `date -r $filename +%m` == "12" ];then mv $filename ~/12_m; fi done
 ```
 
@@ -459,20 +388,11 @@ for filename in /home/admin/cassandra/data/forseti/velocity_app/*; do if [ `date
 ```plain text
 查看la(2.2.6)开头的总文件大小，mc是3.10
 
-
-
-
 find data/data/forseti/velocity_global*/ -name "la*Data.db" -print0 | du --files0-from=- -hc | tail -n1 &&
 find data/data/forseti/velocity_global*/ -name "mc*Data.db" -print0 | du --files0-from=- -hc | tail -n1
 
-
-
-
 find data/data/forseti/velocity*/ -name "la*Data.db" -print0 | du --files0-from=- -hc | tail -n1 &&
 find data/data/forseti/velocity*/ -name "mc*Data.db" -print0 | du --files0-from=- -hc | tail -n1
-
-
-
 
 ll data/data/forseti/velocity* -rth |grep la |grep Data
 ```
@@ -551,9 +471,6 @@ C.输出Cassandra进程的堆栈信息，然后根据线程ID的十六进制值g
 ```plain text
 jstat -gc `jps | grep CassandraDaemon |awk '{print $1}'` 1000
 
-
-
-
 jstat -gc -h 20 `jps | grep CassandraDaemon |awk '{print $1}'` 1000 |
 awk '{printf("%10st%10st%10st%10st%10st%10st%10st%10st%10st%10stn",$1,$5,$3,$4,$6,$8,$11,$12,$13,$14)}'
 ```
@@ -590,31 +507,16 @@ CREATE TABLE velocity_app (
   PRIMARY KEY ((attribute, partner_code, app_name, type), sequence_id)
 ) WITH CLUSTERING ORDER BY (sequence_id DESC);
 
-
-
-
 CREATE KEYSPACE demo WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
-
-
-
 
 insert into velocity_app(attribute,partner_code,app_name,type,timestamp,event,sequence_id)
 values('192.168.0.1','tongdun','tongdun_app','ipAddress',1473427497000,
 '{"accountLogin":"zqhxuyuan","ipAddress":"192.168.0.1"}','1473427497000-0001');
 
-
-
-
 for i in `seq 100`;do bin/cqlsh -e "insert into forseti.velocity_app(attribute,partner_code,app_name,type,timestamp,event,sequence_id) values('192.168.0.2','tongdun','tongdun_app','ipAddress',1473427497000$i, '{"accountLogin":"zqhxuyuan","ipAddress":"192.168.0.2"}','1473427497000-000$i');";done
 bin/nodetool tablestats forseti.velocity_app
 
-
-
-
 select max(timestamp) from forseti.velocity_app where attribute='192.168.0.2' and partner_code='tongdun' and app_name='tongdun_app' and type='ipAddress';
-
-
-
 
 for i in `seq 1000`;do bin/cqlsh -e "insert into demo.velocity_app(attribute,partner_code,app_name,type,timestamp,event,sequence_id) values('192.168.0.3','tongdun','tongdun_app','ipAddress',1473427497000,'{"accountLogin":"zqhxuyuan","ipAddress":"192.168.0.2"}','1473427497000-000$i');";done
 select * from demo.velocity_app where attribute='192.168.0.3' and
@@ -628,14 +530,8 @@ cqlsh 192.168.6.52 -e "copy forseti.historical_prices (ticker,date,adj_close,clo
 cqlsh 192.168.47.202 -e "copy cill.channel_device to 'channel_device.csv';"
 cqlsh 10.21.21.133 -e "copy cill.channel_device from 'channel_device.csv';"
 
-
-
-
 copy forseti.velocity (attribute,partner_code,app_name,type,"timestamp",event,sequence_id) to '217.csv';
 Request did not complete within rpc_timeout.
-
-
-
 
 cqlsh 192.168.47.242 -e "copy forseti.velocity (attribute,partner_code,app_name,type,timestamp,event,sequence_id) to 'test1.csv';"
 cqlsh 192.168.47.242 -e "copy forseti.velocity to 'test1.csv';"
@@ -643,9 +539,6 @@ cqlsh 192.168.47.202 -e "copy model_result.ip_category to 'ip_category_20161107.
 cqlsh 192.168.47.202 -e "copy model_result.credit_id_labels to 'credit_id_labels.csv';"
 cqlsh 10.21.21.19 -e "copy forseti_fp.android_device_time (device_id,gmt_create,device_info,emulator) to 'android_device_time.csv';"
 cqlsh 192.168.48.161 -e "copy forseti_fp.device_session_map to 'device_session_map.csv';"
-
-
-
 
 cat /tmp/unitedModeling_id_online_labels.csv |head -1 > id_tbl.cql
 sed -i -e "s/,/" text,"/g" id_tbl.cql
@@ -658,14 +551,8 @@ echo -e "create table model_resesult.id_online_label("" >> id_tbl.cql
 在跳板机上生成建表语句:
 /usr/install/cassandra/bin/cqlsh -e 'desc keyspace forseti_fp' 192.168.50.20 > forseti_fp.cql
 
-
-
-
 创建keyspace:
 CREATE KEYSPACE forseti_fp WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
-
-
-
 
 修改副本数:
 ALTER KEYSPACE forseti_fp WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
@@ -674,32 +561,17 @@ ALTER KEYSPACE model_result WITH REPLICATION = {'class' : 'NetworkTopologyStrate
 ALTER KEYSPACE realtime WITH replication = {'class': 'NetworkTopologyStrategy', 'dc1': '3'}  AND durable_writes = true;
 ALTER KEYSPACE gaea WITH REPLICATION = {'class' : 'NetworkTopologyStrategy', 'dc1' : 3};
 
-
-
-
 https://docs.datastax.com/en/cql/3.1/cql/cql_reference/compactSubprop.html?scroll=compactSubprop__compactionSubpropertiesSTCS
-
-
-
 
 ALTER TABLE device WITH compaction = {'class' : 'SizeTieredCompactionStrategy', 'min_threshold' : 6 };
 
-
-
-
 在跳板机上执行建表语句:
 /usr/install/cassandra/bin/cqlsh 192.168.47.227 -f forseti_fp.cql
-
-
-
 
 在跳板机上查询:
 [qihuang.zheng@fd047022 ~]$ /usr/install/cassandra/bin/cqlsh 192.168.47.227
 cqlsh> desc KEYSPACES ;
 system  forseti_fp  system_traces
-
-
-
 
 cqlsh> use forseti_fp ;
 cqlsh:forseti_fp> desc TABLES ;
@@ -717,9 +589,6 @@ B.挂掉的节点:
 ```plain text
 nohup nodetool removenode host-id &
 nodetool removenode force
-
-
-
 
 nodetool removenode status
 ```
@@ -797,14 +666,8 @@ Cleanup can be safely postponed for low-usage hours.
 2.2.6 在cassandra-env.sh中
 JVM_OPTS="$JVM_OPTS -Dcassandra.replace_address=10.21.38.106
 
-
-
-
 3.10在jvm.options中
 -Dcassandra.replace_address=10.21.38.106
-
-
-
 
 #cassandra/bin/cassandra -Dcassandra.replace_address=10.21.38.106
 ```
@@ -843,37 +706,19 @@ The basic cause of the problem is that the rate of data stored in memory outpace
 把Cassandra 2.0的配置通过比对, 把你原来cassandra.yaml配置文件里的参数移植到新版本的cassandra.yaml配置文件中。
 因为cassandra2.1增加了一些配置，也减少了一些配置。所以你不能直接复制过来。你只要把新版的配置文件中有的配置项，从老的配置文件中挪过来就可以了。
 
-
-
-
 第二步：创建快照，防止升级失败
 nodetool snapshot keyspace -t snapshot_20150828 创建快照。如果你使用了JNA，快照是通过硬链接实现的，并不会增加磁盘空间，创建快照时间很短。
 
-
-
-
 apache-cassandra-2.0.16/bin/nodetool snapshot forseti -t snapshot_20160420
-
-
-
 
 第三步：停节点
 先执行apache-cassandra-2.0.16/bin/nodetool drain关闭写入，同时把数据写入文件。
 执行bin/nodetool stodaemon停掉本节点。 --> kill xxx
 
-
-
-
 第四步: 启动新节点
 apache-cassandra-2.1.13/bin/cassandra
 
-
-
-
 第五步：重复一到四步把集群所有机器都升级为新版本。这时候如果查询forseti的表应该是能查到数据的。 如果没有，说明有问题！
-
-
-
 
 第六步：在所有节点执行升级sstable文件操作
 apache-cassandra-2.1.13/bin/nodetool upgradesstables
@@ -885,21 +730,12 @@ apache-cassandra-2.1.13/bin/nodetool upgradesstables
 wget http://192.168.47.211:8000/apache-cassandra-2.2.6_hz.tar.gz
 tar zxf apache-cassandra-2.2.6_hz.tar.gz && mv apache-cassandra-2.2.6_hz apache-cassandra-2.2.6
 
-
-
-
 ##执行上面的脚本
-
-
-
 
 /usr/install/apache-cassandra-2.1.13/bin/nodetool flush
 /usr/install/apache-cassandra-2.1.13/bin/nodetool drain
 /usr/install/apache-cassandra-2.1.13/bin/nodetool stopdaemon
 /usr/install/apache-cassandra-2.2.6/bin/cassandra
-
-
-
 
 nohup /usr/install/apache-cassandra-2.2.6/bin/nodetool upgradesstables &
 ```
@@ -940,9 +776,6 @@ nohup apache-cassandra-3.10/bin/nodetool upgradesstables &
 ```plain text
 rm -rf cassandra
 ln -s apache-cassandra-3.10 cassandra
-
-
-
 
 #检查压缩状态，升级的文件
 cassandra/bin/nodetool compactionstats -H
@@ -1074,9 +907,6 @@ sftp sftp@192.168.47.13
 wget http://192.168.47.211:8000/datastax-agent-5.2.2.tar.gz
 wget http://10.21.21.11:8000/datastax-agent-5.2.2.tar.gz
 
-
-
-
 tar zxf datastax-agent-5.2.2.tar.gz
 rm datastax-agent-5.2.2/conf/address.yaml
 rm datastax-agent-5.2.2/log/agent.log
@@ -1092,9 +922,6 @@ echo "async_queue_size: 20000" >> datastax-agent-5.2.2/conf/address.yaml
 echo "cassandra_conf: /home/admin/cassandra/conf/cassandra.yaml" >> datastax-agent-5.2.2/conf/address.yaml
 sed -i -e "s#localhost#$host#g" datastax-agent-5.2.2/conf/address.yaml
 echo "alias: $host" >> datastax-agent-5.2.2/conf/address.yaml
-
-
-
 
 datastax-agent-5.2.2/bin/datastax-agent
 ```
@@ -1166,9 +993,6 @@ Error creating cluster: Timeout while adding cluster. Please check the log for d
 /usr/install/cassandra/bin/nodetool cfhistograms forseti velocity -h 192.168.47.225
 /usr/install/cassandra/bin/nodetool cfhistograms forseti velocity_app -h 192.168.48.162
 
-
-
-
 #2.2版本用proxyhistograms代替cfhistograms
 cassandra/bin/nodetool proxyhistograms
 ```
@@ -1196,16 +1020,10 @@ nodetool status |grep RAC|awk '{print $2}' | while read ip; do echo $ip; nodetoo
 192.168.48.159
 Requested creating snapshot(s) for [forseti_fp] with snapshot name [1467716815575]
 
-
-
-
 以159为例：
 [admin@fp-cass048159 ~]$ ll /home/admin/cassandra/data/forseti_fp/android_device_session/snapshots/
 总用量 4
 drwxr-xr-x. 2 admin admin 4096 7月 5 19:07 1467716815575
-
-
-
 
 pssh -A -h ip.txt -i '/usr/install/apache-cassandra-2.0.15/bin/nodetool clearsnapshot forseti_fp'
 pssh -A -H 192.168.47.203 -i '/usr/install/apache-cassandra-2.0.15/bin/nodetool clearsnapshot forseti_fp'
@@ -1239,9 +1057,6 @@ cat /var/log/cassandra/system.log | grep 'GC for ConcurrentMarkSweep' | grep `da
 ./pssh.sh ip_forseti.txt "cat /var/log/cassandra/system.log | grep `date +%Y-%m-%d` | grep 'GC for .*: [0-9][0-9][0-9][0-9][0-9]'"
 ./pssh.sh ip_forseti.txt "cat /var/log/cassandra/system.log | grep 2016-04-28 | grep 'GC for .*: [0-9][0-9][0-9][0-9][0-9]'"
 
-
-
-
 #2.1.13查看单节点GC日志
 cat /usr/install/cassandra/logs/system.log | grep `date +%Y-%m-%d` | grep 'GC'
 cat /usr/install/cassandra/logs/system.log | grep `date +%Y-%m-%d` | grep 'GC in [0-9][0-9][0-9][0-9][0-9]'
@@ -1262,17 +1077,11 @@ cat /var/log/cassandra/system.log* | grep "GC for ParNew" | awk '{print $3}' | u
     153 2016-03-02
     146 2016-03-03
 
-
-
-
 按天统计超过500ms的ParNew
 cat /var/log/cassandra/system.log | grep "GC for ParNew" | awk '{if($11>500) print $3}' | uniq -c
      57 2016-03-01
      73 2016-03-02
      89 2016-03-03
-
-
-
 
 按天-小时统计超过500ms的ParNew
 cat /var/log/cassandra/system.log | grep "GC for ParNew" | awk '{if($11>500) print $3" "substr($4,0,2)}' | uniq -c | tail
@@ -1294,9 +1103,6 @@ CMS GC
 cat gc.log | grep 'GC in [0-9][0-9][0-9][0-9][0-9]ms' | awk '{print $4":"substr($5,0,2)}' | uniq -c | awk '{print $2" "$1}' | sort
 cat /usr/install/cassandra/logs/system.log | grep 'GC in [0-9][0-9][0-9][0-9][0-9]ms' | awk '{print $4":"substr($5,0,2)}' | uniq -c | awk '{print $2" "$1}' | sort
 
-
-
-
 1 2 3 4 5 6 7 8 9 10 11
 2016-06-16 03:45:46,213 - ConcurrentMarkSweep GC in 41559ms. CMS Old Gen: 12278864496 -> 11729068408;
 2016-06-16 04:07:41,335 - ConcurrentMarkSweep GC in 45019ms. CMS Old Gen: 12658987080 -> 12655359880;
@@ -1307,9 +1113,6 @@ cat /usr/install/cassandra/logs/system.log | grep 'GC in [0-9][0-9][0-9][0-9][0-
 
 ```plain text
 WARN [ReadStage:69] 2016-03-02 07:52:55,238 SliceQueryFilter.java (line 231) Read 1002 live and 5112 tombstone cells in forseti.velocity (see tombstone_warn_threshold). 1001 columns was requested, slices=[dhgate:dh_web_seller:ip3:1453780552156:sequence_id-dhgate:!]
-
-
-
 
 统计多个文件，要加sort
 [qihuang.zheng@cass047202 cassandra]$ cat system.log* | grep "tombstone cells in forseti.velocity" | awk '{print substr($3,0,7)}' | sort |  uniq -c | head
@@ -1416,21 +1219,12 @@ cat cassandra/logs/system.log|grep large|grep CompactionExecutor |
 awk '{if(NF==14){print $3" "$4" "$10" "$(NF-3);}
 else if(NF!=14){printf $3" "$4" ";for(i=10;i<NF-2;i++)printf $i" ";printf "n"}}'
 
-
-
-
 2017-1-1 10:00:00 forset/velocity_global:122:idNumber (111MiB)
 #cat largekey.log |sort -k3
-
-
-
 
 zgrep 2017-3-20 cassandra/logs/system.log* |zgrep large|zgrep CompactionExecutor |
 awk '{if(NF==14){print $3" "$4" "$10" "$(NF-3);}
 else if(NF!=14){printf $3" "$4" ";for(i=10;i<NF-2;i++)printf $i" ";printf "n"}}' |head
-
-
-
 
 #今天、昨天，定时生成报表：时间 大key 大小
 #0 1 * * * /home/admin/cassandra_large.sh
@@ -1440,13 +1234,7 @@ cat cassandra/logs/system.log|grep large|grep CompactionExecutor|grep "$day" |
 awk '{if(NF==14){print $3" "$4" "$10" "$(NF-3);}
 else if(NF!=14){printf $3" "$4" ";for(i=10;i<NF-2;i++)printf $i" ";printf "n"}}' > cassandra_large_$day.log
 
-
-
-
 #awk '{max[$3]=max[$3]>$1?max[$3]:$1;}END{for (i in max) print max[i],i}' OFS="t" largekey.log
-
-
-
 
 #(123MiB) to sstable /home/admin/11-Data.db
 cat cassandra/logs/system.log |grep 'large partition' | awk '{print $(NF-3)}'
@@ -1454,15 +1242,9 @@ cat cassandra/logs/system.log |grep 'large partition' | awk '{print length($(NF-
 cat cassandra/logs/system.log |grep 'large partition' | awk '{print substr($(NF-3),1,length($(NF-3)))}'
 cat cassandra/logs/system.log |grep 'large partition' | awk '{print substr($(NF-3),2,length($(NF-3))-5)}'  #去掉()和MiB,GiB
 
-
-
-
 cat cassandra/logs/system.log |grep 'large partition' | awk '{
 if(match($(NF-3),"MiB")) {print substr($(NF-3),2,length($(NF-3))-5)}
 else if(match($(NF-3),"GiB")) {print substr($(NF-3),2,length($(NF-3))-5)*1024}}'  # 统一转换为MB
-
-
-
 
 cat cassandra/logs/system.log |grep 'large partition' | awk '
 function getMB() {
@@ -1472,15 +1254,9 @@ function getMB() {
 {print getMB()}
 '  #用awk的函数来做，$(NF-3)表示倒数第四列，$NF是倒数第一列
 
-
-
-
 cat cassandra/logs/system.log|grep large|grep CompactionExecutor |
 awk '{if(NF==14){print $3" "$4" "$10" "$(NF-3);}
 else if(NF!=14){printf $3" "$4" ";for(i=10;i<NF-3;i++)printf $i" ";printf $(NF-3);printf "n"}}'
-
-
-
 
 #将(123MiB)转为123，(1.1GiB)转为1024
 cat cassandra/logs/system.log|grep large|grep CompactionExecutor |
@@ -1493,9 +1269,6 @@ function getPartitionKeyMB() {
 else if(NF!=14){printf $3" "$4" ";for(i=10;i<NF-3;i++)printf $i" ";printf getPartitionKeyMB();printf "n"}}' |
 awk '{print $NF" "$0}' | sort -rn | awk '{$1="";print $0}' |sed 's/.//' |head
 #分区大小在最后一列，根据最后一列排序。或者输出的时候把大小放在第一列，就可以sort -n -k1排序.（-n表示按照数值，否则按照字母）
-
-
-
 
 #超过100G的大key
 cat cassandra/logs/system.log|grep large|grep CompactionExecutor |
@@ -1520,19 +1293,9 @@ function printLargeKeyGB(limit) {
 }
 {printLargeKeyGB(100)}'
 
-
-
-
-
-
-
-
 #使用函数打印时间、key、大小
 cat cassandra/logs/system.log|grep large|grep CompactionExecutor | wc -l
 cat cassandra/logs/system.log|grep large|grep CompactionExecutor | awk '{if(NF==14){print $3" "$4" "$10" "$(NF-3);}}' |wc -l
-
-
-
 
 #注意%转义字符的处理：grep -v "%"  报错：相对格式来说参数个数不足，跑出范围
 cat cassandra/logs/system.log|grep large|grep CompactionExecutor|
@@ -1553,9 +1316,6 @@ function getPartitionKeyMB() {
 }
 {printf $3" "$4" "getKey()" "getPartitionKeyMB()" n"}
 '
-
-
-
 
 #分组求最大值，最后的输出是大小和key，大小放在前面，是为了方便排序
 #awk '{max[$1]=max[$1]>$2?max[$1]:$2;}END{for (i in max) print i,max[i]}' OFS="t" url.txt
@@ -1584,9 +1344,6 @@ function getPartitionKeyMB() {
 END{for (i in max) print int(max[i]),i}
 ' | sort -rn > largekey.log
 
-
-
-
 #只需要输出type
 ```
 
@@ -1599,25 +1356,18 @@ END{for (i in max) print int(max[i]),i}
 ```plain text
 endpoint_snitch: GossipingPropertyFileSnitch
 
-
 使用cassandra-rackdc.properties配置文件，可以配置默认的RAC名称，适用于多个机架方式部署
-
 
 seed_provider：种子节点
 
-
 同一个集群的每个节点的种子节点必须一致，配置2-3个种子就可以了
-
 
 compaction_large_partition_warning_threshold_mb: 100
 
-
 很大的partition实际上就说明了PK的数据很大
-
 
 commitlog_segment_size_in_mb: 32
 commitlog_total_space_in_mb: 30720
-
 
 每个commit log的大小为32M，文件夹保留30G
 ```
@@ -1627,9 +1377,7 @@ commitlog_total_space_in_mb: 30720
 ```plain text
 memtable_total_space_in_mb
 
-
 (Default: 1/4 of heap) Specifies the total memory used for all memtables on a node. This replaces the per-table storage settings memtable_operations_in_millions and memtable_throughput_in_mb.
-
 
 # For workloads with more data than can fit in memory, Cassandra's
 # bottleneck will be reads that need to fetch data from
@@ -1643,31 +1391,23 @@ memtable_total_space_in_mb
 concurrent_reads: 32
 concurrent_writes: 64
 
-
 datastax documentation:
-
 
 concurrent_reads: 32
 (Default: 32) For workloads（工作负载） with more data than can fit in memory（内存中的数据放不下更多的数据）, the bottleneck is reads fetching data from disk（瓶颈在于从磁盘读取文件的速度）. Setting to (16 × number_of_drives) allows operations（请求） to queue low enough in the stack（进入队列的时间足够短） so that the OS and drives can reorder them（操作系统和磁盘会重新排序，指令重排？）. The default setting applies to both logical volume managed (LVM) and RAID drives. 对于LVM(?)和RAID都适用这个设置。
 
-
 假设硬盘数量=8，datastax建议的concurrent_reads=8drive*16=128
 当前集群硬盘数量=24个，所以concurrent_reads=16*24=384....
-
 
 concurrent_writes: 64
 (Default: 32)note Writes in Cassandra are rarely I/O bound, so the ideal number of concurrent writes depends on the number of CPU cores in your system. The recommended value is 8 × number_of_cpu_cores.
 
-
 假设CPU数量为24个，datastax建议的concurrent_writes=24cpu*8=128
-
 
 Cassandra High Performance Book:
 
-
 It is common to calculate the number of Concurrent Readers by taking the number of cores and multiplying it by two.
 Concurrent Writers should be set equal to or higher then Concurrent Readers
-
 
 假设CPU数量为16个，concurrent_reads=16*2=32， concurrent_writes>=32
 ```
@@ -1688,17 +1428,11 @@ megaraid_sas 0000:02:00.0: Controller type: MR,Memory size is: 1024MB
 megaraid_sas 0000:02:00.0: FW supports: UnevenSpanSupport=1
 scsi0 : LSI SAS based MegaRAID driver
 
-
-
-
 [admin@cass021026 bin]$ cat /proc/scsi/scsi
 Attached devices:
 Host: scsi0 Channel: 02 Id: 00 Lun: 00
   Vendor: DELL     Model: PERC H730 Mini   Rev: 4.26
   Type:   Direct-Access                    ANSI  SCSI revision: 05
-
-
-
 
 [admin@cass021026 bin]$ cat /var/log/dmesg | grep raid
 megaraid_sas 0000:02:00.0: PCI INT A -> GSI 26 (level, low) -> IRQ 26
@@ -1709,9 +1443,6 @@ megaraid_sas 0000:02:00.0: irq 87 for MSI/MSI-X
 megaraid_sas 0000:02:00.0: [scsi0]: FW supports<96> MSIX vector,Online CPUs: <24>,Current MSIX <24>
 megaraid_sas 0000:02:00.0: Controller type: MR,Memory size is: 1024MB
 megaraid_sas 0000:02:00.0: FW supports: UnevenSpanSupport=1
-
-
-
 
 [admin@cass021026 bin]$ df -h
 Filesystem      Size  Used Avail Use% Mounted on

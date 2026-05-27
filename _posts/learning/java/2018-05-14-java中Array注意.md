@@ -3,17 +3,19 @@ layout: post
 title: java中Array注意
 slug: java-array-note
 type:
-  - note
+- note
 date: 2018-05-14
 week: 2025-W48
 status: draft
 tags:
-  - Array
+- Java
 author: deathwhispers
 created: 2018-05-14 22:31
 updated: 2018-05-14 22:31
+categories:
+- Learning
+- Java
 ---
-
 
 # java中Array注意
 

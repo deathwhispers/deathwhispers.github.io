@@ -4,16 +4,17 @@ title: ReplicaSet
 slug: replicaset
 date: 2020-06-09
 type:
-  - note
+- note
 tags:
-  - Kubernetes
+- Docker
+- Kubernetes
 categories:
-  - Kubernetes
+- Learning
+- Docker
 author: deathwhispers
 created: 2020-06-09 11:48
 updated: 2020-06-09 11:48
 ---
-
 
 # ReplicaSet
 

@@ -3,18 +3,17 @@ layout: post
 title: 访问者模式 (Visitor Pattern) 深度解析
 slug: design-pattern-visitor-pattern
 type:
-  - note
+- note
 date: 2019-11-04
 tags:
-  - designPatterns
-  - visitorPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 🚶 访问者模式 (Visitor Pattern) 深度解析
 
@@ -78,30 +77,29 @@ public class Mouse  implements ComputerPart {
    @Override
    public void accept(ComputerPartVisitor computerPartVisitor) {
       // 双重分派的关键：调用访问者对应 Mouse 类型的 visit 方法
-      computerPartVisitor.visit(this); 
+      computerPartVisitor.visit(this);
    }
 }
 
 // --- 3. 具体元素 B: 计算机 (组合结构) ---
 public class Computer implements ComputerPart {
    ComputerPart[] parts;
-   
+
    public Computer(){
       parts = new ComputerPart[] {new Mouse(), new Keyboard(), new Monitor()};
    }
-   
+
    @Override
    public void accept(ComputerPartVisitor computerPartVisitor) {
       // 遍历所有子元素，让它们都接受访问
       for (ComputerPart part : parts) {
-         part.accept(computerPartVisitor); 
+         part.accept(computerPartVisitor);
       }
       // 访问者访问 Computer 自身
-      computerPartVisitor.visit(this); 
+      computerPartVisitor.visit(this);
    }
 }
 // (Keyboard 和 Monitor 类结构类似 Mouse，此处省略)
-
 
 // --- 4. 抽象访问者 (Visitor) ---
 public interface ComputerPartVisitor {
@@ -133,11 +131,11 @@ public class ComputerPartDisplayVisitor implements ComputerPartVisitor {
 public class VisitorPatternDemo {
    public static void main(String[] args) {
       ComputerPart computer = new Computer(); // 这是一个组合结构
-      
+
       // 客户端创建具体的访问者并将其传入元素结构
       System.out.println("--- 执行 Display 操作 ---");
-      computer.accept(new ComputerPartDisplayVisitor()); 
-      
+      computer.accept(new ComputerPartDisplayVisitor());
+
       // 如果要新增一个 CheckHealth 操作，只需新增一个 ConcreteVisitor 即可：
       // System.out.println("\n--- 执行 CheckHealth 操作 ---");
       // computer.accept(new ComputerPartHealthCheckVisitor()); // 无需修改 Computer 或 Part 接口
@@ -159,14 +157,14 @@ class AssetVisitor(ABC):
     @abstractmethod
     def visit_bond(self, bond):
         pass
-    
+
     # ... 其他资产类型
 
 # --- 2. 抽象元素 (Element) ---
 class FinancialAsset(ABC):
     def __init__(self, value):
         self.value = value
-        
+
     @abstractmethod
     def accept(self, visitor: AssetVisitor):
         pass
@@ -196,13 +194,13 @@ class NetWorthCalculator(AssetVisitor):
 
 # --- 6. 客户端调用 (Client) ---
 if __name__ == "__main__":
-    
+
     portfolio = [
-        Stock(10000), 
-        Bond(5000), 
+        Stock(10000),
+        Bond(5000),
         Stock(2000)
     ]
-    
+
     # 实例化一个操作：净值计算
     calculator = NetWorthCalculator()
     total_worth = 0
@@ -211,13 +209,13 @@ if __name__ == "__main__":
     for asset in portfolio:
         # 客户端使用统一的 accept 接口
         total_worth += calculator.visit(asset) # Python 动态特性简化了这里的调用，但在类型系统中仍是双重分派
-        
+
     # Python 习惯用法：在 Visitor 中集成调度
     # 实际在 Python 中，通常使用 `functools.singledispatch` 或自定义调度
-    
+
     # 这里演示标准的 accept 调用
     # 注意：为了简化Python示例，我们通常直接在Visitor类中手动选择方法
-    
+
     # Standard Dispatch (Manual Example):
     print("\n--- Standard Visitor Dispatch ---")
     for asset in portfolio:

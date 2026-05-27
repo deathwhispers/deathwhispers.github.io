@@ -3,14 +3,16 @@ layout: post
 title: 关于Mac使用IDEA的设置和小tip
 slug: mac-idea-setup-tips
 type:
-  - note
+- note
 status: published
 date: 2022-08-27
 tags:
-  - Idea
+- Tooling
 author: deathwhispers
+categories:
+- Other
+- General
 ---
-
 
 ## 操作环境
 
@@ -57,14 +59,11 @@ Setting - Editor - Font
 
 ### 主题设置
 
-
 - 主题样式：Atom One Dark
-
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee97dfa018454506bc338cc40082d5b8~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
 
 ### 新建文件模版设置
-
 
 - 模版设置目的：新建文件时 自动填充作者、文件描述、创建日期注释
 若需新增其余可按照官方描述进行添加即可
@@ -78,7 +77,6 @@ Setting - Editor - Font
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c243ea73f1a452488832f64008e043a~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
 
 ### 快捷键模版设置
-
 
 - 自定义快捷键模板：该功能主要用于自定义快捷键输出自定义的代码，如 psvm
 
@@ -98,7 +96,6 @@ public static void main(String[] args){
 其中：关于模版文本框中的变量名和对应值可以到 **Edit variables** 自行添加和修改
 
 ### 隐藏文件设置
-
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/93b60e321ef74a6b8f935db6d08c9fae~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
 

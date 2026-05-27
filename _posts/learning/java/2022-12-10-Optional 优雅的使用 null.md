@@ -3,16 +3,15 @@ layout: post
 title: Optional 优雅处理 null（整合版）
 slug: optional-elegant-use-of-null
 type:
-  - note
+- note
 date: 2022-12-10
 week: 2025-W48
 status: draft
 tags:
-  - Java8
-  - Optional
+- Java
 categories:
-  - Java
-  - Java8
+- Learning
+- Java
 author: deathwhispers
 created: 2022-12-10 15:25
 updated: 2026-04-20 18:30

@@ -3,16 +3,18 @@ layout: post
 title: 聚合函数Aggregations
 slug: spark-sql-aggregations
 type:
-  - note
+- note
 date: 2020-05-25
 status: draft
 tags:
-  - Spark
-  - Spark SQL
+- Spark
+- BigData
+- SparkSQL
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26

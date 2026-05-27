@@ -3,17 +3,19 @@ layout: post
 title: HttpRequestRetryHandler
 slug: http-request-retry-handler
 type:
-  - note
+- note
 date: 2019-03-11
 week: 2019-W14
 status: draft
 tags:
-  - 计算机网络
+- Network
 author: deathwhispers
 created: 2019-03-11 09:57
 updated: 2019-03-11 09:57
+categories:
+- Learning
+- Network
 ---
-
 
 # HttpRequestRetryHandler
 

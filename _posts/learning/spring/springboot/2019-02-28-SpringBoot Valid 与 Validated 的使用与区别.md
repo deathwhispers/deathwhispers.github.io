@@ -8,13 +8,15 @@ date: 2019-02-28
 week: 2019-W09
 status: draft
 tags:
-- Spring Boot
+- Spring
+- SpringBoot
 author: deathwhispers
 created: 2019-02-28 09:57
 updated: 2019-02-28 09:57
+categories:
+- Learning
+- Spring
 ---
-
-
 
 ### @Valid：
 

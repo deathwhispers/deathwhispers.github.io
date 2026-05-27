@@ -3,19 +3,22 @@ layout: post
 title: Hive CLI和Beeline命令行的基本使用
 slug: hive-cli-and-beeline-command-line-basic-usage
 type:
-  - note
+- note
 date: 2021-04-11
 status: draft
 tags:
-  - Hive
+- Hive
+- BigData
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---
+
 ## 一、Hive CLI
 
 ### 1.1 Help

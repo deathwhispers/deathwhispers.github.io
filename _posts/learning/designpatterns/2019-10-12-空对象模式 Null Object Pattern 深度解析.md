@@ -3,18 +3,17 @@ layout: post
 title: 空对象模式 (Null Object Pattern) 深度解析
 slug: design-pattern-null-object-pattern
 type:
-  - note
+- note
 date: 2019-10-12
 tags:
-  - designPatterns
-  - nullObjectPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 📜 设计模式：空对象模式 (Null Object Pattern)
 
@@ -173,7 +172,6 @@ Not Available in Customer Database
 # abstract_customer.py
 from abc import ABC, abstractmethod
 
-
 class AbstractCustomer(ABC):
     def __init__(self, name: str = None):
         self._name = name
@@ -199,7 +197,6 @@ class RealCustomer(AbstractCustomer):
 
     def get_name(self) -> str:
         return self._name
-
 
 # null_customer.py
 class NullCustomer(AbstractCustomer):

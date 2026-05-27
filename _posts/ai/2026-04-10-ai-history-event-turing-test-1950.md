@@ -1,16 +1,15 @@
 ---
 layout: post
-title: "AI 发展史大事件 01：1950 图灵测试，机器智能的起点问题"
+title: AI 发展史大事件 01：1950 图灵测试，机器智能的起点问题
 slug: ai-history-event-turing-test-1950
 status: Published
 date: 2026-04-10
 tags:
-  - AI
-  - AI发展史
-  - 图灵测试
+- AI
+- AIHistory
 categories:
-  - AI
-  - AI发展史系列
+- AI
+- General
 author: deathwhispers
 ---
 

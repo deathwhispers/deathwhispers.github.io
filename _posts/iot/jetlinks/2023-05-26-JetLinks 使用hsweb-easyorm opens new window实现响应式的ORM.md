@@ -3,21 +3,21 @@ layout: post
 title: JetLinks 使用hsweb-easyorm (opens new window)实现响应式的ORM.
 slug: jetlinks-using-hsweb-easyorm-for-reactive-orm
 type:
-  - note
+- note
 date: 2023-05-26
 status: draft
 tags:
-  - JetLinks
+- IoT
+- JetLinks
 categories:
-  - IoT
-  - JetLinks
-mood:
-weather:
+- IoT
+- JetLinks
+mood: null
+weather: null
 author: deathwhispers
 created: 2023-05-26 11:45
 updated: 2023-05-26 18:33
 ---
-
 
 # JetLinks 使用hsweb-easyorm (opens new window)实现响应式的ORM.
 

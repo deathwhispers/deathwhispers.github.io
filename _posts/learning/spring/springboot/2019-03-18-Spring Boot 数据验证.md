@@ -3,15 +3,19 @@ layout: post
 title: Spring Boot 数据验证
 slug: spring-boot-data-validation
 type:
-  - note
+- note
 date: 2019-03-18
 week: 2019-W14
 status: draft
 tags:
-  - Spring Boot
+- Spring
+- SpringBoot
 author: deathwhispers
 created: 2019-03-18 09:57
 updated: 2019-03-18 09:57
+categories:
+- Learning
+- Spring
 ---
 
 ## JSR-303 注释介绍

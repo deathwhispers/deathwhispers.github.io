@@ -3,19 +3,19 @@ layout: post
 title: 精尽 Redisson 源码分析 —— 限流器 RateLimiter
 slug: redisson-redlock-source-code-analysis-rate-limiter
 type:
-  - note
+- note
 date: 2018-03-11
 tags:
-  - Redis
-  - Redisson
-  - 分布式锁
+- Concurrency
+- Redis
+- Database
 categories:
-  - Redis
+- Learning
+- Database
 author: deathwhispers
 created: 2019-05-11 11:45
 updated: 2019-05-11 22:17
 ---
-
 
 # 1. 概述
 

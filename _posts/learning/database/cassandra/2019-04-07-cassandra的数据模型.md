@@ -3,19 +3,19 @@ layout: post
 title: Cassandra的数据模型
 slug: cassandra-data-model
 type:
-  - note
+- note
 date: 2019-04-07
 status: draft
 tags:
-  - cassandra
-  - compression
-categories: 
-  - cassandra
+- Database
+- Cassandra
+categories:
+- Learning
+- Database
 author: deathwhispers
 created: 2019-04-07 11:46
 updated: 2019-04-07 18:34
 ---
-
 
 # Cassandra的数据模型
 

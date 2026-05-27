@@ -3,19 +3,21 @@ layout: post
 title: Spring Aop 基本用法及概念
 slug: spring-aop-basic-usage-concept
 type:
-  - note
+- note
 date: 2019-05-14
 week: 2019-W21
 status: draft
 tags:
-  - Spring 框架
-mood:
-weather:
+- Spring
+mood: null
+weather: null
 author: deathwhispers
 created: 2019-05-14 10:00
 updated: 2019-05-14 10:00
+categories:
+- Learning
+- Spring
 ---
-
 
 参考文章：
 

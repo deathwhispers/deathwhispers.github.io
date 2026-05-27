@@ -3,13 +3,13 @@ layout: post
 title: 责任链模式 (Chain of Responsibility Pattern) 深度解析
 slug: design-pattern-chain-of-responsibility-pattern
 type:
-  - note
+- note
 date: 2019-10-28
 tags:
-  - designPatterns
-  - chainOfResponsibilityPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
@@ -146,7 +146,7 @@ public class ChainPatternDemo {
         AbstractLogger loggerChain = getChainOfLoggers();
 
         // 消息级别：INFO (1)
-        loggerChain.logMessage(AbstractLogger.INFO, "This is an information."); 
+        loggerChain.logMessage(AbstractLogger.INFO, "This is an information.");
         // 消息级别：DEBUG (2)
         loggerChain.logMessage(AbstractLogger.DEBUG, "This is a debug level information.");
         // 消息级别：ERROR (3)
@@ -195,7 +195,7 @@ class AbstractLogger(ABC):
     def log_message(self, level, message):
         if self.level <= level:
             self.write(message)
-        
+
         # 转发请求
         if self.next_logger is not None:
             self.next_logger.log_message(level, message)
@@ -234,10 +234,10 @@ if __name__ == "__main__":
 
     print("--- INFO Message (1) ---")
     logger_chain.log_message(INFO, "This is an information.")
-    
+
     print("\n--- DEBUG Message (2) ---")
     logger_chain.log_message(DEBUG, "This is a debug level information.")
-    
+
     print("\n--- ERROR Message (3) ---")
     logger_chain.log_message(ERROR, "This is an error information.")
 ```

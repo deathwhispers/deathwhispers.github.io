@@ -4,17 +4,17 @@ title: Kubernetes Deployment
 slug: kubernetes-deployment
 date: 2020-05-21
 type:
-  - note
+- note
 tags:
-  - Kubernetes
+- Docker
+- Kubernetes
 categories:
-  - Kubernetes
+- Learning
+- Docker
 author: deathwhispers
 created: 2020-05-21 11:48
 updated: 2020-05-21 11:48
 ---
-
-
 
 # Deployment
 

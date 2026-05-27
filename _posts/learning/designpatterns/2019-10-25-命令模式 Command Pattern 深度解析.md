@@ -3,18 +3,17 @@ layout: post
 title: 命令模式 (Command Pattern) 深度解析
 slug: design-pattern-command-pattern
 type:
-  - note
+- note
 date: 2019-10-25
 tags:
-  - designPatterns
-  - commandPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 命令模式 (Command Pattern) 深度解析
 
@@ -115,19 +114,19 @@ public class CommandDemo {
     public static void main(String[] args) {
         // 创建接收者
         Television myTV = new Television();
-        
+
         // 创建具体命令，并将接收者绑定到命令上
         Command onCommand = new TurnOnCommand(myTV);
-        
+
         // 创建调用者
         RemoteControl remote = new RemoteControl();
-        
+
         // 将命令设置给调用者
         remote.setCommand(onCommand);
-        
+
         // 发送请求，实际执行的动作由命令对象封装
-        remote.pressButton(); 
-        
+        remote.pressButton();
+
         // 动态更换命令
         Command offCommand = new TurnOffCommand(myTV); // 略去 TurnOffCommand 实现
         remote.setCommand(offCommand);
@@ -171,10 +170,10 @@ class MacroCommand(Command):
     """一个包含多个命令的宏命令（组合命令）"""
     def __init__(self):
         self.commands = []
-    
+
     def add_command(self, command):
         self.commands.append(command)
-    
+
     def execute(self):
         print("\n--- Executing Macro Command ---")
         for command in self.commands:
@@ -184,11 +183,11 @@ class MacroCommand(Command):
 # 5. 客户端
 if __name__ == "__main__":
     kitchen_light = Light()
-    
+
     # 单独命令
     cmd_on = LightOnCommand(kitchen_light)
     cmd_off = LightOffCommand(kitchen_light)
-    
+
     # 创建宏命令
     party_macro = MacroCommand()
     party_macro.add_command(cmd_on)

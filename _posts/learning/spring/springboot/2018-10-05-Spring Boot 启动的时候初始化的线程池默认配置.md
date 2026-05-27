@@ -3,17 +3,20 @@ layout: post
 title: Spring Boot 启动的时候初始化的线程池默认配置
 slug: spring-boot-tomcat-thread-pool-default-config
 type:
-  - note
+- note
 date: 2018-10-05
 week: 2018-W40
 status: draft
 tags:
-  - Spring Boot
+- Spring
+- SpringBoot
 author: deathwhispers
 created: 2018-10-05 09:57
 updated: 2018-10-05 09:57
+categories:
+- Learning
+- Spring
 ---
-
 
 [参考文献：http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#HTTP/1.1_and_HTTP/1.0_Support](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#HTTP/1.1_and_HTTP/1.0_Support)
 

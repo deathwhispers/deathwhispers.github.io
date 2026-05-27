@@ -1,13 +1,14 @@
 ---
 layout: post
-title: "Knife4j 踩坑记录-全局请求头Authorization无效的问题"
+title: Knife4j 踩坑记录-全局请求头Authorization无效的问题
 slug: knife4j-global-authorization-bug
 status: Published
 date: 2025-10-27
 tags:
-  - Knife4j
+- Tooling
 categories:
-  []
+- Misc
+- General
 author: deathwhispers
 ---
 
@@ -49,7 +50,7 @@ public OpenAPI customOpenAPI() {
                                     .scheme("bearer")
                                     .bearerFormat("JWT")))
             // 【关键点二】：将安全方案应用到全局（SecurityRequirement）
-            .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication")); 
+            .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"));
 }
 ```
 
@@ -102,17 +103,17 @@ public GlobalOpenApiCustomizer globalAuthCustomizer() {
         // 核心目标：遍历所有 Path，并将 SecurityRequirement 添加到每个 Operation 中
         if (openApi.getPaths() != null) {
             openApi.getPaths().forEach((path, pathItem) -> {
-                
+
                 // 排除不需要认证的路径（可选，可自定义配置实现）
-                // if (isPathExcluded(path)) { return; } 
+                // if (isPathExcluded(path)) { return; }
 
                 // 遍历该路径下的所有 HTTP 操作（GET, POST, PUT, DELETE...）
                 pathItem.readOperations().forEach(operation -> {
-                    
+
                     // 1. 创建操作级别的安全要求
                     SecurityRequirement securityRequirement = new SecurityRequirement()
-                            .addList("Bearer Authentication"); 
-                            
+                            .addList("Bearer Authentication");
+
                     // 2. 将安全要求添加到 Operation 对象中
                     operation.addSecurityItem(securityRequirement);
                 });

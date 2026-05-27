@@ -3,13 +3,13 @@ layout: post
 title: 备忘录模式 (Memento Pattern) 深度解析
 slug: design-pattern-memento-pattern
 type:
-  - note
+- note
 date: 2019-10-12
 tags:
-  - designPatterns
-  - mementoPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
@@ -55,7 +55,7 @@ public class Memento {
    public Memento(String state){
       this.state = state;
    }
-   
+
    // 供发起人恢复状态时使用
    public String getState(){
       return state;
@@ -73,12 +73,12 @@ public class Originator {
    public String getState(){
       return state;
    }
-   
+
    // 创建备忘录：保存当前状态
    public Memento saveStateToMemento(){
       return new Memento(state);
    }
-   
+
    // 恢复状态：从备忘录中获取状态
    public void getStateFromMemento(Memento Memento){
       state = Memento.getState();
@@ -96,7 +96,7 @@ public class CareTaker {
    public void add(Memento state){
       mementoList.add(state);
    }
-   
+
    // 获取备忘录
    public Memento get(int index){
       return mementoList.get(index);
@@ -112,21 +112,21 @@ public class MementoPatternDemo {
       originator.setState("State #1");
       originator.setState("State #2");
       // 第一次存档：保存 State #2
-      careTaker.add(originator.saveStateToMemento()); 
+      careTaker.add(originator.saveStateToMemento());
 
       originator.setState("State #3");
       // 第二次存档：保存 State #3
-      careTaker.add(originator.saveStateToMemento()); 
+      careTaker.add(originator.saveStateToMemento());
 
       originator.setState("State #4");
       System.out.println("Current State: " + originator.getState()); // State #4
 
       // 恢复到第一次存档 (State #2)
-      originator.getStateFromMemento(careTaker.get(0)); 
+      originator.getStateFromMemento(careTaker.get(0));
       System.out.println("First saved State: " + originator.getState()); // State #2
 
       // 恢复到第二次存档 (State #3)
-      originator.getStateFromMemento(careTaker.get(1)); 
+      originator.getStateFromMemento(careTaker.get(1));
       System.out.println("Second saved State: " + originator.getState()); // State #3
    }
 }
@@ -153,7 +153,7 @@ class Originator:
     class Memento:
         def __init__(self, state):
             self._state = state
-        
+
         # 仅供 Originator 内部恢复时访问
         def get_saved_state(self):
             return self._state

@@ -3,20 +3,20 @@ layout: post
 title: 外部化配置-集成SpringBoot
 slug: dubbo-configuration-externalized-springboot
 type:
-  - note
+- note
 date: 2022-03-22
 status: draft
 tags:
-  - Dubbo
+- Dubbo
 categories:
-  - Dubbo
-mood:
-weather:
+- Learning
+- Dubbo
+mood: null
+weather: null
 author: deathwhispers
 created: 2022-04-13 11:50
 updated: 2022-04-13 18:33
 ---
-
 
 本文实际是 《Dubbo 源码分析 —— 集成 Spring Boot》文章。考虑到和 Dubbo 配置比较相关，所以改成这个标题。
 
@@ -106,7 +106,7 @@ consumer-sample
 // DubboRegistryZooKeeperConsumerBootstrap.javaprivate final Logger logger = LoggerFactory.getLogger(getClass());@Reference(version = "${demo.service.version}")private DemoService demoService;@Beanpublic ApplicationRunner runner() {    return args -> logger.info(demoService.sayHello("mercyblitz")); // 发起调用}public static void main(String[] args) {    SpringApplication.run(DubboRegistryZooKeeperConsumerBootstrap.class) // 启动    .close(); // <X> 关闭}
 ```
 
-- 
+-
 处，所以在发起一次 Dubbo 调用之后，会直接关闭 Spring Boot 应用。因此，JVM 进程就直接结束了。
 
 # 3. 项目结构一览

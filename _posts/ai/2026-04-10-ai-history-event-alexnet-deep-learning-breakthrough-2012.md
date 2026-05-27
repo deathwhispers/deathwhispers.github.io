@@ -1,17 +1,16 @@
 ---
 layout: post
-title: "AI 发展史大事件 06：2012 AlexNet，引爆深度学习浪潮"
+title: AI 发展史大事件 06：2012 AlexNet，引爆深度学习浪潮
 slug: ai-history-event-alexnet-deep-learning-breakthrough-2012
 status: Published
 date: 2026-04-10
 tags:
-  - AI
-  - AI发展史
-  - AlexNet
-  - 深度学习
+- AI
+- AIHistory
+- DeepLearning
 categories:
-  - AI
-  - AI发展史系列
+- AI
+- General
 author: deathwhispers
 ---
 

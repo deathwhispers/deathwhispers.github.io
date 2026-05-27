@@ -3,18 +3,17 @@ layout: post
 title: 代理模式 (Proxy Pattern) 深度解析
 slug: design-pattern-proxy-pattern
 type:
-  - note
+- note
 date: 2019-06-29
 tags:
-  - designPatterns
-  - proxyPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 🛡️ 代理模式 (Proxy Pattern) 深度解析
 
@@ -90,17 +89,17 @@ public interface Image {
 // 2. 真实主题 (RealSubject)
 public class RealImage implements Image {
    private String fileName;
-   
+
    public RealImage(String fileName){
       this.fileName = fileName;
       loadFromDisk(fileName); // 模拟耗时操作：真正加载大图
    }
-   
+
    @Override
    public void display() {
       System.out.println("Displaying " + fileName);
    }
-   
+
    private void loadFromDisk(String fileName){
       System.out.println("Loading " + fileName + " from disk...");
    }
@@ -110,18 +109,18 @@ public class RealImage implements Image {
 public class ProxyImage implements Image{
    private RealImage realImage; // 代理持有真实主题的引用
    private String fileName;
-   
+
    public ProxyImage(String fileName){
       this.fileName = fileName;
       // 注意：构造函数中不加载 RealImage，实现了延迟加载 (Virtual Proxy)
    }
-   
+
    @Override
    public void display() {
       // 只有在第一次调用 display() 时，才创建并加载 RealImage
       if(realImage == null){
          System.out.println("Proxy: Real image not created yet. Creating now.");
-         realImage = new RealImage(fileName); 
+         realImage = new RealImage(fileName);
       }
       realImage.display();
    }
@@ -135,7 +134,7 @@ public class ProxyImage implements Image{
 ```cpp
 // Proxy.cpp 核心实现 (基于原文逻辑)
 #include "Proxy.h"
-#include "RealSubject.h" 
+#include "RealSubject.h"
 #include <iostream>
 using namespace std;
 
@@ -159,10 +158,10 @@ void Proxy::afterRequest(){
 void Proxy::request(){
     // 1. 执行预处理
     preRequest();
-    
+
     // 2. 调用真实对象的核心方法
     m_pRealSubject->request();
-    
+
     // 3. 执行后处理
     afterRequest();
 }
@@ -184,7 +183,7 @@ class BankAccount:
 class RealBankAccount(BankAccount):
     def __init__(self, balance=0):
         self._balance = balance
-        
+
     def deposit(self, amount):
         self._balance += amount
         print(f"Deposited {amount}. New Balance: {self._balance}")
@@ -201,7 +200,7 @@ class RealBankAccount(BankAccount):
 class ProtectionProxy(BankAccount):
     def __init__(self, real_account):
         self._real_account = real_account
-        
+
     # 存钱无需权限
     def deposit(self, amount):
         self._real_account.deposit(amount)
@@ -219,7 +218,7 @@ real_acc = RealBankAccount(500)
 proxy_acc = ProtectionProxy(real_acc)
 
 # 存款 (代理直接委托给真实对象)
-proxy_acc.deposit(100) 
+proxy_acc.deposit(100)
 
 # 取款 (代理进行控制/权限检查)
 proxy_acc.withdraw(50, "WRONGPASS")
@@ -250,6 +249,3 @@ proxy_acc.withdraw(150, "SECRET123")
 
 * **与适配器模式的区别**：适配器模式主要目的是**改变接口**，而代理模式**不能改变**所代理类的接口。
 * **与装饰器模式的区别**：装饰器模式目的是**增强功能**，而代理模式的目的是**控制访问**。
-
-
-

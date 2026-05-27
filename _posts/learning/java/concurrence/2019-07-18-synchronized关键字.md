@@ -3,17 +3,16 @@ layout: post
 title: synchronized 关键字（整合版）
 slug: java-synchronized-keyword
 type:
-  - note
+- note
 date: 2019-07-18
 week: 2025-W48
 status: draft
 tags:
-  - Java并发
-  - synchronized
-  - Java并发系列
+- Java
+- Concurrency
 categories:
-  - Java
-  - 并发
+- Learning
+- Java
 author: deathwhispers
 created: 2019-07-18 16:37
 updated: 2026-04-20 19:30
@@ -33,9 +32,9 @@ updated: 2026-04-20 19:30
 
 ## 常见使用方式
 
-1. 同步代码块：作用于大括号内临界区。  
-2. 同步实例方法：作用于整个实例方法。  
-3. 同步静态方法：作用于整个静态方法。  
+1. 同步代码块：作用于大括号内临界区。
+2. 同步实例方法：作用于整个实例方法。
+3. 同步静态方法：作用于整个静态方法。
 
 ```java
 public class Demo {
@@ -59,9 +58,9 @@ public class Demo {
 
 ## 语义速记
 
-- 可重入：同一线程可重复进入同一把锁。  
-- 可见性：释放锁前的写，对后续获取同一锁的线程可见。  
-- 互斥性：同一时刻仅有一个线程持有同一把对象锁。  
+- 可重入：同一线程可重复进入同一把锁。
+- 可见性：释放锁前的写，对后续获取同一锁的线程可见。
+- 互斥性：同一时刻仅有一个线程持有同一把对象锁。
 
 ## 相关阅读
 

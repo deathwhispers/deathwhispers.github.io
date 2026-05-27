@@ -1,13 +1,12 @@
 ---
 layout: post
-title: "Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（六）"
+title: Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（六）
 date: 2025-09-12
 tags:
-  - Spring Scheduling
-  - Task Scheduling
+- Spring
 categories:
-  - Framework
-  - Spring Boot定时任务
+- Framework
+- Backend
 author: deathwhispers
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
@@ -170,4 +169,3 @@ sequenceDiagram
 现在咱既有“上帝视角”（监控），又有“上帝之手”（API控制），看似啥都能搞定了。但在真实生产环境里，尤其是集群部署时，还有个“幽灵”没解决——
 **并发安全**。比如多个节点同时改一个任务的状态，或者同一个任务在多个节点上跑重复了。下一章，咱就聊`hadoken-scheduler`
 的分布式锁设计，给任务在集群里“保驾护航”，确保“指令不会乱，任务不重复跑”。
-

@@ -3,20 +3,23 @@ layout: post
 title: Storm 集成 Redis 详解
 slug: storm-integration-redis-detail
 type:
-  - note
+- note
 date: 2022-04-28
 status: draft
 tags:
-  - Storm
-  - Redis
+- Redis
+- Storm
+- BigData
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---
+
 ## 一、简介
 
 Storm-Redis 提供了 Storm 与 Redis 的集成支持，你只需要引入对应的依赖即可使用：

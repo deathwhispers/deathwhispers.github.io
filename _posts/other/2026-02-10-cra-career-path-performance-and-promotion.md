@@ -1,18 +1,17 @@
 ---
 layout: post
-title: "CRA 系列 05：职业发展与晋升路径，如何从 CRA 走向管理岗"
+title: CRA 系列 05：职业发展与晋升路径，如何从 CRA 走向管理岗
 slug: cra-career-path-performance-and-promotion
 status: Published
 date: 2026-02-10
 mermaid: true
 tags:
-  - CRA
-  - 职业发展
-  - 临床研究
-  - 绩效管理
+- Tooling
+- Career
+- ClinicalResearch
 categories:
-  - 临床研究
-  - CRA系列
+- Other
+- General
 author: deathwhispers
 ---
 

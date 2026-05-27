@@ -4,13 +4,14 @@ title: 离线安装 Ollama 并运行 DeepSeek
 slug: offline-install-ollama-and-run-deepseek
 date: 2025-02-20
 type:
-  - note
+- note
 tags:
-  - DeepSeek
-  - Ollama
+- AI
+- LLM
+- DeepSeek
 categories:
-  - AI
-  - AI大模型
+- AI
+- LargeModel
 author: deathwhispers
 created: 2025-02-20 11:35
 updated: 2025-02-20 11:35
@@ -345,5 +346,3 @@ ollama run myuser/mymodel
     **](https://blog.csdn.net/2401_84204413/article/details/145647836)
 15. [**Ollama 中文文档 | Ollama 官方文档**](https://ollama.cadn.net.cn/#quickstart)
 16. [**Ollama自定义导入DeepSeek-R1-Distill-Qwen-1.5B模型**](https://zhuanlan.zhihu.com/p/23807625841)
-
-

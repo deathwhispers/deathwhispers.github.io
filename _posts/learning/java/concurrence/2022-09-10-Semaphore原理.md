@@ -3,15 +3,16 @@ layout: post
 title: Semaphore 原理
 slug: concurrent-source-code-semaphore
 type:
-  - note
+- note
 date: 2022-09-10
 week: 2025-W48
 status: draft
 tags:
-  - Java并发源码分析
-  - Java并发系列
+- Java
+- Concurrency
 categories:
-  - Java
+- Learning
+- Java
 author: deathwhispers
 created: 2022-09-10 09:10
 updated: 2022-09-10 09:10

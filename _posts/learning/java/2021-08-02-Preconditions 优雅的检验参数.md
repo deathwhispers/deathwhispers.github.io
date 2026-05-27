@@ -3,16 +3,20 @@ layout: post
 title: Preconditions 优雅的检验参数
 slug: preconditions-elegant-parameter-validation
 type:
-  - note
+- note
 date: 2021-08-02
 week: 2025-W48
 status: draft
 tags:
-  - Preconditions
+- Java
 author: deathwhispers
 created: 2021-08-02 10:52
 updated: 2021-08-02 10:52
+categories:
+- Learning
+- Java
 ---
+
 # Preconditions 优雅的检验参数
 
 在日常开发中，我们经常会对方法的输入参数做一些数据格式上的验证，以便保证方法能够按照正常流程执行下去。对于可预知的一些数据上的错误，我们一定要做事前检测和判断，来避免程序流程出错，而不是完全通过错误处理来保证流程正确执行，毕竟错误处理是比较消耗资源的方式。在平常情况下我们对参数的判断都需要自己来逐个写方法判断，代码量不少并且复用性不高，如下所示：

@@ -3,15 +3,17 @@ layout: post
 title: 基于ZooKeeper搭建Spark高可用集群
 slug: spark-high-availability-cluster-setup-with-zookeeper
 type:
-  - note
+- note
 date: 2020-05-12
 status: draft
 tags:
-  - Spark
+- Spark
+- BigData
 categories:
-  - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26

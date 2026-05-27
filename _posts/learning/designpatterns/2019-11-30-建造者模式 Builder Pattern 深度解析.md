@@ -3,19 +3,17 @@ layout: post
 title: 建造者模式 (Builder Pattern) 深度解析
 slug: design-pattern-builder-pattern
 type:
-  - note
+- note
 date: 2019-11-30
 tags:
-  - designPatterns
-  - builderPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
-
 
 # 🏗️ 建造者模式 (Builder Pattern) 深度解析
 
@@ -71,7 +69,7 @@ import java.util.List;
 
 class Meal {
     private List<String> parts = new ArrayList<>();
-    
+
     public void addPart(String part) {
         parts.add(part);
     }
@@ -86,10 +84,10 @@ class Meal {
 // --- 2. 抽象建造者 (Builder) ---
 abstract class MealBuilder {
     protected Meal meal = new Meal();
-    
+
     public abstract void buildBurger();
     public abstract void buildDrink();
-    
+
     // 返回结果的方法
     public Meal getMeal() {
         return meal;
@@ -114,11 +112,11 @@ class NonVegMealBuilder extends MealBuilder {
 // --- 4. 指挥者 (Director) ---
 class Director {
     private MealBuilder builder;
-    
+
     public void setBuilder(MealBuilder builder) {
         this.builder = builder;
     }
-    
+
     // 负责控制产品的生成次序 (不变的构建过程)
     public Meal construct() {
         // 装配顺序：先装汉堡，再装饮料
@@ -171,7 +169,7 @@ class CarBuilder:
     def build_engine(self, type="Standard"):
         self.car.add(f"{type} Engine")
         return self
-    
+
     def build_wheels(self, count=4):
         self.car.add(f"{count} Wheels")
         return self
@@ -179,7 +177,7 @@ class CarBuilder:
     def build_frame(self, color="Black"):
         self.car.add(f"{color} Frame")
         return self
-    
+
     # 结果获取方法
     def get_result(self):
         return self.car
@@ -187,10 +185,10 @@ class CarBuilder:
 # --- 3. 客户端调用 (Client) ---
 if __name__ == "__main__":
     builder = CarBuilder()
-    
+
     # 构建产品 1: 经济型轿车 (使用链式调用定义构建过程)
     economy_car = builder.build_frame("Grey").build_wheels(4).build_engine("Economy").get_result()
-    economy_car.show() 
+    economy_car.show()
     # Output: Car construction complete. Parts: Grey Frame, 4 Wheels, Economy Engine
 
     # 构建产品 2: 跑车 (同样的构建方法，不同的调用次序和参数)

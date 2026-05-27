@@ -3,17 +3,22 @@ layout: post
 title: IOC-解析bean标签：meta、lookup-method、replace-method
 slug: ioc-parse-bean-tag-meta-lookup-method-replace-method
 type:
-  - note
+- note
 date: 2020-06-02
 status: draft
 tags:
-  - Spring 源码解析
-mood:
-weather:
+- Spring
+- SpringSourceCode
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-06-02 09:00
 updated: 2020-06-02 18:00
+categories:
+- Learning
+- Spring
 ---
+
 **本文主要基于 Spring 5.0.6.RELEASE**
 
 摘要: 原创出处 [http://cmsblogs.com/?p=2736](http://cmsblogs.com/?p=2736) 「小明哥」，谢谢！
@@ -24,11 +29,11 @@ updated: 2020-06-02 18:00
 
 完成 bean 标签的基本属性解析后，会依次调用 BeanDefinitionParserDelegate 的 #parseMetaElements(lement ele, BeanMetadataAttributeAccessor attributeAccessor)、#parseLookupOverrideSubElements(Element beanEle, MethodOverrides overrides)、#parseReplacedMethodSubElements(Element beanEle, MethodOverrides overrides) 方法，分别对子元素 meta、lookup-method、replace-method 元素完成解析。三个子元素的作用如下：
 
-- 
+-
 ：元数据。
-- 
+-
 ：Spring 动态改变 bean 里方法的实现。方法执行返回的对象，使用 Spring 内原有的这类对象替换，通过改变方法返回值来动态改变方法。内部实现为使用 cglib 方法，重新生成子类，重写配置的方法和返回对象，达到动态改变的效果。
-- 
+-
 ：Spring 动态改变 bean 里方法的实现。需要改变的方法，使用 Spring 内原有其他类（需要继承接口
 org.springframework.beans.factory.support.MethodReplacer
 ）的逻辑，替换这个方法。通过改变方法执行逻辑来动态改变方法。

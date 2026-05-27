@@ -3,22 +3,21 @@ layout: post
 title: ThingsBoard入门实战（一）：物联网平台 ThingsBoard 简介
 slug: thingsboard-introduction
 type:
-  - note
+- note
 date: 2023-07-03
 status: draft
 tags:
-  - ThingsBoard
+- IoT
+- ThingsBoard
 categories:
-  - IoT
-  - ThingsBoard
-mood:
-weather:
+- IoT
+- ThingsBoard
+mood: null
+weather: null
 author: deathwhispers
 created: 2023-06-03 11:45
 updated: 2023-06-03 18:33
 ---
-
-
 
 # ThingsBoard入门实战（一）：物联网平台 ThingsBoard 简介_莽就对了的博客-CSDN博客_thingsboard
 

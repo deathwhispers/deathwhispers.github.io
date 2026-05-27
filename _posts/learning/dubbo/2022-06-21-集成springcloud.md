@@ -3,15 +3,16 @@ layout: post
 title: 集成SpringCloud
 slug: dubbo-integration-spring-cloud
 type:
-  - note
+- note
 date: 2022-06-21
 status: draft
 tags:
-  - Dubbo
+- Dubbo
 categories:
-  - Dubbo
-mood:
-weather:
+- Learning
+- Dubbo
+mood: null
+weather: null
 author: deathwhispers
 created: 2022-06-21 11:52
 updated: 2022-06-21 18:33
@@ -399,7 +400,7 @@ plain {   "name" : "providers:dubbo:org.springframework.cloud.alibaba.dubbo.serv
 
 ---
 
-- 
+-
 
 ## 7.1 Metadata 类
 

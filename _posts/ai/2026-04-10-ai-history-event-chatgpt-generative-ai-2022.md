@@ -1,17 +1,16 @@
 ---
 layout: post
-title: "AI 发展史大事件 09：2022 ChatGPT 出圈，生成式 AI 全面产业化"
+title: AI 发展史大事件 09：2022 ChatGPT 出圈，生成式 AI 全面产业化
 slug: ai-history-event-chatgpt-generative-ai-2022
 status: Published
 date: 2026-04-10
 tags:
-  - AI
-  - AI发展史
-  - ChatGPT
-  - 生成式AI
+- AI
+- GenerativeAI
+- AIHistory
 categories:
-  - AI
-  - AI发展史系列
+- AI
+- General
 author: deathwhispers
 ---
 

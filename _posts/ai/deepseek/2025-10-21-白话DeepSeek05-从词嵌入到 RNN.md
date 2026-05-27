@@ -1,15 +1,16 @@
 ---
 layout: post
-title: "白话DeepSeek05-从词嵌入到 RNN"
+title: 白话DeepSeek05-从词嵌入到 RNN
 slug: from-word-embeddings-to-rnns
 status: Published
 date: 2025-10-21
 tags:
-  - DeepSeek
-  - 神经网络
+- AI
+- DeepSeek
+- NeuralNetwork
 categories:
-  - DeepSeek
-  - "白话 DeepSeek 系列"
+- AI
+- DeepSeek
 author: deathwhispers
 ---
 

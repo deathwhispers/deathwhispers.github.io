@@ -3,19 +3,19 @@ layout: post
 title: Cassandra配置,启动与集群
 slug: cassandra-configuration-startup-and-cluster
 type:
-  - note
+- note
 date: 2019-05-28
 status: draft
 tags:
-  - cassandra
-  - compression
-categories: 
-  - cassandra
+- Database
+- Cassandra
+categories:
+- Learning
+- Database
 author: deathwhispers
 created: 2019-05-28 11:46
 updated: 2019-05-28 18:34
 ---
-
 
 # cassandra配置,启动与集群
 

@@ -3,18 +3,22 @@ layout: post
 title: IOC-加载Bean：parentBeanFactory与依赖处理
 slug: ioc-load-bean-parent-bean-factory-and-dependency-handling
 type:
-  - note
+- note
 date: 2020-07-28
 status: draft
 tags:
-  - Spring 源码解析
-mood:
-weather:
+- Spring
+- SpringSourceCode
+mood: null
+weather: null
 author: deathwhispers
-created: 2025-01-09T11:42:00
-categories: []
-updated: 2025-03-12T18:39:00
+created: 2025-01-09 11:42:00
+categories:
+- Learning
+- Spring
+updated: 2025-03-12 18:39:00
 ---
+
 本文主要基于 Spring 5.0.6.RELEASE
 
 摘要: 原创出处 [http://cmsblogs.com/?p=todo](http://cmsblogs.com/?p=todo) 「小明哥」，谢谢！

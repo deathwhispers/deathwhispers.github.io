@@ -3,16 +3,19 @@ layout: post
 title: Linux下安装MySQL
 slug: install-mysql-on-linux
 type:
-  - note
+- note
 date: 2021-08-10
 tags:
-  - mysql
+- MySQL
+- Database
 categories:
-  - mysql
+- Learning
+- Database
 author: deathwhispers
 created: 2021-08-10 11:45
 updated: 2021-08-10 22:17
 ---
+
 ## **yum安装**
 
 ```bash

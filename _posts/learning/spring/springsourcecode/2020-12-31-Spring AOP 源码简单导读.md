@@ -3,17 +3,22 @@ layout: post
 title: Spring AOP 源码简单导读
 slug: spring-aop-source-code-simple-intro
 type:
-  - note
+- note
 date: 2020-12-31
 status: draft
 tags:
-  - Spring 源码解析
-mood:
-weather:
+- Spring
+- SpringSourceCode
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-12-31 09:00
 updated: 2020-12-31 18:00
+categories:
+- Learning
+- Spring
 ---
+
 # 1. 前置内容
 
 Spring AOP 是基于 Spring IoC 机制来实现的，所以建议对 IoC 的源码有一定的了解。

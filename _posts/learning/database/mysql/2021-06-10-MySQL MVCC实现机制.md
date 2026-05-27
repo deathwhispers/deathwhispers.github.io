@@ -3,16 +3,19 @@ layout: post
 title: MySQL MVCC实现机制
 slug: mysql-mvcc-implementation-mechanism
 type:
-  - note
+- note
 date: 2021-06-10
 tags:
-  - mysql
+- MySQL
+- Database
 categories:
-  - mysql
+- Learning
+- Database
 author: deathwhispers
 created: 2021-06-10 11:45
 updated: 2021-06-10 22:17
 ---
+
 # MySQL MVCC实现机制
 
 ## 什么是MVC## 什么是MVCC

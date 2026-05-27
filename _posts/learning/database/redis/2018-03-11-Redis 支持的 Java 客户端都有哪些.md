@@ -3,12 +3,14 @@ layout: post
 title: Redis 支持的 Java 客户端都有哪些？
 slug: redis-java-clients
 type:
-  - note
+- note
 date: 2018-03-11
 tags:
-  - Redis
+- Redis
+- Database
 categories:
-  - Redis
+- Learning
+- Database
 author: deathwhispers
 created: 2019-05-11 11:45
 updated: 2019-05-11 22:17

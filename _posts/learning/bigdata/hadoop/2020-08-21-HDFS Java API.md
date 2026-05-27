@@ -3,20 +3,22 @@ layout: post
 title: HDFS Java API
 slug: hadoop-hdfs-java-api
 type:
-  - note
+- note
 date: 2020-08-21
 status: draft
 tags:
-  - HDFS
+- BigData
+- HDFS
 categories:
-  - BigData
-  - HDFS
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-08-21 11:45
 updated: 2020-08-21 18:27
 ---
+
 ## 一、 简介
 
 想要使用 HDFS API，需要导入依赖 hadoop-client。如果是 CDH 版本的 Hadoop，还需要额外指明其仓库地址：

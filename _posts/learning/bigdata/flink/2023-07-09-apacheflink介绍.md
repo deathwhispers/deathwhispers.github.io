@@ -3,23 +3,21 @@ layout: post
 title: ApacheFlink介绍
 slug: apache-flink-introduction
 type:
-   - note
+- note
 date: 2023-07-09
 status: draft
 tags:
-   - Flink
-   - 大数据
-   - 流式计算
+- Flink
+- BigData
 categories:
-   - BigData
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2024-01-09 11:45
 updated: 2024-03-12 18:33
 ---
-
-
 
 - [Flink](http://www.54tianzhisheng.cn/tags/Flink/)
 - [大数据](http://www.54tianzhisheng.cn/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/)

@@ -4,15 +4,17 @@ title: Docker for Windows 使用入门
 slug: docker-for-windows-intro
 date: 2020-01-09
 type:
-  - note
+- note
 tags:
-  - Docker
+- Docker
 categories:
-  - Docker
+- Learning
+- Docker
 author: deathwhispers
 created: 2020-01-09 11:48
 updated: 2020-01-09 11:48
 ---
+
 # Docker for Windows 使用入门
 
 - <u>Docker for Windows 使用入门</u>

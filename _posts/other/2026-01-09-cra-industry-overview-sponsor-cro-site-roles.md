@@ -1,17 +1,16 @@
 ---
 layout: post
-title: "CRA 系列 01：行业结构全景，Sponsor、CRO、Site 如何协作"
+title: CRA 系列 01：行业结构全景，Sponsor、CRO、Site 如何协作
 slug: cra-industry-overview-sponsor-cro-site-roles
 status: Published
 date: 2026-01-09
 tags:
-  - CRA
-  - 临床研究
-  - CRO
-  - Sponsor
+- Tooling
+- CRO
+- ClinicalResearch
 categories:
-  - 临床研究
-  - CRA系列
+- Other
+- General
 author: deathwhispers
 ---
 

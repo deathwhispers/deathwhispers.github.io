@@ -1,18 +1,16 @@
 ---
 layout: post
-title: "Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（四）"
+title: Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（四）
 date: 2025-09-01
 tags:
-  - Spring Scheduling
-  - Task Scheduling
+- Spring
 categories:
-  - Framework
-  - Spring Boot定时任务
+- Framework
+- Backend
 author: deathwhispers
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
 ---
-
 
 ## 引言
 
@@ -204,4 +202,3 @@ graph TD
 *接口抽象**、**多实现**、**自动配置**这三招，给`hadoken-scheduler`装了个“能换记忆芯片”的存储系统，既好用又灵活。
 
 到这儿，咱的框架已经能在生产环境稳定跑了。但现代调度框架光稳定还不够，还得能“看见”（监控）、能“操作”（管理）。下一章，咱就给它装“眼睛”和“手臂”——聊聊任务监控、日志和运行时统计是咋设计的。
-

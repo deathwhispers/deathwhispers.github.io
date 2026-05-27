@@ -3,18 +3,22 @@ layout: post
 title: BeanFactoryPostProcessor和BeanPostProcessor有什么区别
 slug: beanfactorypostprocessor-and-beanpostprocessor-difference
 type:
-  - note
+- note
 date: 2020-05-22
 week: 2020-W21
 status: draft
 tags:
-  - Spring 框架
-mood:
-weather:
+- Spring
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-05-22 10:00
 updated: 2020-05-22 10:00
+categories:
+- Learning
+- Spring
 ---
+
 1. 区别
 
 这两个接口说白了都是 Spring 在初始化 Bean 时对外暴露的扩展点，因为 Spring 框架提供的功能不一定能够满足我们所有的需求，有的时候我们需要对其进行扩展，那么这两个接口就是用来做扩展功能的。

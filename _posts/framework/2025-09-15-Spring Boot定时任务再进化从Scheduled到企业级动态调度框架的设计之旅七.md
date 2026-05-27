@@ -1,18 +1,16 @@
 ---
 layout: post
-title: "Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（七）"
+title: Spring Boot定时任务再进化：从@Scheduled到企业级动态调度框架的设计之旅（七）
 date: 2025-09-15
 tags:
-  - Spring Scheduling
-  - Task Scheduling
+- Spring
 categories:
-  - Framework
-  - Spring Boot定时任务
+- Framework
+- Backend
 author: deathwhispers
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
 ---
-
 
 ## 引言
 
@@ -137,7 +135,6 @@ public interface DistributedLockProvider {
 
 我在它的run()方法里添加了一段逻辑，专门负责任务执行前加锁、执行任务、执行完后解锁，就像监督员全程把控任务执行流程一样。
 
-
 ```java
 // MonitoredTaskWrapper.java
 @Override
@@ -193,7 +190,7 @@ private void executeWithLock(String lockConfig) {
    框架的`TaskManagerImpl`在初始化时，会通过`ObjectProvider`去容器里找这个Bean。只要找到了，分布式锁功能就**自动激活**了。
 
 2. **在任务上“加锁”**
-   
+
    有两种方式给任务加锁：
 
 * **单个任务加锁**：在注解里写上`lockAtMostForString`属性就行。
@@ -220,5 +217,3 @@ private void executeWithLock(String lockConfig) {
 至此，我们的`hadoken-scheduler`已经真正成长为一个能力全面的“多边形战士”了。它既能在单机环境下提供强大的管理和监控能力，也能在复杂的集群环境中保证执行的唯一和安全。
 
 在接下来的章节，我们将进入实战演练，看看如何将这个框架与真实的业务场景结合，并探讨一些更高级的用法和扩展技巧。
-
-

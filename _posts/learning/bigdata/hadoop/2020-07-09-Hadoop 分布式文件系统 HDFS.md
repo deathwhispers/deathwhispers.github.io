@@ -3,21 +3,23 @@ layout: post
 title: Hadoop 分布式文件系统 HDFS
 slug: hadoop-distributed-file-system-hdfs
 type:
-   - note
+- note
 date: 2020-07-09
 status: draft
 tags:
-   - Hadoop
-   - HDFS
+- Hadoop
+- BigData
+- HDFS
 categories:
-   - BigData
-   - Hadoop
-mood:
-weather:
+- Learning
+- BigData
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-07-09 11:45
 updated: 2020-07-09 18:27
 ---
+
 ## 一、介绍
 
 **HDFS** （**Hadoop Distributed File System**）是 Hadoop 下的分布式文件系统，具有高容错、高吞吐量等特性，可以部署在低成本的硬件上。

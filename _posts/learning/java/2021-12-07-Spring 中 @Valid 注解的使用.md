@@ -3,13 +3,18 @@ layout: post
 title: Spring 中 @Valid 注解的使用
 slug: valid-annotation-usage
 type:
-  - note
+- note
 date: 2021-12-07
 week: 2025-W48
 status: draft
 author: deathwhispers
 created: 2021-12-07 12:00
 updated: 2021-12-07 12:00
+categories:
+- Learning
+- Java
+tags:
+- Java
 ---
 
 # @Valid 注解的使用

@@ -3,17 +3,22 @@ layout: post
 title: 死磕 Spring4 张图带你读懂 Spring IoC 的世界
 slug: dead-dive-spring4-understand-spring-ioc-with-this-picture
 type:
-  - note
+- note
 date: 2020-04-07
 status: draft
 tags:
-  - Spring 源码解析
-mood:
-weather:
+- Spring
+- SpringSourceCode
+mood: null
+weather: null
 author: deathwhispers
 created: 2020-04-07 09:00
 updated: 2020-04-07 18:00
+categories:
+- Learning
+- Spring
 ---
+
 # 1. Bean 的转换过程
 
 下面这张图演示了一个可用的 bean 是如何从 xml 配置文件中演变过来的。

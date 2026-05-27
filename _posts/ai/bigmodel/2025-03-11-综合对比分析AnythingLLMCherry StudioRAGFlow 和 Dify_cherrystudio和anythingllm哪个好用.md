@@ -4,22 +4,17 @@ title: 综合对比分析：AnythingLLM、Cherry Studio、RAGFlow 和 Dify_cherr
 slug: anythingllm-cherry-studio-ragflow-dify-cherrystudio-anythingllm-which-is-better
 date: 2025-03-11
 type:
-  - note
-tags: 
-  - AnythingLLM
-  - Dify
-  - Cherry Studio
-  - RAGFlow
-  - LLM
-categories: 
-  - AI
-  - AI大模型
+- note
+tags:
+- AI
+- LLM
+categories:
+- AI
+- LargeModel
 author: deathwhispers
 created: 2025-03-11 10:28
 updated: 2025-03-11 10:28
 ---
-
-
 
 文章标签： [大数据](https://so.csdn.net/so/search/s.do?q=%E5%A4%A7%E6%95%B0%E6%8D%AE&t=all&o=vip&s=&l=&f=&viparticle=&from_tracking_code=tag_word&from_code=app_blog_art)
 

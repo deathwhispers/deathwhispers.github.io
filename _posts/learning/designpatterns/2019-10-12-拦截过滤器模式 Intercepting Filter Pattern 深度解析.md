@@ -3,18 +3,17 @@ layout: post
 title: 拦截过滤器模式 (Intercepting Filter Pattern) 深度解析
 slug: design-pattern-intercepting-filter-pattern
 type:
-  - note
+- note
 date: 2019-10-12
 tags:
-  - designPatterns
-  - interceptingFilterPattern
+- DesignPatterns
 categories:
-  - designPatterns
+- Learning
+- DesignPatterns
 author: deathwhispers
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---
-
 
 # 📝 拦截过滤器模式 (Intercepting Filter Pattern) 深度解析
 
@@ -65,18 +64,18 @@ import java.util.List;
 public class FilterChain {
    private List<Filter> filters = new ArrayList<Filter>();
    private Target target;
-   
+
    public void addFilter(Filter filter){
       filters.add(filter);
    }
-   
+
    public void execute(String request){
       for (Filter filter : filters) {
          filter.execute(request); // 依次执行过滤器
       }
       target.execute(request); // 最后执行 Target
    }
-   
+
    public void setTarget(Target target){
       this.target = target;
    }
@@ -88,16 +87,16 @@ public class FilterChain {
 ```java
 public class FilterManager {
    FilterChain filterChain;
-   
+
    public FilterManager(Target target){
       filterChain = new FilterChain();
       filterChain.setTarget(target);
    }
-   
+
    public void setFilter(Filter filter){
       filterChain.addFilter(filter);
    }
-   
+
    public void filterRequest(String request){
       filterChain.execute(request); // 客户端通过 Manager 触发链的执行
    }
@@ -189,18 +188,18 @@ import java.util.List;
 public class AndCriteria implements Criteria {
    private Criteria criteria;
    private Criteria otherCriteria;
-   
+
    public AndCriteria(Criteria criteria, Criteria otherCriteria) {
       this.criteria = criteria;
       this.otherCriteria = otherCriteria;
    }
-   
+
    @Override
    public List<Person> meetCriteria(List<Person> persons) {
       // 链式执行第一个标准
       List<Person> firstCriteriaPersons = criteria.meetCriteria(persons);
       // 在第一个标准的结果上执行第二个标准（即逻辑 AND）
-      return otherCriteria.meetCriteria(firstCriteriaPersons); 
+      return otherCriteria.meetCriteria(firstCriteriaPersons);
    }
 }
 ```
@@ -222,6 +221,3 @@ public class AndCriteria implements Criteria {
 | **解决问题** | 请求/响应的**预处理和后处理**（交叉关注点）。 | 根据**多个标准**筛选集合中的对象。 |
 | **核心机制** | **责任链**（依次执行，最终到达 Target）。 | **组合**（逻辑组合，返回子集）。 |
 | **数据流** | 请求/响应在链中**传递和修改**。 | 集合数据在标准中**筛选和缩减**。 |
-
-
-
