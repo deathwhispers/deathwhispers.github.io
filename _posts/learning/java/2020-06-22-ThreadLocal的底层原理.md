@@ -1,21 +1,19 @@
 ---
 layout: post
 title: ThreadLocal 的底层原理（整合版）
-slug: threadlocal-underlying-principle
-type:
-- note
+author: deathwhispers
 date: 2020-06-22
-week: 2025-W48
-status: draft
+slug: threadlocal-underlying-principle
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2020-06-22 22:58
 updated: 2026-04-20 18:30
+week: 2025-W48
 ---
 
 本文整合了 `ThreadLocal的底层原理` 与 `threadlocal` 两篇笔记。

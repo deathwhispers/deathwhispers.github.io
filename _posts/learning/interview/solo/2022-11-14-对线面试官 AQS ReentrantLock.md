@@ -1,18 +1,16 @@
 ---
 layout: post
 title: 对线面试官 AQS ReentrantLock
+author: deathwhispers
+date: 2022-11-14
 slug: solo-interviewer-aqs-reentrantlock
-date: '2022-11-14'
-type:
-- note
+categories:
+- Interview
 tags:
+- Concurrency
 - Java
 - Network
-- AQS
-categories:
-- Learning
-- Interview
-author: deathwhispers
+type: note
 created: 2024-07-26 11:48
 updated: 2024-07-26 11:48
 ---

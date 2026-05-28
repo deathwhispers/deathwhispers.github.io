@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 注册中心（二）之Zookeeper
-slug: dubbo-registry-zookeeper
-type:
-- note
+author: deathwhispers
 date: 2022-04-14
-status: draft
+slug: dubbo-registry-zookeeper
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-04-23 11:52
 updated: 2022-04-23 18:33
 ---

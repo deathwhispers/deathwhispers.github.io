@@ -1,17 +1,16 @@
 ---
 layout: post
 title: 综合对比分析：AnythingLLM、Cherry Studio、RAGFlow 和 Dify_cherrystudio和anythingllm哪个好用
-slug: anythingllm-cherry-studio-ragflow-dify-cherrystudio-anythingllm-which-is-better
+author: deathwhispers
 date: 2025-03-11
-type:
-- note
-tags:
-- AI
-- LLM
+slug: anythingllm-cherry-studio-ragflow-dify-cherrystudio-anythingllm-which-is-better
 categories:
 - AI
 - LargeModel
-author: deathwhispers
+tags:
+- AI
+- LLM
+type: note
 created: 2025-03-11 10:28
 updated: 2025-03-11 10:28
 ---

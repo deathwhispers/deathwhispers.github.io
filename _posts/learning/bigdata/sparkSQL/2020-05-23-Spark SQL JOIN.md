@@ -1,21 +1,16 @@
 ---
 layout: post
 title: Spark SQL JOIN
-slug: spark-sql-join
-type:
-- note
-date: 2020-05-23
-status: draft
-tags:
-- Spark
-- BigData
-- SparkSQL
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
 author: deathwhispers
+date: 2020-05-23
+slug: spark-sql-join
+categories:
+- BigData
+tags:
+- BigData
+- Spark
+type: note
+status: draft
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---

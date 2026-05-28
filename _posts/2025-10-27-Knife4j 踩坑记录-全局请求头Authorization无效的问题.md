@@ -1,15 +1,15 @@
 ---
 layout: post
 title: Knife4j 踩坑记录-全局请求头Authorization无效的问题
-slug: knife4j-global-authorization-bug
-status: Published
+author: deathwhispers
 date: 2025-10-27
-tags:
-- Tooling
+slug: knife4j-global-authorization-bug
 categories:
 - Misc
 - General
-author: deathwhispers
+tags:
+- Tooling
+status: published
 ---
 
 ### 摘要

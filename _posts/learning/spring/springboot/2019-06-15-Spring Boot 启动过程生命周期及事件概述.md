@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Spring Boot 启动过程（生命周期及事件）概述
-slug: spring-boot-startup-lifecycle-events
-type:
-- note
+author: deathwhispers
 date: 2019-06-15
-week: 2019-W24
-status: draft
+slug: spring-boot-startup-lifecycle-events
+categories:
+- Spring
 tags:
 - Spring
 - SpringBoot
-author: deathwhispers
+type: note
+status: draft
 created: 2019-06-15 09:57
 updated: 2019-06-15 09:57
-categories:
-- Learning
-- Spring
+week: 2019-W24
 ---
 
 总结：

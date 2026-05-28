@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Disruptor 术语说明
-slug: disruptor-terminology
-type:
-- note
+author: deathwhispers
 date: 2021-09-16
-week: 2025-W48
-status: draft
+slug: disruptor-terminology
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2021-09-16 19:45
 updated: 2021-09-16 19:45
+week: 2025-W48
 ---
 
 # Disruptor

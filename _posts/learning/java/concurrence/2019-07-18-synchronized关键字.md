@@ -1,21 +1,19 @@
 ---
 layout: post
 title: synchronized 关键字（整合版）
-slug: java-synchronized-keyword
-type:
-- note
+author: deathwhispers
 date: 2019-07-18
-week: 2025-W48
-status: draft
+slug: java-synchronized-keyword
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2019-07-18 16:37
 updated: 2026-04-20 19:30
+week: 2025-W48
 ---
 
 ## 什么是 synchronized

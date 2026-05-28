@@ -1,19 +1,15 @@
 ---
 layout: post
 title: NIO服务器（五）之Buffer层
-slug: dubbo-nio-server-buffer
-type:
-- note
+author: deathwhispers
 date: 2022-05-30
-status: draft
+slug: dubbo-nio-server-buffer
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-30 11:49
 updated: 2022-05-30 18:33
 ---

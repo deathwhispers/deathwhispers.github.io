@@ -1,16 +1,16 @@
 ---
 layout: post
 title: AI 发展史大事件 03：1969 感知机之争与第一次 AI 冬天
-slug: ai-history-event-perceptron-controversy-and-first-ai-winter
-status: Published
+author: deathwhispers
 date: 2026-04-10
-tags:
-- AI
-- AIHistory
+slug: ai-history-event-perceptron-controversy-and-first-ai-winter
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+- AIHistory
+status: published
 ---
 
 欢迎来到第三展厅。和前两个展厅的“开创感”不同，这里充满了争论、失望与反思。

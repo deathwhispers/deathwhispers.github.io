@@ -1,17 +1,16 @@
 ---
 layout: post
 title: 深入解析 HttpClient：核心调度器 DefaultRequestDirector
-slug: default-request-director
+author: deathwhispers
 date: 2022-06-09
-type:
-- note
-tags:
-- IoT
-- HttpClient
+slug: default-request-director
 categories:
 - IoT
 - General
-author: deathwhispers
+tags:
+- IoT
+- Network
+type: note
 ---
 
 ## 1. `DefaultRequestDirector` 的作用

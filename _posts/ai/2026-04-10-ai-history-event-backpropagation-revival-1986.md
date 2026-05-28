@@ -1,17 +1,16 @@
 ---
 layout: post
 title: AI 发展史大事件 04：1986 反向传播复兴，神经网络重获生命
-slug: ai-history-event-backpropagation-revival-1986
-status: Published
+author: deathwhispers
 date: 2026-04-10
-tags:
-- AI
-- AIHistory
-- NeuralNetwork
+slug: ai-history-event-backpropagation-revival-1986
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+- AIHistory
+status: published
 ---
 
 欢迎来到第四展厅。上一展厅我们经历了第一次 AI 冬天，这一展厅的主题是“方法复活”。

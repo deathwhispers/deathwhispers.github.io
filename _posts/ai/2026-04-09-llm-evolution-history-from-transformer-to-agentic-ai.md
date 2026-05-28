@@ -1,18 +1,16 @@
 ---
 layout: post
 title: LLM 发展历程：从 Transformer 到 Agent 化时代
-slug: llm-evolution-history-from-transformer-to-agentic-ai
-status: Published
+author: deathwhispers
 date: 2026-04-09
-tags:
-- AI
-- LLM
-- Agent
-- Transformer
+slug: llm-evolution-history-from-transformer-to-agentic-ai
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+- LLM
+status: published
 ---
 
 这几年，LLM（大语言模型）几乎重塑了 AI 应用形态。

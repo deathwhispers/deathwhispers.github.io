@@ -1,18 +1,16 @@
 ---
 layout: post
 title: BIO、NIO、AIO
+author: deathwhispers
+date: 2025-03-09
 slug: interview-bio-nio-aio
-date: '2025-03-09'
-type:
-- note
+categories:
+- Interview
 tags:
 - Java
+- Netty
 - Network
-- NIO
-categories:
-- Learning
-- Interview
-author: deathwhispers
+type: note
 created: 2024-07-26 11:48
 updated: 2024-07-26 11:48
 ---

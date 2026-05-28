@@ -1,19 +1,15 @@
 ---
 layout: post
 title: Zookeeper 客户端
-slug: dubbo-zookeeper-client
-type:
-- note
+author: deathwhispers
 date: 2022-04-10
-status: draft
+slug: dubbo-zookeeper-client
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-04-21 11:50
 updated: 2022-04-21 18:33
 ---

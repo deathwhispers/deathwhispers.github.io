@@ -1,22 +1,18 @@
 ---
 layout: post
 title: BeanFactoryPostProcessor和BeanPostProcessor有什么区别
-slug: beanfactorypostprocessor-and-beanpostprocessor-difference
-type:
-- note
+author: deathwhispers
 date: 2020-05-22
-week: 2020-W21
-status: draft
+slug: beanfactorypostprocessor-and-beanpostprocessor-difference
+categories:
+- Spring
 tags:
 - Spring
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-05-22 10:00
 updated: 2020-05-22 10:00
-categories:
-- Learning
-- Spring
+week: 2020-W21
 ---
 
 1. 区别

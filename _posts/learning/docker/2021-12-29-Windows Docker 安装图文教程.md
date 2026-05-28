@@ -1,17 +1,15 @@
 ---
 layout: post
 title: Windows Docker 安装图文教程
-slug: windows-docker-install-tutorial
+author: deathwhispers
 date: 2021-12-29
-type: note
+slug: windows-docker-install-tutorial
+categories:
+- Docker
 tags:
 - Docker
-categories:
-- Learning
-- Docker
-author: deathwhispers
+type: note
 description: 一份详细的图文教程，指导您如何在 Windows 10 操作系统上成功安装和配置 Docker Desktop，包括环境要求、安装步骤、验证方法以及如何在
-  Linux 和 Windows 容器间切换。
 keywords: Docker, Docker Desktop, Windows, 安装教程, Hyper-V, WSL 2, 容器
 ---
 

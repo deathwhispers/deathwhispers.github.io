@@ -1,20 +1,18 @@
 ---
 layout: post
 title: 彻底搞懂WebSocket原理
-slug: websocket-principle
-type:
-- note
+author: deathwhispers
 date: 2020-04-19
-week: 2020-W16
-status: draft
+slug: websocket-principle
+categories:
+- Network
 tags:
 - Network
-author: deathwhispers
+type: note
+status: draft
 created: 2020-04-19 09:57
 updated: 2020-04-19 09:57
-categories:
-- Learning
-- Network
+week: 2020-W16
 ---
 
 # 彻底搞懂WebSocket原理

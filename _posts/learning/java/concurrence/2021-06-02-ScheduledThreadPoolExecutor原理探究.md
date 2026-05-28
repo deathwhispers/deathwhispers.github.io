@@ -1,21 +1,19 @@
 ---
 layout: post
 title: ScheduledThreadPoolExecutor 原理探究
-slug: java-scheduled-thread-pool-executor-principle-pursuit
-type:
-- note
+author: deathwhispers
 date: 2021-06-02
-week: 2025-W48
-status: draft
+slug: java-scheduled-thread-pool-executor-principle-pursuit
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2021-06-02 17:22
 updated: 2021-06-02 17:22
+week: 2025-W48
 ---
 
 ## 类图结构

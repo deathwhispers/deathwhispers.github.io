@@ -1,18 +1,17 @@
 ---
 layout: post
-base: '[文档中心](_posts/learning/文档中心/文档中心.base)'
-categories:
-- Learning
-- Java
-created: 2021-11-07 21:48
+title: ReentrantLock 原理
 author: deathwhispers
 date: 2021-11-07
-updated: 2021-11-07 21:48
-title: ReentrantLock 原理
 slug: concurrent-source-code-reentrantlock
+categories:
+- Java
 tags:
 - Java
 - Concurrency
+created: 2021-11-07 21:48
+updated: 2021-11-07 21:48
+base: [文档中心](_posts/learning/文档中心/文档中心.base)
 ---
 
 [https://www.iocoder.cn/JUC/sike/ReentrantLock/](https://www.iocoder.cn/JUC/sike/ReentrantLock/)

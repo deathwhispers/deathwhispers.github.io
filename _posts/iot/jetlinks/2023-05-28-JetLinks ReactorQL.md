@@ -1,20 +1,17 @@
 ---
 layout: post
 title: JetLinks ReactorQL
-slug: jetlinks-reactorql
-type:
-- note
+author: deathwhispers
 date: 2023-05-28
-status: draft
-tags:
-- IoT
-- JetLinks
+slug: jetlinks-reactorql
 categories:
 - IoT
 - JetLinks
-mood: null
-weather: null
-author: deathwhispers
+tags:
+- IoT
+- JetLinks
+type: note
+status: draft
 created: 2023-05-28 11:45
 updated: 2023-05-28 18:33
 ---

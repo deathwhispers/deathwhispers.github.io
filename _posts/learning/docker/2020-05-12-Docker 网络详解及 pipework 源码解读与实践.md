@@ -1,16 +1,14 @@
 ---
 layout: post
 title: Docker 网络详解及 pipework 源码解读与实践
-slug: docker-network-pipework
+author: deathwhispers
 date: 2020-05-12
-type:
-- note
+slug: docker-network-pipework
+categories:
+- Docker
 tags:
 - Docker
-categories:
-- Learning
-- Docker
-author: deathwhispers
+type: note
 created: 2020-05-12 11:48
 updated: 2020-05-12 11:48
 ---

@@ -1,18 +1,16 @@
 ---
 layout: post
 title: Cassandra框架
-slug: cassandra-framework
-type:
-- note
+author: deathwhispers
 date: 2019-03-11
-status: draft
+slug: cassandra-framework
+categories:
+- Database
 tags:
 - Database
 - Cassandra
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
+status: draft
 created: 2019-03-22 11:46
 updated: 2019-03-22 18:34
 ---

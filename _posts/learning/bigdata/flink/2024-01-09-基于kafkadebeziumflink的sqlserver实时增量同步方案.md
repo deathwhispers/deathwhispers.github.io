@@ -1,20 +1,16 @@
 ---
 layout: post
 title: 基于Kafka+Debezium+Flink的SQLServer实时增量同步方案
-slug: sqlserver-real-time-incremental-synchronization-using-kafka-debezium-flink
-type:
-- note
+author: deathwhispers
 date: 2024-01-09
-status: draft
+slug: sqlserver-real-time-incremental-synchronization-using-kafka-debezium-flink
+categories:
+- BigData
 tags:
 - Flink
 - BigData
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2024-01-09 11:45
 updated: 2024-03-12 18:33
 ---

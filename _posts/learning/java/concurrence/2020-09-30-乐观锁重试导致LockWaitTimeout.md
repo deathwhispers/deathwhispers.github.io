@@ -1,21 +1,19 @@
 ---
 layout: post
 title: 乐观锁重试导致 Lock Wait Timeout
-slug: java-optimistic-lock-retry-lock-wait-timeout-exceeded
-type:
-- note
+author: deathwhispers
 date: 2020-09-30
-week: 2025-W48
-status: draft
+slug: java-optimistic-lock-retry-lock-wait-timeout-exceeded
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2020-09-30 12:19
 updated: 2020-09-30 12:19
+week: 2025-W48
 ---
 
 # 乐观锁加重试，并发更新数据库一条记录导致：Lock wait timeout exceeded

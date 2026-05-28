@@ -1,20 +1,16 @@
 ---
 layout: post
 title: HBase 常用 Shell 命令
-slug: hbase-common-shell-commands
-type:
-- note
+author: deathwhispers
 date: 2020-03-20
-status: draft
+slug: hbase-common-shell-commands
+categories:
+- BigData
 tags:
 - HBase
 - BigData
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:25
 ---

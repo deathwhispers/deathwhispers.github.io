@@ -1,18 +1,16 @@
 ---
 layout: post
 title: 尝试使用 Github pages 搭建个人博客
+author: deathwhispers
 date: 2024-08-28
-tags:
-- EngineeringPractice
-- Blog
-- Geek
 categories:
 - Practicing
 - General
-comments: true
-author: deathwhispers
+tags:
+- EngineeringPractice
 created: 2024-08-28 09:57
 updated: 2024-08-28 09:57
+comments: True
 ---
 
 作为一个懒散的程序员，这么多年了，从来不写博客，也没在社交媒体上输出文章之类的。

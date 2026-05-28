@@ -1,16 +1,14 @@
 ---
 layout: post
 title: 观察者模式 (Observer Pattern) 深度解析
-slug: observer-pattern
-type:
-- note
+author: deathwhispers
 date: 2019-11-18
+slug: observer-pattern
+categories:
+- DesignPatterns
 tags:
 - DesignPatterns
-categories:
-- Learning
-- DesignPatterns
-author: deathwhispers
+type: note
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---

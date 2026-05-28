@@ -1,19 +1,15 @@
 ---
 layout: post
 title: NIO服务器（二）之Transport层
-slug: dubbo-nio-server-transport
-type:
-- note
+author: deathwhispers
 date: 2022-05-26
-status: draft
+slug: dubbo-nio-server-transport
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-26 11:49
 updated: 2022-05-26 18:33
 ---

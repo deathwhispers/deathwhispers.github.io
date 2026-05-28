@@ -1,16 +1,14 @@
 ---
 layout: post
 title: 状态模式 (State Pattern) 深度解析
-slug: design-pattern-state-pattern
-type:
-- note
+author: deathwhispers
 date: 2019-08-13
+slug: design-pattern-state-pattern
+categories:
+- DesignPatterns
 tags:
 - DesignPatterns
-categories:
-- Learning
-- DesignPatterns
-author: deathwhispers
+type: note
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---

@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Flume 整合 Kafka
-slug: flume-integrate-kafka
-type:
-- note
+author: deathwhispers
 date: 2021-12-01
-week: 2025-W48
-status: draft
+slug: flume-integrate-kafka
+categories:
+- General
 tags:
 - EngineeringPractice
 - Kafka
-author: deathwhispers
+type: note
+status: draft
 created: 2021-12-01 10:00
 updated: 2021-12-01 10:00
-categories:
-- Learning
-- General
+week: 2025-W48
 ---
 
 ## 一、背景

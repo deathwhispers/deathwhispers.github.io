@@ -1,21 +1,19 @@
 ---
 layout: post
 title: ThreadLocalRandom 原理剖析
-slug: java-thread-local-random-principle-analysis
-type:
-- note
+author: deathwhispers
 date: 2020-01-01
-week: 2025-W48
-status: draft
+slug: java-thread-local-random-principle-analysis
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2020-01-01 18:32
 updated: 2020-01-01 18:32
+week: 2025-W48
 ---
 
 ## Random类及其局限性

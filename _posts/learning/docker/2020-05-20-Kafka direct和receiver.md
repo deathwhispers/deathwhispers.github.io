@@ -1,17 +1,15 @@
 ---
 layout: post
 title: Kafka direct和receiver
-slug: kafka-direct-receiver
+author: deathwhispers
 date: 2020-05-20
-type:
-- note
+slug: kafka-direct-receiver
+categories:
+- Docker
 tags:
 - Docker
 - Kafka
-categories:
-- Learning
-- Docker
-author: deathwhispers
+type: note
 created: 2020-05-20 11:48
 updated: 2020-05-20 11:48
 ---

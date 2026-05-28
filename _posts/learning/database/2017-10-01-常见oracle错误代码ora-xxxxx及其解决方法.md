@@ -1,16 +1,14 @@
 ---
 layout: post
 title: 常见oracle错误代码ORA-xxxxx及其解决方法
-slug: common-oracle-error-code-ora-xxxx-and-solution
-type:
-- note
+author: deathwhispers
 date: 2017-10-01
+slug: common-oracle-error-code-ora-xxxx-and-solution
+categories:
+- Database
 tags:
 - Database
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
 created: 2017-10-01 22:08
 updated: 2017-10-01 22:08
 ---

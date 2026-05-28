@@ -1,20 +1,18 @@
 ---
 layout: post
 title: 删除一个StringBuilder的最后一个字符
-slug: delete-last-character-of-stringbuilder
-type:
-- note
+author: deathwhispers
 date: 2018-07-25
-week: 2025-W48
-status: draft
+slug: delete-last-character-of-stringbuilder
+categories:
+- Java
 tags:
 - Java
-author: deathwhispers
+type: note
+status: draft
 created: 2018-07-25 22:07
 updated: 2018-07-25 22:07
-categories:
-- Learning
-- Java
+week: 2025-W48
 ---
 
 When you have to loop through a [collection](https://so.csdn.net/so/search?q=collection&spm=1001.2101.3001.7020) and make a string of each data separated by a delimiter, you always end up with an extra delimiter at the end, e.g.

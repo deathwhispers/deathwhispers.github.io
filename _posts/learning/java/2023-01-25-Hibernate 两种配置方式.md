@@ -1,20 +1,18 @@
 ---
 layout: post
 title: Hibernate 两种配置方式
-slug: hibernate-two-configuration-methods
-type:
-- note
+author: deathwhispers
 date: 2023-01-25
-week: 2025-W48
-status: draft
+slug: hibernate-two-configuration-methods
+categories:
+- Java
 tags:
 - Java
-author: deathwhispers
+type: note
+status: draft
 created: 2023-01-25 10:47
 updated: 2023-01-25 10:47
-categories:
-- Learning
-- Java
+week: 2025-W48
 ---
 
 ## Hibernate 两种配置方式

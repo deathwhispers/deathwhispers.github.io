@@ -1,18 +1,16 @@
 ---
 layout: post
 title: Synchronized和ReentrantLock的区别
+author: deathwhispers
+date: 2024-09-03
 slug: interview-synchronized-and-reentrantlock-differences
-date: '2024-09-03'
-type:
-- note
+categories:
+- Interview
 tags:
 - Java
 - Redis
 - Network
-categories:
-- Learning
-- Interview
-author: deathwhispers
+type: note
 created: 2024-07-26 11:48
 updated: 2024-07-26 11:48
 ---

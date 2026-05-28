@@ -1,18 +1,18 @@
 ---
 layout: post
 title: CRA 系列 04：入行路径与面试攻略，如何从 0 到 1
-slug: cra-entry-path-and-interview-playbook
-status: Published
+author: deathwhispers
 date: 2026-02-02
+slug: cra-entry-path-and-interview-playbook
+categories:
+- Other
+- General
 tags:
 - Tooling
 - EngineeringPractice
 - Career
 - ClinicalResearch
-categories:
-- Other
-- General
-author: deathwhispers
+status: published
 ---
 
 想转行 CRA 的人，最常卡在两件事：

@@ -1,17 +1,16 @@
 ---
 layout: post
 title: 白话DeepSeek04-从矩阵到 CNN
-slug: from-matrices-to-cnns
-status: Published
+author: deathwhispers
 date: 2025-10-16
-tags:
-- AI
-- DeepSeek
-- NeuralNetwork
+slug: from-matrices-to-cnns
 categories:
 - AI
 - DeepSeek
-author: deathwhispers
+tags:
+- AI
+- DeepSeek
+status: published
 ---
 
 > 全文总结于 [Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！](https://www.bilibili.com/video/BV1NCgVzoEG9?spm_id_from=333.788.videopod.sections&vd_source=1ce32605a59581a6ec6d48f9eaa72d66&p=3)

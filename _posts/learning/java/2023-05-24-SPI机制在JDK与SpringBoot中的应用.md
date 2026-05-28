@@ -1,20 +1,18 @@
 ---
 layout: post
 title: SPI机制在JDK与SpringBoot中的应用
-slug: spi-mechanism-in-jdk-and-springboot
-type:
-- note
+author: deathwhispers
 date: 2023-05-24
-week: 2025-W48
-status: draft
+slug: spi-mechanism-in-jdk-and-springboot
+categories:
+- Java
 tags:
 - Java
-author: deathwhispers
+type: note
+status: draft
 created: 2023-05-24 10:25
 updated: 2023-05-24 10:25
-categories:
-- Learning
-- Java
+week: 2025-W48
 ---
 
 Spring Boot 不仅是简化 Spring 应用开发的工具，它还融合了许多先进的机制。本文深入探讨了 Spring Boot 中与 Java 的标准 SPI 相似的机制，揭示了它的工作原理、应用场景及与标准 SPI 的异同。文章通过实际代码示例为你展示了如何在 Spring Boot 中使用这一机制，并以形象的比喻帮助你理解其背后的思想。

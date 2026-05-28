@@ -1,20 +1,18 @@
 ---
 layout: post
 title: JVM学习笔记 New doc
-slug: jvm-learning-notes-new-doc
-type:
-- note
+author: deathwhispers
 date: 2018-09-04
-week: 2025-W48
-status: draft
+slug: jvm-learning-notes-new-doc
+categories:
+- JVM
 tags:
 - JVM
-author: deathwhispers
+type: note
+status: draft
 created: 2018-09-04 13:44
 updated: 2018-09-04 13:44
-categories:
-- Learning
-- JVM
+week: 2025-W48
 ---
 
 # 背景

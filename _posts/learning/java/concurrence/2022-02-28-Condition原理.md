@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Condition 原理
-slug: concurrent-source-code-condition
-type:
-- note
+author: deathwhispers
 date: 2022-02-28
-week: 2025-W48
-status: draft
+slug: concurrent-source-code-condition
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2022-02-28 12:47
 updated: 2022-02-28 12:47
+week: 2025-W48
 ---
 
 [https://www.iocoder.cn/JUC/sike/Condition/](https://www.iocoder.cn/JUC/sike/Condition/)

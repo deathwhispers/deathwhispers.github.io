@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Spring Boot 参数校验 Validation 入门
-slug: spring-boot-validation-getting-started
-type:
-- note
+author: deathwhispers
 date: 2018-04-18
-week: 2018-W16
-status: draft
+slug: spring-boot-validation-getting-started
+categories:
+- Spring
 tags:
 - Spring
 - SpringBoot
-author: deathwhispers
+type: note
+status: draft
 created: 2018-04-18 09:57
 updated: 2018-04-18 09:57
-categories:
-- Learning
-- Spring
+week: 2018-W16
 ---
 
 # 1. 概述

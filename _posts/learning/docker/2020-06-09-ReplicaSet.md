@@ -1,17 +1,15 @@
 ---
 layout: post
 title: ReplicaSet
-slug: replicaset
+author: deathwhispers
 date: 2020-06-09
-type:
-- note
+slug: replicaset
+categories:
+- Docker
 tags:
 - Docker
 - Kubernetes
-categories:
-- Learning
-- Docker
-author: deathwhispers
+type: note
 created: 2020-06-09 11:48
 updated: 2020-06-09 11:48
 ---

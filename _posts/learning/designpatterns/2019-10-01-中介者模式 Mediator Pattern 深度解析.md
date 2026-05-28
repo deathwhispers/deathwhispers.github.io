@@ -1,16 +1,14 @@
 ---
 layout: post
 title: 中介者模式 (Mediator Pattern) 深度解析
-slug: design-pattern-mediator-pattern
-type:
-- note
+author: deathwhispers
 date: 2019-10-01
+slug: design-pattern-mediator-pattern
+categories:
+- DesignPatterns
 tags:
 - DesignPatterns
-categories:
-- Learning
-- DesignPatterns
-author: deathwhispers
+type: note
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---

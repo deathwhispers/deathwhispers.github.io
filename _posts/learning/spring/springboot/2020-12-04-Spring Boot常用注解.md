@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Spring Boot常用注解
-slug: spring-boot-common-annotations
-type:
-- note
+author: deathwhispers
 date: 2020-12-04
-week: 2020-W48
-status: draft
+slug: spring-boot-common-annotations
+categories:
+- Spring
 tags:
 - Spring
 - SpringBoot
-author: deathwhispers
+type: note
+status: draft
 created: 2020-12-04 09:57
 updated: 2020-12-04 09:57
-categories:
-- Learning
-- Spring
+week: 2020-W48
 ---
 
 ## 一、注解(annotations)列表

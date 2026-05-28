@@ -1,20 +1,18 @@
 ---
 layout: post
 title: HttpRequestRetryHandler
-slug: http-request-retry-handler
-type:
-- note
+author: deathwhispers
 date: 2019-03-11
-week: 2019-W14
-status: draft
+slug: http-request-retry-handler
+categories:
+- Network
 tags:
 - Network
-author: deathwhispers
+type: note
+status: draft
 created: 2019-03-11 09:57
 updated: 2019-03-11 09:57
-categories:
-- Learning
-- Network
+week: 2019-W14
 ---
 
 # HttpRequestRetryHandler

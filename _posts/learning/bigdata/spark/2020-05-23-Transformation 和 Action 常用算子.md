@@ -1,20 +1,16 @@
 ---
 layout: post
 title: Transformation 和 Action 常用算子
-slug: transformation-and-action-common-operators
-type:
-- note
+author: deathwhispers
 date: 2020-05-23
-status: draft
+slug: transformation-and-action-common-operators
+categories:
+- BigData
 tags:
 - Spark
 - BigData
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---

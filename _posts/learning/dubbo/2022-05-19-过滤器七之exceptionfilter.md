@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 过滤器（七）之ExceptionFilter
-slug: dubbo-filter-exception
-type:
-- note
+author: deathwhispers
 date: 2022-05-19
-status: draft
+slug: dubbo-filter-exception
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-19 11:52
 updated: 2022-05-19 18:33
 ---

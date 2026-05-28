@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 集群容错（三）之Directory实现
-slug: dubbo-cluster-fault-tolerance-directory-impl
-type:
-- note
+author: deathwhispers
 date: 2022-06-09
-status: draft
+slug: dubbo-cluster-fault-tolerance-directory-impl
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-06-06 11:52
 updated: 2022-06-06 18:33
 ---

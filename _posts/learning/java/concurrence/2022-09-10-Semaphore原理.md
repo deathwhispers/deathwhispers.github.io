@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Semaphore 原理
-slug: concurrent-source-code-semaphore
-type:
-- note
+author: deathwhispers
 date: 2022-09-10
-week: 2025-W48
-status: draft
+slug: concurrent-source-code-semaphore
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2022-09-10 09:10
 updated: 2022-09-10 09:10
+week: 2025-W48
 ---
 
 [https://www.iocoder.cn/JUC/sike/Semaphore/](https://www.iocoder.cn/JUC/sike/Semaphore/)

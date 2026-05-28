@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 集群容错（六）之Configurator实现
-slug: dubbo-cluster-fault-tolerance-configurator-impl
-type:
-- note
+author: deathwhispers
 date: 2022-06-13
-status: draft
+slug: dubbo-cluster-fault-tolerance-configurator-impl
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-06-06 11:53
 updated: 2022-06-06 18:33
 ---

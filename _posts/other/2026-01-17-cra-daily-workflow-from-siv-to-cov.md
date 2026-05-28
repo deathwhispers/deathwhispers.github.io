@@ -1,19 +1,18 @@
 ---
 layout: post
 title: CRA 系列 02：日常工作全流程，从 SIV 到 COV
-slug: cra-daily-workflow-from-siv-to-cov
-status: Published
+author: deathwhispers
 date: 2026-01-17
-mermaid: true
-tags:
-- Tooling
-- ClinicalMonitoring
-- ClinicalTrial
-- GCP
+slug: cra-daily-workflow-from-siv-to-cov
 categories:
 - Other
 - General
-author: deathwhispers
+tags:
+- ClinicalResearch
+- GCP
+- Tooling
+status: published
+mermaid: True
 ---
 
 “CRA 一天到底在做什么？”

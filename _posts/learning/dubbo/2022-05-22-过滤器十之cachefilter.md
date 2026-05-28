@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 过滤器（十）之CacheFilter
-slug: dubbo-filter-cache
-type:
-- note
+author: deathwhispers
 date: 2022-05-22
-status: draft
+slug: dubbo-filter-cache
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-22 11:52
 updated: 2022-05-22 18:33
 ---

@@ -1,18 +1,18 @@
 ---
 layout: post
 title: CRA 系列 05：职业发展与晋升路径，如何从 CRA 走向管理岗
-slug: cra-career-path-performance-and-promotion
-status: Published
+author: deathwhispers
 date: 2026-02-10
-mermaid: true
+slug: cra-career-path-performance-and-promotion
+categories:
+- Other
+- General
 tags:
 - Tooling
 - Career
 - ClinicalResearch
-categories:
-- Other
-- General
-author: deathwhispers
+status: published
+mermaid: True
 ---
 
 很多 CRA 做到 1-2 年后都会遇到同一个问题：

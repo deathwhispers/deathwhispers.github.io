@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 外部化配置-集成SpringBoot
-slug: dubbo-configuration-externalized-springboot
-type:
-- note
+author: deathwhispers
 date: 2022-03-22
-status: draft
+slug: dubbo-configuration-externalized-springboot
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-04-13 11:50
 updated: 2022-04-13 18:33
 ---

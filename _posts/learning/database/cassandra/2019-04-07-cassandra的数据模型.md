@@ -1,18 +1,16 @@
 ---
 layout: post
 title: Cassandra的数据模型
-slug: cassandra-data-model
-type:
-- note
+author: deathwhispers
 date: 2019-04-07
-status: draft
+slug: cassandra-data-model
+categories:
+- Database
 tags:
 - Database
 - Cassandra
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
+status: draft
 created: 2019-04-07 11:46
 updated: 2019-04-07 18:34
 ---

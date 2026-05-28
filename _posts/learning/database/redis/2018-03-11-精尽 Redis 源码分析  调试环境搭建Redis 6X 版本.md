@@ -1,18 +1,16 @@
 ---
 layout: post
 title: 精尽 Redis 源码分析 —— 调试环境搭建（Redis 6.X 版本）
-slug: redisson-redlock-source-code-analysis-debug-environment-setup-redis-6-x
-type:
-- note
+author: deathwhispers
 date: 2018-03-11
+slug: redisson-redlock-source-code-analysis-debug-environment-setup-redis-6-x
+categories:
+- Database
 tags:
 - Concurrency
 - Redis
 - Database
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
 created: 2019-05-11 11:45
 updated: 2019-05-11 22:17
 ---

@@ -1,22 +1,18 @@
 ---
 layout: post
 title: IOC-加载Bean：创建Bean（四）之属性填充
-slug: ioc-populate-bean
-type:
-- note
+author: deathwhispers
 date: 2020-08-28
-status: draft
+slug: ioc-populate-bean
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-08-28 09:00
 updated: 2020-08-28 18:00
-categories:
-- Learning
-- Spring
 ---
 
 **本文主要基于 Spring 5.0.6.RELEASE**

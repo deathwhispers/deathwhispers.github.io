@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Spring Boot 项目 Jar 包加密，防止反编译
-slug: spring-boot-jar-encrypt
-type:
-- note
+author: deathwhispers
 date: 2020-04-13
-week: 2020-W15
-status: draft
+slug: spring-boot-jar-encrypt
+categories:
+- Spring
 tags:
 - Spring
 - SpringBoot
-author: deathwhispers
+type: note
+status: draft
 created: 2020-04-13 09:57
 updated: 2020-04-13 09:57
-categories:
-- Learning
-- Spring
+week: 2020-W15
 ---
 
 ## [1 场景](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247487551&idx=1&sn=18f64ba49f3f0f9d8be9d1fdef8857d9&scene=21#wechat_redirect)

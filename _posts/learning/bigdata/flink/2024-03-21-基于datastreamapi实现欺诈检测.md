@@ -1,20 +1,16 @@
 ---
 layout: post
 title: 基于DataStreamAPI实现欺诈检测
-slug: fraud-detection-using-datastream-api
-type:
-- note
+author: deathwhispers
 date: 2024-03-21
-status: draft
+slug: fraud-detection-using-datastream-api
+categories:
+- BigData
 tags:
 - Flink
 - BigData
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2024-01-09 11:45
 updated: 2024-03-12 18:33
 ---

@@ -1,22 +1,18 @@
 ---
 layout: post
 title: IOC-注册BeanDefinitions
-slug: ioc-register-bean-definitions
-type:
-- note
+author: deathwhispers
 date: 2020-06-27
-status: draft
+slug: ioc-register-bean-definitions
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-06-27 09:00
 updated: 2020-06-27 18:00
-categories:
-- Learning
-- Spring
 ---
 
 **本文主要基于 Spring 5.0.6.RELEASE**

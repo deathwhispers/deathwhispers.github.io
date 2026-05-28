@@ -1,22 +1,18 @@
 ---
 layout: post
 title: 死磕 Spring4 张图带你读懂 Spring IoC 的世界
-slug: dead-dive-spring4-understand-spring-ioc-with-this-picture
-type:
-- note
+author: deathwhispers
 date: 2020-04-07
-status: draft
+slug: dead-dive-spring4-understand-spring-ioc-with-this-picture
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-04-07 09:00
 updated: 2020-04-07 18:00
-categories:
-- Learning
-- Spring
 ---
 
 # 1. Bean 的转换过程

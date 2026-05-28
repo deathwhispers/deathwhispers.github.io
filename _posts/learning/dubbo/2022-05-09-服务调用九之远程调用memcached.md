@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 服务调用（九）之远程调用（Memcached）
-slug: dubbo-invocation-memcached
-type:
-- note
+author: deathwhispers
 date: 2022-05-09
-status: draft
+slug: dubbo-invocation-memcached
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-09 11:51
 updated: 2022-05-09 18:33
 ---

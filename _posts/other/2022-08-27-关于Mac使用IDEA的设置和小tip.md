@@ -1,17 +1,16 @@
 ---
 layout: post
 title: 关于Mac使用IDEA的设置和小tip
-slug: mac-idea-setup-tips
-type:
-- note
-status: published
-date: 2022-08-27
-tags:
-- Tooling
 author: deathwhispers
+date: 2022-08-27
+slug: mac-idea-setup-tips
 categories:
 - Other
 - General
+tags:
+- Tooling
+type: note
+status: published
 ---
 
 ## 操作环境

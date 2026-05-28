@@ -1,16 +1,14 @@
 ---
 layout: post
 title: 解释器模式 (Interpreter Pattern) 深度解析
-slug: design-pattern-interpreter-pattern
-type:
-- note
+author: deathwhispers
 date: 2019-08-27
+slug: design-pattern-interpreter-pattern
+categories:
+- DesignPatterns
 tags:
 - DesignPatterns
-categories:
-- Learning
-- DesignPatterns
-author: deathwhispers
+type: note
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---

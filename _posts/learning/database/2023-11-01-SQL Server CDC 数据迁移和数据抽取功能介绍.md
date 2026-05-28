@@ -1,16 +1,14 @@
 ---
 layout: post
 title: SQL Server CDC 数据迁移和数据抽取功能介绍
-slug: sql-server-cdc-data-migration-and-extraction-features-introduction
-type:
-- note
+author: deathwhispers
 date: 2023-11-01
+slug: sql-server-cdc-data-migration-and-extraction-features-introduction
+categories:
+- Database
 tags:
 - Database
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
 created: 2023-11-01 22:08
 updated: 2023-11-01 22:08
 ---

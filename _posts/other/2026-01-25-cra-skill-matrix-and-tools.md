@@ -1,18 +1,18 @@
 ---
 layout: post
 title: CRA 系列 03：能力模型与工具栈，优秀 CRA 需要什么能力
-slug: cra-skill-matrix-and-tools
-status: Published
+author: deathwhispers
 date: 2026-01-25
+slug: cra-skill-matrix-and-tools
+categories:
+- Other
+- General
 tags:
 - Tooling
 - Career
 - ClinicalResearch
 - GCP
-categories:
-- Other
-- General
-author: deathwhispers
+status: published
 ---
 
 “CRA 这份工作是不是只要细心就行？”

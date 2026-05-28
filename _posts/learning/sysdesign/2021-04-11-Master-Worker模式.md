@@ -1,20 +1,18 @@
 ---
 layout: post
 title: Master-Worker模式
-slug: master-worker-pattern
-type:
-- note
+author: deathwhispers
 date: 2021-04-11
-week: 2021-W19
-status: draft
+slug: master-worker-pattern
+categories:
+- SystemDesign
 tags:
 - SystemDesign
-author: deathwhispers
+type: note
+status: draft
 created: 2021-04-11 10:00
 updated: 2021-04-11 10:00
-categories:
-- Learning
-- SystemDesign
+week: 2021-W19
 ---
 
 # Master-Worker模式

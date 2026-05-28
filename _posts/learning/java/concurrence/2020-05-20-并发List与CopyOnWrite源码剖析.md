@@ -1,21 +1,19 @@
 ---
 layout: post
 title: 并发 List 与 CopyOnWrite 源码剖析
-slug: java-concurrent-list-source-code-analysis
-type:
-- note
+author: deathwhispers
 date: 2020-05-20
-week: 2025-W48
-status: draft
+slug: java-concurrent-list-source-code-analysis
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2020-05-20 13:09
 updated: 2020-05-20 13:09
+week: 2025-W48
 ---
 
 ## 介绍

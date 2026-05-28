@@ -1,20 +1,18 @@
 ---
 layout: post
 title: Preconditions 优雅的检验参数
-slug: preconditions-elegant-parameter-validation
-type:
-- note
+author: deathwhispers
 date: 2021-08-02
-week: 2025-W48
-status: draft
+slug: preconditions-elegant-parameter-validation
+categories:
+- Java
 tags:
 - Java
-author: deathwhispers
+type: note
+status: draft
 created: 2021-08-02 10:52
 updated: 2021-08-02 10:52
-categories:
-- Learning
-- Java
+week: 2025-W48
 ---
 
 # Preconditions 优雅的检验参数

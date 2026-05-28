@@ -1,18 +1,16 @@
 ---
 layout: post
 title: 对线面试官 synchronized
+author: deathwhispers
+date: 2023-03-10
 slug: solo-interviewer-synchronized
-date: '2023-03-10'
-type:
-- note
+categories:
+- Interview
 tags:
 - Java
 - Concurrency
 - Network
-categories:
-- Learning
-- Interview
-author: deathwhispers
+type: note
 created: 2024-07-26 11:48
 updated: 2024-07-26 11:48
 ---

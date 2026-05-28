@@ -1,16 +1,16 @@
 ---
 layout: post
 title: AI 发展史大事件 05：1997 Deep Blue 击败卡斯帕罗夫
-slug: ai-history-event-deep-blue-vs-kasparov-1997
-status: Published
+author: deathwhispers
 date: 2026-04-10
-tags:
-- AI
-- AIHistory
+slug: ai-history-event-deep-blue-vs-kasparov-1997
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+- AIHistory
+status: published
 ---
 
 欢迎来到第五展厅。正中央是一张历史照片：1997 年，IBM Deep Blue 战胜国际象棋世界冠军加里·卡斯帕罗夫。

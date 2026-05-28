@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 过滤器（一）之ClassLoaderFilter
-slug: dubbo-filter-classloader
-type:
-- note
+author: deathwhispers
 date: 2022-05-13
-status: draft
+slug: dubbo-filter-classloader
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-13 11:52
 updated: 2022-05-13 18:33
 ---

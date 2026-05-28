@@ -1,20 +1,17 @@
 ---
 layout: post
 title: ThingsBoard入门实战（五）：设备详情面板
-slug: thingsboard-device-details-panel
-type:
-- note
+author: deathwhispers
 date: 2023-07-15
-status: draft
-tags:
-- IoT
-- ThingsBoard
+slug: thingsboard-device-details-panel
 categories:
 - IoT
 - ThingsBoard
-mood: null
-weather: null
-author: deathwhispers
+tags:
+- IoT
+- ThingsBoard
+type: note
+status: draft
 created: 2023-06-07 11:45
 updated: 2023-06-07 18:33
 ---

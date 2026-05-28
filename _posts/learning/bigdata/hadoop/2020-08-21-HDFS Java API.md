@@ -1,20 +1,16 @@
 ---
 layout: post
 title: HDFS Java API
-slug: hadoop-hdfs-java-api
-type:
-- note
+author: deathwhispers
 date: 2020-08-21
-status: draft
+slug: hadoop-hdfs-java-api
+categories:
+- BigData
 tags:
 - BigData
-- HDFS
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+- Hadoop
+type: note
+status: draft
 created: 2020-08-21 11:45
 updated: 2020-08-21 18:27
 ---

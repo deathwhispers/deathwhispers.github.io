@@ -1,22 +1,18 @@
 ---
 layout: post
 title: Spring AOP 源码简单导读
-slug: spring-aop-source-code-simple-intro
-type:
-- note
+author: deathwhispers
 date: 2020-12-31
-status: draft
+slug: spring-aop-source-code-simple-intro
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-12-31 09:00
 updated: 2020-12-31 18:00
-categories:
-- Learning
-- Spring
 ---
 
 # 1. 前置内容

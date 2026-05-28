@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Spring Boot WebSocket 入门
-slug: spring-boot-websocket-getting-started
-type:
-- note
+author: deathwhispers
 date: 2019-05-15
-week: 2019-W21
-status: draft
+slug: spring-boot-websocket-getting-started
+categories:
+- Spring
 tags:
 - Spring
 - SpringBoot
-author: deathwhispers
+type: note
+status: draft
 created: 2019-05-15 09:57
 updated: 2019-05-15 09:57
-categories:
-- Learning
-- Spring
+week: 2019-W21
 ---
 
 # 1. 概述

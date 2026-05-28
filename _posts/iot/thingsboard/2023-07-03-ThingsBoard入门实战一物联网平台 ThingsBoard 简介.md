@@ -1,20 +1,17 @@
 ---
 layout: post
 title: ThingsBoard入门实战（一）：物联网平台 ThingsBoard 简介
-slug: thingsboard-introduction
-type:
-- note
+author: deathwhispers
 date: 2023-07-03
-status: draft
-tags:
-- IoT
-- ThingsBoard
+slug: thingsboard-introduction
 categories:
 - IoT
 - ThingsBoard
-mood: null
-weather: null
-author: deathwhispers
+tags:
+- IoT
+- ThingsBoard
+type: note
+status: draft
 created: 2023-06-03 11:45
 updated: 2023-06-03 18:33
 ---

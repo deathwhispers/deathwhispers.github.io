@@ -1,21 +1,19 @@
 ---
 layout: post
 title: CyclicBarrier 原理
-slug: concurrent-source-code-cyclicbarrier
-type:
-- note
+author: deathwhispers
 date: 2022-06-15
-week: 2025-W48
-status: draft
+slug: concurrent-source-code-cyclicbarrier
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2022-06-15 16:57
 updated: 2022-06-15 16:57
+week: 2025-W48
 ---
 
 [https://www.iocoder.cn/JUC/sike/CyclicBarrier/](https://www.iocoder.cn/JUC/sike/CyclicBarrier/)

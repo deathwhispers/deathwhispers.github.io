@@ -1,17 +1,15 @@
 ---
 layout: post
 title: MySQL 中 Explain 的用法
-slug: mysql-explain-usage
-type:
-- note
+author: deathwhispers
 date: 2021-06-21
+slug: mysql-explain-usage
+categories:
+- Database
 tags:
 - MySQL
 - Database
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
 created: 2021-06-21 11:45
 updated: 2021-06-21 22:17
 ---

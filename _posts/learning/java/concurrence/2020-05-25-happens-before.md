@@ -1,21 +1,19 @@
 ---
 layout: post
 title: happens-before
-slug: concurrent-source-code-happens-before
-type:
-- note
+author: deathwhispers
 date: 2020-05-25
-week: 2025-W48
-status: draft
+slug: concurrent-source-code-happens-before
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2020-05-25 11:55
 updated: 2020-05-25 11:55
+week: 2025-W48
 ---
 
 [https://www.iocoder.cn/JUC/sike/happens-before/](https://www.iocoder.cn/JUC/sike/happens-before/)

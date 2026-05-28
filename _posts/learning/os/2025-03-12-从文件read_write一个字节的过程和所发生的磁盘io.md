@@ -1,25 +1,21 @@
 ---
 layout: post
 title: 从文件read_write一个字节的过程和所发生的磁盘IO
-slug: read-write-io
-type:
-- note
+author: deathwhispers
 date: 2025-03-12
-week: 2025-W12
-status: draft
+slug: read-write-io
+categories:
+- OperatingSystem
 tags:
 - OperatingSystem
-categories:
-- Learning
-- OperatingSystem
-mood: null
-weather: null
-comments: true
-math: true
-mermaid: true
-author: deathwhispers
+type: note
+status: draft
 created: 2025-03-12 21:59
 updated: 2025-03-12 21:59
+week: 2025-W12
+comments: True
+mermaid: True
+math: True
 ---
 
 # [从文件read/write一个字节的过程和所发生的磁盘IO](https://www.cnblogs.com/z-sm/p/15163921.html)

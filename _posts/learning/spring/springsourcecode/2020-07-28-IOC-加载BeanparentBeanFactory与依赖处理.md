@@ -1,21 +1,17 @@
 ---
 layout: post
 title: IOC-加载Bean：parentBeanFactory与依赖处理
-slug: ioc-load-bean-parent-bean-factory-and-dependency-handling
-type:
-- note
+author: deathwhispers
 date: 2020-07-28
-status: draft
+slug: ioc-load-bean-parent-bean-factory-and-dependency-handling
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2025-01-09 11:42:00
-categories:
-- Learning
-- Spring
 updated: 2025-03-12 18:39:00
 ---
 

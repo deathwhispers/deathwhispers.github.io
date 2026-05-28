@@ -1,21 +1,19 @@
 ---
 layout: post
 title: synchronized 实现原理
-slug: concurrent-source-code-synchronized
-type:
-- note
+author: deathwhispers
 date: 2020-01-22
-week: 2025-W48
-status: draft
+slug: concurrent-source-code-synchronized
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2020-01-22 18:53
 updated: 2020-01-22 18:53
+week: 2025-W48
 ---
 
 [https://www.iocoder.cn/JUC/sike/synchronized/](https://www.iocoder.cn/JUC/sike/synchronized/)

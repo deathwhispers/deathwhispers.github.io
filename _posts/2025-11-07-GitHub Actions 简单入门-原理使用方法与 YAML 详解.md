@@ -1,15 +1,15 @@
 ---
 layout: post
 title: GitHub Actions 简单入门-原理、使用方法与 YAML 详解
-slug: github-actions-intro-principles-usage-and-yaml-details
-status: Published
+author: deathwhispers
 date: 2025-11-07
-tags:
-- Tooling
+slug: github-actions-intro-principles-usage-and-yaml-details
 categories:
 - Misc
 - General
-author: deathwhispers
+tags:
+- Tooling
+status: published
 ---
 
 GitHub Actions 是一个集成在 GitHub 仓库中的 CI/CD 和自动化平台，它允许您通过事件触发自动化工作流，用于构建、测试、部署代码或其他任务，如标签问题或发送通知。 它基于 YAML 文件定义工作流，这些文件易读且灵活，支持并行执行和依赖管理。 总体上，它的工作原理可靠，但复杂配置可能需要注意权限和并发问题，以避免意外行为。

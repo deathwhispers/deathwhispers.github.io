@@ -1,17 +1,16 @@
 ---
 layout: post
 title: AI 发展史大事件 06：2012 AlexNet，引爆深度学习浪潮
-slug: ai-history-event-alexnet-deep-learning-breakthrough-2012
-status: Published
+author: deathwhispers
 date: 2026-04-10
-tags:
-- AI
-- AIHistory
-- DeepLearning
+slug: ai-history-event-alexnet-deep-learning-breakthrough-2012
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+- AIHistory
+status: published
 ---
 
 欢迎来到第六展厅。墙上是一条著名曲线：ImageNet 竞赛错误率在 2012 年出现断崖式下降。

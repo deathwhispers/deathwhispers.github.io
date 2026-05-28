@@ -1,17 +1,15 @@
 ---
 layout: post
 title: Redis 数据结构：String 篇
-slug: redis-string-deep-dive
-type:
-- note
+author: deathwhispers
 date: 2018-03-11
+slug: redis-string-deep-dive
+categories:
+- Database
 tags:
 - Redis
 - Database
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
 created: 2019-05-11 11:45
 updated: 2023-10-28 22:17
 ---

@@ -1,23 +1,19 @@
 ---
 layout: post
 title: Spring + Mybatis 操作 Phoenix 数据库
-slug: spring-mybatis-phoenix
-type:
-- note
+author: deathwhispers
 date: 2022-05-22
-week: 2022-W21
-status: draft
+slug: spring-mybatis-phoenix
+categories:
+- Spring
 tags:
 - Spring
 - MyBatis
-categories:
-- Learning
-- Spring
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-22 10:00
 updated: 2022-05-22 10:00
+week: 2022-W21
 ---
 
 ## 一、前言

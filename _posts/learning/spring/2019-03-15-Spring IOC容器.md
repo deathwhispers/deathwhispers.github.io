@@ -1,20 +1,18 @@
 ---
 layout: post
 title: Spring IOC容器
-slug: spring-ioc-container
-type:
-- note
+author: deathwhispers
 date: 2019-03-15
-week: 2019-W12
-status: draft
+slug: spring-ioc-container
+categories:
+- Spring
 tags:
 - Spring
-author: deathwhispers
+type: note
+status: draft
 created: 2019-03-15 10:00
 updated: 2019-03-15 10:00
-categories:
-- Learning
-- Spring
+week: 2019-W12
 ---
 
 Spring实现IOC的多种方式

@@ -1,19 +1,17 @@
 ---
 layout: post
 title: 多模态大模型如何实现：从原理到架构的深度拆解
-slug: multimodal-llm-how-it-works-architecture-training-and-systems
-status: Published
+author: deathwhispers
 date: 2026-04-10
-mermaid: true
-tags:
-- AI
-- LLM
-- Transformer
-- Multimodal
+slug: multimodal-llm-how-it-works-architecture-training-and-systems
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+- LLM
+status: published
+mermaid: True
 ---
 
 “多模态大模型”看起来很神奇：一边看图，一边理解问题，还能输出长文本推理。

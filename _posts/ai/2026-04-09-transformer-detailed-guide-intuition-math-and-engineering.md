@@ -1,19 +1,17 @@
 ---
 layout: post
 title: Transformer 详解：原理、公式、图解与工程实践
-slug: transformer-detailed-guide-intuition-math-and-engineering
-status: Published
+author: deathwhispers
 date: 2026-04-09
-mermaid: true
-tags:
-- AI
-- LLM
-- Transformer
-- DeepLearning
+slug: transformer-detailed-guide-intuition-math-and-engineering
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+- LLM
+status: published
+mermaid: True
 ---
 
 Transformer 是现代 LLM 的核心架构。很多同学“知道它很重要”，但一到公式、维度、训练流程就容易卡住。

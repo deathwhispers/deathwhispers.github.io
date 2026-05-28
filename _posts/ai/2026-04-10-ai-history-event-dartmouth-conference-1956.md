@@ -1,16 +1,16 @@
 ---
 layout: post
 title: AI 发展史大事件 02：1956 达特茅斯会议，人工智能学科诞生
-slug: ai-history-event-dartmouth-conference-1956
-status: Published
+author: deathwhispers
 date: 2026-04-10
-tags:
-- AI
-- AIHistory
+slug: ai-history-event-dartmouth-conference-1956
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+- AIHistory
+status: published
 ---
 
 欢迎来到第二展厅。玻璃柜里陈列的是一份并不厚重的提案，却影响了七十多年技术史。

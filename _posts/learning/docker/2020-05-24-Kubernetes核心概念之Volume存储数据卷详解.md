@@ -1,17 +1,15 @@
 ---
 layout: post
 title: Kubernetes核心概念之Volume存储数据卷详解
-slug: kubernetes-volume
+author: deathwhispers
 date: 2020-05-24
-type:
-- note
+slug: kubernetes-volume
+categories:
+- Docker
 tags:
 - Docker
 - Kubernetes
-categories:
-- Learning
-- Docker
-author: deathwhispers
+type: note
 created: 2020-05-24 11:48
 updated: 2020-05-24 11:48
 ---

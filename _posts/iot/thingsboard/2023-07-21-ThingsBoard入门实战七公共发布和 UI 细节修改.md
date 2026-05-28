@@ -1,20 +1,17 @@
 ---
 layout: post
 title: ThingsBoard入门实战（七）：公共发布和 UI 细节修改
-slug: thingsboard-common-publishing-ui-details-modification
-type:
-- note
+author: deathwhispers
 date: 2023-07-21
-status: draft
-tags:
-- IoT
-- ThingsBoard
+slug: thingsboard-common-publishing-ui-details-modification
 categories:
 - IoT
 - ThingsBoard
-mood: null
-weather: null
-author: deathwhispers
+tags:
+- IoT
+- ThingsBoard
+type: note
+status: draft
 created: 2023-06-08 11:45
 updated: 2023-06-08 18:33
 ---

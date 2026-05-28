@@ -1,22 +1,18 @@
 ---
 layout: post
 title: IOC-加载Bean：从单例缓存中获取单例Bean
-slug: ioc-load-bean-from-singleton-cache
-type:
-- note
+author: deathwhispers
 date: 2020-07-22
-status: draft
+slug: ioc-load-bean-from-singleton-cache
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-07-22 09:00
 updated: 2020-07-22 18:00
-categories:
-- Learning
-- Spring
 ---
 
 摘要: 原创出处 [http://cmsblogs.com/?p=todo](http://cmsblogs.com/?p=todo) 「小明哥」，谢谢！

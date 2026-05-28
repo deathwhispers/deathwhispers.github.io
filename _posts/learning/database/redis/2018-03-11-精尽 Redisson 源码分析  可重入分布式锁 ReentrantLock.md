@@ -1,17 +1,15 @@
 ---
 layout: post
 title: 精尽 Redisson 源码分析 —— 可重入分布式锁 ReentrantLock
-slug: redisson-reentrant-lock-source-code-analysis
-type:
-- note
+author: deathwhispers
 date: 2018-03-11
+slug: redisson-reentrant-lock-source-code-analysis
+categories:
+- Database
 tags:
 - Redis
 - Database
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
 created: 2019-05-11 11:45
 updated: 2019-05-11 22:17
 ---

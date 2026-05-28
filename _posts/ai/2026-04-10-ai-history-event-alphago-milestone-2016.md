@@ -1,17 +1,17 @@
 ---
 layout: post
 title: AI 发展史大事件 07：2016 AlphaGo 时刻，AI 进入大众视野
-slug: ai-history-event-alphago-milestone-2016
-status: Published
+author: deathwhispers
 date: 2026-04-10
+slug: ai-history-event-alphago-milestone-2016
+categories:
+- AI
+- General
 tags:
 - AI
 - AIHistory
 - LearningMethod
-categories:
-- AI
-- General
-author: deathwhispers
+status: published
 ---
 
 欢迎来到第七展厅。大屏幕循环播放着 2016 年那场全球关注的比赛：AlphaGo 对战李世石。

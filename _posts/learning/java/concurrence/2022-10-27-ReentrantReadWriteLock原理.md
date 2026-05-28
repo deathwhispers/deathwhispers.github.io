@@ -1,21 +1,19 @@
 ---
 layout: post
 title: ReentrantReadWriteLock 原理
-slug: concurrent-source-code-reentrantreadwritelock
-type:
-- note
+author: deathwhispers
 date: 2022-10-27
-week: 2025-W48
-status: draft
+slug: concurrent-source-code-reentrantreadwritelock
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2022-10-27 18:33
 updated: 2022-10-27 18:33
+week: 2025-W48
 ---
 
 [https://www.iocoder.cn/JUC/sike/ReentrantReadWriteLock/](https://www.iocoder.cn/JUC/sike/ReentrantReadWriteLock/)

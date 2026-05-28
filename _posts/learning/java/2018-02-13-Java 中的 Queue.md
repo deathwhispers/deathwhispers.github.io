@@ -1,20 +1,18 @@
 ---
 layout: post
 title: Java 中的 Queue
-slug: java-queue
-type:
-- note
+author: deathwhispers
 date: 2018-02-13
-week: 2025-W48
-status: draft
+slug: java-queue
+categories:
+- Java
 tags:
 - Java
-author: deathwhispers
+type: note
+status: draft
 created: 2018-02-13 11:32
 updated: 2018-02-13 11:32
-categories:
-- Learning
-- Java
+week: 2025-W48
 ---
 
 # Queue

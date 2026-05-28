@@ -1,22 +1,18 @@
 ---
 layout: post
 title: IOC-深入理解Spring IOC
-slug: ioc-deep-dive-into-spring-ioc
-type:
-- note
+author: deathwhispers
 date: 2020-04-13
-status: draft
+slug: ioc-deep-dive-into-spring-ioc
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-04-13 09:00
 updated: 2020-04-13 18:00
-categories:
-- Learning
-- Spring
 ---
 
 **本文主要基于 Spring 5.0.6.RELEASE**

@@ -1,17 +1,15 @@
 ---
 layout: post
 title: Kubernetes Deployment
-slug: kubernetes-deployment
+author: deathwhispers
 date: 2020-05-21
-type:
-- note
+slug: kubernetes-deployment
+categories:
+- Docker
 tags:
 - Docker
 - Kubernetes
-categories:
-- Learning
-- Docker
-author: deathwhispers
+type: note
 created: 2020-05-21 11:48
 updated: 2020-05-21 11:48
 ---

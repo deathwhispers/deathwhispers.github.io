@@ -1,17 +1,16 @@
 ---
 layout: post
 title: 白话DeepSeek05-从词嵌入到 RNN
-slug: from-word-embeddings-to-rnns
-status: Published
+author: deathwhispers
 date: 2025-10-21
-tags:
-- AI
-- DeepSeek
-- NeuralNetwork
+slug: from-word-embeddings-to-rnns
 categories:
 - AI
 - DeepSeek
-author: deathwhispers
+tags:
+- AI
+- DeepSeek
+status: published
 ---
 
 > 全文总结于 [Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！](https://www.bilibili.com/video/BV1NCgVzoEG9?spm_id_from=333.788.videopod.sections&vd_source=1ce32605a59581a6ec6d48f9eaa72d66&p=3)

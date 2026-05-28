@@ -1,22 +1,18 @@
 ---
 layout: post
 title: IoC-加载BeanDefinition
-slug: ioc-load-bean-definition
-type:
-- note
+author: deathwhispers
 date: 2020-04-25
-status: draft
+slug: ioc-load-bean-definition
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-04-25 09:00
 updated: 2020-04-25 18:00
-categories:
-- Learning
-- Spring
 ---
 
 **本文主要基于 Spring 5.0.6.RELEASE**

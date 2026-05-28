@@ -1,22 +1,18 @@
 ---
 layout: post
 title: IOC-解析bean标签：constructor-arg、property、qualifier
-slug: ioc-parse-bean-tag-constructor-arg-property-qualifier
-type:
-- note
+author: deathwhispers
 date: 2020-06-08
-status: draft
+slug: ioc-parse-bean-tag-constructor-arg-property-qualifier
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-06-08 09:00
 updated: 2020-06-08 18:00
-categories:
-- Learning
-- Spring
 ---
 
 本文主要基于 Spring 5.0.6.RELEASE

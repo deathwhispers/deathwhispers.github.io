@@ -1,18 +1,16 @@
 ---
 layout: post
 title: Cassandra日常运维
-slug: cassandra-daily-ops
-type:
-- note
+author: deathwhispers
 date: 2019-03-22
-status: draft
+slug: cassandra-daily-ops
+categories:
+- Database
 tags:
 - Database
 - Cassandra
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
+status: draft
 created: 2019-03-22 11:46
 updated: 2019-03-22 18:34
 ---

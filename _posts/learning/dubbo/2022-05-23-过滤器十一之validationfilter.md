@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 过滤器（十一）之ValidationFilter
-slug: dubbo-filter-validation
-type:
-- note
+author: deathwhispers
 date: 2022-05-23
-status: draft
+slug: dubbo-filter-validation
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-23 11:52
 updated: 2022-05-23 18:33
 ---

@@ -1,22 +1,18 @@
 ---
 layout: post
 title: IOC-分析BeanWrapper
-slug: ioc-analyze-beanwrapper
-type:
-- note
+author: deathwhispers
 date: 2020-10-04
-status: draft
+slug: ioc-analyze-beanwrapper
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-10-04 09:00
 updated: 2020-10-04 18:00
-categories:
-- Learning
-- Spring
 ---
 
 **本文主要基于 Spring 5.0.6.RELEASE**

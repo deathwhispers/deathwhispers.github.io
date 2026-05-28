@@ -1,21 +1,16 @@
 ---
 layout: post
 title: Hadoop 分布式文件系统 HDFS
-slug: hadoop-distributed-file-system-hdfs
-type:
-- note
-date: 2020-07-09
-status: draft
-tags:
-- Hadoop
-- BigData
-- HDFS
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
 author: deathwhispers
+date: 2020-07-09
+slug: hadoop-distributed-file-system-hdfs
+categories:
+- BigData
+tags:
+- BigData
+- Hadoop
+type: note
+status: draft
 created: 2020-07-09 11:45
 updated: 2020-07-09 18:27
 ---

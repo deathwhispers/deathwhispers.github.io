@@ -1,16 +1,14 @@
 ---
 layout: post
 title: 空对象模式 (Null Object Pattern) 深度解析
-slug: design-pattern-null-object-pattern
-type:
-- note
+author: deathwhispers
 date: 2019-10-12
+slug: design-pattern-null-object-pattern
+categories:
+- DesignPatterns
 tags:
 - DesignPatterns
-categories:
-- Learning
-- DesignPatterns
-author: deathwhispers
+type: note
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---

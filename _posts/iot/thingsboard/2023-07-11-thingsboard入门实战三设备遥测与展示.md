@@ -1,20 +1,17 @@
 ---
 layout: post
 title: ThingsBoard入门实战（三）：设备遥测与展示
-slug: thingsboard-device-telemetry-and-display
-type:
-- note
+author: deathwhispers
 date: 2023-07-11
-status: draft
-tags:
-- IoT
-- ThingsBoard
+slug: thingsboard-device-telemetry-and-display
 categories:
 - IoT
 - ThingsBoard
-mood: null
-weather: null
-author: deathwhispers
+tags:
+- IoT
+- ThingsBoard
+type: note
+status: draft
 created: 2023-06-05 11:45
 updated: 2023-06-05 18:33
 ---

@@ -1,22 +1,18 @@
 ---
 layout: post
 title: ApplicationContext相关接口架构分析
-slug: applicationcontext-interface-architecture-analysis
-type:
-- note
+author: deathwhispers
 date: 2020-12-12
-status: draft
+slug: applicationcontext-interface-architecture-analysis
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-12-12 09:00
 updated: 2020-12-12 18:00
-categories:
-- Learning
-- Spring
 ---
 
 **本文主要基于 Spring 5.0.6.RELEASE**

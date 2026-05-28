@@ -1,15 +1,15 @@
 ---
 layout: post
 title: 一键开启 MacOS HiDPI
-slug: macos-one-key-hidpi
-status: Published
+author: deathwhispers
 date: 2024-06-20
-tags:
-- Tooling
+slug: macos-one-key-hidpi
 categories:
 - Misc
 - General
-author: deathwhispers
+tags:
+- Tooling
+status: published
 ---
 
 新买个了 27 英寸 2k 的显示器，我自己的电脑是 MacBook Pro (M1 Pro)，直接插上使用起来效果非常差，显示效果和 1080p 一样，很模糊。最终在 Github 上找到了一个解决方案，仅在此记录一下，一行命令解决现实模糊的问题。

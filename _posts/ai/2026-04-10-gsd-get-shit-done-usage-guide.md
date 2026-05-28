@@ -1,16 +1,16 @@
 ---
 layout: post
 title: Get Shit Done（GSD）实战使用文档：从安装到交付
-slug: gsd-get-shit-done-usage-guide
-status: Published
+author: deathwhispers
 date: 2026-04-10
-mermaid: true
-tags:
-- AI
+slug: gsd-get-shit-done-usage-guide
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+status: published
+mermaid: True
 ---
 
 如果你已经用过 Claude Code、Codex、OpenCode 这类 AI 编程工具，你大概率会遇到一个问题：

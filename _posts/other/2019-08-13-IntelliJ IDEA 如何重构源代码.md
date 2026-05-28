@@ -1,17 +1,16 @@
 ---
 layout: post
 title: IntelliJ IDEA 如何重构源代码
-slug: intellij-idea-refactoring-source-code
-type:
-- note
-status: published
-date: 2019-08-13
-tags:
-- Tooling
 author: deathwhispers
+date: 2019-08-13
+slug: intellij-idea-refactoring-source-code
 categories:
 - Other
 - General
+tags:
+- Tooling
+type: note
+status: published
 ---
 
 IntelliJ IDEA 提供了各种各样的代码重构，它们可以自动跟踪和更正受影响的代码引用。

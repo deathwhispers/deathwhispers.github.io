@@ -1,20 +1,16 @@
 ---
 layout: post
 title: HDFS 常用 shell 命令
-slug: hadoop-hdfs-common-shell-commands
-type:
-- note
+author: deathwhispers
 date: 2020-08-26
-status: draft
+slug: hadoop-hdfs-common-shell-commands
+categories:
+- BigData
 tags:
 - BigData
-- HDFS
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+- Hadoop
+type: note
+status: draft
 created: 2020-08-26 11:45
 updated: 2020-08-26 18:27
 ---

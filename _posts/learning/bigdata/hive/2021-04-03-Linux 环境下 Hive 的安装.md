@@ -1,20 +1,16 @@
 ---
 layout: post
 title: Linux 环境下 Hive 的安装
-slug: hive-installation-on-linux
-type:
-- note
+author: deathwhispers
 date: 2021-04-03
-status: draft
+slug: hive-installation-on-linux
+categories:
+- BigData
 tags:
 - Hive
 - BigData
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---

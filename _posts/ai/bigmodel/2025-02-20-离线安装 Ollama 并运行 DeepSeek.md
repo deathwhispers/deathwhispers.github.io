@@ -1,18 +1,17 @@
 ---
 layout: post
 title: 离线安装 Ollama 并运行 DeepSeek
-slug: offline-install-ollama-and-run-deepseek
+author: deathwhispers
 date: 2025-02-20
-type:
-- note
+slug: offline-install-ollama-and-run-deepseek
+categories:
+- AI
+- LargeModel
 tags:
 - AI
 - LLM
 - DeepSeek
-categories:
-- AI
-- LargeModel
-author: deathwhispers
+type: note
 created: 2025-02-20 11:35
 updated: 2025-02-20 11:35
 ---

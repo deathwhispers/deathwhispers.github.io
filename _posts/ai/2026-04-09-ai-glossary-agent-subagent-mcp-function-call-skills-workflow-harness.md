@@ -1,18 +1,17 @@
 ---
 layout: post
 title: AI 常用名词入门：从 Agent 到 Harness
-slug: ai-glossary-agent-to-harness
-status: Published
+author: deathwhispers
 date: 2026-04-09
-tags:
-- AI
-- LLM
-- Agent
-- MCP
+slug: ai-glossary-agent-to-harness
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+- LLM
+- MCP
+status: published
 ---
 
 在和 AI 产品、AI 编程工具打交道时，我们经常会听到一串术语：Agent、Subagent、MCP、Function Call、Skills、Workflow、Harness。

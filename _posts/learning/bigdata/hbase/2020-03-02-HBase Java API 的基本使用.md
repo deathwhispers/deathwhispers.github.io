@@ -1,20 +1,16 @@
 ---
 layout: post
 title: HBase Java API 的基本使用
-slug: hbase-java-api-basic-usage
-type:
-- note
+author: deathwhispers
 date: 2020-03-02
-status: draft
+slug: hbase-java-api-basic-usage
+categories:
+- BigData
 tags:
 - HBase
 - BigData
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---

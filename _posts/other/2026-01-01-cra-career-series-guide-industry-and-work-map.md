@@ -1,19 +1,19 @@
 ---
 layout: post
 title: CRA 行业与工作系列导览：从入行到进阶的全景地图
-slug: cra-career-series-guide-industry-and-work-map
-status: Published
+author: deathwhispers
 date: 2026-01-01
-mermaid: true
+slug: cra-career-series-guide-industry-and-work-map
+categories:
+- Other
+- General
 tags:
 - Tooling
 - Career
 - ClinicalResearch
 - GCP
-categories:
-- Other
-- General
-author: deathwhispers
+status: published
+mermaid: True
 ---
 
 如果你想系统了解 CRA（Clinical Research Associate，临床试验监查员）这个行业，这篇是整个系列的总入口。

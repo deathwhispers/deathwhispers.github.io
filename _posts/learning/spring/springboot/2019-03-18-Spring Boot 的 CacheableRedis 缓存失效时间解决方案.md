@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Spring Boot 的 @Cacheable(Redis) 缓存失效时间解决方案
-slug: spring-boot-cacheable-redis-expire-time-solution
-type:
-- note
+author: deathwhispers
 date: 2019-03-18
-week: 2019-W14
-status: draft
+slug: spring-boot-cacheable-redis-expire-time-solution
+categories:
+- Spring
 tags:
 - Spring
 - SpringBoot
-author: deathwhispers
+type: note
+status: draft
 created: 2019-03-18 09:57
 updated: 2019-03-18 09:57
-categories:
-- Learning
-- Spring
+week: 2019-W14
 ---
 
 原文链接：[https://blog.csdn.net/zyt807/article/details/82428615](https://blog.csdn.net/zyt807/article/details/82428615)

@@ -1,17 +1,16 @@
 ---
 layout: post
 title: 一文看透 Apache HttpClient 的底层请求执行与 Socket 连接建立流程（源码级解析）
-slug: apache-httpclient-under-the-hood
+author: deathwhispers
 date: 2022-01-09
-type:
-- note
-tags:
-- IoT
-- HttpClient
+slug: apache-httpclient-under-the-hood
 categories:
 - IoT
 - General
-author: deathwhispers
+tags:
+- IoT
+- Network
+type: note
 ---
 
 # ✅ 一文看透 Apache HttpClient 的底层请求执行与 Socket 连接建立流程（源码级解析）

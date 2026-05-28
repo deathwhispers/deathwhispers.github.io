@@ -1,25 +1,21 @@
 ---
 layout: post
 title: 彻底搞懂select_poll_epoll，这篇就够了
-slug: select-poll-epoll
-type:
-- note
+author: deathwhispers
 date: 2025-03-12
-week: 2025-W12
-status: draft
+slug: select-poll-epoll
+categories:
+- OperatingSystem
 tags:
 - OperatingSystem
-categories:
-- Learning
-- OperatingSystem
-mood: null
-weather: null
-comments: true
-math: true
-mermaid: true
-author: deathwhispers
+type: note
+status: draft
 created: 2025-03-12 21:59
 updated: 2025-03-12 21:59
+week: 2025-W12
+comments: True
+mermaid: True
+math: True
 ---
 
 之前已经把网络 I/O 相关要点都盘了，还剩 select/poll/epoll 这几个区别没说，这篇就来搞搞它们，并且是从完全理解原理的角度来区分它们。

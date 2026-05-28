@@ -1,18 +1,16 @@
 ---
 layout: post
 title: Cassandra数据压缩机制
-slug: cassandra-data-compression-mechanism
-type:
-- note
+author: deathwhispers
 date: 2019-06-22
-status: draft
+slug: cassandra-data-compression-mechanism
+categories:
+- Database
 tags:
 - Database
 - Cassandra
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
+status: draft
 created: 2019-06-22 11:46
 updated: 2019-06-22 18:34
 ---

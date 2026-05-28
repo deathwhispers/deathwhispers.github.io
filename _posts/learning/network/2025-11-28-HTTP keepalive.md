@@ -1,20 +1,18 @@
 ---
 layout: post
 title: HTTP keepalive
-slug: http-keepalive
-type:
-- note
+author: deathwhispers
 date: 2025-11-28
-week: 2025-W48
-status: draft
+slug: http-keepalive
+categories:
+- Network
 tags:
 - Network
-author: deathwhispers
+type: note
+status: draft
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
-categories:
-- Learning
-- Network
+week: 2025-W48
 ---
 
 # HttpRequestRetryHandler

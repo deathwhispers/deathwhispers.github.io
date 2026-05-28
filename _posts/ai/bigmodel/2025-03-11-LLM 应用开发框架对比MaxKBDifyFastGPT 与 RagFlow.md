@@ -1,19 +1,16 @@
 ---
 layout: post
 title: LLM 应用开发框架对比：MaxKB、Dify、FastGPT 与 RagFlow
-slug: llm-framework-comparison
+author: deathwhispers
 date: 2025-03-11
-type:
-- note
-tags:
-- AI
-- LLM
-- Agent
-- RAG
+slug: llm-framework-comparison
 categories:
 - AI
 - LargeModel
-author: deathwhispers
+tags:
+- AI
+- LLM
+type: note
 created: 2025-03-11 10:28
 updated: 2025-03-11 10:28
 ---

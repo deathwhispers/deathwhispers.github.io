@@ -1,20 +1,18 @@
 ---
 layout: post
 title: 聊聊 Linux 上软件实现的“交换机” - Bridge！
-slug: bridge-on-linux
-type:
-- note
+author: deathwhispers
 date: 2019-10-14
-week: 2019-W44
-status: draft
+slug: bridge-on-linux
+categories:
+- Network
 tags:
 - Network
-author: deathwhispers
+type: note
+status: draft
 created: 2019-10-14 09:57
 updated: 2019-10-14 09:57
-categories:
-- Learning
-- Network
+week: 2019-W44
 ---
 
 # 聊聊 Linux 上软件实现的“交换机” - Bridge！

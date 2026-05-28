@@ -1,20 +1,16 @@
 ---
 layout: post
 title: 分布式计算框架 MapReduce
-slug: hadoop-distributed-computing-framework-mapreduce
-type:
-- note
+author: deathwhispers
 date: 2020-08-18
-status: draft
+slug: hadoop-distributed-computing-framework-mapreduce
+categories:
+- BigData
 tags:
 - Hadoop
 - BigData
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-08-18 11:46
 updated: 2020-08-18 18:27
 ---

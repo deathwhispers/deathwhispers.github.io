@@ -1,18 +1,17 @@
 ---
 layout: post
 title: AI 发展史大事件 08：2017 Transformer，开启大模型时代底座
-slug: ai-history-event-transformer-2017
-status: Published
+author: deathwhispers
 date: 2026-04-10
-tags:
-- AI
-- Transformer
-- AIHistory
-- LargeModel
+slug: ai-history-event-transformer-2017
 categories:
 - AI
 - General
-author: deathwhispers
+tags:
+- AI
+- AIHistory
+- LLM
+status: published
 ---
 
 欢迎来到第八展厅。正中央的展板只有一行字：**Attention Is All You Need（2017）**。

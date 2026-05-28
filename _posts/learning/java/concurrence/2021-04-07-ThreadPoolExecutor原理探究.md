@@ -1,21 +1,19 @@
 ---
 layout: post
 title: ThreadPoolExecutor 原理探究
-slug: java-thread-pool-executor-principle-pursuit
-type:
-- note
+author: deathwhispers
 date: 2021-04-07
-week: 2025-W48
-status: draft
+slug: java-thread-pool-executor-principle-pursuit
+categories:
+- Java
 tags:
 - Java
 - Concurrency
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2021-04-07 13:33
 updated: 2021-04-07 13:33
+week: 2025-W48
 ---
 
 ## 类图结构

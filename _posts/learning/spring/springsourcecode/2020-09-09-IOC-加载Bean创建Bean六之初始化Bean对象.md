@@ -1,22 +1,18 @@
 ---
 layout: post
 title: IOC-加载Bean：创建Bean（六）之初始化Bean对象
-slug: ioc-initialize-bean-object
-type:
-- note
+author: deathwhispers
 date: 2020-09-09
-status: draft
+slug: ioc-initialize-bean-object
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-09-09 09:00
 updated: 2020-09-09 18:00
-categories:
-- Learning
-- Spring
 ---
 
 **本文主要基于 Spring 5.0.6.RELEASE**

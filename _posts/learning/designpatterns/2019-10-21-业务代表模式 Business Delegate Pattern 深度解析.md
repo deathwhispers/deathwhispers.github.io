@@ -1,16 +1,14 @@
 ---
 layout: post
 title: 业务代表模式 (Business Delegate Pattern) 深度解析
-slug: design-pattern-business-delegate-pattern-tutorial
-type:
-- note
+author: deathwhispers
 date: 2019-10-21
+slug: design-pattern-business-delegate-pattern-tutorial
+categories:
+- DesignPatterns
 tags:
 - DesignPatterns
-categories:
-- Learning
-- DesignPatterns
-author: deathwhispers
+type: note
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---

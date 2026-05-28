@@ -1,22 +1,18 @@
 ---
 layout: post
 title: IOC-Bean的实例化策略：InstantiationStrategy
-slug: ioc-bean-instantiation-strategy-instantiationstrategy
-type:
-- note
+author: deathwhispers
 date: 2020-09-28
-status: draft
+slug: ioc-bean-instantiation-strategy-instantiationstrategy
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-09-28 09:00
 updated: 2020-09-28 18:00
-categories:
-- Learning
-- Spring
 ---
 
 **本文主要基于 Spring 5.0.6.RELEASE**

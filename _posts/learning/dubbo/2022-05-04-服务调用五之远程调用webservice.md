@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 服务调用（五）之远程调用（WebService）
-slug: dubbo-invocation-webservice
-type:
-- note
+author: deathwhispers
 date: 2022-05-04
-status: draft
+slug: dubbo-invocation-webservice
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-05 11:51
 updated: 2022-05-05 18:33
 ---

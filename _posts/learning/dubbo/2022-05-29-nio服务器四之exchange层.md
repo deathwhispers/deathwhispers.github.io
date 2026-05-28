@@ -1,19 +1,15 @@
 ---
 layout: post
 title: NIO服务器（四）之Exchange层
-slug: dubbo-nio-server-exchange
-type:
-- note
+author: deathwhispers
 date: 2022-05-29
-status: draft
+slug: dubbo-nio-server-exchange
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-29 11:49
 updated: 2022-05-29 18:33
 ---

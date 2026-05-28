@@ -1,22 +1,18 @@
 ---
 layout: post
 title: IOC-深入分析BeanPostProcessor
-slug: ioc-deep-dive-into-bean-post-processor
-type:
-- note
+author: deathwhispers
 date: 2020-12-06
-status: draft
+slug: ioc-deep-dive-into-bean-post-processor
+categories:
+- Spring
 tags:
 - Spring
 - SpringSourceCode
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2020-12-06 09:00
 updated: 2020-12-06 18:00
-categories:
-- Learning
-- Spring
 ---
 
 **本文主要基于 Spring 5.0.6.RELEASE**

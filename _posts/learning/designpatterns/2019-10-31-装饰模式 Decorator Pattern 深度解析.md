@@ -1,16 +1,14 @@
 ---
 layout: post
 title: 装饰模式 (Decorator Pattern) 深度解析
-slug: design-pattern-decorator-pattern
-type:
-- note
+author: deathwhispers
 date: 2019-10-31
+slug: design-pattern-decorator-pattern
+categories:
+- DesignPatterns
 tags:
 - DesignPatterns
-categories:
-- Learning
-- DesignPatterns
-author: deathwhispers
+type: note
 created: 2019-01-09 11:45
 updated: 2019-03-12 22:17
 ---

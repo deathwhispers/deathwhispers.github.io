@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 过滤器（四）之ActiveLimitFilter&&ExecuteLimitFilter
-slug: dubbo-filter-active-execute-limit
-type:
-- note
+author: deathwhispers
 date: 2022-05-16
-status: draft
+slug: dubbo-filter-active-execute-limit
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-05-16 11:52
 updated: 2022-05-16 18:33
 ---

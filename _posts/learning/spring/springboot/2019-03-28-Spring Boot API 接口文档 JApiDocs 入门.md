@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Spring Boot API 接口文档 JApiDocs 入门
-slug: spring-boot-apidoc-japidocs-getting-started
-type:
-- note
+author: deathwhispers
 date: 2019-03-28
-week: 2019-W21
-status: draft
+slug: spring-boot-apidoc-japidocs-getting-started
+categories:
+- Spring
 tags:
 - Spring
 - SpringBoot
-author: deathwhispers
+type: note
+status: draft
 created: 2019-03-28 09:57
 updated: 2019-03-28 09:57
-categories:
-- Learning
-- Spring
+week: 2019-W21
 ---
 
 ![8b8ef94463c45fad1bbd047731f3b67d](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/8b8ef94463c45fad1bbd047731f3b67d.png)

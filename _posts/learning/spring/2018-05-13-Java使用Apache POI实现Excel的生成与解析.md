@@ -1,18 +1,16 @@
 ---
 layout: post
 title: Java使用Apache POI实现Excel的生成与解析
-slug: java-poi-excel-generation-parsing
+author: deathwhispers
 date: 2018-05-13
-week: 2018-W20
-type:
-- note
+slug: java-poi-excel-generation-parsing
+categories:
+- Spring
 tags:
 - Java
 - Spring
-categories:
-- Learning
-- Spring
-author: deathwhispers
+type: note
+week: 2018-W20
 description: 本笔记介绍了如何使用 Apache POI 库在 Java 中快速生成和解析 Excel（.xls）文件，包含创建工作簿、工作表、单元格以及读取数据的核心代码示例。
 keywords: Java, Apache POI, Excel, HSSFWorkbook, XSSFWorkbook, Excel导出, Excel解析
 ---

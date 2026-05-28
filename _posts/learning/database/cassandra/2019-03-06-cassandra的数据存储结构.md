@@ -1,18 +1,16 @@
 ---
 layout: post
 title: Cassandra的数据存储结构
-slug: cassandra-data-storage-structure
-type:
-- note
+author: deathwhispers
 date: 2019-03-06
-status: draft
+slug: cassandra-data-storage-structure
+categories:
+- Database
 tags:
 - Database
 - Cassandra
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
+status: draft
 created: 2019-03-06 11:46
 updated: 2019-03-06 18:34
 ---

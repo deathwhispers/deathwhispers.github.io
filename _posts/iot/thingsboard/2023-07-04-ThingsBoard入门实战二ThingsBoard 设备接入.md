@@ -1,20 +1,17 @@
 ---
 layout: post
 title: ThingsBoard入门实战（二）：ThingsBoard 设备接入
-slug: thingsboard-device-access
-type:
-- note
+author: deathwhispers
 date: 2023-07-04
-status: draft
-tags:
-- IoT
-- ThingsBoard
+slug: thingsboard-device-access
 categories:
 - IoT
 - ThingsBoard
-mood: null
-weather: null
-author: deathwhispers
+tags:
+- IoT
+- ThingsBoard
+type: note
+status: draft
 created: 2023-06-04 11:45
 updated: 2023-06-04 18:33
 ---

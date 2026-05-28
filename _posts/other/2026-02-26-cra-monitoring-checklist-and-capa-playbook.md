@@ -1,19 +1,17 @@
 ---
 layout: post
 title: CRA 核查全流程实务：步骤、时点、条件、补救与预案
-slug: cra-monitoring-checklist-and-capa-playbook
-status: Published
+author: deathwhispers
 date: 2026-02-26
-mermaid: true
-tags:
-- Tooling
-- CAPA
-- ClinicalMonitoring
-- ClinicalTrial
+slug: cra-monitoring-checklist-and-capa-playbook
 categories:
 - Other
 - General
-author: deathwhispers
+tags:
+- ClinicalResearch
+- Tooling
+status: published
+mermaid: True
 ---
 
 很多团队把 CRA 核查理解为“来现场看一眼资料”，这其实是最常见误区。

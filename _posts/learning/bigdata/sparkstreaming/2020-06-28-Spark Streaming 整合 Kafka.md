@@ -1,22 +1,17 @@
 ---
 layout: post
 title: Spark Streaming 整合 Kafka
-slug: spark-streaming-integration-with-kafka
-type:
-- note
+author: deathwhispers
 date: 2020-06-28
-status: draft
+slug: spark-streaming-integration-with-kafka
+categories:
+- BigData
 tags:
-- Spark
 - BigData
 - Kafka
-- SparkStreaming
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+- Spark
+type: note
+status: draft
 created: 2025-01-09 11:45
 updated: 2025-03-12 18:26
 ---

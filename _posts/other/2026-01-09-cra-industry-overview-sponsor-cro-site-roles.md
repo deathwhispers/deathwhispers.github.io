@@ -1,17 +1,16 @@
 ---
 layout: post
 title: CRA 系列 01：行业结构全景，Sponsor、CRO、Site 如何协作
-slug: cra-industry-overview-sponsor-cro-site-roles
-status: Published
+author: deathwhispers
 date: 2026-01-09
-tags:
-- Tooling
-- CRO
-- ClinicalResearch
+slug: cra-industry-overview-sponsor-cro-site-roles
 categories:
 - Other
 - General
-author: deathwhispers
+tags:
+- ClinicalResearch
+- Tooling
+status: published
 ---
 
 刚接触 CRA 时最常见的问题是：

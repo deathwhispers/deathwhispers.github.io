@@ -1,15 +1,15 @@
 ---
 layout: post
 title: 基于 MybatisPlus 的动态 sql 构建器
-slug: dynamic-sql-builder-based-on-mybatisplus
+author: deathwhispers
 date: 2025-07-26
-tags:
-- Spring
-- MyBatisPlus
+slug: dynamic-sql-builder-based-on-mybatisplus
 categories:
 - Framework
 - Backend
-author: deathwhispers
+tags:
+- MyBatis
+- Spring
 created: 2025-11-28 09:57
 updated: 2025-11-28 09:57
 ---

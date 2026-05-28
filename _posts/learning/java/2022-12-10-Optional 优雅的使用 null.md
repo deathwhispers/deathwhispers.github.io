@@ -1,20 +1,18 @@
 ---
 layout: post
 title: Optional 优雅处理 null（整合版）
-slug: optional-elegant-use-of-null
-type:
-- note
+author: deathwhispers
 date: 2022-12-10
-week: 2025-W48
-status: draft
+slug: optional-elegant-use-of-null
+categories:
+- Java
 tags:
 - Java
-categories:
-- Learning
-- Java
-author: deathwhispers
+type: note
+status: draft
 created: 2022-12-10 15:25
 updated: 2026-04-20 18:30
+week: 2025-W48
 ---
 
 本文整合了 `Java8 Optional的使用详解` 与 `Optional 优雅的使用 null`，以 JDK Optional 为主线。

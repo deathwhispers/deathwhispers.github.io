@@ -1,18 +1,17 @@
 ---
 layout: post
 title: CRA 系列 06：常见风险与避坑清单，如何少走弯路
-slug: cra-risk-management-and-common-pitfalls
-status: Published
+author: deathwhispers
 date: 2026-02-18
-tags:
-- Tooling
-- CAPA
-- ClinicalResearch
-- RiskManagement
+slug: cra-risk-management-and-common-pitfalls
 categories:
 - Other
 - General
-author: deathwhispers
+tags:
+- ClinicalResearch
+- Finance
+- Tooling
+status: published
 ---
 
 很多 CRA 的压力不是来自任务量，而是来自“同类问题反复出现”。

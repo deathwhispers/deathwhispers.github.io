@@ -1,18 +1,16 @@
 ---
 layout: post
 title: 精尽 Redisson 源码分析 —— 限流器 RateLimiter
-slug: redisson-redlock-source-code-analysis-rate-limiter
-type:
-- note
+author: deathwhispers
 date: 2018-03-11
+slug: redisson-redlock-source-code-analysis-rate-limiter
+categories:
+- Database
 tags:
 - Concurrency
 - Redis
 - Database
-categories:
-- Learning
-- Database
-author: deathwhispers
+type: note
 created: 2019-05-11 11:45
 updated: 2019-05-11 22:17
 ---

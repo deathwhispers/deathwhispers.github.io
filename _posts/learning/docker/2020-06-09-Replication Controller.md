@@ -1,17 +1,15 @@
 ---
 layout: post
 title: Replication Controller
-slug: replication-controller
+author: deathwhispers
 date: 2020-06-09
-type:
-- note
+slug: replication-controller
+categories:
+- Docker
 tags:
 - Docker
 - Kubernetes
-categories:
-- Learning
-- Docker
-author: deathwhispers
+type: note
 created: 2020-06-09 11:48
 updated: 2020-06-09 11:48
 ---

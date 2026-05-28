@@ -1,19 +1,15 @@
 ---
 layout: post
 title: 动态编译（一）之Javassist
-slug: dubbo-compiler-javassist
-type:
-- note
+author: deathwhispers
 date: 2022-03-15
-status: draft
+slug: dubbo-compiler-javassist
+categories:
+- Dubbo
 tags:
 - Dubbo
-categories:
-- Learning
-- Dubbo
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2022-04-25 11:50
 updated: 2022-04-25 18:33
 ---

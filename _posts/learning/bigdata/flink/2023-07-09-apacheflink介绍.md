@@ -1,20 +1,16 @@
 ---
 layout: post
 title: ApacheFlink介绍
-slug: apache-flink-introduction
-type:
-- note
+author: deathwhispers
 date: 2023-07-09
-status: draft
+slug: apache-flink-introduction
+categories:
+- BigData
 tags:
 - Flink
 - BigData
-categories:
-- Learning
-- BigData
-mood: null
-weather: null
-author: deathwhispers
+type: note
+status: draft
 created: 2024-01-09 11:45
 updated: 2024-03-12 18:33
 ---

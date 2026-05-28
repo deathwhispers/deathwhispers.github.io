@@ -1,21 +1,19 @@
 ---
 layout: post
 title: Spring Boot 项目启动成功后执行特定代码的两种实现方式
-slug: spring-boot-run-after-startup
-type:
-- note
+author: deathwhispers
 date: 2018-04-28
-week: 2018-W18
-status: draft
+slug: spring-boot-run-after-startup
+categories:
+- Spring
 tags:
 - Spring
 - SpringBoot
-author: deathwhispers
+type: note
+status: draft
 created: 2018-04-28 09:57
 updated: 2018-04-28 09:57
-categories:
-- Learning
-- Spring
+week: 2018-W18
 ---
 
 springboot项目启动成功后执行特定代码的两种实现方式
