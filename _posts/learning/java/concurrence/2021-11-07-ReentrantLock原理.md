@@ -386,6 +386,6 @@ protected Collection getWaitingThreads(Condition condition) {
 
 # 参考资料
 
-6. Doug Lea：《Java并发编程实战》
-7. 方腾飞：《Java并发编程的艺术》的 「5.1 Lock 接口」 和 「5.3 重入锁」 章节
-8. 《【JUC】JDK 1.8 源码分析之 ReentrantLock（三）》
+1. Doug Lea：《Java并发编程实战》
+2. 方腾飞：《Java并发编程的艺术》的 「5.1 Lock 接口」 和 「5.3 重入锁」 章节
+3. 《【JUC】JDK 1.8 源码分析之 ReentrantLock（三）》
