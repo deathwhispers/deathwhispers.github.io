@@ -2,14 +2,16 @@
 layout: post
 title: 对线面试官 AQS ReentrantLock
 slug: solo-interviewer-aqs-reentrantlock
-date: 2024-07-26
+date: '2022-11-14'
 type:
-  - note
+- note
 tags:
-  - AQS
-  - ReentrantLock
+- Java
+- Network
+- AQS
 categories:
-  - interview
+- Learning
+- Interview
 author: deathwhispers
 created: 2024-07-26 11:48
 updated: 2024-07-26 11:48

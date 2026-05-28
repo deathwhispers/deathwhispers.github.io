@@ -2,19 +2,21 @@
 layout: post
 title: BIO、NIO、AIO
 slug: interview-bio-nio-aio
-date: 2024-07-26
+date: '2025-03-09'
 type:
-  - note
+- note
 tags:
-  - BIO
-  - NIO
-  - AIO
+- Java
+- Network
+- NIO
 categories:
-  - interview
+- Learning
+- Interview
 author: deathwhispers
 created: 2024-07-26 11:48
 updated: 2024-07-26 11:48
 ---
+
 # BIO是什么?
 
 ## 概念

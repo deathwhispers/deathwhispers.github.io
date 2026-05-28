@@ -2,18 +2,20 @@
 layout: post
 title: PostgreSQL 与 MySQL 的区别
 slug: interview-postgresql-vs-mysql-difference
-date: 2024-07-26
+date: '2021-10-23'
 type:
-  - note
+- note
 tags:
-  - Redis
+- Java
+- Redis
+- Network
 categories:
-  - interview
+- Learning
+- Interview
 author: deathwhispers
 created: 2024-07-26 11:48
 updated: 2024-07-26 11:48
 ---
-
 
 # 面试官：谈谈 PostgreSQL 与 MySQL 的区别
 
