@@ -65,8 +65,22 @@ true
 该方法由 DocumentLoader 的默认实现类 org.springframework.beans.factory.xml.DefaultDocumentLoader 实现。代码如下：
 
 ```java
-/** * Load the {@link Document} at the supplied {@link InputSource} using the standard JAXP-configured
- * XML parser. */@Overridepublic Document loadDocument(InputSource inputSource, EntityResolver entityResolver,                             ErrorHandler errorHandler, int validationMode, boolean namespaceAware) throws Exception {    // <1> 创建 DocumentBuilderFactory    DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);    if (logger.isTraceEnabled()) {        logger.trace("Using JAXP provider [" + factory.getClass().getName() + "]");    }    // <2> 创建 DocumentBuilder    DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);    // <3> 解析 XML InputSource 返回 Document 对象    return builder.parse(inputSource);}
+/** * Load the {
+    @link Document
+}
+at the supplied {
+    @link InputSource
+}
+using the standard JAXP-configured
+* XML parser. */
+@Override
+public Document loadDocument(InputSource inputSource, EntityResolver entityResolver,                             ErrorHandler errorHandler, int validationMode, boolean namespaceAware) throws Exception {
+    // <1> 创建 DocumentBuilderFactory    DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
+    if (logger.isTraceEnabled()) {
+        logger.trace("Using JAXP provider [" + factory.getClass().getName() + "]");
+    } // <2> 创建 DocumentBuilder    DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);    // <3> 解析 XML InputSource 返回
+    Document 对象    return builder.parse(inputSource);
+}
 ```
 
 - 首先，调用 #
@@ -76,7 +90,33 @@ javax.xml.parsers.DocumentBuilderFactory
 对象。代码如下：
 
 ```java
-/** * JAXP attribute used to configure the schema language for validation. */private static final String SCHEMA_LANGUAGE_ATTRIBUTE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";/** * JAXP attribute value indicating the XSD schema language. */private static final String XSD_SCHEMA_LANGUAGE = "http://www.w3.org/2001/XMLSchema";protected DocumentBuilderFactory createDocumentBuilderFactory(int validationMode, boolean namespaceAware)throws ParserConfigurationException {    // 创建 DocumentBuilderFactory    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();    factory.setNamespaceAware(namespaceAware); // 设置命名空间支持    if (validationMode != XmlValidationModeDetector.VALIDATION_NONE) {        factory.setValidating(true); // 开启校验        // XSD 模式下，设置 factory 的属性        if (validationMode == XmlValidationModeDetector.VALIDATION_XSD) {            // Enforce namespace aware for XSD...            factory.setNamespaceAware(true); // XSD 模式下，强制设置命名空间支持            // 设置 SCHEMA_LANGUAGE_ATTRIBUTE            try {                factory.setAttribute(SCHEMA_LANGUAGE_ATTRIBUTE, XSD_SCHEMA_LANGUAGE);            } catch (IllegalArgumentException ex) {                ParserConfigurationException pcex = new ParserConfigurationException(                    "Unable to validate using XSD: Your JAXP provider [" + factory +                    "] does not support XML Schema. Are you running on Java 1.4 with Apache Crimson? " +                    "Upgrade to Apache Xerces (or Java 1.5) for full XSD support.");                pcex.initCause(ex);                throw pcex;            }        }    }    return factory;}
+/** * JAXP attribute used to configure the schema language for validation. */
+private static final String SCHEMA_LANGUAGE_ATTRIBUTE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+/** * JAXP attribute value indicating the XSD schema language. */
+private static final String XSD_SCHEMA_LANGUAGE = "http://www.w3.org/2001/XMLSchema";
+protected DocumentBuilderFactory createDocumentBuilderFactory(int validationMode,
+boolean namespaceAware)throws
+ParserConfigurationException {
+    // 创建 DocumentBuilderFactory    DocumentBuilderFactory factory =
+    DocumentBuilderFactory.newInstance();
+    factory.setNamespaceAware(namespaceAware); // 设置命名空间支持    if (validationMode != XmlValidationModeDetector.VALIDATION_NONE) {        factory.setValidating(true); // 开启校验        // XSD 模式下，设置 factory 的属性
+    if (validationMode == XmlValidationModeDetector.VALIDATION_XSD) {
+        // Enforce namespace aware
+        for XSD...            factory.setNamespaceAware(true); // XSD 模式下，强制设置命名空间支持            // 设置 SCHEMA_LANGUAGE_ATTRIBUTE
+        try {
+            factory.setAttribute(SCHEMA_LANGUAGE_ATTRIBUTE, XSD_SCHEMA_LANGUAGE);
+        }
+        catch (IllegalArgumentException ex) {
+            ParserConfigurationException pcex =
+            new
+            ParserConfigurationException(                    "Unable to validate using XSD: Your JAXP provider [" + factory +                    "] does not support XML Schema. Are you running on Java 1.4 with Apache Crimson? " +                    "Upgrade to Apache Xerces (or Java 1.5) for full XSD support.");
+            pcex.initCause(ex);
+            throw pcex;
+        }
+    }
+}
+return factory;
+}
 ```
 
 - 然后，调用
@@ -86,7 +126,19 @@ javax.xml.parsers.DocumentBuilder
 对象。代码如下：
 
 ```java
-protected DocumentBuilder createDocumentBuilder(DocumentBuilderFactory factory,                                                @Nullable EntityResolver entityResolver, @Nullable ErrorHandler errorHandler)throws ParserConfigurationException {    // 创建 DocumentBuilder 对象    DocumentBuilder docBuilder = factory.newDocumentBuilder();    // <x> 设置 EntityResolver 属性    if (entityResolver != null) {        docBuilder.setEntityResolver(entityResolver);    }    // 设置 ErrorHandler 属性    if (errorHandler != null) {        docBuilder.setErrorHandler(errorHandler);    }    return docBuilder;}
+protected DocumentBuilder createDocumentBuilder(DocumentBuilderFactory factory,                                                @Nullable
+EntityResolver entityResolver, @Nullable
+ErrorHandler errorHandler)throws ParserConfigurationException {
+    // 创建 DocumentBuilder 对象
+    DocumentBuilder docBuilder = factory.newDocumentBuilder(); // <x> 设置 EntityResolver 属性
+    if (entityResolver != null) {
+        docBuilder.setEntityResolver(entityResolver);
+    } // 设置
+    ErrorHandler 属性    if (errorHandler != null) {
+        docBuilder.setErrorHandler(errorHandler);
+    }
+    return docBuilder;
+}
 ```
 
 ```plain text
@@ -104,7 +156,25 @@ DocumentBuilder#parse(InputSource)
 #getEntityResolver() 方法，返回指定的解析器，如果没有指定，则构造一个未指定的默认解析器。
 
 ```java
-// XmlBeanDefinitionReader.java/** * EntityResolver 解析器 */@Nullableprivate EntityResolver entityResolver;protected EntityResolver getEntityResolver() {    if (this.entityResolver == null) {        // Determine default EntityResolver to use.        ResourceLoader resourceLoader = getResourceLoader();        if (resourceLoader != null) {            this.entityResolver = new ResourceEntityResolver(resourceLoader);        } else {            this.entityResolver = new DelegatingEntityResolver(getBeanClassLoader());        }    }    return this.entityResolver;}
+// XmlBeanDefinitionReader.java
+/** * EntityResolver 解析器 */
+@Nullable
+private EntityResolver entityResolver;
+protected EntityResolver getEntityResolver() {
+    if (this.entityResolver == null) {
+        // Determine
+        default EntityResolver to use.
+        ResourceLoader resourceLoader = getResourceLoader();
+        if (resourceLoader != null) {
+            this.entityResolver = new
+            ResourceEntityResolver(resourceLoader);
+        }
+        else {
+            this.entityResolver = new DelegatingEntityResolver(getBeanClassLoader());
+        }
+    }
+    return this.entityResolver;
+}
 ```
 
 - 如果 ResourceLoader 不为
@@ -122,7 +192,8 @@ null
 ：实现 EntityResolver 接口，Spring Bean dtd 解码器，用来从 classpath 或者 jar 文件中加载 dtd 。部分代码如下：
 
 ```java
-private static final String DTD_EXTENSION = ".dtd";private static final String DTD_NAME = "spring-beans";
+private static final String DTD_EXTENSION = ".dtd";
+private static final String DTD_NAME = "spring-beans";
 ```
 
 - org.springframework.beans.factory.xml.PluggableSchemaResolver
@@ -131,20 +202,46 @@ private static final String DTD_EXTENSION = ".dtd";private static final String D
 成一个 namespaceURI 与 Schema 文件地址的 map 。代码如下：
 
 ```java
-/** * The location of the file that defines schema mappings. * Can be present in multiple JAR files. * * 默认 {@link #schemaMappingsLocation} 地址 */public static final String DEFAULT_SCHEMA_MAPPINGS_LOCATION = "META-INF/spring.schemas";@Nullableprivate final ClassLoader classLoader;/** * Schema 文件地址 */private final String schemaMappingsLocation;/** Stores the mapping of schema URL -> local schema path. */@Nullableprivate volatile Map<String, String> schemaMappings; // namespaceURI 与 Schema 文件地址的映射集合
+/** * The location of the file that defines schema mappings. * Can be present in multiple JAR files. * * 默认 {
+    @link #schemaMappingsLocation
+}
+地址 */
+public static final String DEFAULT_SCHEMA_MAPPINGS_LOCATION = "META-INF/spring.schemas";
+@Nullable
+private final ClassLoader classLoader;
+/** * Schema 文件地址 */
+private final String schemaMappingsLocation;
+/** Stores the mapping of schema URL -> local schema path. */
+@Nullable
+private volatile Map<String, String> schemaMappings; // namespaceURI 与 Schema 文件地址的映射集合
 ```
 
 - org.springframework.beans.factory.xml.DelegatingEntityResolver
 ：实现 EntityResolver 接口，分别代理 dtd 的 BeansDtdResolver 和 xml schemas 的 PluggableSchemaResolver 。代码如下：
 
 ```java
-/** Suffix for DTD files. */public static final String DTD_SUFFIX = ".dtd";/** Suffix for schema definition files. */public static final String XSD_SUFFIX = ".xsd";private final EntityResolver dtdResolver;private final EntityResolver schemaResolver;// 默认public DelegatingEntityResolver(@Nullable ClassLoader classLoader) {    this.dtdResolver = new BeansDtdResolver();    this.schemaResolver = new PluggableSchemaResolver(classLoader);}// 自定义public DelegatingEntityResolver(EntityResolver dtdResolver, EntityResolver schemaResolver) {    Assert.notNull(dtdResolver, "'dtdResolver' is required");    Assert.notNull(schemaResolver, "'schemaResolver' is required");    this.dtdResolver = dtdResolver;    this.schemaResolver = schemaResolver;}
+/** Suffix for DTD files. */
+public static final String DTD_SUFFIX = ".dtd";
+/** Suffix for schema definition files. */
+public static final String XSD_SUFFIX = ".xsd";
+private final EntityResolver dtdResolver;
+private final EntityResolver schemaResolver; // 默认public DelegatingEntityResolver(@Nullable
+ClassLoader classLoader) {
+    this.dtdResolver = new BeansDtdResolver();
+    this.schemaResolver = new PluggableSchemaResolver(classLoader);
+} // 自定义public DelegatingEntityResolver(EntityResolver dtdResolver, EntityResolver schemaResolver) {    Assert.notNull(dtdResolver, "'dtdResolver' is required");    Assert.notNull(schemaResolver, "'schemaResolver' is required");    this.dtdResolver = dtdResolver;
+this.schemaResolver = schemaResolver;
+}
 ```
 
 org.springframework.beans.factory.xml.ResourceEntityResolver ：继承自 DelegatingEntityResolver 类，通过 ResourceLoader 来解析实体的引用。代码如下：
 
 ```java
-private final ResourceLoader resourceLoader;public ResourceEntityResolver(ResourceLoader resourceLoader) {    super(resourceLoader.getClassLoader());    this.resourceLoader = resourceLoader;}
+private final ResourceLoader resourceLoader;
+public ResourceEntityResolver(ResourceLoader resourceLoader) {
+    super(resourceLoader.getClassLoader());
+    this.resourceLoader = resourceLoader;
+}
 ```
 
 ## 2.2 作用
@@ -159,7 +256,9 @@ private final ResourceLoader resourceLoader;public ResourceEntityResolver(Resour
 org.xml.sax.EntityResolver 接口，代码如下：
 
 ```java
-public interface EntityResolver {    public abstract InputSource resolveEntity (String publicId, String systemId)        throws SAXException, IOException;}
+public interface EntityResolver {
+    public abstract InputSource resolveEntity (String publicId, String systemId)        throws SAXException, IOException;
+}
 ```
 
 接口方法接收两个参数 publicId 和 systemId ，并返回 InputSource 对象。两个参数声明如下：
@@ -191,7 +290,19 @@ DTD 验证模式
 我们知道在 Spring 中使用 DelegatingEntityResolver 为 EntityResolver 的实现类。#resolveEntity(String publicId, String systemId) 方法，实现如下：
 
 ```java
-@Override@Nullablepublic InputSource resolveEntity(String publicId, @Nullable String systemId) throws SAXException, IOException {    if (systemId != null) {        // DTD 模式        if (systemId.endsWith(DTD_SUFFIX)) {            return this.dtdResolver.resolveEntity(publicId, systemId);        // XSD 模式        } else if (systemId.endsWith(XSD_SUFFIX)) {            return this.schemaResolver.resolveEntity(publicId, systemId);        }    }    return null;}
+@Override@Nullable
+public InputSource resolveEntity(String publicId, @Nullable
+String systemId) throws SAXException, IOException {
+    if (systemId != null) {
+        // DTD 模式        if (systemId.endsWith(DTD_SUFFIX)) {            return
+        this.dtdResolver.resolveEntity(publicId, systemId); // XSD 模式        }
+        else
+        if (systemId.endsWith(XSD_SUFFIX)) {
+            return this.schemaResolver.resolveEntity(publicId, systemId);
+        }
+    }
+    return null;
+}
 ```
 
 - 如果是 DTD 验证模式，则使用 BeansDtdResolver 来进行解析
@@ -202,7 +313,45 @@ DTD 验证模式
 BeansDtdResolver 的解析过程，代码如下：
 
 ```java
-/** * DTD 文件的后缀 */private static final String DTD_EXTENSION = ".dtd";/** * Spring Bean DTD 的文件名 */private static final String DTD_NAME = "spring-beans";@Override@Nullablepublic InputSource resolveEntity(String publicId, @Nullable String systemId) throws IOException {    if (logger.isTraceEnabled()) {        logger.trace("Trying to resolve XML entity with public ID [" + publicId +                "] and system ID [" + systemId + "]");    }    // 必须以 .dtd 结尾    if (systemId != null && systemId.endsWith(DTD_EXTENSION)) {        // 获取最后一个 / 的位置        int lastPathSeparator = systemId.lastIndexOf('/');        // 获取 spring-beans 的位置        int dtdNameStart = systemId.indexOf(DTD_NAME, lastPathSeparator);        if (dtdNameStart != -1) { // 找到            String dtdFile = DTD_NAME + DTD_EXTENSION;            if (logger.isTraceEnabled()) {                logger.trace("Trying to locate [" + dtdFile + "] in Spring jar on classpath");            }            try {                // 创建 ClassPathResource 对象                Resource resource = new ClassPathResource(dtdFile, getClass());                // 创建 InputSource 对象，并设置 publicId、systemId 属性                InputSource source = new InputSource(resource.getInputStream());                source.setPublicId(publicId);                source.setSystemId(systemId);                if (logger.isTraceEnabled()) {                    logger.trace("Found beans DTD [" + systemId + "] in classpath: " + dtdFile);                }                return source;            }            catch (IOException ex) {                if (logger.isDebugEnabled()) {                    logger.debug("Could not resolve beans DTD [" + systemId + "]: not found in classpath", ex);                }            }        }    }    // 使用默认行为，从网络上下载    // Use the default behavior -> download from website or wherever.    return null;}
+/** * DTD 文件的后缀 */
+private static final String DTD_EXTENSION = ".dtd";
+/** * Spring Bean DTD 的文件名 */
+private static final String DTD_NAME = "spring-beans";
+@Override@Nullable
+public InputSource resolveEntity(String publicId, @Nullable
+String systemId) throws IOException {
+    if (logger.isTraceEnabled()) {
+        logger.trace("Trying to resolve XML entity with public ID [" + publicId +                "] and system ID [" + systemId + "]");
+    } // 必须以 .dtd 结尾    if (systemId !=
+    null && systemId.endsWith(DTD_EXTENSION)) {
+        // 获取最后一个 / 的位置        int lastPathSeparator = systemId.lastIndexOf('/');        // 获取 spring-beans 的位置
+        int dtdNameStart = systemId.indexOf(DTD_NAME, lastPathSeparator);
+        if (dtdNameStart != -1) {
+            // 找到
+            String dtdFile = DTD_NAME + DTD_EXTENSION;
+            if (logger.isTraceEnabled()) {
+                logger.trace("Trying to locate [" + dtdFile + "] in Spring jar on classpath");
+            }
+            try {
+                // 创建 ClassPathResource 对象
+                Resource resource = new ClassPathResource(dtdFile, getClass()); // 创建 InputSource 对象，并设置
+                publicId、systemId 属性                InputSource source = new InputSource(resource.getInputStream());
+                source.setPublicId(publicId);
+                source.setSystemId(systemId);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Found beans DTD [" + systemId + "] in classpath: " + dtdFile);
+                }
+                return source;
+            }
+            catch (IOException ex) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Could not resolve beans DTD [" + systemId + "]: not found in classpath", ex);
+                }
+            }
+        }
+    } // 使用默认行为，从网络上下载    // Use the
+    default behavior -> download from website or wherever.    return null;
+}
 ```
 
 从上面的代码中，我们可以看到，加载 DTD 类型的 BeansDtdResolver#resolveEntity(…) 过程，只是对 systemId 进行了简单的校验（从最后一个 / 开始，内容中是否包含 spring-beans），然后构造一个 InputSource 对象，并设置 publicId、systemId 属性，然后返回。
@@ -212,7 +361,44 @@ BeansDtdResolver 的解析过程，代码如下：
 PluggableSchemaResolver 的解析过程，代码如下:
 
 ```java
-@Nullableprivate final ClassLoader classLoader;/** * Schema 文件地址 */private final String schemaMappingsLocation;/** Stores the mapping of schema URL -> local schema path. */@Nullableprivate volatile Map<String, String> schemaMappings; // namespaceURI 与 Schema 文件地址的映射集合@Override@Nullablepublic InputSource resolveEntity(String publicId, @Nullable String systemId) throws IOException {    if (logger.isTraceEnabled()) {        logger.trace("Trying to resolve XML entity with public id [" + publicId +                "] and system id [" + systemId + "]");    }    if (systemId != null) {        // 获得 Resource 所在位置        String resourceLocation = getSchemaMappings().get(systemId);        if (resourceLocation != null) {            // 创建 ClassPathResource            Resource resource = new ClassPathResource(resourceLocation, this.classLoader);            try {                // 创建 InputSource 对象，并设置 publicId、systemId 属性                InputSource source = new InputSource(resource.getInputStream());                source.setPublicId(publicId);                source.setSystemId(systemId);                if (logger.isTraceEnabled()) {                    logger.trace("Found XML schema [" + systemId + "] in classpath: " + resourceLocation);                }                return source;            }            catch (FileNotFoundException ex) {                if (logger.isDebugEnabled()) {                    logger.debug("Could not find XML schema [" + systemId + "]: " + resource, ex);                }            }        }    }    return null;}
+@Nullable
+private final ClassLoader classLoader;
+/** * Schema 文件地址 */
+private final String schemaMappingsLocation;
+/** Stores the mapping of schema URL -> local schema path. */
+@Nullable
+private volatile Map<String, String> schemaMappings; // namespaceURI 与 Schema 文件地址的映射集合@Override@Nullable
+public InputSource resolveEntity(String publicId, @Nullable
+String systemId) throws IOException {
+    if (logger.isTraceEnabled()) {
+        logger.trace("Trying to resolve XML entity with public id [" + publicId +                "] and system id [" + systemId + "]");
+    }
+    if (systemId != null) {
+        // 获得
+        Resource 所在位置
+        String resourceLocation = getSchemaMappings().get(systemId);
+        if (resourceLocation != null) {
+            // 创建 ClassPathResource
+            Resource resource = new ClassPathResource(resourceLocation, this.classLoader);
+            try {
+                // 创建 InputSource 对象，并设置
+                publicId、systemId 属性                InputSource source = new InputSource(resource.getInputStream());
+                source.setPublicId(publicId);
+                source.setSystemId(systemId);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Found XML schema [" + systemId + "] in classpath: " + resourceLocation);
+                }
+                return source;
+            }
+            catch (FileNotFoundException ex) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Could not find XML schema [" + systemId + "]: " + resource, ex);
+                }
+            }
+        }
+    }
+    return null;
+}
 ```
 
 - 首先调用
@@ -220,7 +406,33 @@ PluggableSchemaResolver 的解析过程，代码如下:
 方法，获取一个映射表(systemId 与其在本地的对照关系)。代码如下：
 
 ```java
-private Map<String, String> getSchemaMappings() {    Map<String, String> schemaMappings = this.schemaMappings;    // 双重检查锁，实现 schemaMappings 单例    if (schemaMappings == null) {        synchronized (this) {            schemaMappings = this.schemaMappings;            if (schemaMappings == null) {                if (logger.isTraceEnabled()) {                    logger.trace("Loading schema mappings from [" + this.schemaMappingsLocation + "]");                }                try {                    // 以 Properties 的方式，读取 schemaMappingsLocation                    Properties mappings = PropertiesLoaderUtils.loadAllProperties(this.schemaMappingsLocation, this.classLoader);                    if (logger.isTraceEnabled()) {                        logger.trace("Loaded schema mappings: " + mappings);                    }                    // 将 mappings 初始化到 schemaMappings 中                    schemaMappings = new ConcurrentHashMap<>(mappings.size());                    CollectionUtils.mergePropertiesIntoMap(mappings, schemaMappings);                    this.schemaMappings = schemaMappings;                } catch (IOException ex) {                    throw new IllegalStateException(                        "Unable to load schema mappings from location [" + this.schemaMappingsLocation + "]", ex);                }            }        }    }    return schemaMappings;}
+private Map<String, String> getSchemaMappings() {
+    Map<String, String> schemaMappings = this.schemaMappings; // 双重检查锁，实现 schemaMappings 单例
+    if (schemaMappings == null) {
+        synchronized (this) {
+            schemaMappings = this.schemaMappings;
+            if (schemaMappings == null) {
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Loading schema mappings from [" + this.schemaMappingsLocation + "]");
+                }
+                try {
+                    // 以 Properties 的方式，读取 schemaMappingsLocation                    Properties mappings = PropertiesLoaderUtils.loadAllProperties(this.schemaMappingsLocation,
+                    this.classLoader);
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("Loaded schema mappings: " + mappings);
+                    } // 将 mappings 初始化到 schemaMappings 中                    schemaMappings =
+                    new ConcurrentHashMap<>(mappings.size());
+                    CollectionUtils.mergePropertiesIntoMap(mappings, schemaMappings);
+                    this.schemaMappings = schemaMappings;
+                }
+                catch (IOException ex) {
+                    throw new IllegalStateException(                        "Unable to load schema mappings from location [" + this.schemaMappingsLocation + "]", ex);
+                }
+            }
+        }
+    }
+    return schemaMappings;
+}
 ```
 
 ```plain text
@@ -243,7 +455,47 @@ resourceLocation
 ResourceEntityResolver 的解析过程，代码如下:
 
 ```java
-private final ResourceLoader resourceLoader;@Override@Nullablepublic InputSource resolveEntity(String publicId, @Nullable String systemId) throws SAXException, IOException {    // 调用父类的方法，进行解析    InputSource source = super.resolveEntity(publicId, systemId);    // 解析失败，resourceLoader 进行解析    if (source == null && systemId != null) {        // 获得 resourcePath ，即 Resource 资源地址        String resourcePath = null;        try {            String decodedSystemId = URLDecoder.decode(systemId, "UTF-8"); // 使用 UTF-8 ，解码 systemId            String givenUrl = new URL(decodedSystemId).toString(); // 转换成 URL 字符串            // 解析文件资源的相对路径（相对于系统根路径）            String systemRootUrl = new File("").toURI().toURL().toString();            // Try relative to resource base if currently in system root.            if (givenUrl.startsWith(systemRootUrl)) {                resourcePath = givenUrl.substring(systemRootUrl.length());            }        } catch (Exception ex) {            // Typically a MalformedURLException or AccessControlException.            if (logger.isDebugEnabled()) {                logger.debug("Could not resolve XML entity [" + systemId + "] against system root URL", ex);            }            // No URL (or no resolvable URL) -> try relative to resource base.            resourcePath = systemId;        }        if (resourcePath != null) {            if (logger.isTraceEnabled()) {                logger.trace("Trying to locate XML entity [" + systemId + "] as resource [" + resourcePath + "]");            }            // 获得 Resource 资源            Resource resource = this.resourceLoader.getResource(resourcePath);            // 创建 InputSource 对象            source = new InputSource(resource.getInputStream());            // 设置 publicId 和 systemId 属性            source.setPublicId(publicId);            source.setSystemId(systemId);            if (logger.isDebugEnabled()) {                logger.debug("Found XML entity [" + systemId + "]: " + resource);            }        }    }    return source;}
+private final ResourceLoader resourceLoader;
+@Override@Nullable
+public InputSource resolveEntity(String publicId, @Nullable
+String systemId) throws SAXException, IOException {
+    // 调用父类的方法，进行解析    InputSource source =
+    super.resolveEntity(publicId, systemId); // 解析失败，resourceLoader 进行解析
+    if (source == null && systemId != null) {
+        // 获得 resourcePath ，即
+        Resource 资源地址        String resourcePath = null;
+        try {
+            String decodedSystemId = URLDecoder.decode(systemId, "UTF-8"); // 使用 UTF-8 ，解码 systemId            String givenUrl =
+            new URL(decodedSystemId).toString(); // 转换成
+            URL 字符串            // 解析文件资源的相对路径（相对于系统根路径）
+            String systemRootUrl = new File("").toURI().toURL().toString(); // Try relative to resource base if currently in system root.
+            if (givenUrl.startsWith(systemRootUrl)) {
+                resourcePath = givenUrl.substring(systemRootUrl.length());
+            }
+        }
+        catch (Exception ex) {
+            // Typically a
+            MalformedURLException or AccessControlException.
+            if (logger.isDebugEnabled()) {
+                logger.debug("Could not resolve XML entity [" + systemId + "] against system root URL", ex);
+            } // No URL (or no resolvable
+            URL) -> try relative to resource base.            resourcePath = systemId;
+        }
+        if (resourcePath != null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Trying to locate XML entity [" + systemId + "] as resource [" + resourcePath + "]");
+            } // 获得 Resource 资源
+            Resource resource = this.resourceLoader.getResource(resourcePath); // 创建 InputSource 对象            source =
+            new InputSource(resource.getInputStream()); // 设置
+            publicId 和 systemId 属性            source.setPublicId(publicId);
+            source.setSystemId(systemId);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Found XML entity [" + systemId + "]: " + resource);
+            }
+        }
+    }
+    return source;
+}
 ```
 
 - 首先，调用**父类**
@@ -267,7 +519,20 @@ If a SAX application needs to implement customized handling for external entitie
 示例如下：
 
 ```java
-public class MyResolver implements EntityResolver {    @Override    public InputSource resolveEntity(String publicId, String systemId) {        if (systemId.equals("http://www.myhost.com/today")) {            MyReader reader = new MyReader();            return new InputSource(reader);        } else {            // use the default behaviour            return null;        }    }}
+public class MyResolver implements EntityResolver {
+    @Override
+    public InputSource resolveEntity(String publicId, String systemId) {
+        if (systemId.equals("http://www.myhost.com/today")) {
+            MyReader reader = new MyReader();
+            return
+            new InputSource(reader);
+        }
+        else {
+            // use the
+            default behaviour            return null;
+        }
+    }
+}
 ```
 
 首先，我们将 “spring-student.xml” 文件中的 XSD 声明的地址改掉，如下：

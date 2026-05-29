@@ -35,7 +35,14 @@ updated: 2020-10-04 18:00
 就是我们实例出来的 bean 实例，通过构造一个 BeanWrapper 实例对象进行包裹，如下：
 
 ```java
-// BeanWrapperImpl.javapublic BeanWrapperImpl(Object object) {    super(object);}protected AbstractNestablePropertyAccessor(Object object) {    registerDefaultEditors();    setWrappedInstance(object);}
+// BeanWrapperImpl.java
+public BeanWrapperImpl(Object object) {
+    super(object);
+}
+protected AbstractNestablePropertyAccessor(Object object) {
+    registerDefaultEditors();
+    setWrappedInstance(object);
+}
 ```
 
 ---
@@ -53,7 +60,28 @@ updated: 2020-10-04 18:00
 > 可以访问属性的通用型接口（例如对象的 bean 属性或者对象中的字段），作为 BeanWrapper 的基础接口。
 
 ```java
-// PropertyAccessor.javapublic interface PropertyAccessor {    String NESTED_PROPERTY_SEPARATOR = ".";    char NESTED_PROPERTY_SEPARATOR_CHAR = '.';    String PROPERTY_KEY_PREFIX = "[";    char PROPERTY_KEY_PREFIX_CHAR = '[';    String PROPERTY_KEY_SUFFIX = "]";    char PROPERTY_KEY_SUFFIX_CHAR = ']';    boolean isReadableProperty(String propertyName);    boolean isWritableProperty(String propertyName);    Class<?> getPropertyType(String propertyName) throws BeansException;    TypeDescriptor getPropertyTypeDescriptor(String propertyName) throws BeansException;    Object getPropertyValue(String propertyName) throws BeansException;    void setPropertyValue(String propertyName, @Nullable Object value) throws BeansException;    void setPropertyValue(PropertyValue pv) throws BeansException;    void setPropertyValues(Map<?, ?> map) throws BeansException;    void setPropertyValues(PropertyValues pvs) throws BeansException;    void setPropertyValues(PropertyValues pvs, boolean ignoreUnknown)    throws BeansException;    void setPropertyValues(PropertyValues pvs, boolean ignoreUnknown, boolean ignoreInvalid)    throws BeansException;}
+// PropertyAccessor.java
+public
+interface PropertyAccessor {
+    String NESTED_PROPERTY_SEPARATOR = ".";
+    char NESTED_PROPERTY_SEPARATOR_CHAR = '.';
+    String PROPERTY_KEY_PREFIX = "[";
+    char PROPERTY_KEY_PREFIX_CHAR = '[';
+    String PROPERTY_KEY_SUFFIX = "]";
+    char PROPERTY_KEY_SUFFIX_CHAR = ']';
+    boolean isReadableProperty(String propertyName);
+    boolean isWritableProperty(String propertyName);
+    Class<?> getPropertyType(String propertyName) throws BeansException;
+    TypeDescriptor getPropertyTypeDescriptor(String propertyName) throws BeansException;
+    Object getPropertyValue(String propertyName) throws BeansException;
+    void setPropertyValue(String propertyName, @Nullable
+    Object value) throws BeansException;
+    void setPropertyValue(PropertyValue pv) throws BeansException;
+    void setPropertyValues(Map<?, ?> map) throws BeansException;
+    void setPropertyValues(PropertyValues pvs) throws BeansException;
+    void setPropertyValues(PropertyValues pvs, boolean ignoreUnknown)    throws BeansException;
+    void setPropertyValues(PropertyValues pvs, boolean ignoreUnknown, boolean ignoreInvalid)    throws BeansException;
+}
 ```
 
 就上面的源码我们可以分解为四类方法：
@@ -74,7 +102,18 @@ updated: 2020-10-04 18:00
 > 用于注册 JavaBean 的 PropertyEditors，对 PropertyEditorRegistrar 起核心作用的中心接口。由 BeanWrapper 扩展，BeanWrapperImpl 和 DataBinder 实现。
 
 ```java
-// PropertyEditorRegistry.javapublic interface PropertyEditorRegistry {    void registerCustomEditor(Class<?> requiredType, PropertyEditor propertyEditor);    void registerCustomEditor(@Nullable Class<?> requiredType, @Nullable String propertyPath, PropertyEditor propertyEditor);    @Nullable    PropertyEditor findCustomEditor(@Nullable Class<?> requiredType, @Nullable String propertyPath);}
+//
+PropertyEditorRegistry.javapublic
+interface PropertyEditorRegistry {
+    void registerCustomEditor(Class<?> requiredType, PropertyEditor propertyEditor);
+    void registerCustomEditor(@Nullable
+    Class<?> requiredType, @Nullable
+    String propertyPath, PropertyEditor propertyEditor);
+    @Nullable
+    PropertyEditor findCustomEditor(@Nullable
+    Class<?> requiredType, @Nullable
+    String propertyPath);
+}
 ```
 
 根据接口提供的方法，PropertyEditorRegistry 就是用于 PropertyEditor 的注册和发现，而 PropertyEditor 是 Java 内省里面的接口，用于改变指定 property 属性的类型。
@@ -87,7 +126,11 @@ updated: 2020-10-04 18:00
 > 这里小编解释下，在 Spring 3 后，不在采用 PropertyEditors 类作为 Spring 默认的类型转换接口，而是采用 ConversionService 体系，但 ConversionService 是线程安全的，所以在 Spring 3 后，如果你所选择的类型转换器是 ConversionService 而不是 PropertyEditors 那么 TypeConverters 则是线程安全的。
 
 ```java
-public interface TypeConverter {    <T> T convertIfNecessary(Object value, Class<T> requiredType) throws TypeMismatchException;    <T> T convertIfNecessary(Object value, Class<T> requiredType, MethodParameter methodParam)    throws TypeMismatchException;    <T> T convertIfNecessary(Object value, Class<T> requiredType, Field field)    throws TypeMismatchException;}
+public interface TypeConverter {
+    <T> T convertIfNecessary(Object value, Class<T> requiredType) throws TypeMismatchException;
+    <T> T convertIfNecessary(Object value, Class<T> requiredType, MethodParameter methodParam)    throws TypeMismatchException;
+    <T> T convertIfNecessary(Object value, Class<T> requiredType, Field field)    throws TypeMismatchException;
+}
 ```
 
 ---
@@ -101,7 +144,18 @@ BeanWrapper 继承上述三个接口，那么它就具有三重身份：
 BeanWrapper 继承 ConfigurablePropertyAccessor 接口，该接口除了继承上面介绍的三个接口外还集成了 Spring 的 ConversionService 类型转换体系。
 
 ```java
-// ConfigurablePropertyAccessor.javapublic interface ConfigurablePropertyAccessor extends PropertyAccessor, PropertyEditorRegistry, TypeConverter {    void setConversionService(@Nullable ConversionService conversionService);    @Nullable    ConversionService getConversionService();    void setExtractOldValueForEditor(boolean extractOldValueForEditor);    boolean isExtractOldValueForEditor();    void setAutoGrowNestedPaths(boolean autoGrowNestedPaths);    boolean isAutoGrowNestedPaths();}
+// ConfigurablePropertyAccessor.java
+public
+interface ConfigurablePropertyAccessor extends PropertyAccessor, PropertyEditorRegistry, TypeConverter {
+    void setConversionService(@Nullable
+    ConversionService conversionService);
+    @Nullable
+    ConversionService getConversionService();
+    void setExtractOldValueForEditor(boolean extractOldValueForEditor);
+    boolean isExtractOldValueForEditor();
+    void setAutoGrowNestedPaths(boolean autoGrowNestedPaths);
+    boolean isAutoGrowNestedPaths();
+}
 ```
 
 #setConversionService(ConversionService conversionService) 和 #getConversionService() 方法，则是用于集成 Spring 的 ConversionService 类型转换体系。
@@ -111,7 +165,16 @@ BeanWrapper 继承 ConfigurablePropertyAccessor 接口，该接口除了继承�
 > Spring 的 低级 JavaBean 基础结构的接口，一般不会直接使用，而是通过 BeanFactory 或者 DataBinder 隐式使用。它提供分析和操作标准 JavaBeans 的操作：获取和设置属性值、获取属性描述符以及查询属性的可读性/可写性的能力。
 
 ```java
-// BeanWrapper.javapublic interface BeanWrapper extends ConfigurablePropertyAccessor {    void setAutoGrowCollectionLimit(int autoGrowCollectionLimit);    int getAutoGrowCollectionLimit();    Object getWrappedInstance();    Class<?> getWrappedClass();    PropertyDescriptor[] getPropertyDescriptors();    PropertyDescriptor getPropertyDescriptor(String propertyName) throws InvalidPropertyException;}
+// BeanWrapper.java
+public
+interface BeanWrapper extends ConfigurablePropertyAccessor {
+    void setAutoGrowCollectionLimit(int autoGrowCollectionLimit);
+    int getAutoGrowCollectionLimit();
+    Object getWrappedInstance();
+    Class<?> getWrappedClass();
+    PropertyDescriptor[] getPropertyDescriptors();
+    PropertyDescriptor getPropertyDescriptor(String propertyName) throws InvalidPropertyException;
+}
 ```
 
 下面几个方法比较重要：

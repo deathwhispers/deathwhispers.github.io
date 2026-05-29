@@ -253,7 +253,24 @@ ${}</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51
 #convertValueIfNecessary(Object value, Class targetType) 方法，是不是感觉到非常的熟悉，该方法就是完成类型转换的。代码如下：
 
 ```java
-// AbstractPropertyResolver.java@Nullableprotected <T> T convertValueIfNecessary(Object value, @Nullable Class<T> targetType) {    if (targetType == null) {        return (T) value;    }    ConversionService conversionServiceToUse = this.conversionService;    if (conversionServiceToUse == null) {        // Avoid initialization of shared DefaultConversionService if        // no standard type conversion is needed in the first place...        if (ClassUtils.isAssignableValue(targetType, value)) {            return (T) value;        }        conversionServiceToUse = DefaultConversionService.getSharedInstance();    }    // 执行转换    return conversionServiceToUse.convert(value, targetType);}
+// AbstractPropertyResolver.java
+@Nullable
+protected <T> T convertValueIfNecessary(Object value, @Nullable
+Class<T> targetType) {
+    if (targetType == null) {
+        return (T) value;
+    }
+    ConversionService conversionServiceToUse = this.conversionService;
+    if (conversionServiceToUse == null) {
+        //
+        Avoid initialization of shared DefaultConversionService if        // no standard type conversion is needed in the first place...
+        if (ClassUtils.isAssignableValue(targetType, value)) {
+            return (T) value;
+        }
+        conversionServiceToUse = DefaultConversionService.getSharedInstance();
+    } // 执行转换
+    return conversionServiceToUse.convert(value, targetType);
+}
 ```
 
 - 首先，获取类型转换服务
@@ -277,7 +294,14 @@ conversionService
 代码如下：
 
 ```java
-// Environment.javapublic interface Environment extends PropertyResolver {    // 返回此环境下激活的配置文件集    String[] getActiveProfiles();    // 如果未设置激活配置文件，则返回默认的激活的配置文件集    String[] getDefaultProfiles();    boolean acceptsProfiles(String... profiles);}
+// Environment.java
+public
+interface
+Environment extends PropertyResolver {
+    // 返回此环境下激活的配置文件集    String[] getActiveProfiles();    // 如果未设置激活配置文件，则返回默认的激活的配置文件集
+    String[] getDefaultProfiles();
+    boolean acceptsProfiles(String... profiles);
+}
 ```
 
 Environment 体系结构图如下：
@@ -301,7 +325,18 @@ Environment 类图
 该类除了继承 Environment 接口外还继承了 ConfigurablePropertyResolver 接口，所以它即具备了设置 profile 的功能也具备了操作 Properties 的功能。同时还允许客户端通过它设置和验证所需要的属性，自定义转换服务等功能。如下：
 
 ```java
-// ConfigurableEnvironment.javapublic interface ConfigurableEnvironment extends Environment, ConfigurablePropertyResolver {    // 指定该环境下的 profile 集    void setActiveProfiles(String... profiles);    // 增加此环境的 profile    void addActiveProfile(String profile);    // 设置默认的 profile    void setDefaultProfiles(String... profiles);    // 返回此环境的 PropertySources    MutablePropertySources getPropertySources();   // 尝试返回 System.getenv() 的值，若失败则返回通过 System.getenv(string) 的来访问各个键的映射    Map<String, Object> getSystemEnvironment();    // 尝试返回 System.getProperties() 的值，若失败则返回通过 System.getProperties(string) 的来访问各个键的映射    Map<String, Object> getSystemProperties();    void merge(ConfigurableEnvironment parent);}
+// ConfigurableEnvironment.java
+public
+interface ConfigurableEnvironment extends
+Environment, ConfigurablePropertyResolver {
+    // 指定该环境下的 profile 集    void setActiveProfiles(String... profiles);    // 增加此环境的 profile    void addActiveProfile(String profile);    // 设置默认的 profile
+    void setDefaultProfiles(String... profiles); // 返回此环境的
+    PropertySources    MutablePropertySources getPropertySources(); // 尝试返回 System.getenv() 的值，若失败则返回通过 System.getenv(string) 的来访问各个键的映射    Map<String, Object> getSystemEnvironment();    // 尝试返回 System.getProperties() 的值，若失败则返回通过
+    System.getProperties(string) 的来访问各个键的映射
+    Map<String,
+    Object> getSystemProperties();
+    void merge(ConfigurableEnvironment parent);
+}
 ```
 
 ## 3.2 AbstractEnvironment

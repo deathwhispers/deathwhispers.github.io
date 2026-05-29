@@ -24,7 +24,11 @@ updated: 2020-04-25 18:00
 先看一段熟悉的代码：
 
 ```java
-ClassPathResource resource = new ClassPathResource("bean.xml"); // <1>DefaultListableBeanFactory factory = new DefaultListableBeanFactory(); // <2>XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory); // <3>reader.loadBeanDefinitions(resource); // <4>
+ClassPathResource resource = new ClassPathResource("bean.xml"); // <1>
+DefaultListableBeanFactory factory = new DefaultListableBeanFactory(); // <2>
+XmlBeanDefinitionReader reader =
+new XmlBeanDefinitionReader(factory); // <3>
+reader.loadBeanDefinitions(resource); // <4>
 ```
 
 这段代码是 Spring 中编程式使用 IoC 容器，通过这四段简单的代码，我们可以初步判断 IoC 容器的使用过程。
@@ -67,7 +71,11 @@ lazyinit = false
 资源定位在前面已经分析了，下面我们直接分析**加载**，上面看到的 reader.loadBeanDefinitions(resource) 代码，才是加载资源的真正实现，所以我们直接从该方法入手。代码如下：
 
 ```java
-// XmlBeanDefinitionReader.java@Overridepublic int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {    return loadBeanDefinitions(new EncodedResource(resource));}
+// XmlBeanDefinitionReader.java
+@Override
+public int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {
+    return loadBeanDefinitions(new EncodedResource(resource));
+}
 ```
 
 - 从指定的 xml 文件加载 Bean Definition ，这里会先对 Resource 资源封装成
@@ -78,7 +86,48 @@ org.springframework.core.io.support.EncodedResource
 方法，执行真正的逻辑实现。
 
 ```java
-/** * 当前线程，正在加载的 EncodedResource 集合。 */private final ThreadLocal<Set<EncodedResource>> resourcesCurrentlyBeingLoaded = new NamedThreadLocal<>("XML bean definition resources currently being loaded");public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefinitionStoreException {    Assert.notNull(encodedResource, "EncodedResource must not be null");    if (logger.isTraceEnabled()) {        logger.trace("Loading XML bean definitions from " + encodedResource);    }    // <1> 获取已经加载过的资源    Set<EncodedResource> currentResources = this.resourcesCurrentlyBeingLoaded.get();    if (currentResources == null) {        currentResources = new HashSet<>(4);        this.resourcesCurrentlyBeingLoaded.set(currentResources);    }    if (!currentResources.add(encodedResource)) { // 将当前资源加入记录中。如果已存在，抛出异常        throw new BeanDefinitionStoreException("Detected cyclic loading of " + encodedResource + " - check your import definitions!");    }    try {        // <2> 从 EncodedResource 获取封装的 Resource ，并从 Resource 中获取其中的 InputStream        InputStream inputStream = encodedResource.getResource().getInputStream();        try {            InputSource inputSource = new InputSource(inputStream);            if (encodedResource.getEncoding() != null) { // 设置编码                inputSource.setEncoding(encodedResource.getEncoding());            }            // 核心逻辑部分，执行加载 BeanDefinition            return doLoadBeanDefinitions(inputSource, encodedResource.getResource());        } finally {            inputStream.close();        }    } catch (IOException ex) {        throw new BeanDefinitionStoreException("IOException parsing XML document from " + encodedResource.getResource(), ex);    } finally {        // 从缓存中剔除该资源 <3>        currentResources.remove(encodedResource);        if (currentResources.isEmpty()) {            this.resourcesCurrentlyBeingLoaded.remove();        }    }}
+/** * 当前线程，正在加载的 EncodedResource 集合。 */
+private final ThreadLocal<Set<EncodedResource>> resourcesCurrentlyBeingLoaded = new NamedThreadLocal<>("XML bean definition resources currently being loaded");
+public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefinitionStoreException {
+    Assert.notNull(encodedResource, "EncodedResource must not be null");
+    if (logger.isTraceEnabled()) {
+        logger.trace("Loading XML bean definitions from " + encodedResource);
+    } // <1> 获取已经加载过的资源
+    Set<EncodedResource> currentResources = this.resourcesCurrentlyBeingLoaded.get();
+    if (currentResources == null) {
+        currentResources = new HashSet<>(4);
+        this.resourcesCurrentlyBeingLoaded.set(currentResources);
+    }
+    if (!currentResources.add(encodedResource)) {
+        // 将当前资源加入记录中。如果已存在，抛出异常
+        throw
+        new
+        BeanDefinitionStoreException("Detected cyclic loading of " + encodedResource + " - check your import definitions!");
+    }
+    try {
+        // <2> 从 EncodedResource 获取封装的 Resource ，并从
+        Resource 中获取其中的 InputStream        InputStream inputStream = encodedResource.getResource().getInputStream();
+        try {
+            InputSource inputSource = new InputSource(inputStream);
+            if (encodedResource.getEncoding() != null) {
+                // 设置编码                inputSource.setEncoding(encodedResource.getEncoding());            }            // 核心逻辑部分，执行加载 BeanDefinition
+                return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
+            }
+            finally {
+                inputStream.close();
+            }
+        }
+        catch (IOException ex) {
+            throw new
+            BeanDefinitionStoreException("IOException parsing XML document from " + encodedResource.getResource(), ex);
+        }
+        finally {
+            // 从缓存中剔除该资源 <3>        currentResources.remove(encodedResource);
+            if (currentResources.isEmpty()) {
+                this.resourcesCurrentlyBeingLoaded.remove();
+            }
+        }
+    }
 ```
 
 - <1>
@@ -107,12 +156,41 @@ encodedResource
 
 ```java
 /** * Actually load bean definitions from the specified XML file. * @param inputSource the SAX InputSource to read from
- * @param resource the resource descriptor for the XML file
- * @return the number of bean definitions found
- * @throws BeanDefinitionStoreException in case of loading or parsing errors
- * @see #doLoadDocument
- * @see #registerBeanDefinitions
- */protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)throws BeanDefinitionStoreException {    try {        // <1> 获取 XML Document 实例        Document doc = doLoadDocument(inputSource, resource);        // <2> 根据 Document 实例，注册 Bean 信息        int count = registerBeanDefinitions(doc, resource);        if (logger.isDebugEnabled()) {            logger.debug("Loaded " + count + " bean definitions from " + resource);        }        return count;    } catch (BeanDefinitionStoreException ex) {        throw ex;    } catch (SAXParseException ex) {        throw new XmlBeanDefinitionStoreException(resource.getDescription(),                                                  "Line " + ex.getLineNumber() + " in XML document from " + resource + " is invalid", ex);    } catch (SAXException ex) {        throw new XmlBeanDefinitionStoreException(resource.getDescription(),                                                  "XML document from " + resource + " is invalid", ex);    } catch (ParserConfigurationException ex) {        throw new BeanDefinitionStoreException(resource.getDescription(),                                               "Parser configuration exception parsing XML from " + resource, ex);    } catch (IOException ex) {        throw new BeanDefinitionStoreException(resource.getDescription(),                                               "IOException parsing XML document from " + resource, ex);    } catch (Throwable ex) {        throw new BeanDefinitionStoreException(resource.getDescription(),                                               "Unexpected exception parsing XML document from " + resource, ex);    }}
+* @param resource the resource descriptor for the XML file
+* @return the number of bean definitions found
+* @throws BeanDefinitionStoreException in case of loading or parsing errors
+* @see #doLoadDocument
+* @see #registerBeanDefinitions
+*/
+protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)throws BeanDefinitionStoreException {
+    try {
+        // <1> 获取 XML Document 实例        Document doc =
+        doLoadDocument(inputSource, resource); // <2> 根据
+        Document 实例，注册 Bean 信息        int count = registerBeanDefinitions(doc, resource);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Loaded " + count + " bean definitions from " + resource);
+        }
+        return count;
+    }
+    catch (BeanDefinitionStoreException ex) {
+        throw ex;
+    }
+    catch (SAXParseException ex) {
+        throw new XmlBeanDefinitionStoreException(resource.getDescription(),                                                  "Line " + ex.getLineNumber() + " in XML document from " + resource + " is invalid", ex);
+    }
+    catch (SAXException ex) {
+        throw new XmlBeanDefinitionStoreException(resource.getDescription(),                                                  "XML document from " + resource + " is invalid", ex);
+    }
+    catch (ParserConfigurationException ex) {
+        throw new BeanDefinitionStoreException(resource.getDescription(),                                               "Parser configuration exception parsing XML from " + resource, ex);
+    }
+    catch (IOException ex) {
+        throw new BeanDefinitionStoreException(resource.getDescription(),                                               "IOException parsing XML document from " + resource, ex);
+    }
+    catch (Throwable ex) {
+        throw new BeanDefinitionStoreException(resource.getDescription(),                                               "Unexpected exception parsing XML document from " + resource, ex);
+    }
+}
 ```
 
 - 在
@@ -130,12 +208,15 @@ encodedResource
 
 ```java
 /** * 获取 XML Document 实例 * * Actually load the specified document using the configured DocumentLoader. * @param inputSource the SAX InputSource to read from
- * @param resource the resource descriptor for the XML file
- * @return the DOM Document
- * @throws Exception when thrown from the DocumentLoader
- * @see #setDocumentLoader
- * @see DocumentLoader#loadDocument
- */protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {    return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,                                            getValidationModeForResource(resource), isNamespaceAware());}
+* @param resource the resource descriptor for the XML file
+* @return the DOM Document
+* @throws Exception when thrown from the DocumentLoader
+* @see #setDocumentLoader
+* @see DocumentLoader#loadDocument
+*/
+protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {
+    return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,                                            getValidationModeForResource(resource), isNamespaceAware());
+}
 ```
 
 5. 调用 **验证模式**[《【死磕 Spring】—— IoC 之获取验证模型》](http://svip.iocoder.cn/Spring/IoC-Validation-Mode-For-Resource)

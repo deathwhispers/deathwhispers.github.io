@@ -70,7 +70,9 @@ student.name = chenssy-PropertyOverrideConfigurer
 测试打印student中的name属性值，代码如下：
 
 ```java
-ApplicationContext context =newClassPathXmlApplicationContext("spring.xml");StudentService studentService = (StudentService) context.getBean("student");System.out.println("student name:"+ studentService.getName());
+ApplicationContext context =newClassPathXmlApplicationContext("spring.xml");
+StudentService studentService = (StudentService) context.getBean("student");
+System.out.println("student name:"+ studentService.getName());
 ```
 
 运行结果为：
@@ -147,7 +149,28 @@ spring-201809231001
 与 PropertyPlaceholderConfigurer 一样，也是继承 PropertyResourceConfigurer，我们知道 PropertyResourceConfigurer 对 BeanFactoryPostProcessor 的#postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)方法提供了实现，在该实现中它会去读取指定配置文件中的内容，然后调用#processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)方法。该方法是一个抽象方法，具体的实现由子类来实现，所以这里我们只需要看 PropertyOverrideConfigurer 中#processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)方法的具体实现，代码如下：
 
 ```java
-// PropertyOverrideConfigurer.java@OverrideprotectedvoidprocessProperties(ConfigurableListableBeanFactory beanFactory, Properties props)throwsBeansException {    // 迭代配置文件中的内容    for(Enumeration<?> names = props.propertyNames(); names.hasMoreElements();) {        String key = (String) names.nextElement();        try{            processKey(beanFactory, key, props.getProperty(key));        }catch(BeansException ex) {            String msg ="Could not process key '"+ key +"' in PropertyOverrideConfigurer";            if(!this.ignoreInvalidKeys) {                thrownewBeanInitializationException(msg, ex);            }            if(logger.isDebugEnabled()) {                logger.debug(msg, ex);            }        }    }}
+// PropertyOverrideConfigurer.java
+@Override
+protectedvoidprocessProperties(ConfigurableListableBeanFactory beanFactory, Properties props)throwsBeansException {
+    // 迭代配置文件中的内容
+    for(Enumeration<?> names = props.propertyNames();
+    names.hasMoreElements();
+    ) {
+        String key = (String) names.nextElement();
+        try{
+            processKey(beanFactory, key, props.getProperty(key));
+        }
+        catch(BeansException ex) {
+            String msg ="Could not process key '"+ key +"' in PropertyOverrideConfigurer";
+            if(!this.ignoreInvalidKeys) {
+                thrownewBeanInitializationException(msg, ex);
+            }
+            if(logger.isDebugEnabled()) {
+                logger.debug(msg, ex);
+            }
+        }
+    }
+}
 ```
 
 - 迭代
@@ -157,7 +180,27 @@ props
 方法，代码如下:
 
 ```java
-// PropertyOverrideConfigurer.java/*** The default bean name separator.*/public static final String DEFAULT_BEAN_NAME_SEPARATOR =".";/*** Bean 名字的分隔符*/private String beanNameSeparator = DEFAULT_BEAN_NAME_SEPARATOR;/*** Contains names of beans that have overrides.*/private final Set<String> beanNames = Collections.newSetFromMap(newConcurrentHashMap<>(16));protected void processKey(ConfigurableListableBeanFactory factory, String key, String value)throwsBeansException {    // 判断是否存在 "."，即获取其索引位置    int separatorIndex = key.indexOf(this.beanNameSeparator);    if(separatorIndex == -1) {        throw new BeanInitializationException("Invalid key '"+ key +"': expected 'beanName"+this.beanNameSeparator +"property'");    }    // 得到 beanName    String beanName = key.substring(0, separatorIndex);    // 得到属性值    String beanProperty = key.substring(separatorIndex+1);    this.beanNames.add(beanName);    // 替换    applyPropertyValue(factory, beanName, beanProperty, value);    if(logger.isDebugEnabled()) {        logger.debug("Property '"+ key +"' set to value ["+ value +"]");    }}
+// PropertyOverrideConfigurer.java
+/*** The
+default bean name separator.*/
+public static final String DEFAULT_BEAN_NAME_SEPARATOR =".";
+/*** Bean 名字的分隔符*/
+private String beanNameSeparator = DEFAULT_BEAN_NAME_SEPARATOR;
+/*** Contains names of beans that have overrides.*/
+private final Set<String> beanNames = Collections.newSetFromMap(newConcurrentHashMap<>(16));
+protected void processKey(ConfigurableListableBeanFactory factory, String key, String value)throwsBeansException {
+    // 判断是否存在 "."，即获取其索引位置
+    int separatorIndex = key.indexOf(this.beanNameSeparator);
+    if(separatorIndex == -1) {
+        throw
+        new BeanInitializationException("Invalid key '"+ key +"': expected 'beanName"+this.beanNameSeparator +"property'");
+    } // 得到 beanName    String beanName = key.substring(0, separatorIndex);    // 得到属性值
+    String beanProperty = key.substring(separatorIndex+1);
+    this.beanNames.add(beanName); // 替换    applyPropertyValue(factory, beanName, beanProperty, value);
+    if(logger.isDebugEnabled()) {
+        logger.debug("Property '"+ key +"' set to value ["+ value +"]");
+    }
+}
 ```
 
 ```plain text
@@ -165,11 +208,22 @@ props
 ```
 
 ```java
-// PropertyOverrideConfigurer.javaprotected void applyPropertyValue(ConfigurableListableBeanFactory factory,
-                                  String beanName,
-                                  String property,
-                                  String value) {    // 获得 BeanDefinition 对象    BeanDefinition bd = factory.getBeanDefinition(beanName);    BeanDefinition bdToUse = bd;    while(bd !=null) {        bdToUse = bd;        bd = bd.getOriginatingBeanDefinition();    }    // 设置 PropertyValue 到 BeanDefinition 中    PropertyValue pv =new PropertyValue(property, value);    pv.setOptional(this.ignoreInvalidKeys);    bdToUse
-    .getPropertyValues()    .addPropertyValue(pv);}
+// PropertyOverrideConfigurer.java
+protected
+void applyPropertyValue(ConfigurableListableBeanFactory factory,
+String beanName,
+String property,
+String value) {
+    // 获得 BeanDefinition 对象    BeanDefinition bd = factory.getBeanDefinition(beanName);    BeanDefinition bdToUse = bd;
+    while(bd !=null) {
+        bdToUse = bd;
+        bd = bd.getOriginatingBeanDefinition();
+    } // 设置 PropertyValue 到
+    BeanDefinition 中    PropertyValue pv =new PropertyValue(property, value);
+    pv.setOptional(this.ignoreInvalidKeys);
+    bdToUse
+    .getPropertyValues()    .addPropertyValue(pv);
+}
 ```
 
 ```plain text
@@ -177,7 +231,17 @@ props
 ```
 
 ```java
-// MutablePropertyValues.javapublicMutablePropertyValuesaddPropertyValue(PropertyValue pv) {    for(inti =0; i <this.propertyValueList.size(); i++) {        PropertyValue currentPv =this.propertyValueList.get(i);        // 匹配        if(currentPv.getName().equals(pv.getName())) {            // 合并属性            pv = mergeIfRequired(pv, currentPv);            // 覆盖属性            setPropertyValueAt(pv, i);returnthis;        }    }    // 未匹配到，添加到 propertyValueList 中    this.propertyValueList.add(pv);    return this;}
+// MutablePropertyValues.java
+publicMutablePropertyValuesaddPropertyValue(PropertyValue pv) {
+    for(inti =0;
+    i <this.propertyValueList.size();
+    i++) {
+        PropertyValue currentPv =this.propertyValueList.get(i); // 匹配
+        if(currentPv.getName().equals(pv.getName())) {
+            // 合并属性            pv = mergeIfRequired(pv, currentPv);            // 覆盖属性            setPropertyValueAt(pv, i);returnthis;        }    }    // 未匹配到，添加到 propertyValueList 中
+            this.propertyValueList.add(pv);
+            return this;
+        }
 ```
 
 ```plain text

@@ -43,7 +43,21 @@ IoC 全称为 Inversion of Control，翻译为 “控制反转”，它还有一
 找女朋友，一般情况下我们是如何来找女朋友的呢？首先我们需要根据自己的需求（漂亮、身材好、性格好）找一个妹子，然后到处打听她的兴趣爱好、微信、电话号码，然后各种投其所好送其所要，最后追到手。如下：
 
 ```java
-/** * 年轻小伙子 */public class YoungMan {    private BeautifulGirl beautifulGirl;    YoungMan(){        // 可能你比较牛逼，指腹为婚        // beautifulGirl = new BeautifulGirl();    }    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {        this.beautifulGirl = beautifulGirl;    }    public static void main(String[] args){        YoungMan you = new YoungMan();        BeautifulGirl beautifulGirl = new BeautifulGirl("你的各种条件");        beautifulGirl.setxxx("各种投其所好");        // 然后你有女票了        you.setBeautifulGirl(beautifulGirl);    }}
+/** * 年轻小伙子 */
+public class YoungMan {
+    private BeautifulGirl beautifulGirl;
+    YoungMan(){
+        // 可能你比较牛逼，指腹为婚        //
+        beautifulGirl =
+        new BeautifulGirl();
+    }
+    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {
+        this.beautifulGirl = beautifulGirl;
+    }
+    public static void main(String[] args){
+        YoungMan you = new YoungMan();
+        BeautifulGirl beautifulGirl = new BeautifulGirl("你的各种条件");
+        beautifulGirl.setxxx("各种投其所好"); // 然后你有女票了        you.setBeautifulGirl(beautifulGirl);    }}
 ```
 
 这就是我们通常做事的方式，如果我们需要某个对象，一般都是采用这种直接创建的方式(new BeautifulGirl())，这个过程复杂而又繁琐，而且我们必须要面对每个环节，而且使用完成之后我们还要复杂销毁它，这种情况下我们的对象与它所依赖的对象耦合在一起。
@@ -84,7 +98,9 @@ IoC 全称为 Inversion of Control，翻译为 “控制反转”，它还有一
 构造器注入，顾名思义就是被注入的对象通过在其构造方法中声明依赖对象的参数列表，让外部知道它需要哪些依赖对象。
 
 ```java
-YoungMan(BeautifulGirl beautifulGirl) {    this.beautifulGirl = beautifulGirl;}
+YoungMan(BeautifulGirl beautifulGirl) {
+    this.beautifulGirl = beautifulGirl;
+}
 ```
 
 构造器注入方式比较直观，对象构造完毕后就可以直接使用，这就好比你出生你家里就给你指定了你媳妇。
@@ -94,7 +110,12 @@ YoungMan(BeautifulGirl beautifulGirl) {    this.beautifulGirl = beautifulGirl;}
 对于 JavaBean 对象而言，我们一般都是通过 getter 和 setter 方法来访问和设置对象的属性。所以，当前对象只需要为其所依赖的对象提供相对应的 setter 方法，就可以通过该方法将相应的依赖对象设置到被注入对象中。如下：
 
 ```java
-public class YoungMan {    private BeautifulGirl beautifulGirl;    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {        this.beautifulGirl = beautifulGirl;    }}
+public class YoungMan {
+    private BeautifulGirl beautifulGirl;
+    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {
+        this.beautifulGirl = beautifulGirl;
+    }
+}
 ```
 
 相比于构造器注入，setter 方式注入会显得比较宽松灵活些，它可以在任何时候进行注入（当然是在使用依赖对象之前），这就好比你可以先把自己想要的妹子想好了，然后再跟婚介公司打招呼，你可以要林志玲款式的，赵丽颖款式的，甚至凤姐哪款的，随意性较强。
