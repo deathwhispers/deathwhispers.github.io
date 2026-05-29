@@ -118,7 +118,11 @@ SPI
 **步骤 1**：定义一个服务接口，文件名: MessageService.java
 
 ```java
-package com.example.demo.service;public interface MessageService {    String getMessage();}
+package com.example.demo.service;
+
+public interface MessageService {
+    String getMessage();
+}
 ```
 
 **步骤 2**：为服务接口提供实现，这里会提供两个简单的实现类。
@@ -126,13 +130,27 @@ package com.example.demo.service;public interface MessageService {    String get
 HelloMessageService.java
 
 ```java
-package com.example.demo.service;public class HelloMessageService implements MessageService {    @Override    public String getMessage() {        return "Hello from HelloMessageService!";    }}
+package com.example.demo.service;
+
+public class HelloMessageService implements MessageService {
+    @Override
+    public String getMessage() {
+        return "Hello from HelloMessageService!";
+    }
+}
 ```
 
 HiMessageService.java
 
 ```java
-package com.example.demo.service;public class HiMessageService implements MessageService {    @Override    public String getMessage() {        return "Hi from HiMessageService!";    }}
+package com.example.demo.service;
+
+public class HiMessageService implements MessageService {
+    @Override
+    public String getMessage() {
+        return "Hi from HiMessageService!";
+    }
+}
 ```
 
 这些实现就像不同品牌或型号的 U 盘或其他 USB 设备。每个设备都有自己的功能和特性，但都遵循相同的 USB 标准。
@@ -142,7 +160,8 @@ package com.example.demo.service;public class HiMessageService implements Messag
 在资源目录（通常是 src/main/resources/）下创建一个名为 META-INF/services/ 的文件夹。在这个文件夹中，创建一个名为 com.example.demo.service.MessageService 的文件（这是我们**接口的全限定名**），这个文件没有任何文件扩展名，所以不要加上.txt 这样的后缀。文件的内容应为我们的两个实现类的全限定名，每个名字占一行：
 
 ```java
-com.example.demo.service.HelloMessageServicecom.example.demo.service.HiMessageService
+com.example.demo.service.HelloMessageService
+com.example.demo.service.HiMessageService
 ```
 
 ![](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/f5bb50ebf675af1189675b70eb5fa5b1.png)
@@ -156,7 +175,19 @@ META-INF/services/ 是 Java SPI (Service Provider Interface) 机制中约定俗�
 **步骤 4**：使用 ServiceLoader 加载和使用服务
 
 ```java
-package com.example.demo;import com.example.demo.service.MessageService;import java.util.ServiceLoader;public class DemoApplication {    public static void main(String[] args) {        ServiceLoader<MessageService> loaders = ServiceLoader.load(MessageService.class);        for (MessageService service : loaders) {            System.out.println(service.getMessage());        }    }}
+package com.example.demo;
+
+import com.example.demo.service.MessageService;
+import java.util.ServiceLoader;
+
+public class DemoApplication {
+    public static void main(String[] args) {
+        ServiceLoader<MessageService> loaders = ServiceLoader.load(MessageService.class);
+        for (MessageService service : loaders) {
+            System.out.println(service.getMessage());
+        }
+    }
+}
 ```
 
 运行结果如下：
@@ -270,14 +301,54 @@ Spring Boot
 HelloMessageService.java
 
 ```java
-package com.example.demo.service;public class HelloMessageService implements MessageService {    @Override    public String getMessage() {        return "Hello from HelloMessageService!";    }}`HiMessageService.java`
-package com.example.demo.service;public class HiMessageService implements MessageService {    @Override    public String getMessage() {        return "Hi from HiMessageService!";    }}
+package com.example.demo.service;
+
+public class HelloMessageService implements MessageService {
+    @Override
+    public String getMessage() {
+        return "Hello from HelloMessageService!";
+    }
+}
+```
+
+HiMessageService.java
+
+```java
+package com.example.demo.service;
+
+public class HiMessageService implements MessageService {
+    @Override
+    public String getMessage() {
+        return "Hi from HiMessageService!";
+    }
+}
 ```
 
 定义 BeanPostProcessor
 
 ```java
-import org.springframework.beans.BeansException;import org.springframework.beans.factory.config.BeanPostProcessor;public class MessageServicePostProcessor implements BeanPostProcessor {    @Override    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {        if(bean instanceof MessageService) {            return new MessageService() {                @Override                public String getMessage() {                    return ((MessageService) bean).getMessage() + " [Processed by Spring SPI]";                }            };        }        return bean;    }    @Override    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {        return bean;    }}
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+
+public class MessageServicePostProcessor implements BeanPostProcessor {
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        if (bean instanceof MessageService) {
+            return new MessageService() {
+                @Override
+                public String getMessage() {
+                    return ((MessageService) bean).getMessage() + " [Processed by Spring SPI]";
+                }
+            };
+        }
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+}
 ```
 
 修改 Spring 配置
@@ -285,7 +356,26 @@ import org.springframework.beans.BeansException;import org.springframework.beans
 将 MessageServicePostProcessor 添加到 Spring 配置中：
 
 ```java
-import org.springframework.context.annotation.Bean;import org.springframework.context.annotation.Configuration;@Configurationpublic class MessageServiceConfig {    @Bean    public MessageService helloMessageService() {        return new HelloMessageService();    }    @Bean    public MessageService hiMessageService() {        return new HiMessageService();    }    @Bean    public MessageServicePostProcessor messageServicePostProcessor() {        return new MessageServicePostProcessor();    }}
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class MessageServiceConfig {
+    @Bean
+    public MessageService helloMessageService() {
+        return new HelloMessageService();
+    }
+
+    @Bean
+    public MessageService hiMessageService() {
+        return new HiMessageService();
+    }
+
+    @Bean
+    public MessageServicePostProcessor messageServicePostProcessor() {
+        return new MessageServicePostProcessor();
+    }
+}
 ```
 
 执行程序
@@ -293,7 +383,22 @@ import org.springframework.context.annotation.Bean;import org.springframework.co
 使用之前提供的 DemoApplication 示例类：
 
 ```java
-package com.example.demo;import com.example.demo.configuration.MessageServiceConfig;import com.example.demo.service.MessageService;import org.springframework.context.ApplicationContext;import org.springframework.context.annotation.AnnotationConfigApplicationContext;public class DemoApplication {    public static void main(String[] args) {        ApplicationContext context = new AnnotationConfigApplicationContext(MessageServiceConfig.class);        MessageService helloMessageService = context.getBean("helloMessageService", MessageService.class);        MessageService hiMessageService = context.getBean("hiMessageService", MessageService.class);        System.out.println(helloMessageService.getMessage());        System.out.println(hiMessageService.getMessage());    }}
+package com.example.demo;
+
+import com.example.demo.configuration.MessageServiceConfig;
+import com.example.demo.service.MessageService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class DemoApplication {
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(MessageServiceConfig.class);
+        MessageService helloMessageService = context.getBean("helloMessageService", MessageService.class);
+        MessageService hiMessageService = context.getBean("hiMessageService", MessageService.class);
+        System.out.println(helloMessageService.getMessage());
+        System.out.println(hiMessageService.getMessage());
+    }
+}
 ```
 
 运行结果：
@@ -325,7 +430,11 @@ Spring Boot 的自动配置机制主要依赖于 spring.factories 文件。这�
 定义接口
 
 ```java
-package com.example.demo.service;public interface MessageService {    String getMessage();}
+package com.example.demo.service;
+
+public interface MessageService {
+    String getMessage();
+}
 ```
 
 这里会提供两个简单的实现类。
@@ -333,13 +442,27 @@ package com.example.demo.service;public interface MessageService {    String get
 HelloMessageService.java
 
 ```java
-package com.example.demo.service;public class HelloMessageService implements MessageService {    @Override    public String getMessage() {        return "Hello from HelloMessageService!";    }}
+package com.example.demo.service;
+
+public class HelloMessageService implements MessageService {
+    @Override
+    public String getMessage() {
+        return "Hello from HelloMessageService!";
+    }
+}
 ```
 
 HiMessageService.java
 
 ```java
-package com.example.demo.service;public class HiMessageService implements MessageService {    @Override    public String getMessage() {        return "Hi from HiMessageService!";    }}
+package com.example.demo.service;
+
+public class HiMessageService implements MessageService {
+    @Override
+    public String getMessage() {
+        return "Hi from HiMessageService!";
+    }
+}
 ```
 
 注册服务
@@ -368,7 +491,20 @@ com.example.demo.service.HiMessageService
 使用 SpringFactoriesLoader 来加载服务
 
 ```java
-package com.example.demo;import com.example.demo.service.MessageService;import org.springframework.core.io.support.SpringFactoriesLoader;import java.util.List;public class DemoApplication {    public static void main(String\[\] args) {        List<MessageService\> services = SpringFactoriesLoader.loadFactories(MessageService.class, null);        for (MessageService service : services) {            System.out.println(service.getMessage());        }    }}
+package com.example.demo;
+
+import com.example.demo.service.MessageService;
+import org.springframework.core.io.support.SpringFactoriesLoader;
+import java.util.List;
+
+public class DemoApplication {
+    public static void main(String[] args) {
+        List<MessageService> services = SpringFactoriesLoader.loadFactories(MessageService.class, null);
+        for (MessageService service : services) {
+            System.out.println(service.getMessage());
+        }
+    }
+}
 ```
 
 SpringFactoriesLoader.loadFactories 的第二个参数是类加载器，此处我们使用默认的类加载器，所以传递 null。
@@ -434,7 +570,9 @@ USB
 各大数据库厂商（如 Oracle, MySQL, PostgreSQL 等）为其数据库提供了 JDBC 驱动程序，它们都实现了 java.sql.Driver 接口。例如，MySQL 的驱动程序中有一个类似于以下的类：
 
 ```java
-public class com.mysql.cj.jdbc.Driver implements java.sql.Driver {    // 实现接口方法...}
+public class com.mysql.cj.jdbc.Driver implements java.sql.Driver {
+    // 实现接口方法...
+}
 ```
 
 直接上图：
@@ -462,7 +600,23 @@ com.mysql.cj.jdbc.Driver
 以下是一个简单的示例，展示如何使用 JDBC SPI 获取数据库连接：
 
 ```java
-import java.sql.Connection;import java.sql.DriverManager;public class JdbcExample {    public static void main(String[] args) {        String jdbcUrl = "jdbc:mysql://localhost:3306/mydatabase";        String username = "root";        String password = "password";        try {            Connection connection = DriverManager.getConnection(jdbcUrl, username, password);            System.out.println("Connected to the database!");            connection.close();        } catch (Exception e) {            e.printStackTrace();        }    }}
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class JdbcExample {
+    public static void main(String[] args) {
+        String jdbcUrl = "jdbc:mysql://localhost:3306/mydatabase";
+        String username = "root";
+        String password = "password";
+        try {
+            Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
+            System.out.println("Connected to the database!");
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
 ```
 
 在上述代码中，我们没有明确指定使用哪个 JDBC 驱动程序，因为 DriverManager 会自动为我们选择合适的驱动程序。
@@ -495,25 +649,69 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 **MessageService 接口**：
 
 ```java
-package com.example.demo.service;public interface MessageService {    void send(String message);}
+package com.example.demo.service;
+
+public interface MessageService {
+    void send(String message);
+}
 ```
 
 **SMS 服务实现**：
 
 ```java
-package com.example.demo.service.impl;import com.example.demo.service.MessageService;public class SmsService implements MessageService {    @Override    public void send(String message) {        System.out.println("Sending SMS: " + message);    }}
+package com.example.demo.service.impl;
+
+import com.example.demo.service.MessageService;
+
+public class SmsService implements MessageService {
+    @Override
+    public void send(String message) {
+        System.out.println("Sending SMS: " + message);
+    }
+}
 ```
 
 **Email 服务实现**：
 
 ```java
-package com.example.demo.service.impl;import com.example.demo.service.MessageService;public class EmailService implements MessageService {    @Override    public void send(String message) {        System.out.println("Sending Email: " + message);    }}
+package com.example.demo.service.impl;
+
+import com.example.demo.service.MessageService;
+
+public class EmailService implements MessageService {
+    @Override
+    public void send(String message) {
+        System.out.println("Sending Email: " + message);
+    }
+}
 ```
 
 **自动配置类**：
 
 ```java
-package com.example.demo.configuration;import com.example.demo.service.EmailService;import com.example.demo.service.MessageService;import com.example.demo.service.SmsService;import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;import org.springframework.context.annotation.Bean;import org.springframework.context.annotation.Configuration;@Configurationpublic class MessageAutoConfiguration {    @Bean    @ConditionalOnProperty(name = "message.type", havingValue = "sms")    public MessageService smsService() {        return new SmsService();    }    @Bean    @ConditionalOnProperty(name = "message.type", havingValue = "email")    public MessageService emailService() {        return new EmailService();    }}
+package com.example.demo.configuration;
+
+import com.example.demo.service.EmailService;
+import com.example.demo.service.MessageService;
+import com.example.demo.service.SmsService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class MessageAutoConfiguration {
+    @Bean
+    @ConditionalOnProperty(name = "message.type", havingValue = "sms")
+    public MessageService smsService() {
+        return new SmsService();
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "message.type", havingValue = "email")
+    public MessageService emailService() {
+        return new EmailService();
+    }
+}
 ```
 
 这个类提供两个条件性的 beans（组件），分别是 SmsService 和 EmailService。这些 beans 的创建取决于 application.properties 文件中特定的属性值。
@@ -544,13 +742,39 @@ message.type=sms
 **MessageTester 组件**：
 
 ```java
-package com.example.demo;import com.example.demo.service.MessageService;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.stereotype.Component;import javax.annotation.PostConstruct;@Componentpublic class MessageTester {    @Autowired    private MessageService messageService;    @PostConstruct    public void init() {        messageService.send("Hello World");    }}
+package com.example.demo;
+
+import com.example.demo.service.MessageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import javax.annotation.PostConstruct;
+
+@Component
+public class MessageTester {
+    @Autowired
+    private MessageService messageService;
+
+    @PostConstruct
+    public void init() {
+        messageService.send("Hello World");
+    }
+}
 ```
 
 **DemoApplication 主程序**：
 
 ```java
-package com.example.demo;import org.springframework.boot.SpringApplication;import org.springframework.boot.autoconfigure.SpringBootApplication;@SpringBootApplicationpublic class DemoApplication {    public static void main(String\[\] args) {        SpringApplication.run(DemoApplication.class, args);    }}
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
 ```
 
 运行结果：
