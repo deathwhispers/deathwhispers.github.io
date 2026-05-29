@@ -24,7 +24,7 @@ Flink Data Source 用于定义 Flink 程序的数据来源，Flink 官方提供�
 **1. readTextFile(path)**：按照 TextInputFormat 格式读取文本文件，并将其内容以字符串的形式返回。示例如下：
 
 ```java
-env.readTextFile(filePath).print();
+env.readTextFile(filePath).print() ;
 ```
 
 **2. readFile(fileInputFormat, path)** ：按照指定格式读取文件。
@@ -52,7 +52,10 @@ PROCESS_CONTINUOUSLY
 使用示例如下：
 
 ```java
-final String filePath = "D:\\log4j.properties";final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();env.readFile(new TextInputFormat(new Path(filePath)),             filePath,             FileProcessingMode.PROCESS_ONCE,             1,             BasicTypeInfo.STRING_TYPE_INFO).print();env.execute();
+final String filePath = "D:\\log4j.properties" ;
+final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment() ;
+env.readFile(new TextInputFormat(new Path(filePath)), filePath, FileProcessingMode.PROCESS_ONCE, 1, BasicTypeInfo.STRING_TYPE_INFO).print() ;
+env.execute() ;
 ```
 
 ### 1.2 基于集合构建
@@ -60,31 +63,45 @@ final String filePath = "D:\\log4j.properties";final StreamExecutionEnvironment 
 **1. fromCollection(Collection)**：基于集合构建，集合中的所有元素必须是同一类型。示例如下：
 
 ```java
-env.fromCollection(Arrays.asList(1,2,3,4,5)).print();
+env.fromCollection(Arrays.asList(1,2,3,4,5)).print() ;
 ```
 
 **2. fromElements(T …)**： 基于元素构建，所有元素必须是同一类型。示例如下：
 
 ```java
-env.fromElements(1,2,3,4,5).print();
+env.fromElements(1,2,3,4,5).print() ;
 ```
 
 **3. generateSequence(from, to)**：基于给定的序列区间进行构建。示例如下：
 
 ```java
-env.generateSequence(0,100);
+env.generateSequence(0,100) ;
 ```
 
 **4. fromCollection(Iterator, Class)**：基于迭代器进行构建。第一个参数用于定义迭代器，第二个参数用于定义输出元素的类型。使用示例如下：
 
 ```java
-env.fromCollection(new CustomIterator(), BasicTypeInfo.INT_TYPE_INFO).print();
+env.fromCollection(new CustomIterator(), BasicTypeInfo.INT_TYPE_INFO).print() ;
 ```
 
 其中 CustomIterator 为自定义的迭代器，这里以产生 1 到 100 区间内的数据为例，源码如下。需要注意的是自定义迭代器除了要实现 Iterator 接口外，还必须要实现序列化接口 Serializable ，否则会抛出序列化失败的异常：
 
 ```java
-import java.io.Serializable;import java.util.Iterator;public class CustomIterator implements Iterator<Integer>, Serializable {    private Integer i = 0;    @Override    public boolean hasNext() {        return i < 100;    }    @Override    public Integer next() {        i++;        return i;    }}
+import java.io.Serializable ;
+import java.util.Iterator ;
+public class CustomIterator implements Iterator<Integer>, Serializable
+{
+    private Integer i = 0 ;
+    @Override public boolean hasNext()
+    {
+        return i < 100 ;
+    }
+    @Override public Integer next()
+    {
+        i++ ;
+        return i ;
+    }
+}
 ```
 
 **5. fromParallelCollection(SplittableIterator, Class)**：方法接收两个参数，第二个参数用于定义输出元素的类型，第一个参数 SplittableIterator 是迭代器的抽象基类，它用于将原始迭代器的值拆分到多个不相交的迭代器中。
@@ -103,7 +120,7 @@ Flink 提供了 socketTextStream 方法用于构建基于 Socket 的数据流，
 ：当 Socket 临时关闭时，程序的最大重试间隔，单位为秒。设置为 0 时表示不进行重试；设置为负值则表示一直重试。示例如下：
 
 ```java
-env.socketTextStream("192.168.0.229", 9999, "\n", 3).print();
+env.socketTextStream("192.168.0.229", 9999, "\n", 3).print() ;
 ```
 
 ## 二、自定义 Data Source
@@ -113,7 +130,26 @@ env.socketTextStream("192.168.0.229", 9999, "\n", 3).print();
 除了内置的数据源外，用户还可以使用 addSource 方法来添加自定义的数据源。自定义的数据源必须要实现 SourceFunction 接口，这里以产生 [0 , 1000) 区间内的数据为例，代码如下：
 
 ```java
-final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();env.addSource(new SourceFunction<Long>() {    private long count = 0L;    private volatile boolean isRunning = true;    public void run(SourceContext<Long> ctx) {        while (isRunning && count < 1000) {            // 通过collect将输入发送出去            ctx.collect(count);            count++;        }    }    public void cancel() {        isRunning = false;    }}).print();env.execute();
+final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment() ;
+env.addSource(new SourceFunction<Long>()
+{
+    private long count = 0L ;
+    private volatile boolean isRunning = true ;
+    public void run(SourceContext<Long> ctx)
+    {
+        while (isRunning && count < 1000)
+        {
+            // 通过collect将输入发送出去 ctx.collect(count) ;
+            count++ ;
+        }
+    }
+    public void cancel()
+    {
+        isRunning = false ;
+    }
+}
+).print() ;
+env.execute() ;
 ```
 
 ### 2.2 ParallelSourceFunction 和 RichParallelSourceFunction
@@ -185,8 +221,12 @@ ParallelSourceFunction 直接继承自 ParallelSourceFunction，具有并行度�
 这里以最简单的场景为例，接收 Kafka 上的数据并打印，代码如下：
 
 ```java
-final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();Properties properties = new Properties();// 指定Kafka的连接位置properties.setProperty("bootstrap.servers", "hadoop001:9092");// 指定监听的主题，并定义Kafka字节消息到Flink对象之间的转换规则DataStream<String> stream = env
-.addSource(new FlinkKafkaConsumer<>("flink-stream-in-topic", new SimpleStringSchema(), properties));stream.print();env.execute("Flink Streaming");
+final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment() ;
+Properties properties = new Properties() ;
+// 指定Kafka的连接位置properties.setProperty("bootstrap.servers", "hadoop001:9092") ;
+// 指定监听的主题，并定义Kafka字节消息到Flink对象之间的转换规则DataStream<String> stream = env .addSource(new FlinkKafkaConsumer<>("flink-stream-in-topic", new SimpleStringSchema(), properties)) ;
+stream.print() ;
+env.execute("Flink Streaming") ;
 ```
 
 ### 3.3 整合测试

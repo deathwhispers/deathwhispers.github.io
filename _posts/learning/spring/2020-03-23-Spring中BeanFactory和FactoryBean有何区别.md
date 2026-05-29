@@ -36,7 +36,25 @@ BeanFactory 看名字就知道这是一个 Bean 工厂，小伙伴们知道，Sp
 我们来简单看下 BeanFactory 的代码：
 
 ```java
-public interface BeanFactory {    String FACTORY_BEAN_PREFIX = "&";    Object getBean(String name) throws BeansException;    <T> T getBean(String name, Class<T> requiredType) throws BeansException;    Object getBean(String name, Object... args) throws BeansException;    <T> T getBean(Class<T> requiredType) throws BeansException;    <T> T getBean(Class<T> requiredType, Object... args) throws BeansException;    <T> ObjectProvider<T> getBeanProvider(Class<T> requiredType);    <T> ObjectProvider<T> getBeanProvider(ResolvableType requiredType);    boolean containsBean(String name);    boolean isSingleton(String name) throws NoSuchBeanDefinitionException;    boolean isPrototype(String name) throws NoSuchBeanDefinitionException;    boolean isTypeMatch(String name, ResolvableType typeToMatch) throws NoSuchBeanDefinitionException;    boolean isTypeMatch(String name, Class<?> typeToMatch) throws NoSuchBeanDefinitionException;    @Nullable    Class<?> getType(String name) throws NoSuchBeanDefinitionException;    @Nullable    Class<?> getType(String name, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException;    String[] getAliases(String name);}
+public interface BeanFactory
+{
+    String FACTORY_BEAN_PREFIX = "&" ;
+    Object getBean(String name) throws BeansException ;
+    <T> T getBean(String name, Class<T> requiredType) throws BeansException ;
+    Object getBean(String name, Object... args) throws BeansException ;
+    <T> T getBean(Class<T> requiredType) throws BeansException ;
+    <T> T getBean(Class<T> requiredType, Object... args) throws BeansException ;
+    <T> ObjectProvider<T> getBeanProvider(Class<T> requiredType) ;
+    <T> ObjectProvider<T> getBeanProvider(ResolvableType requiredType) ;
+    boolean containsBean(String name) ;
+    boolean isSingleton(String name) throws NoSuchBeanDefinitionException ;
+    boolean isPrototype(String name) throws NoSuchBeanDefinitionException ;
+    boolean isTypeMatch(String name, ResolvableType typeToMatch) throws NoSuchBeanDefinitionException ;
+    boolean isTypeMatch(String name, Class<?> typeToMatch) throws NoSuchBeanDefinitionException ;
+    @Nullable Class<?> getType(String name) throws NoSuchBeanDefinitionException ;
+    @Nullable Class<?> getType(String name, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException ;
+    String[] getAliases(String name) ;
+}
 ```
 
 这些方法基本上都见名知义：
@@ -125,7 +143,39 @@ FactoryBean 其实很多小伙伴可能都见过，只是可能没去总结归�
 手动配置过 MyBatis 的小伙伴应该都知道，MyBatis 有两个重要的类，一个是 SqlSessionFactory，还有一个是 SqlSession，通过 SqlSessionFactory 可以获取到一个 SqlSession。但是不知道小伙伴们是否还记得配置代码，手动配置代码如下：
 
 ```java
-public class SqlSessionFactoryUtils {    private static SqlSessionFactory SQLSESSIONFACTORY = null;    public static SqlSessionFactory getInstance() {        if (SQLSESSIONFACTORY == null) {            try {                SQLSESSIONFACTORY = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml"));            } catch (IOException e) {                e.printStackTrace();            }        }        return SQLSESSIONFACTORY;    }}public class Main {    public static void main(String[] args) {        SqlSessionFactory factory = SqlSessionFactoryUtils.getInstance();        SqlSession sqlSession = factory.openSession();        List<User> list = sqlSession.selectList("org.javaboy.mybatis01.mapper.UserMapper.getAllUser");        for (User user : list) {            System.out.println("user = " + user);        }        sqlSession.close();    }}
+public class SqlSessionFactoryUtils
+{
+    private static SqlSessionFactory SQLSESSIONFACTORY = null ;
+    public static SqlSessionFactory getInstance()
+    {
+        if (SQLSESSIONFACTORY == null)
+        {
+            try
+            {
+                SQLSESSIONFACTORY = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml")) ;
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace() ;
+            }
+        }
+        return SQLSESSIONFACTORY ;
+    }
+}
+public class Main
+{
+    public static void main(String[] args)
+    {
+        SqlSessionFactory factory = SqlSessionFactoryUtils.getInstance() ;
+        SqlSession sqlSession = factory.openSession() ;
+        List<User> list = sqlSession.selectList("org.javaboy.mybatis01.mapper.UserMapper.getAllUser") ;
+        for (User user : list)
+        {
+            System.out.println("user = " + user) ;
+        }
+        sqlSession.close() ;
+    }
+}
 ```
 
 小伙伴们看到，无论是 SqlSessionFactory 还是 SqlSession，都不是正经 new 出来的，其实这两个都是接口，显然不可能 new 出来，前者通过建造者模式去配置各种属性，最后生成一个 SqlSessionFactory 的实例，后者则通过前者这个工厂去生成，最终拿到的都是这两个接口的子类的对象。
@@ -135,7 +185,26 @@ public class SqlSessionFactoryUtils {    private static SqlSessionFactory SQLSES
 我们来看下 SqlSessionFactoryBean 类，源码很长，我挑了重要的出来：
 
 ```java
-public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, InitializingBean, ApplicationListener<ApplicationEvent> {    private SqlSessionFactory sqlSessionFactory;    @Override    public SqlSessionFactory getObject() throws Exception {        if (this.sqlSessionFactory == null) {            afterPropertiesSet();        }        return this.sqlSessionFactory;    }    @Override    public Class<? extends SqlSessionFactory> getObjectType() {        return this.sqlSessionFactory == null ? SqlSessionFactory.class : this.sqlSessionFactory.getClass();    }    @Override    public boolean isSingleton() {        return true;    }}
+public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, InitializingBean, ApplicationListener<ApplicationEvent>
+{
+    private SqlSessionFactory sqlSessionFactory ;
+    @Override public SqlSessionFactory getObject() throws Exception
+    {
+        if (this.sqlSessionFactory == null)
+        {
+            afterPropertiesSet() ;
+        }
+        return this.sqlSessionFactory ;
+    }
+    @Override public Class<? extends SqlSessionFactory> getObjectType()
+    {
+        return this.sqlSessionFactory == null ? SqlSessionFactory.class : this.sqlSessionFactory.getClass() ;
+    }
+    @Override public boolean isSingleton()
+    {
+        return true ;
+    }
+}
 ```
 
 大家看一下，SqlSessionFactoryBean 需要实现 FactoryBean 接口，并且在实现接口的时候指定泛型是 SqlSessionFactory，也就是 SqlSessionFactoryBean 最终产出的 Bean 是 SqlSessionFactory。实现了 FactoryBean 接口之后，就需要实现接口中的三个方法：
@@ -153,13 +222,42 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
 假设我有如下类：
 
 ```java
-public class Author {    private String name;    private Integer age;    private Author() {    }    public static Author init(String name, Integer age) {        Author author = new Author();        author.setAge(age);        author.setName(name);        return author;    }    //省略 getter/setter/toString}
+public class Author
+{
+    private String name ;
+    private Integer age ;
+    private Author()
+    {
+    }
+    public static Author init(String name, Integer age)
+    {
+        Author author = new Author() ;
+        author.setAge(age) ;
+        author.setName(name) ;
+        return author ;
+    }
+    //省略 getter/setter/toString
+}
 ```
 
 这个类的特点就是构造方法是私有的，你没法从外面去 new，现在我想将这个类的对象注册到 Spring 容器中，那么我可以提供一个 AuthorFactoryBean：
 
 ```java
-public class AuthorFactoryBean implements FactoryBean<Author> {    @Override    public Author getObject() throws Exception {        return Author.init("javaboy", 99);    }    @Override    public Class<?> getObjectType() {        return Author.class;    }    @Override    public boolean isSingleton() {        return true;    }}
+public class AuthorFactoryBean implements FactoryBean<Author>
+{
+    @Override public Author getObject() throws Exception
+    {
+        return Author.init("javaboy", 99) ;
+    }
+    @Override public Class<?> getObjectType()
+    {
+        return Author.class ;
+    }
+    @Override public boolean isSingleton()
+    {
+        return true ;
+    }
+}
 ```
 
 然后在 Spring 容器中配置 AuthorFactoryBean 即可：
@@ -171,7 +269,17 @@ public class AuthorFactoryBean implements FactoryBean<Author> {    @Override    
 接下来我们就可以从容器中去获取 Author 对象了，但是要注意，通过 author 这个名字拿到的是 Author 对象，而不是 AuthorFactoryBean 对象，如果想要获取到 AuthorFactoryBean 对象，那么要通过 &author 这个名字去获取（回顾第一小节所讲内容）。
 
 ```java
-public class Main {    public static void main(String[] args) {        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");        Object author = ctx.getBean("author");        Object authorFactoryBean = ctx.getBean("&author");        System.out.println("author.getClass() = " + author.getClass());        System.out.println("authorFactoryBean.getClass() = " + authorFactoryBean.getClass());    }}
+public class Main
+{
+    public static void main(String[] args)
+    {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml") ;
+        Object author = ctx.getBean("author") ;
+        Object authorFactoryBean = ctx.getBean("&author") ;
+        System.out.println("author.getClass() = " + author.getClass()) ;
+        System.out.println("authorFactoryBean.getClass() = " + authorFactoryBean.getClass()) ;
+    }
+}
 ```
 
 来看下最终运行结果：

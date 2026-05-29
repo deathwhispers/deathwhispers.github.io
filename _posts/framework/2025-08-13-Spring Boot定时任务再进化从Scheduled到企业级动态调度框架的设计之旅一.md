@@ -30,7 +30,8 @@ updated: 2025-11-28 09:57
 ```java
 // 这就是典型的硬编码，好多人都这么写过
 @Scheduled(cron = "0 0 2 * * ?") // 每天凌晨2点跑
-public void generateDailyReport() {
+public void generateDailyReport()
+{
     // ... 业务逻辑
 }
 ```

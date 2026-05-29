@@ -57,7 +57,12 @@ print  printToErr 是测试当中最常用的方式，用于将计算结果以�
 采用自定义的输出格式将计算结果写出，上面介绍的 writeAsText 和 writeAsCsv 其底层调用的都是该方法，源码如下：
 
 ```java
-public DataStreamSink<T> writeAsText(String path, WriteMode writeMode) {    TextOutputFormat<T> tof = new TextOutputFormat<>(new Path(path));    tof.setWriteMode(writeMode);    return writeUsingOutputFormat(tof);}
+public DataStreamSink<T> writeAsText(String path, WriteMode writeMode)
+{
+    TextOutputFormat<T> tof = new TextOutputFormat<>(new Path(path)) ;
+    tof.setWriteMode(writeMode) ;
+    return writeUsingOutputFormat(tof) ;
+}
 ```
 
 ### 1.5 writeToSocket
@@ -65,7 +70,7 @@ public DataStreamSink<T> writeAsText(String path, WriteMode writeMode) {    Text
 writeToSocket 用于将计算结果以指定的格式写出到 Socket 中，使用示例如下：
 
 ```java
-streamSource.writeToSocket("192.168.0.226", 9999, new SimpleStringSchema());
+streamSource.writeToSocket("192.168.0.226", 9999, new SimpleStringSchema()) ;
 ```
 
 ## 二、Streaming Connectors
@@ -157,9 +162,12 @@ bin/kafka-console-consumer.sh --bootstrap-server hadoop001:9092 --topic flink-st
 继承自 RichSinkFunction，实现自定义的 Sink ：
 
 ```java
-public class FlinkToMySQLSink extends RichSinkFunction<Employee> {    private PreparedStatement stmt;    private Connection conn;    @Override    public void open(Configuration parameters) throws Exception {        Class.forName("com.mysql.cj.jdbc.Driver");        conn = DriverManager.getConnection("jdbc:mysql://192.168.0.229:3306/employees" +                                           "?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
-                                           "root",
-                                           "123456");        String sql = "insert into emp(name, age, birthday) values(?, ?, ?)";        stmt = conn.prepareStatement(sql);    }    @Override    public void invoke(Employee value, Context context) throws Exception {        stmt.setString(1, value.getName());        stmt.setInt(2, value.getAge());        stmt.setDate(3, value.getBirthday());        stmt.executeUpdate();    }    @Override    public void close() throws Exception {        super.close();        if (stmt != null) {            stmt.close();        }        if (conn != null) {            conn.close();        }    }}
+public class FlinkToMySQLSink extends RichSinkFunction<Employee>
+{
+    private PreparedStatement stmt;    private Connection conn;    @Override    public void open(Configuration parameters) throws Exception {        Class.forName("com.mysql.cj.jdbc.Driver");        conn = DriverManager.getConnection("jdbc:mysql://192.168.0.229:3306/employees" +                                           "?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
+    "root",
+"123456");        String sql = "insert into emp(name, age, birthday) values(?, ?, ?)";        stmt = conn.prepareStatement(sql);    }    @Override    public void invoke(Employee value, Context context) throws Exception {        stmt.setString(1, value.getName());        stmt.setInt(2, value.getAge());        stmt.setDate(3, value.getBirthday());        stmt.executeUpdate();    }    @Override    public void close() throws Exception {        super.close();        if (stmt != null) {            stmt.close();        }        if (conn != null) {            conn.close();        }    }
+}
 ```
 
 ### 4.3 使用自定义 Sink
@@ -167,7 +175,11 @@ public class FlinkToMySQLSink extends RichSinkFunction<Employee> {    private Pr
 想要使用自定义的 Sink，同样是需要调用 addSink 方法，具体如下：
 
 ```java
-final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();Date date = new Date(System.currentTimeMillis());DataStreamSource<Employee> streamSource = env.fromElements(    new Employee("hei", 10, date),    new Employee("bai", 20, date),    new Employee("ying", 30, date));streamSource.addSink(new FlinkToMySQLSink());env.execute();
+final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment() ;
+Date date = new Date(System.currentTimeMillis()) ;
+DataStreamSource<Employee> streamSource = env.fromElements( new Employee("hei", 10, date), new Employee("bai", 20, date), new Employee("ying", 30, date)) ;
+streamSource.addSink(new FlinkToMySQLSink()) ;
+env.execute() ;
 ```
 
 ### 4.4 测试结果

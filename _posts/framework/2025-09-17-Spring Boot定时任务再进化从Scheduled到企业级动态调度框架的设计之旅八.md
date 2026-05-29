@@ -63,10 +63,12 @@ updated: 2025-11-28 09:57
 // DataSyncService.java
 @Slf4j
 @Component("dataSyncService") // 给Bean起名，后续API调用要用
-public class DataSyncService {
+public class DataSyncService
+{
 
     // 同步数据源A
-    public void syncFromSourceA() {
+    public void syncFromSourceA()
+    {
         log.info("【数据源A】开始同步数据...");
         // 实际逻辑：调用A的API、拉数据、存数据库
         // 比如：restTemplate.getForObject("https://api.source-a.com/data", DataDTO.class);
@@ -74,14 +76,16 @@ public class DataSyncService {
     }
 
     // 同步数据源B
-    public void syncFromSourceB() {
+    public void syncFromSourceB()
+    {
         log.info("【数据源B】开始同步数据...");
         // 实际逻辑：连B的数据库、查数据、同步到自己库
         log.info("【数据源B】同步完成。");
     }
 
     // 以后加新数据源，在这儿加方法就行
-    public void syncFromSourceC() {
+    public void syncFromSourceC()
+    {
         log.info("【数据源C】开始同步...");
         // ...
     }

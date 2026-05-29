@@ -51,12 +51,15 @@ import org.apache.poi.ss.usermodel.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class ExcelGenerator {
+public class ExcelGenerator
+{
 
-    public static void generateExcel() {
+    public static void generateExcel()
+    {
         // 1. 创建一个新的工作簿 (Workbook)，HSSFWorkbook 对应 .xls 文件
         try (Workbook wb = new HSSFWorkbook();
-             FileOutputStream fileOut = new FileOutputStream("D:\\tmp\\workbook.xls")) {
+        FileOutputStream fileOut = new FileOutputStream("D:\\tmp\\workbook.xls"))
+        {
 
             // 2. 在工作簿中创建一个新的工作表 (Sheet)
             Sheet sheet = wb.createSheet("用户信息");
@@ -80,7 +83,7 @@ public class ExcelGenerator {
 
             System.out.println("Excel 文件生成成功！");
 
-        } catch (IOException e) {
+            } catch (IOException e) {
             // 在实际项目中，应使用日志库记录异常，而不是简单地忽略
             e.printStackTrace();
         }
@@ -98,19 +101,23 @@ import org.apache.poi.ss.usermodel.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class ExcelParser {
+public class ExcelParser
+{
 
-    public static void parseExcel() {
+    public static void parseExcel()
+    {
         // 1. 使用 FileInputStream 加载 Excel 文件
         try (FileInputStream fileIn = new FileInputStream("D:\\tmp\\workbook.xls");
-             Workbook wb = new HSSFWorkbook(fileIn)) {
+        Workbook wb = new HSSFWorkbook(fileIn))
+        {
 
             // 2. 获取第一个工作表
             Sheet sheet = wb.getSheetAt(0);
 
             // 3. 遍历工作表的每一行 (通常跳过表头，所以从 i = 1 开始)
             // getLastRowNum() 返回最后一行的索引 (从0开始)
-            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+            for (int i = 1; i <= sheet.getLastRowNum(); i++)
+            {
                 Row row = sheet.getRow(i);
                 if (row == null) continue; // 避免空行导致 NullPointerException
 
@@ -125,7 +132,7 @@ public class ExcelParser {
                 System.out.println("姓名：" + name + "，年龄：" + (int)age + "，手机：" + phone);
             }
 
-        } catch (IOException e) {
+            } catch (IOException e) {
             // 在实际项目中，应使用日志库记录异常
             e.printStackTrace();
         }

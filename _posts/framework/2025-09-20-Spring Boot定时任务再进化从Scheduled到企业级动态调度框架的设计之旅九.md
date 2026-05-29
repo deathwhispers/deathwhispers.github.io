@@ -42,13 +42,15 @@ mermaid: true
 ```java
 // JpaTaskStore.java
 @Component // 关键：注册成Spring Bean
-public class JpaTaskStore implements TaskStore {
+public class JpaTaskStore implements TaskStore
+{
 
     @Autowired
     private TaskDefinitionRepository taskRepo; // 自己写的JPA Repository
 
     @Override
-    public void save(TaskDefinition definition) {
+    public void save(TaskDefinition definition)
+    {
         // 把框架的TaskDefinition转成JPA实体
         TaskDefinitionEntity entity = TaskDefinitionEntity.from(definition);
         taskRepo.save(entity); // 用JPA存数据
@@ -67,10 +69,10 @@ public class JpaTaskStore implements TaskStore {
 还记得`HadokenSchedulerAutoConfiguration`里的这个注解不？它是灵活扩展的关键：
 
 ```java
-
 @Bean
 @ConditionalOnMissingBean(TaskStore.class) // 容器里没有TaskStore，我才生效
-public TaskStore taskStore(...) {
+public TaskStore taskStore(...)
+{
     // 框架默认的实现（比如RedisTaskStore、MybatisTaskStore）
 }
 ```
@@ -155,19 +157,21 @@ sequenceDiagram
 在Spring Boot应用里加个监听器，监听配置中心的变更：
 
 ```java
-
 @Component
-public class NacosTaskListener {
+public class NacosTaskListener
+{
 
     @Autowired
     private TaskManager taskManager;
 
     // Nacos的监听注解，配置变了就调用这个方法
     @NacosConfigListener(dataId = "nacos-task-config.yaml", group = "DEFAULT_GROUP")
-    public void onConfigChange(String configContent) {
+    public void onConfigChange(String configContent)
+    {
         // 1. 把配置内容转成List<TaskDefinition> newTasks
-        List<TaskDefinition> newTasks = YamlUtil.parse(configContent, new TypeReference<List<TaskDefinition>>() {
-        });
+        List<TaskDefinition> newTasks = YamlUtil.parse(configContent, new TypeReference<List<TaskDefinition>>()
+        {
+            });
 
         // 2. 拿当前运行的任务
         List<ManagedTask> currentTasks = taskManager.getAllTasks();
@@ -176,7 +180,8 @@ public class NacosTaskListener {
         syncTasks(newTasks, currentTasks);
     }
 
-    private void syncTasks(List<TaskDefinition> newTasks, List<ManagedTask> currentTasks) {
+    private void syncTasks(List<TaskDefinition> newTasks, List<ManagedTask> currentTasks)
+    {
         // 这里写具体的同步逻辑：
         // - 遍历currentTasks，不在newTasks里的就删
         // - 遍历newTasks，不在currentTasks里的就加
@@ -200,15 +205,16 @@ public class NacosTaskListener {
 #### 1. 改造业务方法
 
 ```java
-
 @Component
-public class ParamTaskService {
+public class ParamTaskService
+{
 
     @Autowired
     private TaskParamRepository paramRepo; // 存任务参数的库（可以是DB/Redis）
 
     // 方法还是无参，但能通过任务ID拿参数
-    public void processWithParam() {
+    public void processWithParam()
+    {
         // 问题：咋知道当前是哪个任务在调用？
         // 框架没传上下文，这是个小坑
         String taskId = ???; // 这里需要拿到当前任务的ID
@@ -228,34 +234,38 @@ public class ParamTaskService {
 
 ```java
 // TaskManagerImpl.java 里的resolveTaskDefinition方法
-private Runnable resolveTaskDefinition(TaskDefinition definition) {
+private Runnable resolveTaskDefinition(TaskDefinition definition)
+{
     Object bean = applicationContext.getBean(definition.getBeanName());
     Method method = findMethod(bean.getClass(), definition.getMethodName(), TaskDefinition.class); // 找带参数的方法
 
     // 原来的无参调用：() -> method.invoke(bean)
     // 改成传TaskDefinition：() -> method.invoke(bean, definition)
-    return () -> {
-        try {
+    return () ->
+    {
+        try
+        {
             method.invoke(bean, definition); // 把任务定义传过去
-        } catch (Exception e) {
+            } catch (Exception e) {
             throw new RuntimeException("任务执行失败", e);
         }
-    };
+        };
 }
 ```
 
 #### 业务方法就能这么写：
 
 ```java
-
 @Component
-public class ParamTaskService {
+public class ParamTaskService
+{
 
     @Autowired
     private TaskParamRepository paramRepo;
 
     // 方法接收TaskDefinition参数
-    public void processWithParam(TaskDefinition context) {
+    public void processWithParam(TaskDefinition context)
+    {
         String taskId = context.getId(); // 从上下文拿任务ID
         // 还能把参数存在context的description里（用JSON格式）
         String paramJson = context.getDescription();

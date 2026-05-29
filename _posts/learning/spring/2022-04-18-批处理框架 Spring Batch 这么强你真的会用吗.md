@@ -123,7 +123,7 @@ BlogInfo.java ：
 
 ```java
 /** * @Author : JCccc
- * @Description : **/public class BlogInfo {    private Integer id;    private String blogAuthor;    private String blogUrl;    private String blogTitle;    private String blogItem;    @Override    public String toString() {        return "BlogInfo{" +        "id=" + id +        ", blogAuthor='" + blogAuthor + '\'' +        ", blogUrl='" + blogUrl + '\'' +        ", blogTitle='" + blogTitle + '\'' +        ", blogItem='" + blogItem + '\'' +        '}';    }    public Integer getId() {        return id;    }    public void setId(Integer id) {        this.id = id;    }    public String getBlogAuthor() {        return blogAuthor;    }    public void setBlogAuthor(String blogAuthor) {        this.blogAuthor = blogAuthor;    }    public String getBlogUrl() {        return blogUrl;    }    public void setBlogUrl(String blogUrl) {        this.blogUrl = blogUrl;    }    public String getBlogTitle() {        return blogTitle;    }    public void setBlogTitle(String blogTitle) {        this.blogTitle = blogTitle;    }    public String getBlogItem() {        return blogItem;    }    public void setBlogItem(String blogItem) {        this.blogItem = blogItem;    }}
+* @Description : **/public class BlogInfo {    private Integer id;    private String blogAuthor;    private String blogUrl;    private String blogTitle;    private String blogItem;    @Override    public String toString() {        return "BlogInfo{" +        "id=" + id +        ", blogAuthor='" + blogAuthor + '\'' +        ", blogUrl='" + blogUrl + '\'' +        ", blogTitle='" + blogTitle + '\'' +        ", blogItem='" + blogItem + '\'' +        '}';    }    public Integer getId() {        return id;    }    public void setId(Integer id) {        this.id = id;    }    public String getBlogAuthor() {        return blogAuthor;    }    public void setBlogAuthor(String blogAuthor) {        this.blogAuthor = blogAuthor;    }    public String getBlogUrl() {        return blogUrl;    }    public void setBlogUrl(String blogUrl) {        this.blogUrl = blogUrl;    }    public String getBlogTitle() {        return blogTitle;    }    public void setBlogTitle(String blogTitle) {        this.blogTitle = blogTitle;    }    public String getBlogItem() {        return blogItem;    }    public void setBlogItem(String blogItem) {        this.blogItem = blogItem;    }}
 ```
 
 ### mapper层
@@ -134,7 +134,7 @@ BlogMapper.java ：
 
 ```java
 import com.example.batchdemo.pojo.BlogInfo;import org.apache.ibatis.annotations.*;import java.util.List;import java.util.Map;/** * @Author : JCccc
- * @Description : **/@Mapperpublic interface BlogMapper {    @Insert("INSERT INTO bloginfo ( blogAuthor, blogUrl, blogTitle, blogItem )   VALUES ( #{blogAuthor}, #{blogUrl},#{blogTitle},#{blogItem}) ")    @Options(useGeneratedKeys = true, keyProperty = "id")    int insert(BlogInfo bloginfo);    @Select("select blogAuthor, blogUrl, blogTitle, blogItem from bloginfo where blogAuthor < #{authorId}")    List<BlogInfo> queryInfoById(Map<String , Integer> map);}
+* @Description : **/@Mapperpublic interface BlogMapper {    @Insert("INSERT INTO bloginfo ( blogAuthor, blogUrl, blogTitle, blogItem )   VALUES ( #{blogAuthor}, #{blogUrl},#{blogTitle},#{blogItem}) ")    @Options(useGeneratedKeys = true, keyProperty = "id")    int insert(BlogInfo bloginfo);    @Select("select blogAuthor, blogUrl, blogTitle, blogItem from bloginfo where blogAuthor < #{authorId}")    List<BlogInfo> queryInfoById(Map<String , Integer> map);}
 ```
 
 接下来 ，重头戏，我们开始对前边那张图里涉及到的各个小组件进行编码。
@@ -170,7 +170,14 @@ ItemWriter 数据输出器
 写在MyBatchConfig类里
 
 ```java
-/** * JobRepository定义：Job的注册容器以及和数据库打交道（事务管理等） * @param dataSource * @param transactionManager * @return * @throws Exception */@Beanpublic JobRepository myJobRepository(DataSource dataSource, PlatformTransactionManager transactionManager) throws Exception{    JobRepositoryFactoryBean jobRepositoryFactoryBean = new JobRepositoryFactoryBean();    jobRepositoryFactoryBean.setDatabaseType("mysql");    jobRepositoryFactoryBean.setTransactionManager(transactionManager);    jobRepositoryFactoryBean.setDataSource(dataSource);    return jobRepositoryFactoryBean.getObject();}
+/** * JobRepository定义：Job的注册容器以及和数据库打交道（事务管理等） * @param dataSource * @param transactionManager * @return * @throws Exception */@Beanpublic JobRepository myJobRepository(DataSource dataSource, PlatformTransactionManager transactionManager) throws Exception
+{
+    JobRepositoryFactoryBean jobRepositoryFactoryBean = new JobRepositoryFactoryBean() ;
+    jobRepositoryFactoryBean.setDatabaseType("mysql") ;
+    jobRepositoryFactoryBean.setTransactionManager(transactionManager) ;
+    jobRepositoryFactoryBean.setDataSource(dataSource) ;
+    return jobRepositoryFactoryBean.getObject() ;
+}
 ```
 
 ### JobLauncher
@@ -179,7 +186,7 @@ ItemWriter 数据输出器
 
 ```java
 /** * jobLauncher定义：job的启动器,绑定相关的jobRepository
- * @param dataSource * @param transactionManager * @return * @throws Exception */@Beanpublic SimpleJobLauncher myJobLauncher(DataSource dataSource, PlatformTransactionManager transactionManager) throws Exception{    SimpleJobLauncher jobLauncher = new SimpleJobLauncher();    // 设置jobRepository    jobLauncher.setJobRepository(myJobRepository(dataSource, transactionManager));    return jobLauncher;}
+* @param dataSource * @param transactionManager * @return * @throws Exception */@Beanpublic SimpleJobLauncher myJobLauncher(DataSource dataSource, PlatformTransactionManager transactionManager) throws Exception{    SimpleJobLauncher jobLauncher = new SimpleJobLauncher();    // 设置jobRepository    jobLauncher.setJobRepository(myJobRepository(dataSource, transactionManager));    return jobLauncher;}
 ```
 
 ### Job
@@ -188,7 +195,7 @@ ItemWriter 数据输出器
 
 ```java
 /** * 定义job
- * @param jobs * @param myStep * @return */@Beanpublic Job myJob(JobBuilderFactory jobs, Step myStep){    return jobs.get("myJob")    .incrementer(new RunIdIncrementer())    .flow(myStep)    .end()    .listener(myJobListener())    .build();}
+* @param jobs * @param myStep * @return */@Beanpublic Job myJob(JobBuilderFactory jobs, Step myStep){    return jobs.get("myJob")    .incrementer(new RunIdIncrementer())    .flow(myStep)    .end()    .listener(myJobListener())    .build();}
 ```
 
 对于Job的运行，是可以配置监听器的
@@ -198,14 +205,17 @@ ItemWriter 数据输出器
 写在MyBatchConfig类里
 
 ```java
-/** * 注册job监听器 * @return */@Beanpublic MyJobListener myJobListener(){    return new MyJobListener();}
+/** * 注册job监听器 * @return */@Beanpublic MyJobListener myJobListener()
+{
+    return new MyJobListener() ;
+}
 ```
 
 这是一个我们自己自定义的监听器，所以是单独创建的，MyJobListener.java：
 
 ```java
 /** * @Author : JCccc
- * @Description :监听Job执行情况，实现JobExecutorListener，且在batch配置类里，Job的Bean上绑定该监听器 **/public class MyJobListener implements JobExecutionListener {    private Logger logger = LoggerFactory.getLogger(MyJobListener.class);    @Override    public void beforeJob(JobExecution jobExecution) {        logger.info("job 开始, id={}",jobExecution.getJobId());    }    @Override    public void afterJob(JobExecution jobExecution) {        logger.info("job 结束, id={}",jobExecution.getJobId());    }}
+* @Description :监听Job执行情况，实现JobExecutorListener，且在batch配置类里，Job的Bean上绑定该监听器 **/public class MyJobListener implements JobExecutionListener {    private Logger logger = LoggerFactory.getLogger(MyJobListener.class);    @Override    public void beforeJob(JobExecution jobExecution) {        logger.info("job 开始, id={}",jobExecution.getJobId());    }    @Override    public void afterJob(JobExecution jobExecution) {        logger.info("job 结束, id={}",jobExecution.getJobId());    }}
 ```
 
 ### Step（ItemReader ItemProcessor ItemWriter）
@@ -223,7 +233,36 @@ step里面包含数据读取器，数据处理器，数据输出器三个小组�
 写在MyBatchConfig类里
 
 ```java
-/** * ItemReader定义：读取文件数据+entirty实体类映射 * @return */@Beanpublic ItemReader<BlogInfo> reader(){    // 使用FlatFileItemReader去读cvs文件，一行即一条数据    FlatFileItemReader<BlogInfo> reader = new FlatFileItemReader<>();    // 设置文件处在路径    reader.setResource(new ClassPathResource("static/bloginfo.csv"));    // entity与csv数据做映射    reader.setLineMapper(new DefaultLineMapper<BlogInfo>() {        {            setLineTokenizer(new DelimitedLineTokenizer() {                {                    setNames(new String[]{"blogAuthor","blogUrl","blogTitle","blogItem"});                }            });            setFieldSetMapper(new BeanWrapperFieldSetMapper<BlogInfo>() {                {                    setTargetType(BlogInfo.class);                }            });        }    });    return reader;}
+/** * ItemReader定义：读取文件数据+entirty实体类映射 * @return */@Beanpublic ItemReader<BlogInfo> reader()
+{
+    // 使用FlatFileItemReader去读cvs文件，一行即一条数据 FlatFileItemReader<BlogInfo> reader = new FlatFileItemReader<>() ;
+    // 设置文件处在路径 reader.setResource(new ClassPathResource("static/bloginfo.csv")) ;
+    // entity与csv数据做映射 reader.setLineMapper(new DefaultLineMapper<BlogInfo>()
+    {
+        {
+            setLineTokenizer(new DelimitedLineTokenizer()
+            {
+                {
+                    setNames(new String[]
+                    {
+                        "blogAuthor","blogUrl","blogTitle","blogItem"
+                    }
+                    ) ;
+                }
+            }
+            ) ;
+            setFieldSetMapper(new BeanWrapperFieldSetMapper<BlogInfo>()
+            {
+                {
+                    setTargetType(BlogInfo.class) ;
+                }
+            }
+            ) ;
+        }
+    }
+    ) ;
+    return reader ;
+}
 ```
 
 简单代码解析：
@@ -234,7 +273,7 @@ step里面包含数据读取器，数据处理器，数据输出器三个小组�
 
 ```java
 /** * @Author : JCccc
- * @Description : **/public class MyReadListener implements ItemReadListener<BlogInfo> {    private Logger logger = LoggerFactory.getLogger(MyReadListener.class);    @Override    public void beforeRead() {    }    @Override    public void afterRead(BlogInfo item) {    }    @Override    public void onReadError(Exception ex) {        try {            logger.info(format("%s%n", ex.getMessage()));        } catch (Exception e) {            e.printStackTrace();        }    }}
+* @Description : **/public class MyReadListener implements ItemReadListener<BlogInfo> {    private Logger logger = LoggerFactory.getLogger(MyReadListener.class);    @Override    public void beforeRead() {    }    @Override    public void afterRead(BlogInfo item) {    }    @Override    public void onReadError(Exception ex) {        try {            logger.info(format("%s%n", ex.getMessage()));        } catch (Exception e) {            e.printStackTrace();        }    }}
 ```
 
 ### ItemProcessor
@@ -242,7 +281,12 @@ step里面包含数据读取器，数据处理器，数据输出器三个小组�
 写在MyBatchConfig类里
 
 ```java
-/** * 注册ItemProcessor: 处理数据+校验数据 * @return */@Beanpublic ItemProcessor<BlogInfo, BlogInfo> processor(){    MyItemProcessor myItemProcessor = new MyItemProcessor();    // 设置校验器    myItemProcessor.setValidator(myBeanValidator());    return myItemProcessor;}
+/** * 注册ItemProcessor: 处理数据+校验数据 * @return */@Beanpublic ItemProcessor<BlogInfo, BlogInfo> processor()
+{
+    MyItemProcessor myItemProcessor = new MyItemProcessor() ;
+    // 设置校验器 myItemProcessor.setValidator(myBeanValidator()) ;
+    return myItemProcessor ;
+}
 ```
 
 数据处理器，是我们自定义的，里面主要是包含我们对数据处理的业务逻辑，并且我们设置了一些数据校验器，我们这里使用 JSR-303的Validator来作为校验器。
@@ -252,7 +296,10 @@ step里面包含数据读取器，数据处理器，数据输出器三个小组�
 写在MyBatchConfig类里
 
 ```java
-/** * 注册校验器 * @return */@Beanpublic MyBeanValidator myBeanValidator(){    return new MyBeanValidator<BlogInfo>();}
+/** * 注册校验器 * @return */@Beanpublic MyBeanValidator myBeanValidator()
+{
+    return new MyBeanValidator<BlogInfo>() ;
+}
 ```
 
 创建MyItemProcessor.java ：
@@ -263,14 +310,14 @@ step里面包含数据读取器，数据处理器，数据输出器三个小组�
 
 ```java
 import com.example.batchdemo.pojo.BlogInfo;import org.springframework.batch.item.validator.ValidatingItemProcessor;import org.springframework.batch.item.validator.ValidationException;/** * @Author : JCccc
- * @Description : **/public class MyItemProcessor extends ValidatingItemProcessor<BlogInfo> {    @Override    public BlogInfo process(BlogInfo item) throws ValidationException {        /**         * 需要执行super.process(item)才会调用自定义校验器         */        super.process(item);        /**         * 对数据进行简单的处理         */        if (item.getBlogItem().equals("springboot")) {            item.setBlogTitle("springboot 系列还请看看我Jc");        } else {            item.setBlogTitle("未知系列");        }        return item;    }}
+* @Description : **/public class MyItemProcessor extends ValidatingItemProcessor<BlogInfo> {    @Override    public BlogInfo process(BlogInfo item) throws ValidationException {        /**         * 需要执行super.process(item)才会调用自定义校验器         */        super.process(item);        /**         * 对数据进行简单的处理         */        if (item.getBlogItem().equals("springboot")) {            item.setBlogTitle("springboot 系列还请看看我Jc");        } else {            item.setBlogTitle("未知系列");        }        return item;    }}
 ```
 
 创建MyBeanValidator.java：
 
 ```java
 import org.springframework.batch.item.validator.ValidationException;import org.springframework.batch.item.validator.Validator;import org.springframework.beans.factory.InitializingBean;import javax.validation.ConstraintViolation;import javax.validation.Validation;import javax.validation.ValidatorFactory;import java.util.Set;/** * @Author : JCccc
- * @Description : **/public class MyBeanValidator<T> implements Validator<T>, InitializingBean {    private javax.validation.Validator validator;    @Override    public void validate(T value) throws ValidationException {        /**         * 使用Validator的validate方法校验数据         */        Set<ConstraintViolation<T>> constraintViolations =        validator.validate(value);        if (constraintViolations.size() > 0) {            StringBuilder message = new StringBuilder();            for (ConstraintViolation<T> constraintViolation : constraintViolations) {                message.append(constraintViolation.getMessage() + "\n");            }            throw new ValidationException(message.toString());        }    }    /**     * 使用JSR-303的Validator来校验我们的数据，在此进行JSR-303的Validator的初始化     * @throws Exception     */    @Override    public void afterPropertiesSet() throws Exception {        ValidatorFactory validatorFactory =        Validation.buildDefaultValidatorFactory();        validator = validatorFactory.usingContext().getValidator();    }}
+* @Description : **/public class MyBeanValidator<T> implements Validator<T>, InitializingBean {    private javax.validation.Validator validator;    @Override    public void validate(T value) throws ValidationException {        /**         * 使用Validator的validate方法校验数据         */        Set<ConstraintViolation<T>> constraintViolations =        validator.validate(value);        if (constraintViolations.size() > 0) {            StringBuilder message = new StringBuilder();            for (ConstraintViolation<T> constraintViolation : constraintViolations) {                message.append(constraintViolation.getMessage() + "\n");            }            throw new ValidationException(message.toString());        }    }    /**     * 使用JSR-303的Validator来校验我们的数据，在此进行JSR-303的Validator的初始化     * @throws Exception     */    @Override    public void afterPropertiesSet() throws Exception {        ValidatorFactory validatorFactory =        Validation.buildDefaultValidatorFactory();        validator = validatorFactory.usingContext().getValidator();    }}
 ```
 
 > ps：其实该篇文章没有使用这个数据校验器，大家想使用的话，可以在实体类上添加一些校验器的注解@NotNull @Max @Email等等。我偏向于直接在处理器里面进行处理，想把关于数据处理的代码都写在一块。
@@ -280,7 +327,15 @@ import org.springframework.batch.item.validator.ValidationException;import org.s
 写在MyBatchConfig类里
 
 ```java
-/** * ItemWriter定义：指定datasource，设置批量插入sql语句，写入数据库 * @param dataSource * @return */@Beanpublic ItemWriter<BlogInfo> writer(DataSource dataSource){    // 使用jdbcBcatchItemWrite写数据到数据库中    JdbcBatchItemWriter<BlogInfo> writer = new JdbcBatchItemWriter<>();    // 设置有参数的sql语句    writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BlogInfo>());    String sql = "insert into bloginfo "+" (blogAuthor,blogUrl,blogTitle,blogItem) "            +" values(:blogAuthor,:blogUrl,:blogTitle,:blogItem)";    writer.setSql(sql);    writer.setDataSource(dataSource);    return writer;}
+/** * ItemWriter定义：指定datasource，设置批量插入sql语句，写入数据库 * @param dataSource * @return */@Beanpublic ItemWriter<BlogInfo> writer(DataSource dataSource)
+{
+    // 使用jdbcBcatchItemWrite写数据到数据库中 JdbcBatchItemWriter<BlogInfo> writer = new JdbcBatchItemWriter<>() ;
+    // 设置有参数的sql语句 writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BlogInfo>()) ;
+    String sql = "insert into bloginfo "+" (blogAuthor,blogUrl,blogTitle,blogItem) " +" values(:blogAuthor,:blogUrl,:blogTitle,:blogItem)" ;
+    writer.setSql(sql) ;
+    writer.setDataSource(dataSource) ;
+    return writer ;
+}
 ```
 
 简单代码解析：
@@ -291,7 +346,7 @@ import org.springframework.batch.item.validator.ValidationException;import org.s
 
 ```java
 import com.example.batchdemo.pojo.BlogInfo;import org.slf4j.Logger;import org.slf4j.LoggerFactory;import org.springframework.batch.core.ItemWriteListener;import java.util.List;import static java.lang.String.format;/** * @Author : JCccc
- * @Description : **/public class MyWriteListener implements ItemWriteListener<BlogInfo> {    private Logger logger = LoggerFactory.getLogger(MyWriteListener.class);    @Override    public void beforeWrite(List<? extends BlogInfo> items) {    }    @Override    public void afterWrite(List<? extends BlogInfo> items) {    }    @Override    public void onWriteError(Exception exception, List<? extends BlogInfo> items) {        try {            logger.info(format("%s%n", exception.getMessage()));            for (BlogInfo message : items) {                logger.info(format("Failed writing BlogInfo : %s", message.toString()));            }        } catch (Exception e) {            e.printStackTrace();        }    }}
+* @Description : **/public class MyWriteListener implements ItemWriteListener<BlogInfo> {    private Logger logger = LoggerFactory.getLogger(MyWriteListener.class);    @Override    public void beforeWrite(List<? extends BlogInfo> items) {    }    @Override    public void afterWrite(List<? extends BlogInfo> items) {    }    @Override    public void onWriteError(Exception exception, List<? extends BlogInfo> items) {        try {            logger.info(format("%s%n", exception.getMessage()));            for (BlogInfo message : items) {                logger.info(format("Failed writing BlogInfo : %s", message.toString()));            }        } catch (Exception e) {            e.printStackTrace();        }    }}
 ```
 
 ItemReader、ItemProcessor、ItemWriter，这三个小组件到这里，我们都实现了，那么接下来就是把这三个小组件跟我们的step去绑定起来。
@@ -299,8 +354,11 @@ ItemReader、ItemProcessor、ItemWriter，这三个小组件到这里，我们�
 写在MyBatchConfig类里
 
 ```java
-/** * step定义： * 包括 * ItemReader 读取 * ItemProcessor  处理 * ItemWriter 输出 * @param stepBuilderFactory * @param reader * @param writer * @param processor * @return */@Beanpublic Step myStep(StepBuilderFactory stepBuilderFactory, ItemReader<BlogInfo> reader,                 ItemWriter<BlogInfo> writer, ItemProcessor<BlogInfo, BlogInfo> processor){    return stepBuilderFactory
-            .get("myStep")            .<BlogInfo, BlogInfo>chunk(65000) // Chunk的机制(即每次读取一条数据，再处理一条数据，累积到一定数量后再一次性交给writer进行写入操作)            .reader(reader).faultTolerant().retryLimit(3).retry(Exception.class).skip(Exception.class).skipLimit(2)            .listener(new MyReadListener())            .processor(processor)            .writer(writer).faultTolerant().skip(Exception.class).skipLimit(2)            .listener(new MyWriteListener())            .build();}
+/** * step定义： * 包括 * ItemReader 读取 * ItemProcessor  处理 * ItemWriter 输出 * @param stepBuilderFactory * @param reader * @param writer * @param processor * @return */@Beanpublic Step myStep(StepBuilderFactory stepBuilderFactory, ItemReader<BlogInfo> reader,                 ItemWriter<BlogInfo> writer, ItemProcessor<BlogInfo, BlogInfo> processor)
+{
+    return stepBuilderFactory
+.get("myStep")            .<BlogInfo, BlogInfo>chunk(65000) // Chunk的机制(即每次读取一条数据，再处理一条数据，累积到一定数量后再一次性交给writer进行写入操作)            .reader(reader).faultTolerant().retryLimit(3).retry(Exception.class).skip(Exception.class).skipLimit(2)            .listener(new MyReadListener())            .processor(processor)            .writer(writer).faultTolerant().skip(Exception.class).skipLimit(2)            .listener(new MyWriteListener())            .build();
+}
 ```
 
 这个Step，稍作讲解。
@@ -343,7 +401,7 @@ skip，跳过，也就是说我们如果设置3， 那么就是可以容忍 3条
 
 ```java
 /** * @Author : JCccc
- * @Description : **/@RestControllerpublic class TestController {    @Autowired    SimpleJobLauncher jobLauncher;    @Autowired    Job myJob;    @GetMapping("testJob")    public  void testJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {     //    后置参数：使用JobParameters中绑定参数 addLong  addString 等方法        JobParameters jobParameters = new JobParametersBuilder().toJobParameters();        jobLauncher.run(myJob, jobParameters);    }}
+* @Description : **/@RestControllerpublic class TestController {    @Autowired    SimpleJobLauncher jobLauncher;    @Autowired    Job myJob;    @GetMapping("testJob")    public  void testJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {     //    后置参数：使用JobParameters中绑定参数 addLong  addString 等方法        JobParameters jobParameters = new JobParametersBuilder().toJobParameters();        jobLauncher.run(myJob, jobParameters);    }}
 ```
 
 对了，我准备了一个csv文件 bloginfo.csv，里面大概8万多条数据，用来进行批处理测试：
@@ -420,15 +478,18 @@ MyBatisCursorItemReader
 
 ```java
 import org.springframework.batch.item.validator.ValidatingItemProcessor;import org.springframework.batch.item.validator.ValidationException;/** * @Author : JCccc
- * @Description : **/public class MyItemProcessorNew extends ValidatingItemProcessor<BlogInfo> {    @Override    public BlogInfo process(BlogInfo item) throws ValidationException {        /**         * 需要执行super.process(item)才会调用自定义校验器         */        super.process(item);        /**         * 对数据进行简单的处理         */        Integer authorId= Integer.valueOf(item.getBlogAuthor());        if (authorId<20000) {            item.setBlogTitle("这是都是小于20000的数据");        } else if (authorId>20000 && authorId<30000){            item.setBlogTitle("这是都是小于30000但是大于20000的数据");        }else {            item.setBlogTitle("旧书不厌百回读");        }        return item;    }}
+* @Description : **/public class MyItemProcessorNew extends ValidatingItemProcessor<BlogInfo> {    @Override    public BlogInfo process(BlogInfo item) throws ValidationException {        /**         * 需要执行super.process(item)才会调用自定义校验器         */        super.process(item);        /**         * 对数据进行简单的处理         */        Integer authorId= Integer.valueOf(item.getBlogAuthor());        if (authorId<20000) {            item.setBlogTitle("这是都是小于20000的数据");        } else if (authorId>20000 && authorId<30000){            item.setBlogTitle("这是都是小于30000但是大于20000的数据");        }else {            item.setBlogTitle("旧书不厌百回读");        }        return item;    }}
 ```
 
 然后其他重新定义的小组件，写在MyBatchConfig类里：
 
 ```java
 /** * 定义job
- * @param jobs * @param stepNew * @return */@Beanpublic Job myJobNew(JobBuilderFactory jobs, Step stepNew){    return jobs.get("myJobNew")            .incrementer(new RunIdIncrementer())            .flow(stepNew)            .end()            .listener(myJobListener())            .build();}@Beanpublic Step stepNew(StepBuilderFactory stepBuilderFactory, MyBatisCursorItemReader<BlogInfo> itemReaderNew,                    ItemWriter<BlogInfo> writerNew, ItemProcessor<BlogInfo, BlogInfo> processorNew){    return stepBuilderFactory
-            .get("stepNew")            .<BlogInfo, BlogInfo>chunk(65000) // Chunk的机制(即每次读取一条数据，再处理一条数据，累积到一定数量后再一次性交给writer进行写入操作)            .reader(itemReaderNew).faultTolerant().retryLimit(3).retry(Exception.class).skip(Exception.class).skipLimit(10)            .listener(new MyReadListener())            .processor(processorNew)            .writer(writerNew).faultTolerant().skip(Exception.class).skipLimit(2)            .listener(new MyWriteListener())            .build();}@Beanpublic ItemProcessor<BlogInfo, BlogInfo> processorNew(){    MyItemProcessorNew csvItemProcessor = new MyItemProcessorNew();    // 设置校验器    csvItemProcessor.setValidator(myBeanValidator());    return csvItemProcessor;}@Autowiredprivate SqlSessionFactory sqlSessionFactory;@Bean@StepScope//Spring Batch提供了一个特殊的bean scope类（StepScope:作为一个自定义的Spring bean scope）。这个step scope的作用是连接batches的各个steps。这个机制允许配置在Spring的beans当steps开始时才实例化并且允许你为这个step指定配置和参数。public MyBatisCursorItemReader<BlogInfo> itemReaderNew(@Value("#{jobParameters[authorId]}") String authorId) {        System.out.println("开始查询数据库");        MyBatisCursorItemReader<BlogInfo> reader = new MyBatisCursorItemReader<>();        reader.setQueryId("com.example.batchdemo.mapper.BlogMapper.queryInfoById");        reader.setSqlSessionFactory(sqlSessionFactory);         Map<String , Object> map = new HashMap<>();          map.put("authorId" , Integer.valueOf(authorId));         reader.setParameterValues(map);        return reader;}/** * ItemWriter定义：指定datasource，设置批量插入sql语句，写入数据库 * @param dataSource * @return */@Beanpublic ItemWriter<BlogInfo> writerNew(DataSource dataSource){    // 使用jdbcBcatchItemWrite写数据到数据库中    JdbcBatchItemWriter<BlogInfo> writer = new JdbcBatchItemWriter<>();    // 设置有参数的sql语句    writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BlogInfo>());    String sql = "insert into bloginfonew "+" (blogAuthor,blogUrl,blogTitle,blogItem) "            +" values(:blogAuthor,:blogUrl,:blogTitle,:blogItem)";    writer.setSql(sql);    writer.setDataSource(dataSource);    return writer;}
+* @param jobs * @param stepNew * @return */@Beanpublic Job myJobNew(JobBuilderFactory jobs, Step stepNew)
+{
+    return jobs.get("myJobNew")            .incrementer(new RunIdIncrementer())            .flow(stepNew)            .end()            .listener(myJobListener())            .build();}@Beanpublic Step stepNew(StepBuilderFactory stepBuilderFactory, MyBatisCursorItemReader<BlogInfo> itemReaderNew,                    ItemWriter<BlogInfo> writerNew, ItemProcessor<BlogInfo, BlogInfo> processorNew){    return stepBuilderFactory
+.get("stepNew")            .<BlogInfo, BlogInfo>chunk(65000) // Chunk的机制(即每次读取一条数据，再处理一条数据，累积到一定数量后再一次性交给writer进行写入操作)            .reader(itemReaderNew).faultTolerant().retryLimit(3).retry(Exception.class).skip(Exception.class).skipLimit(10)            .listener(new MyReadListener())            .processor(processorNew)            .writer(writerNew).faultTolerant().skip(Exception.class).skipLimit(2)            .listener(new MyWriteListener())            .build();}@Beanpublic ItemProcessor<BlogInfo, BlogInfo> processorNew(){    MyItemProcessorNew csvItemProcessor = new MyItemProcessorNew();    // 设置校验器    csvItemProcessor.setValidator(myBeanValidator());    return csvItemProcessor;}@Autowiredprivate SqlSessionFactory sqlSessionFactory;@Bean@StepScope//Spring Batch提供了一个特殊的bean scope类（StepScope:作为一个自定义的Spring bean scope）。这个step scope的作用是连接batches的各个steps。这个机制允许配置在Spring的beans当steps开始时才实例化并且允许你为这个step指定配置和参数。public MyBatisCursorItemReader<BlogInfo> itemReaderNew(@Value("#{jobParameters[authorId]}") String authorId) {        System.out.println("开始查询数据库");        MyBatisCursorItemReader<BlogInfo> reader = new MyBatisCursorItemReader<>();        reader.setQueryId("com.example.batchdemo.mapper.BlogMapper.queryInfoById");        reader.setSqlSessionFactory(sqlSessionFactory);         Map<String , Object> map = new HashMap<>();          map.put("authorId" , Integer.valueOf(authorId));         reader.setParameterValues(map);        return reader;}/** * ItemWriter定义：指定datasource，设置批量插入sql语句，写入数据库 * @param dataSource * @return */@Beanpublic ItemWriter<BlogInfo> writerNew(DataSource dataSource){    // 使用jdbcBcatchItemWrite写数据到数据库中    JdbcBatchItemWriter<BlogInfo> writer = new JdbcBatchItemWriter<>();    // 设置有参数的sql语句    writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BlogInfo>());    String sql = "insert into bloginfonew "+" (blogAuthor,blogUrl,blogTitle,blogItem) "            +" values(:blogAuthor,:blogUrl,:blogTitle,:blogItem)";    writer.setSql(sql);    writer.setDataSource(dataSource);    return writer;
+}
 ```
 
 ### [代码需要注意的点](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247487551&idx=1&sn=18f64ba49f3f0f9d8be9d1fdef8857d9&scene=21#wechat_redirect)
@@ -470,7 +531,13 @@ import org.springframework.batch.item.validator.ValidatingItemProcessor;import o
 ![](/assets/images/learning/spring/spring-batch-strong-but-you-dont-know-how-to-use-it/0f17341c78d41ccdaf6f49bbfe6c1e25.png)
 
 ```java
-@AutowiredSimpleJobLauncher jobLauncher;@AutowiredJob myJobNew;@GetMapping("testJobNew")public  void testJobNew(@RequestParam("authorId") String authorId) throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {    JobParameters jobParametersNew = new JobParametersBuilder().addLong("timeNew", System.currentTimeMillis())            .addString("authorId",authorId)            .toJobParameters();    jobLauncher.run(myJobNew,jobParametersNew);}
+@AutowiredSimpleJobLauncher jobLauncher ;
+@AutowiredJob myJobNew ;
+@GetMapping("testJobNew")public void testJobNew(@RequestParam("authorId") String authorId) throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException
+{
+    JobParameters jobParametersNew = new JobParametersBuilder().addLong("timeNew", System.currentTimeMillis()) .addString("authorId",authorId) .toJobParameters() ;
+    jobLauncher.run(myJobNew,jobParametersNew) ;
+}
 ```
 
 ok，我们来调用一些这个接口：

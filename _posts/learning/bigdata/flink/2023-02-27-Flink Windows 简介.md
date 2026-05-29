@@ -32,7 +32,21 @@ Time Windows 用于以时间为维度来进行数据聚合，具体分为以下�
 这里我们以词频统计为例，给出一个具体的用例，代码如下：
 
 ```java
-final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();// 接收socket上的数据输入DataStreamSource<String> streamSource = env.socketTextStream("hadoop001", 9999, "\n", 3);streamSource.flatMap(new FlatMapFunction<String, Tuple2<String, Long>>() {    @Override    public void flatMap(String value, Collector<Tuple2<String, Long>> out) throws Exception {        String[] words = value.split("\t");        for (String word : words) {            out.collect(new Tuple2<>(word, 1L));        }    }}).keyBy(0).timeWindow(Time.seconds(3)).sum(1).print(); //每隔3秒统计一次每个单词出现的数量env.execute("Flink Streaming");
+final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment() ;
+// 接收socket上的数据输入DataStreamSource<String> streamSource = env.socketTextStream("hadoop001", 9999, "\n", 3) ;
+streamSource.flatMap(new FlatMapFunction<String, Tuple2<String, Long>>()
+{
+    @Override public void flatMap(String value, Collector<Tuple2<String, Long>> out) throws Exception
+    {
+        String[] words = value.split("\t") ;
+        for (String word : words)
+        {
+            out.collect(new Tuple2<>(word, 1L)) ;
+        }
+    }
+}
+).keyBy(0).timeWindow(Time.seconds(3)).sum(1).print() ;
+//每隔3秒统计一次每个单词出现的数量env.execute("Flink Streaming") ;
 ```
 
 测试结果如下：
@@ -90,7 +104,14 @@ Count Windows 用于以数量为维度来进行数据聚合，同样也分为滚
 实际上计数窗口内部就是调用的我们上一部分介绍的全局窗口来实现的，其源码如下：
 
 ```java
-public WindowedStream<T, KEY, GlobalWindow> countWindow(long size) {return window(GlobalWindows.create()).trigger(PurgingTrigger.of(CountTrigger.of(size)));}public WindowedStream<T, KEY, GlobalWindow> countWindow(long size, long slide) {    return window(GlobalWindows.create())    .evictor(CountEvictor.of(size))    .trigger(CountTrigger.of(slide));}
+public WindowedStream<T, KEY, GlobalWindow> countWindow(long size)
+{
+    return window(GlobalWindows.create()).trigger(PurgingTrigger.of(CountTrigger.of(size))) ;
+}
+public WindowedStream<T, KEY, GlobalWindow> countWindow(long size, long slide)
+{
+    return window(GlobalWindows.create()) .evictor(CountEvictor.of(size)) .trigger(CountTrigger.of(slide)) ;
+}
 ```
 
 ## 参考资料

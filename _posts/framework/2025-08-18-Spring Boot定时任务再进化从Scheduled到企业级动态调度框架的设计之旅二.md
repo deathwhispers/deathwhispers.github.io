@@ -50,11 +50,13 @@ Spring Boot会先创建`ThreadPoolTaskScheduler`这个Bean。然后有个叫`Sch
 
 ```java
 // TaskManagerImpl.java (第一版设想)
-public class TaskManagerImpl implements TaskManager {
+public class TaskManagerImpl implements TaskManager
+{
     private final ThreadPoolTaskScheduler taskScheduler;
 
     // 构造器里注入taskScheduler
-    public TaskManagerImpl(ThreadPoolTaskScheduler taskScheduler) {
+    public TaskManagerImpl(ThreadPoolTaskScheduler taskScheduler)
+    {
         this.taskScheduler = taskScheduler;
     }
     // ... 其他方法
@@ -67,16 +69,19 @@ public class TaskManagerImpl implements TaskManager {
 
 ```java
 // HadokenSchedulerConfigurer.java (第一版设想)
-public class HadokenSchedulerConfigurer implements SchedulingConfigurer {
+public class HadokenSchedulerConfigurer implements SchedulingConfigurer
+{
     private final TaskManager taskManager;
 
     // 构造器里注入TaskManager
-    public HadokenSchedulerConfigurer(TaskManager taskManager) {
+    public HadokenSchedulerConfigurer(TaskManager taskManager)
+    {
         this.taskManager = taskManager;
     }
 
     @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar)
+    {
         // 拿到Spring扫好的任务，交给taskManager处理...
     }
 }

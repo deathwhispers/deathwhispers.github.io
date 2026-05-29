@@ -77,16 +77,36 @@ $ mvn archetype:generate \
 ### FraudDetectionJob.java
 
 ```java
-package spendreport;import org.apache.flink.streaming.api.datastream.DataStream;import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;import org.apache.flink.walkthrough.common.sink.AlertSink;import org.apache.flink.walkthrough.common.entity.Alert;import org.apache.flink.walkthrough.common.entity.Transaction;import org.apache.flink.walkthrough.common.source.TransactionSource;public class FraudDetectionJob {    public static void main(String[] args) throws Exception {        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();        DataStream<Transaction> transactions = env
-        .addSource(new TransactionSource())        .name("transactions");        DataStream<Alert> alerts = transactions
-        .keyBy(Transaction::getAccountId)        .process(new FraudDetector())        .name("fraud-detector");        alerts
-        .addSink(new AlertSink())        .name("send-alerts");        env.execute("Fraud Detection");    }}
+package spendreport;import org.apache.flink.streaming.api.datastream.DataStream;import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;import org.apache.flink.walkthrough.common.sink.AlertSink;import org.apache.flink.walkthrough.common.entity.Alert;import org.apache.flink.walkthrough.common.entity.Transaction;import org.apache.flink.walkthrough.common.source.TransactionSource;public class FraudDetectionJob
+{
+    public static void main(String[] args) throws Exception {        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();        DataStream<Transaction> transactions = env
+    .addSource(new TransactionSource())        .name("transactions");        DataStream<Alert> alerts = transactions
+    .keyBy(Transaction::getAccountId)        .process(new FraudDetector())        .name("fraud-detector");        alerts
+.addSink(new AlertSink())        .name("send-alerts");        env.execute("Fraud Detection");    }
+}
 ```
 
 ### FraudDetector.java
 
 ```java
-package spendreport;import org.apache.flink.streaming.api.functions.KeyedProcessFunction;import org.apache.flink.util.Collector;import org.apache.flink.walkthrough.common.entity.Alert;import org.apache.flink.walkthrough.common.entity.Transaction;public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert> {    private static final long serialVersionUID = 1L;    private static final double SMALL_AMOUNT = 1.00;    private static final double LARGE_AMOUNT = 500.00;    private static final long ONE_MINUTE = 60 * 1000;    @Override    public void processElement(        Transaction transaction,        Context context,        Collector<Alert> collector) throws Exception {        Alert alert = new Alert();        alert.setId(transaction.getAccountId());        collector.collect(alert);    }}
+package spendreport ;
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction ;
+import org.apache.flink.util.Collector ;
+import org.apache.flink.walkthrough.common.entity.Alert ;
+import org.apache.flink.walkthrough.common.entity.Transaction ;
+public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert>
+{
+    private static final long serialVersionUID = 1L ;
+    private static final double SMALL_AMOUNT = 1.00 ;
+    private static final double LARGE_AMOUNT = 500.00 ;
+    private static final long ONE_MINUTE = 60 * 1000 ;
+    @Override public void processElement( Transaction transaction, Context context, Collector<Alert> collector) throws Exception
+    {
+        Alert alert = new Alert() ;
+        alert.setId(transaction.getAccountId()) ;
+        collector.collect(alert) ;
+    }
+}
 ```
 
 Scala
@@ -132,7 +152,7 @@ object FraudDetector {  val SMALL_AMOUNT: Double = 1.00  val LARGE_AMOUNT: Doubl
 Java
 
 ```java
-StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment() ;
 ```
 
 Scala
@@ -148,7 +168,7 @@ val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnv
 Java
 
 ```java
-DataStream<Transaction> transactions = env.addSource(new TransactionSource()).name("transactions");
+DataStream<Transaction> transactions = env.addSource(new TransactionSource()).name("transactions") ;
 ```
 
 Scala
@@ -167,8 +187,7 @@ transactions 这个数据流包含了大量的用户交易数据，需要被划�
 Java
 
 ```java
-DataStream<Alert> alerts = transactions
-.keyBy(Transaction::getAccountId).process(new FraudDetector()).name("fraud-detector");
+DataStream<Alert> alerts = transactions .keyBy(Transaction::getAccountId).process(new FraudDetector()).name("fraud-detector") ;
 ```
 
 Scala
@@ -185,7 +204,7 @@ sink 会将 DataStream 写出到外部系统，例如 Apache Kafka、Cassandra �
 Java
 
 ```java
-alerts.addSink(new AlertSink());
+alerts.addSink(new AlertSink()) ;
 ```
 
 Scala
@@ -201,7 +220,7 @@ Flink 程序是懒加载的，并且只有在完全搭建好之后，才能够�
 Java
 
 ```java
-env.execute("Fraud Detection");
+env.execute("Fraud Detection") ;
 ```
 
 Scala
@@ -219,7 +238,18 @@ env.execute("Fraud Detection")
 Java
 
 ```java
-public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert> {    private static final double SMALL_AMOUNT = 1.00;    private static final double LARGE_AMOUNT = 500.00;    private static final long ONE_MINUTE = 60 * 1000;    @Override    public void processElement(        Transaction transaction,        Context context,        Collector<Alert> collector) throws Exception {        Alert alert = new Alert();        alert.setId(transaction.getAccountId());        collector.collect(alert);    }}
+public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert>
+{
+    private static final double SMALL_AMOUNT = 1.00 ;
+    private static final double LARGE_AMOUNT = 500.00 ;
+    private static final long ONE_MINUTE = 60 * 1000 ;
+    @Override public void processElement( Transaction transaction, Context context, Collector<Alert> collector) throws Exception
+    {
+        Alert alert = new Alert() ;
+        alert.setId(transaction.getAccountId()) ;
+        collector.collect(alert) ;
+    }
+}
 ```
 
 Scala
@@ -252,7 +282,15 @@ Flink 中最基础的状态类型是 [ValueState](https://www.bookstack.cn/read/
 Java
 
 ```java
-public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert> {    private static final long serialVersionUID = 1L;    private transient ValueState<Boolean> flagState;    @Override    public void open(Configuration parameters) {        ValueStateDescriptor<Boolean> flagDescriptor = new ValueStateDescriptor<>(            "flag",            Types.BOOLEAN);        flagState = getRuntimeContext().getState(flagDescriptor);    }
+public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert>
+{
+    private static final long serialVersionUID = 1L ;
+    private transient ValueState<Boolean> flagState ;
+    @Override public void open(Configuration parameters)
+    {
+        ValueStateDescriptor<Boolean> flagDescriptor = new ValueStateDescriptor<>( "flag", Types.BOOLEAN) ;
+        flagState = getRuntimeContext().getState(flagDescriptor) ;
+    }
 ```
 
 Scala
@@ -269,7 +307,24 @@ ValueState 是一个包装类，类似于 Java 标准库里边的 AtomicReferenc
 Java
 
 ```java
-@Overridepublic void processElement(    Transaction transaction,    Context context,    Collector<Alert> collector) throws Exception {    // Get the current state for the current key    Boolean lastTransactionWasSmall = flagState.value();    // Check if the flag is set    if (lastTransactionWasSmall != null) {        if (transaction.getAmount() > LARGE_AMOUNT) {            // Output an alert downstream            Alert alert = new Alert();            alert.setId(transaction.getAccountId());            collector.collect(alert);        }        // Clean up our state        flagState.clear();    }    if (transaction.getAmount() < SMALL_AMOUNT) {        // Set the flag to true        flagState.update(true);    }}
+@Overridepublic void processElement( Transaction transaction, Context context, Collector<Alert> collector) throws Exception
+{
+    // Get the current state for the current key Boolean lastTransactionWasSmall = flagState.value() ;
+    // Check if the flag is set if (lastTransactionWasSmall != null)
+    {
+        if (transaction.getAmount() > LARGE_AMOUNT)
+        {
+            // Output an alert downstream Alert alert = new Alert() ;
+            alert.setId(transaction.getAccountId()) ;
+            collector.collect(alert) ;
+        }
+        // Clean up our state flagState.clear() ;
+    }
+    if (transaction.getAmount() < SMALL_AMOUNT)
+    {
+        // Set the flag to true flagState.update(true) ;
+    }
+}
 ```
 
 Scala
@@ -303,7 +358,15 @@ true
 Java
 
 ```java
-private transient ValueState<Boolean> flagState;private transient ValueState<Long> timerState;@Overridepublic void open(Configuration parameters) {ValueStateDescriptor<Boolean> flagDescriptor = new ValueStateDescriptor<>(    "flag",    Types.BOOLEAN);flagState = getRuntimeContext().getState(flagDescriptor);ValueStateDescriptor<Long> timerDescriptor = new ValueStateDescriptor<>(    "timer-state",    Types.LONG);timerState = getRuntimeContext().getState(timerDescriptor);}
+private transient ValueState<Boolean> flagState ;
+private transient ValueState<Long> timerState ;
+@Overridepublic void open(Configuration parameters)
+{
+    ValueStateDescriptor<Boolean> flagDescriptor = new ValueStateDescriptor<>( "flag", Types.BOOLEAN) ;
+    flagState = getRuntimeContext().getState(flagDescriptor) ;
+    ValueStateDescriptor<Long> timerDescriptor = new ValueStateDescriptor<>( "timer-state", Types.LONG) ;
+    timerState = getRuntimeContext().getState(timerDescriptor) ;
+}
 ```
 
 Scala
@@ -319,7 +382,13 @@ KeyedProcessFunction#processElement 需要使用提供了定时器服务的 Cont
 Java
 
 ```java
-if (transaction.getAmount() < SMALL_AMOUNT) {    // set the flag to true    flagState.update(true);    // set the timer and timer state    long timer = context.timerService().currentProcessingTime() + ONE_MINUTE;    context.timerService().registerProcessingTimeTimer(timer);    timerState.update(timer);}
+if (transaction.getAmount() < SMALL_AMOUNT)
+{
+    // set the flag to true flagState.update(true) ;
+    // set the timer and timer state long timer = context.timerService().currentProcessingTime() + ONE_MINUTE ;
+    context.timerService().registerProcessingTimeTimer(timer) ;
+    timerState.update(timer) ;
+}
 ```
 
 Scala
@@ -336,7 +405,11 @@ if (transaction.getAmount < FraudDetector.SMALL_AMOUNT) {  // set the flag to tr
 Java
 
 ```java
-@Overridepublic void onTimer(long timestamp, OnTimerContext ctx, Collector<Alert> out) {    // remove flag after 1 minute    timerState.clear();    flagState.clear();}
+@Overridepublic void onTimer(long timestamp, OnTimerContext ctx, Collector<Alert> out)
+{
+    // remove flag after 1 minute timerState.clear() ;
+    flagState.clear() ;
+}
 ```
 
 Scala
@@ -350,7 +423,13 @@ override def onTimer(  timestamp: Long,  ctx: KeyedProcessFunction[Long, Transac
 Java
 
 ```java
-private void cleanUp(Context ctx) throws Exception {    // delete timer    Long timer = timerState.value();    ctx.timerService().deleteProcessingTimeTimer(timer);    // clean up all state    timerState.clear();    flagState.clear();}
+private void cleanUp(Context ctx) throws Exception
+{
+    // delete timer Long timer = timerState.value() ;
+    ctx.timerService().deleteProcessingTimeTimer(timer) ;
+    // clean up all state timerState.clear() ;
+    flagState.clear() ;
+}
 ```
 
 Scala
@@ -367,7 +446,64 @@ Scala
 Java
 
 ```java
-package spendreport;import org.apache.flink.api.common.state.ValueState;import org.apache.flink.api.common.state.ValueStateDescriptor;import org.apache.flink.api.common.typeinfo.Types;import org.apache.flink.configuration.Configuration;import org.apache.flink.streaming.api.functions.KeyedProcessFunction;import org.apache.flink.util.Collector;import org.apache.flink.walkthrough.common.entity.Alert;import org.apache.flink.walkthrough.common.entity.Transaction;public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert> {    private static final long serialVersionUID = 1L;    private static final double SMALL_AMOUNT = 1.00;    private static final double LARGE_AMOUNT = 500.00;    private static final long ONE_MINUTE = 60 * 1000;    private transient ValueState<Boolean> flagState;    private transient ValueState<Long> timerState;    @Override    public void open(Configuration parameters) {        ValueStateDescriptor<Boolean> flagDescriptor = new ValueStateDescriptor<>(            "flag",            Types.BOOLEAN);        flagState = getRuntimeContext().getState(flagDescriptor);        ValueStateDescriptor<Long> timerDescriptor = new ValueStateDescriptor<>(            "timer-state",            Types.LONG);        timerState = getRuntimeContext().getState(timerDescriptor);    }    @Override    public void processElement(        Transaction transaction,        Context context,        Collector<Alert> collector) throws Exception {        // Get the current state for the current key        Boolean lastTransactionWasSmall = flagState.value();        // Check if the flag is set        if (lastTransactionWasSmall != null) {            if (transaction.getAmount() > LARGE_AMOUNT) {                //Output an alert downstream                Alert alert = new Alert();                alert.setId(transaction.getAccountId());                collector.collect(alert);            }            // Clean up our state            cleanUp(context);        }        if (transaction.getAmount() < SMALL_AMOUNT) {            // set the flag to true            flagState.update(true);            long timer = context.timerService().currentProcessingTime() + ONE_MINUTE;            context.timerService().registerProcessingTimeTimer(timer);            timerState.update(timer);        }    }    @Override    public void onTimer(long timestamp, OnTimerContext ctx, Collector<Alert> out) {        // remove flag after 1 minute        timerState.clear();        flagState.clear();    }    private void cleanUp(Context ctx) throws Exception {        // delete timer        Long timer = timerState.value();        ctx.timerService().deleteProcessingTimeTimer(timer);        // clean up all state        timerState.clear();        flagState.clear();    }}
+package spendreport ;
+import org.apache.flink.api.common.state.ValueState ;
+import org.apache.flink.api.common.state.ValueStateDescriptor ;
+import org.apache.flink.api.common.typeinfo.Types ;
+import org.apache.flink.configuration.Configuration ;
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction ;
+import org.apache.flink.util.Collector ;
+import org.apache.flink.walkthrough.common.entity.Alert ;
+import org.apache.flink.walkthrough.common.entity.Transaction ;
+public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert>
+{
+    private static final long serialVersionUID = 1L ;
+    private static final double SMALL_AMOUNT = 1.00 ;
+    private static final double LARGE_AMOUNT = 500.00 ;
+    private static final long ONE_MINUTE = 60 * 1000 ;
+    private transient ValueState<Boolean> flagState ;
+    private transient ValueState<Long> timerState ;
+    @Override public void open(Configuration parameters)
+    {
+        ValueStateDescriptor<Boolean> flagDescriptor = new ValueStateDescriptor<>( "flag", Types.BOOLEAN) ;
+        flagState = getRuntimeContext().getState(flagDescriptor) ;
+        ValueStateDescriptor<Long> timerDescriptor = new ValueStateDescriptor<>( "timer-state", Types.LONG) ;
+        timerState = getRuntimeContext().getState(timerDescriptor) ;
+    }
+    @Override public void processElement( Transaction transaction, Context context, Collector<Alert> collector) throws Exception
+    {
+        // Get the current state for the current key Boolean lastTransactionWasSmall = flagState.value() ;
+        // Check if the flag is set if (lastTransactionWasSmall != null)
+        {
+            if (transaction.getAmount() > LARGE_AMOUNT)
+            {
+                //Output an alert downstream Alert alert = new Alert() ;
+                alert.setId(transaction.getAccountId()) ;
+                collector.collect(alert) ;
+            }
+            // Clean up our state cleanUp(context) ;
+        }
+        if (transaction.getAmount() < SMALL_AMOUNT)
+        {
+            // set the flag to true flagState.update(true) ;
+            long timer = context.timerService().currentProcessingTime() + ONE_MINUTE ;
+            context.timerService().registerProcessingTimeTimer(timer) ;
+            timerState.update(timer) ;
+        }
+    }
+    @Override public void onTimer(long timestamp, OnTimerContext ctx, Collector<Alert> out)
+    {
+        // remove flag after 1 minute timerState.clear() ;
+        flagState.clear() ;
+    }
+    private void cleanUp(Context ctx) throws Exception
+    {
+        // delete timer Long timer = timerState.value() ;
+        ctx.timerService().deleteProcessingTimeTimer(timer) ;
+        // clean up all state timerState.clear() ;
+        flagState.clear() ;
+    }
+}
 ```
 
 Scala

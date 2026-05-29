@@ -55,5 +55,12 @@ week: 2020-W23
 4.业务层方法：
 
 ```java
-@Cacheable("exams")publicList<Exam> list() {    returnexamDao.findAll();}@CachePut("exams")//清空缓存@Transactional//当前方法受事务管理public voidadd(Exam exam)throwsTipException {    examDao.insert(exam);}
+@Cacheable("exams")publicList<Exam> list()
+{
+    returnexamDao.findAll() ;
+}
+@CachePut("exams")//清空缓存@Transactional//当前方法受事务管理public voidadd(Exam exam)throwsTipException
+{
+    examDao.insert(exam) ;
+}
 ```

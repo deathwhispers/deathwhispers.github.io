@@ -50,13 +50,16 @@ graph TD
 ```java
 // 这是我极力避免的反模式
 @Scheduled(...)
-public void myTask() {
+public void myTask()
+{
     Lock lock = redisLock.lock("my-task-lock");
-    try {
-        if (lock.tryLock()) {
+    try
+    {
+        if (lock.tryLock())
+        {
             // ...真正的业务逻辑...
         }
-    } finally {
+        } finally {
         lock.unlock();
     }
 }
@@ -108,10 +111,12 @@ style I fill: #lightgreen, stroke: #333,stroke-width: 2px
 
 ```java
 // DistributedLockProvider.java
-public interface DistributedLockProvider {
+public interface DistributedLockProvider
+{
 
     // 代表一个已获取的锁，能自动关闭
-    interface Lock extends AutoCloseable {
+    interface Lock extends AutoCloseable
+    {
         @Override
         void close(); // close() 负责释放锁
     }
@@ -138,32 +143,37 @@ public interface DistributedLockProvider {
 ```java
 // MonitoredTaskWrapper.java
 @Override
-public void run() {
+public void run()
+{
     // 检查是否配置了锁
     boolean needsLocking = lockProviderOpt.isPresent() && StringUtils.hasText(lockConfig);
 
-    if (needsLocking) {
+    if (needsLocking)
+    {
         // 如果需要，就走带锁的逻辑
         executeWithLock(lockConfig);
-    } else {
+        } else {
         // 否则，走原来的逻辑
         executeTaskLogic();
     }
 }
 
-private void executeWithLock(String lockConfig) {
+private void executeWithLock(String lockConfig)
+{
     DistributedLockProvider lockProvider = lockProviderOpt.get();
     String taskId = managedTask.getDefinition().getId();
 
     Optional<DistributedLockProvider.Lock> lockOpt = lockProvider.tryLock(taskId, lockAtMostFor);
 
     // try-with-resources 语法
-    if (lockOpt.isPresent()) {
-        try (DistributedLockProvider.Lock lock = lockOpt.get()) {
+    if (lockOpt.isPresent())
+    {
+        try (DistributedLockProvider.Lock lock = lockOpt.get())
+        {
             // 拿到锁了，执行核心逻辑
             executeTaskLogic();
         }
-    } else {
+        } else {
         // 没拿到锁，打印日志，直接跳过
         log.debug("无法获取任务 '{}' 的锁。跳过执行。", taskId);
     }
@@ -181,11 +191,12 @@ private void executeWithLock(String lockConfig) {
    用户需要自己写一个实现类，并把它注册成Spring的Bean。比如用Redisson：
 
    ```java
-   @Component
-   public class RedissonLockProvider implements DistributedLockProvider {
-       // ... 实现 tryLock 和 Lock ...
-   }
-   ```
+@Component
+public class RedissonLockProvider implements DistributedLockProvider
+{
+    // ... 实现 tryLock 和 Lock ...
+}
+```
 
    框架的`TaskManagerImpl`在初始化时，会通过`ObjectProvider`去容器里找这个Bean。只要找到了，分布式锁功能就**自动激活**了。
 
@@ -195,9 +206,11 @@ private void executeWithLock(String lockConfig) {
 
 * **单个任务加锁**：在注解里写上`lockAtMostForString`属性就行。
   ```java
-  @EnhanceScheduled(id = "report-task", cron = "...", lockAtMostForString = "PT5M") // 锁5分钟
-  public void generateReport() { ... }
-  ```
+@EnhanceScheduled(id = "report-task", cron = "...", lockAtMostForString = "PT5M") // 锁5分钟 public void generateReport()
+{
+    ...
+}
+```
 * **全局加锁**：在`application.yml`里配置，让所有任务都默认带锁。
   ```yaml
   hadoken:

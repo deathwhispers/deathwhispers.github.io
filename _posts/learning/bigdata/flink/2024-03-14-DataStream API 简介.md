@@ -35,7 +35,9 @@ Flink 的原生序列化器可以高效地操作 tuples 和 POJOs
 对于 Java，Flink 自带有 Tuple0 到 Tuple25 类型。
 
 ```java
-Tuple2<String, Integer> person = Tuple2.of("Fred", 35);// zero based index!String name = person.f0;Integer age = person.f1;
+Tuple2<String, Integer> person = Tuple2.of("Fred", 35) ;
+// zero based index!String name = person.f0 ;
+Integer age = person.f1 ;
 ```
 
 ### POJOs
@@ -49,11 +51,16 @@ Tuple2<String, Integer> person = Tuple2.of("Fred", 35);// zero based index!Strin
 示例：
 
 ```java
-public class Person {    public String name;
+public class Person
+{
+    public String name;
     public Integer age;
-    public Person() {}    public Person(String name, Integer age) {
-        . . .    }}
-Person person = new Person("Fred Flintstone", 35);
+    public Person()
+    {
+        }    public Person(String name, Integer age) {
+    . . .    }
+    }
+    Person person = new Person("Fred Flintstone", 35);
 ```
 
 Flink 的序列化器[支持的 POJO 类型数据结构升级](https://www.bookstack.cn/read/flink-1.15-zh/4e57547db68bc936.md#pojo-types)。
@@ -67,7 +74,44 @@ Flink 的序列化器[支持的 POJO 类型数据结构升级](https://www.books
 该示例将关于人的记录流作为输入，并且过滤后只包含成年人。
 
 ```java
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;import org.apache.flink.streaming.api.datastream.DataStream;import org.apache.flink.api.common.functions.FilterFunction;public class Example {    public static void main(String[] args) throws Exception {        final StreamExecutionEnvironment env =        StreamExecutionEnvironment.getExecutionEnvironment();        DataStream<Person> flintstones = env.fromElements(            new Person("Fred", 35),            new Person("Wilma", 35),            new Person("Pebbles", 2));        DataStream<Person> adults = flintstones.filter(new FilterFunction<Person>() {            @Override            public boolean filter(Person person) throws Exception {                return person.age >= 18;            }        });        adults.print();        env.execute();    }    public static class Person {        public String name;        public Integer age;        public Person() {}        public Person(String name, Integer age) {            this.name = name;            this.age = age;        }        public String toString() {            return this.name.toString() + ": age " + this.age.toString();        }    }}
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment ;
+import org.apache.flink.streaming.api.datastream.DataStream ;
+import org.apache.flink.api.common.functions.FilterFunction ;
+public class Example
+{
+    public static void main(String[] args) throws Exception
+    {
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment() ;
+        DataStream<Person> flintstones = env.fromElements( new Person("Fred", 35), new Person("Wilma", 35), new Person("Pebbles", 2)) ;
+        DataStream<Person> adults = flintstones.filter(new FilterFunction<Person>()
+        {
+            @Override public boolean filter(Person person) throws Exception
+            {
+                return person.age >= 18 ;
+            }
+        }
+        ) ;
+        adults.print() ;
+        env.execute() ;
+    }
+    public static class Person
+    {
+        public String name ;
+        public Integer age ;
+        public Person()
+        {
+        }
+        public Person(String name, Integer age)
+        {
+            this.name = name ;
+            this.age = age ;
+        }
+        public String toString()
+        {
+            return this.name.toString() + ": age " + this.age.toString() ;
+        }
+    }
+}
 ```
 
 ### Stream 执行环境
@@ -87,7 +131,11 @@ DataStream API 将你的应用构建为一个 job graph，并附加到 StreamExe
 上述示例用 env.fromElements(…) 方法构造 DataStream 。这样将简单的流放在一起是为了方便用于原型或测试。StreamExecutionEnvironment 上还有一个 fromCollection(Collection) 方法。因此，你可以这样做：
 
 ```java
-List<Person> people = new ArrayList<Person>();people.add(new Person("Fred", 35));people.add(new Person("Wilma", 35));people.add(new Person("Pebbles", 2));DataStream<Person> flintstones = env.fromCollection(people);
+List<Person> people = new ArrayList<Person>() ;
+people.add(new Person("Fred", 35)) ;
+people.add(new Person("Wilma", 35)) ;
+people.add(new Person("Pebbles", 2)) ;
+DataStream<Person> flintstones = env.fromCollection(people) ;
 ```
 
 另一个获取数据到流中的便捷方法是用 socket
@@ -99,7 +147,7 @@ DataStream<String> lines = env.socketTextStream("localhost", 9999)
 或读取文件
 
 ```java
-DataStream<String> lines = env.readTextFile("file:///path");
+DataStream<String> lines = env.readTextFile("file:///path") ;
 ```
 
 在真实的应用中，最常用的数据源是那些支持低延迟，高吞吐并行读取以及重复（高性能和容错能力为先决条件）的数据源，例如 Apache Kafka，Kinesis 和各种文件系统。REST API 和数据库也经常用于增强流处理的能力（stream enrichment）。
