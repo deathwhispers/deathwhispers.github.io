@@ -9,9 +9,9 @@ categories:
 tags:
 - Java
 - Concurrency
+type: note
 created: 2021-11-07 21:48
 updated: 2021-11-07 21:48
-base: [文档中心](_posts/learning/文档中心/文档中心.base)
 ---
 
 [https://www.iocoder.cn/JUC/sike/ReentrantLock/](https://www.iocoder.cn/JUC/sike/ReentrantLock/)
