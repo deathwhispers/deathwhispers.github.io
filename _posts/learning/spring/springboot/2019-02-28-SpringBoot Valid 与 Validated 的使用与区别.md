@@ -43,7 +43,17 @@ public Girl addGirl(@Valid Girl girl, BindingResult bindingResult) {
 注: 通常不在这里处理异常, 由统一的exceptioin全局异常处理
 
 ```java
-@ControllerAdvicepublic class GlobalExceptionHandler {    @ResponseBody    @ExceptionHandler(value = MethodArgumentNotValidException.class)    public JsonResult violationException(MethodArgumentNotValidException exception) {        // 不带任何参数访问接口,会抛出 BindException        // 因此，我们只需捕获这个异常，并返回我们设置的 message 即可        String message = exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();        return JsonResult.fail(message);    }}
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    @ResponseBody
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public JsonResult violationException(MethodArgumentNotValidException exception) {
+        // 不带任何参数访问接口,会抛出 BindException
+        // 因此，我们只需捕获这个异常，并返回我们设置的 message 即可
+        String message = exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        return JsonResult.fail(message);
+    }
+}
 ```
 
 ### @Validated：

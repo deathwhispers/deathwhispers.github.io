@@ -74,13 +74,38 @@ week: 2019-W29
 现在有一个保存用户的接口
 
 ```java
-@PostMapping("/add")@RequiresPermissions(value = "add")@Log(methodDesc = "添加用户")public ResponseEntity<String> add(@RequestBody AddReq addReq) {    return userService.add(addReq);}
+@PostMapping("/add")
+@RequiresPermissions(value = "add")
+@Log(methodDesc = "添加用户")
+public ResponseEntity<String> add(@RequestBody AddReq addReq) {
+    return userService.add(addReq);
+}
 ```
 
 AddReq.java
 
 ```java
-package com.summo.demo.model.request;import java.util.List;import lombok.Data;@Datapublic class AddReq {    /**     * 用户名称     */    private String userName;    /**     * 用户手机号     */    private String userPhone;    /**     * 角色ID列表     */    private List<Long> roleIdList;}
+package com.summo.demo.model.request;
+
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class AddReq {
+    /**
+     * 用户名称
+     */
+    private String userName;
+    /**
+     * 用户手机号
+     */
+    private String userPhone;
+    /**
+     * 角色ID列表
+     */
+    private List<Long> roleIdList;
+}
 ```
 
 > ❝
@@ -91,7 +116,27 @@ package com.summo.demo.model.request;import java.util.List;import lombok.Data;@D
 根据上面的要求，我定了一个注解`<font style="color:rgb(30, 107, 184);">@RequestLock</font>`，使用方式很简单，把这个注解打在接口方法上即可。**RequestLock.java**
 
 ```java
-package com.summo.demo.model.request;import java.util.List;import lombok.Data;@Datapublic class AddReq {    /**     * 用户名称     */    private String userName;    /**     * 用户手机号     */    private String userPhone;    /**     * 角色ID列表     */    private List<Long> roleIdList;}
+package com.summo.demo.model.request;
+
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class AddReq {
+    /**
+     * 用户名称
+     */
+    private String userName;
+    /**
+     * 用户手机号
+     */
+    private String userPhone;
+    /**
+     * 角色ID列表
+     */
+    private List<Long> roleIdList;
+}
 ```
 
 > ❝
@@ -104,8 +149,18 @@ package com.summo.demo.model.request;import java.util.List;import lombok.Data;@D
 要做到参数可选，那么用注解的方式最好了，注解如下**RequestKeyParam.java**
 
 ```java
-package com.example.requestlock.lock.annotation;import java.lang.annotation.*;/** * @description 加上这个注解可以将参数设置为key
- */@Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})@Retention(RetentionPolicy.RUNTIME)@Documented@Inheritedpublic @interface RequestKeyParam {}
+package com.example.requestlock.lock.annotation;
+
+import java.lang.annotation.*;
+
+/**
+ * @description 加上这个注解可以将参数设置为key
+ */
+@Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+public @interface RequestKeyParam {}
 ```
 
 > ❝
@@ -125,7 +180,62 @@ import java.lang.annotation.Annotation;import java.lang.reflect.Field;import jav
 **RedisRequestLockAspect.java**
 
 ```java
-import java.lang.reflect.Method;import com.summo.demo.exception.biz.BizException;import com.summo.demo.model.response.ResponseCodeEnum;import org.aspectj.lang.ProceedingJoinPoint;import org.aspectj.lang.annotation.Around;import org.aspectj.lang.annotation.Aspect;import org.aspectj.lang.reflect.MethodSignature;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.context.annotation.Configuration;import org.springframework.core.annotation.Order;import org.springframework.data.redis.connection.RedisStringCommands;import org.springframework.data.redis.core.RedisCallback;import org.springframework.data.redis.core.StringRedisTemplate;import org.springframework.data.redis.core.types.Expiration;import org.springframework.util.StringUtils;/** * @description 缓存实现 */@Aspect@Configuration@Order(2)public class RedisRequestLockAspect {    private final StringRedisTemplate stringRedisTemplate;    @Autowired    public RedisRequestLockAspect(StringRedisTemplate stringRedisTemplate) {        this.stringRedisTemplate = stringRedisTemplate;    }    @Around("execution(public * * (..)) && @annotation(com.summo.demo.config.requestlock.RequestLock)")    public Object interceptor(ProceedingJoinPoint joinPoint) {        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();        Method method = methodSignature.getMethod();        RequestLock requestLock = method.getAnnotation(RequestLock.class);        if (StringUtils.isEmpty(requestLock.prefix())) {            throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "重复提交前缀不能为空");        }        //获取自定义key        final String lockKey = RequestKeyGenerator.getLockKey(joinPoint);        // 使用RedisCallback接口执行set命令，设置锁键；设置额外选项：过期时间和SET_IF_ABSENT选项        final Boolean success = stringRedisTemplate.execute(            (RedisCallback<Boolean>)connection -> connection.set(lockKey.getBytes(), new byte[0],                                                                 Expiration.from(requestLock.expire(), requestLock.timeUnit()),                                                                 RedisStringCommands.SetOption.SET_IF_ABSENT));        if (!success) {            throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "您的操作太快了,请稍后重试");        }        try {            return joinPoint.proceed();        } catch (Throwable throwable) {            throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "系统异常");        }    }}
+import java.lang.reflect.Method;
+
+import com.summo.demo.exception.biz.BizException;
+import com.summo.demo.model.response.ResponseCodeEnum;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.connection.RedisStringCommands;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.types.Expiration;
+import org.springframework.util.StringUtils;
+
+/**
+ * @description 缓存实现
+ */
+@Aspect
+@Configuration
+@Order(2)
+public class RedisRequestLockAspect {
+    private final StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    public RedisRequestLockAspect(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
+
+    @Around("execution(public * * (..)) && @annotation(com.summo.demo.config.requestlock.RequestLock)")
+    public Object interceptor(ProceedingJoinPoint joinPoint) {
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        Method method = methodSignature.getMethod();
+        RequestLock requestLock = method.getAnnotation(RequestLock.class);
+        if (StringUtils.isEmpty(requestLock.prefix())) {
+            throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "重复提交前缀不能为空");
+        }
+        // 获取自定义key
+        final String lockKey = RequestKeyGenerator.getLockKey(joinPoint);
+        // 使用RedisCallback接口执行set命令，设置锁键；设置额外选项：过期时间和SET_IF_ABSENT选项
+        final Boolean success = stringRedisTemplate.execute(
+            (RedisCallback<Boolean>) connection -> connection.set(lockKey.getBytes(), new byte[0],
+                                                                 Expiration.from(requestLock.expire(), requestLock.timeUnit()),
+                                                                 RedisStringCommands.SetOption.SET_IF_ABSENT));
+        if (!success) {
+            throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "您的操作太快了,请稍后重试");
+        }
+        try {
+            return joinPoint.proceed();
+        } catch (Throwable throwable) {
+            throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "系统异常");
+        }
+    }
+}
 ```
 
 > ❝

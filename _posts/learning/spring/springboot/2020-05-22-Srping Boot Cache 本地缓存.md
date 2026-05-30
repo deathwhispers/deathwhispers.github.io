@@ -31,13 +31,36 @@ springboot中对cache做了很好的支持
 通过注解启动缓存
 
 ```java
-//启动缓存@EnableCaching@SpringBootApplicationpublic class BootCacheApplication {    public static void main(String[] args) {        SpringApplication.run(BootCacheApplication.class, args);    }}
+// 启动缓存
+@EnableCaching
+@SpringBootApplication
+public class BootCacheApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(BootCacheApplication.class, args);
+    }
+}
 ```
 
 使用
 
 ```java
-@Slf4j@Servicepublic class PersonService {    @Resource    private PersonMapper personMapper;    @Cacheable("person")    public Person getOne(int id) {        log.info("load one person");        return personMapper.selectOne(id);    }    @CacheEvict(value = "person", key = "#person.id")    public void update(Person person) {        personMapper.updateById(person);    }}
+@Slf4j
+@Service
+public class PersonService {
+    @Resource
+    private PersonMapper personMapper;
+
+    @Cacheable("person")
+    public Person getOne(int id) {
+        log.info("load one person");
+        return personMapper.selectOne(id);
+    }
+
+    @CacheEvict(value = "person", key = "#person.id")
+    public void update(Person person) {
+        personMapper.updateById(person);
+    }
+}
 ```
 
 - @Cacheable是最主要的注解，它指定了被注解方法的返回值是可被缓存的

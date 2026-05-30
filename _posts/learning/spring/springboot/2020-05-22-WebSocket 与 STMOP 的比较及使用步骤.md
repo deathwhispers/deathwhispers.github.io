@@ -80,7 +80,18 @@ package webSocketSockJs;import org.springframework.stereotype.Service;import org
 在TextWebSocketHandler类里有handleMessage方法，如下
 
 ```java
-@Overridepublic void handleMessage(WebSocketSession session, WebSocketMessage<?> message)throws Exception {    if(message instanceof TextMessage) {        handleTextMessage(session, (TextMessage) message);    }    else if(message instanceof BinaryMessage) {        handleBinaryMessage(session, (BinaryMessage) message);    }    else if(message instanceof PongMessage) {        handlePongMessage(session, (PongMessage) message);    }    else{        throw new IllegalStateException("Unexpected WebSocket message type: "+ message);    }}
+@Override
+public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+    if(message instanceof TextMessage) {
+        handleTextMessage(session, (TextMessage) message);
+    } else if(message instanceof BinaryMessage) {
+        handleBinaryMessage(session, (BinaryMessage) message);
+    } else if(message instanceof PongMessage) {
+        handlePongMessage(session, (PongMessage) message);
+    } else {
+        throw new IllegalStateException("Unexpected WebSocket message type: " + message);
+    }
+}
 ```
 
 可以处理3种类型数据。支持TextMessage，BinaryMessage，PongMessage。实现不同方法即可。
@@ -90,7 +101,36 @@ package webSocketSockJs;import org.springframework.stereotype.Service;import org
 WebSocketInterceptor.java
 
 ```java
-package webSocketSockJs;import org.springframework.http.server.ServerHttpRequest;import org.springframework.http.server.ServerHttpResponse;import org.springframework.http.server.ServletServerHttpRequest;import org.springframework.web.socket.WebSocketHandler;import org.springframework.web.socket.server.HandshakeInterceptor;import javax.servlet.http.HttpSession;import java.util.Map;public class WebSocketInterceptor implements HandshakeInterceptor{    //handler处理前调用,attributes属性最终在WebSocketSession里,可能通过webSocketSession.getAttributes().get(key值)获得    @Override    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,        WebSocketHandler wsHandler, Map<String, Object> attributes)throws Exception {        if(request instanceof ServletServerHttpRequest) {            ServletServerHttpRequest serverHttpRequest = (ServletServerHttpRequest) request;            Object clientId = serverHttpRequest.getServletRequest().getParameter("clientId");            System.out.println(clientId);            attributes.put("clientId", clientId);        }        return true;    }    //handler处理后调用    @Override    public void afterHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Exception e) {    }}
+package webSocketSockJs;
+
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.server.HandshakeInterceptor;
+
+import javax.servlet.http.HttpSession;
+import java.util.Map;
+
+public class WebSocketInterceptor implements HandshakeInterceptor {
+    // handler处理前调用,attributes属性最终在WebSocketSession里,可能通过webSocketSession.getAttributes().get(key值)获得
+    @Override
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
+        WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+        if(request instanceof ServletServerHttpRequest) {
+            ServletServerHttpRequest serverHttpRequest = (ServletServerHttpRequest) request;
+            Object clientId = serverHttpRequest.getServletRequest().getParameter("clientId");
+            System.out.println(clientId);
+            attributes.put("clientId", clientId);
+        }
+        return true;
+    }
+
+    // handler处理后调用
+    @Override
+    public void afterHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Exception e) {
+    }
+}
 ```
 
 attributes属性最终在WebSocketSession里,可能通过webSocketSession.getAttributes().get(key值)获得。
@@ -141,7 +181,11 @@ handleTextMessage(WebSocketSession session, TextMessage message)
 任意类里使用
 
 ```java
-@AutowiredMyHandler handler;//调用方法，发送消息boolean hasSend = handler.sendMessageToUser(6, new TextMessage("发送一条小xi"));
+@Autowired
+MyHandler handler;
+
+// 调用方法，发送消息
+boolean hasSend = handler.sendMessageToUser(6, new TextMessage("发送一条小xi"));
 ```
 
 # **STMOP协议**
@@ -157,7 +201,24 @@ spring-web-socket官网上的源码为例
 WebSocketConfig类，继承WebSocketMessageBrokerConfigurer
 
 ```java
-@Configuration@EnableWebSocketMessageBrokerpublic class WebSocketConfig implements WebSocketMessageBrokerConfigurer {    @Override    public void configureMessageBroker(MessageBrokerRegistry config) {        config.enableSimpleBroker("/topic6");        config.setApplicationDestinationPrefixes("/app");        // 点对点使用的订阅前缀（客户端订阅路径上会体现出来），不设置的话，默认也是/user/        // registry.setUserDestinationPrefix("/user/");    }    @Override    public void registerStompEndpoints(StompEndpointRegistry registry) {        registry.addEndpoint("/gs-guide-websocket")        .setAllowedOrigins("*")        .withSockJS();    }}
+@Configuration
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        config.enableSimpleBroker("/topic6");
+        config.setApplicationDestinationPrefixes("/app");
+        // 点对点使用的订阅前缀（客户端订阅路径上会体现出来），不设置的话，默认也是/user/
+        // registry.setUserDestinationPrefix("/user/");
+    }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/gs-guide-websocket")
+        .setAllowedOrigins("*")
+        .withSockJS();
+    }
+}
 ```
 
 登录后复制
@@ -179,7 +240,34 @@ Greeting.java和HelloMessage.java是2个纯java类，没啥介绍的。
 GreetingController.java
 
 ```java
-package hello;import org.slf4j.Logger;import org.slf4j.LoggerFactory;import org.springframework.messaging.handler.annotation.MessageMapping;import org.springframework.messaging.handler.annotation.SendTo;import org.springframework.messaging.simp.annotation.SubscribeMapping;import org.springframework.stereotype.Controller;import org.springframework.web.util.HtmlUtils;@Controllerpublic class GreetingController {    private Logger logger = LoggerFactory.getLogger(this.getClass());    @MessageMapping("/hello")    @SendTo("/topic6/greetings")    public Greeting greeting(HelloMessage message) throws Exception {        Thread.sleep(1000); // simulated delay        return new Greeting("Hello, "+ HtmlUtils.htmlEscape(message.getName()) +"!");    }    @SubscribeMapping("/topic6/greetings")    @SendTo("/topic6/greetings")    public Greetingsub() {        logger.info("XXX用户订阅了我。。。");        return new Greeting("感谢你订阅了我。。。");    }}
+package hello;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.util.HtmlUtils;
+
+@Controller
+public class GreetingController {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @MessageMapping("/hello")
+    @SendTo("/topic6/greetings")
+    public Greeting greeting(HelloMessage message) throws Exception {
+        Thread.sleep(1000); // simulated delay
+        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+    }
+
+    @SubscribeMapping("/topic6/greetings")
+    @SendTo("/topic6/greetings")
+    public Greeting sub() {
+        logger.info("XXX用户订阅了我。。。");
+        return new Greeting("感谢你订阅了我。。。");
+    }
+}
 ```
 
 @MessageMapping是接收客户端发送的消息映射，看名字也知道。由于上面定义了controll层拦截请求的前缀，所以请求/app/hello才能进入controller层。

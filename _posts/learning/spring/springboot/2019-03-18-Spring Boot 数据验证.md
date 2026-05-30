@@ -61,7 +61,33 @@ javax.validation 包与 hibernate-validator 包中存在的注解几乎可以满
 - **groups：** 为约束指定验证组（非常不错的一个功能，下一章介绍）
 - **payload：** 不太清楚（欢迎留言交流）
 
-package com.battcn.annotation; import com.battcn.validator.DateTimeValidator; import javax.validation.Constraint; import javax.validation.Payload; import java.lang.annotation.Retention; import java.lang.annotation.Target; import static java.lang.annotation.ElementType.FIELD; import static java.lang.annotation.ElementType.PARAMETER; import static java.lang.annotation.RetentionPolicy.RUNTIME; /** * @author Levin * @since 2018/6/6 0006 */ @Target({FIELD, PARAMETER}) @Retention(RUNTIME) @Constraint(validatedBy = DateTimeValidator.class) public @interface DateTime { String message() default “格式错误”; String format() default “yyyy-MM-dd”; Class<?>[] groups() default {}; Class<? extends Payload>[] payload() default {}; }
+```java
+package com.battcn.annotation;
+
+import com.battcn.validator.DateTimeValidator;
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+/**
+ * @author Levin
+ * @since 2018/6/6 0006
+ */
+@Target({FIELD, PARAMETER})
+@Retention(RUNTIME)
+@Constraint(validatedBy = DateTimeValidator.class)
+public @interface DateTime {
+    String message() default “格式错误”;
+    String format() default “yyyy-MM-dd”;
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
+}
+```
 
 ## 具体验证
 
@@ -74,11 +100,76 @@ package com.battcn.annotation; import com.battcn.validator.DateTimeValidator; im
 
 这里的验证方式虽然简单，但职责明确；**为空验证可以使用 @NotBlank、@NotNull、@NotEmpty 等注解来进行控制，而不是在一个注解中做各种各样的规则判断，应该职责分离**
 
-package com.battcn.validator; import com.battcn.annotation.DateTime; import javax.validation.ConstraintValidator; import javax.validation.ConstraintValidatorContext; import java.text.ParseException; import java.text.SimpleDateFormat; /** * 日期格式验证 * * @author Levin * @version 1.0.0 * @since 2018-06-06 */ public class DateTimeValidator implements ConstraintValidator<DateTime, String> { private DateTime dateTime; @Override public void initialize(DateTime dateTime) { this.dateTime = dateTime; } @Override public boolean isValid(String value, ConstraintValidatorContext context) { // 如果 value 为空则不进行格式验证，为空验证可以使用 @NotBlank @NotNull @NotEmpty 等注解来进行控制，职责分离 if (value == null) { return true; } String format = dateTime.format(); if (value.length() != format.length()) { return false; } SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format); try { simpleDateFormat.parse(value); } catch (ParseException e) { return false; } return true; } }
+```java
+package com.battcn.validator;
+
+import com.battcn.annotation.DateTime;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+/**
+ * 日期格式验证
+ *
+ * @author Levin
+ * @version 1.0.0
+ * @since 2018-06-06
+ */
+public class DateTimeValidator implements ConstraintValidator<DateTime, String> {
+    private DateTime dateTime;
+
+    @Override
+    public void initialize(DateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        // 如果 value 为空则不进行格式验证，为空验证可以使用 @NotBlank @NotNull @NotEmpty 等注解来进行控制，职责分离
+        if (value == null) {
+            return true;
+        }
+        String format = dateTime.format();
+        if (value.length() != format.length()) {
+            return false;
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        try {
+            simpleDateFormat.parse(value);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
+    }
+}
+```
 
 ## 控制层
 
-package com.battcn.controller; import com.battcn.annotation.DateTime; import org.springframework.validation.annotation.Validated; import org.springframework.web.bind.annotation.GetMapping; import org.springframework.web.bind.annotation.RestController; /** * 参数校验 * * @author Levin * @since 2018/6/04 0031 */ @Validated @RestController public class ValidateController { @GetMapping(“/test”) public String test(@DateTime(message = “您输入的格式错误，正确的格式为：{format}”, format = “yyyy-MM-dd HH:mm”) String date) { return “success”; } }
+```java
+package com.battcn.controller;
+
+import com.battcn.annotation.DateTime;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 参数校验
+ *
+ * @author Levin
+ * @since 2018/6/04 0031
+ */
+@Validated
+@RestController
+public class ValidateController {
+    @GetMapping(“/test”)
+    public String test(@DateTime(message = “您输入的格式错误，正确的格式为：{format}”, format = “yyyy-MM-dd HH:mm”) String date) {
+        return “success”;
+    }
+}
+```
 
 # 分组验证
 
@@ -92,16 +183,77 @@ package com.battcn.controller; import com.battcn.annotation.DateTime; import org
 
 定义一个验证组，里面写上不同的空接口类即可
 
-package com.battcn.groups; /** * 验证组 * * @author Levin * @since 2018/6/7 0007 */ public class Groups { public interface Update { } public interface Default { } }
+```java
+package com.battcn.groups;
+
+/**
+ * 验证组
+ *
+ * @author Levin
+ * @since 2018/6/7 0007
+ */
+public class Groups {
+    public interface Update { }
+    public interface Default { }
+}
+```
 
 ## 实体类
 
 **groups 属性的作用就让 @Validated 注解只验证与自身 value 属性相匹配的字段，可多个，只要满足就会去纳入验证范围；**我们都知道针对新增的数据我们并不需要验证 ID 是否存在，我们只在做修改操作的时候需要用到，因此这里将 ID 字段归纳到 Groups.Update.class 中去，而其它字段是不论新增还是修改都需要用到所以归纳到 Groups.Default.class 中…
 
-package com.battcn.pojo; import com.battcn.groups.Groups; import javax.validation.constraints.NotBlank; import javax.validation.constraints.NotNull; import java.math.BigDecimal; /** * @author Levin * @since 2018/6/7 0005 */ public class Book { @NotNull(message = “id 不能为空”, groups = Groups.Update.class) private Integer id; @NotBlank(message = “name 不允许为空”, groups = Groups.Default.class) private String name; @NotNull(message = “price 不允许为空”, groups = Groups.Default.class) private BigDecimal price; // 省略 GET SET … }
+```java
+package com.battcn.pojo;
+
+import com.battcn.groups.Groups;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+
+/**
+ * @author Levin
+ * @since 2018/6/7 0005
+ */
+public class Book {
+    @NotNull(message = “id 不能为空”, groups = Groups.Update.class)
+    private Integer id;
+    @NotBlank(message = “name 不允许为空”, groups = Groups.Default.class)
+    private String name;
+    @NotNull(message = “price 不允许为空”, groups = Groups.Default.class)
+    private BigDecimal price;
+    // 省略 GET SET …
+}
+```
 
 ## 控制层
 
 创建一个 ValidateController 类，然后定义好 insert、update 俩个方法，比由于 insert 方法并不关心 ID 字段，所以这里 @Validated 的 value 属性写成 Groups.Default.class 就可以了；而 update 方法需要去验证 ID 是否为空，所以此处 @Validated 注解的 value 属性值就要写成 Groups.Default.class, Groups.Update.class；代表只要是这分组下的都需要进行数据有效性校验操作…
 
-package com.battcn.controller; import com.battcn.groups.Groups; import com.battcn.pojo.Book; import org.springframework.validation.annotation.Validated; import org.springframework.web.bind.annotation.GetMapping; import org.springframework.web.bind.annotation.RestController; /** * 参数校验 * * @author Levin * @since 2018/6/06 0031 */ @RestController public class ValidateController { @GetMapping(“/insert”) public String insert(@Validated(value = Groups.Default.class) Book book) { return “insert”; } @GetMapping(“/update”) public String update(@Validated(value = {Groups.Default.class, Groups.Update.class}) Book book) { return “update”; } }
+```java
+package com.battcn.controller;
+
+import com.battcn.groups.Groups;
+import com.battcn.pojo.Book;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 参数校验
+ *
+ * @author Levin
+ * @since 2018/6/06 0031
+ */
+@RestController
+public class ValidateController {
+    @GetMapping(“/insert”)
+    public String insert(@Validated(value = Groups.Default.class) Book book) {
+        return “insert”;
+    }
+
+    @GetMapping(“/update”)
+    public String update(@Validated(value = {Groups.Default.class, Groups.Update.class}) Book book) {
+        return “update”;
+    }
+}
+```

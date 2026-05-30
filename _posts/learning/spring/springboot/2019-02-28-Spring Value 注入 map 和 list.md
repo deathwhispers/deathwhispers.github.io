@@ -19,7 +19,10 @@ week: 2019-W09
 **EL表达式+JSON写法**
 
 ```java
-@Value("#{'${scio.cloud.list}'.split(',')}")private List<String> list;@Value("#{${scio.cloud.maps}}")
+@Value("#{'${scio.cloud.list}'.split(',')}")
+private List<String> list;
+
+@Value("#{${scio.cloud.maps}}")
 private Map<String,String> maps;
 ```
 
@@ -40,7 +43,21 @@ scio.cloud.list: topic1,topic2,topic3scio.cloud.maps: "{key1: 'value1', key2: 'v
 配置类
 
 ```java
-@EnableConfigurationProperties@Configuration@ConfigurationProperties(prefix = "scio.cloud")publci class ScioCloudConfig{    private List<String> list;    private Map<String,String> maps;    public void setList(List<String> list){        this.list = list;    }    public void setMaps(Map<String,String> maps){        this.maps = maps;    }}
+@EnableConfigurationProperties
+@Configuration
+@ConfigurationProperties(prefix = "scio.cloud")
+public class ScioCloudConfig {
+    private List<String> list;
+    private Map<String,String> maps;
+
+    public void setList(List<String> list) {
+        this.list = list;
+    }
+
+    public void setMaps(Map<String,String> maps) {
+        this.maps = maps;
+    }
+}
 ```
 
 yml常规
