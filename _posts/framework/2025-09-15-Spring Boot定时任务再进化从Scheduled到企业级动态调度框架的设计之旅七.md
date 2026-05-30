@@ -59,10 +59,11 @@ public void myTask()
         {
             // ...真正的业务逻辑...
         }
-        } finally {
-        lock.unlock();
-    }
+} finally {
+    lock.unlock();
 }
+}
+
 ```
 
 这段代码不仅看着乱、写起来麻烦，还把关键的 “锁” 机制和业务功能强行绑在一起。后续修改维护时，就像在一团乱麻里找线头，特别费劲。
@@ -121,9 +122,10 @@ public interface DistributedLockProvider
         void close(); // close() 负责释放锁
     }
 
-    // 尝试获取锁
-    Optional<Lock> tryLock(String lockKey, Duration lockAtMostFor);
+// 尝试获取锁
+Optional<Lock> tryLock(String lockKey, Duration lockAtMostFor);
 }
+
 ```
 
 * `tryLock(lockKey, lockAtMostFor)`:
@@ -152,7 +154,7 @@ public void run()
     {
         // 如果需要，就走带锁的逻辑
         executeWithLock(lockConfig);
-        } else {
+    } else {
         // 否则，走原来的逻辑
         executeTaskLogic();
     }
@@ -173,11 +175,12 @@ private void executeWithLock(String lockConfig)
             // 拿到锁了，执行核心逻辑
             executeTaskLogic();
         }
-        } else {
-        // 没拿到锁，打印日志，直接跳过
-        log.debug("无法获取任务 '{}' 的锁。跳过执行。", taskId);
-    }
+} else {
+    // 没拿到锁，打印日志，直接跳过
+    log.debug("无法获取任务 '{}' 的锁。跳过执行。", taskId);
 }
+}
+
 ```
 
 这段代码的核心就在`try-with-resources`。只要`tryLock`成功，代码块里的`executeTaskLogic()`就会执行。无论业务逻辑是成功还是抛异常，只要跳出

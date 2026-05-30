@@ -103,8 +103,9 @@ FsPermission(FsAction u, FsAction g, FsAction o) 的三个参数分别对应：�
 @Test
 public void mkDirWithPermission() throws Exception {
     fileSystem.mkdirs(new Path("/hdfs-api/test1/"),
-                      new FsPermission(FsAction.READ_WRITE, FsAction.READ, FsAction.READ));
+    new FsPermission(FsAction.READ_WRITE, FsAction.READ, FsAction.READ));
 }
+
 ```
 
 ### 2.4 创建文件，并写入内容
@@ -114,7 +115,7 @@ public void mkDirWithPermission() throws Exception {
 public void create() throws Exception {
     // 如果文件存在，默认会覆盖, 可以通过第二个参数进行控制。第三个参数可以控制使用缓冲区的大小
     FSDataOutputStream out = fileSystem.create(new Path("/hdfs-api/test/a.txt"),
-                                                true, 4096);
+    true, 4096);
     out.write("hello hadoop!".getBytes());
     out.write("hello spark!".getBytes());
     out.write("hello flink!".getBytes());
@@ -122,6 +123,7 @@ public void create() throws Exception {
     out.flush();
     out.close();
 }
+
 ```
 
 ### 2.5 判断文件是否存在
@@ -151,28 +153,29 @@ inputStreamToString 是一个自定义方法，代码如下：
 
 ```java
 /**
- * 把输入流转换为指定编码的字符
- *
- * @param inputStream 输入流
- * @param encode      指定编码类型
- */
+* 把输入流转换为指定编码的字符
+*
+* @param inputStream 输入流
+* @param encode      指定编码类型
+*/
 private static String inputStreamToString(InputStream inputStream, String encode) {
     try {
         if (encode == null || ("".equals(encode))) {
             encode = "utf-8";
         }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, encode));
-        StringBuilder builder = new StringBuilder();
-        String str = "";
-        while ((str = reader.readLine()) != null) {
-            builder.append(str).append("\n");
-        }
-        return builder.toString();
-    } catch (IOException e) {
-        e.printStackTrace();
+    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, encode));
+    StringBuilder builder = new StringBuilder();
+    String str = "";
+    while ((str = reader.readLine()) != null) {
+        builder.append(str).append("\n");
     }
-    return null;
+return builder.toString();
+} catch (IOException e) {
+    e.printStackTrace();
 }
+return null;
+}
+
 ```
 
 ### 2.7 文件重命名
@@ -192,13 +195,14 @@ public void rename() throws Exception {
 ```java
 public void delete() throws Exception {
     /*
-     *  第二个参数代表是否递归删除
-     *    +  如果 path 是一个目录且递归删除为 true, 则删除该目录及其中所有文件;
-     *    +  如果 path 是一个目录但递归删除为 false,则会则抛出异常。
-     */
+    *  第二个参数代表是否递归删除
+    *    +  如果 path 是一个目录且递归删除为 true, 则删除该目录及其中所有文件;
+    *    +  如果 path 是一个目录但递归删除为 false,则会则抛出异常。
+    */
     boolean result = fileSystem.delete(new Path("/hdfs-api/test/b.txt"), true);
     System.out.println(result);
 }
+
 ```
 
 ### 2.9 上传文件到HDFS
@@ -222,16 +226,17 @@ public void copyFromLocalBigFile() throws Exception {
     final float fileSize = file.length();
     InputStream in = new BufferedInputStream(new FileInputStream(file));
     FSDataOutputStream out = fileSystem.create(new Path("/hdfs-api/test/kafka5.tgz"),
-                                                new Progressable() {
-                                                    long fileCount = 0;
-                                                    public void progress() {
-                                                        fileCount++;
-                                                        // progress 方法每上传大约 64KB 的数据后就会被调用一次
-                                                        System.out.println("上传进度：" + (fileCount * 64 * 1024 / fileSize) * 100 + " %");
-                                                    }
-                                                });
-    IOUtils.copyBytes(in, out, 4096);
+    new Progressable() {
+        long fileCount = 0;
+        public void progress() {
+            fileCount++;
+            // progress 方法每上传大约 64KB 的数据后就会被调用一次
+            System.out.println("上传进度：" + (fileCount * 64 * 1024 / fileSize) * 100 + " %");
+        }
+});
+IOUtils.copyBytes(in, out, 4096);
 }
+
 ```
 
 ### 2.11 从HDFS上下载文件
@@ -242,14 +247,15 @@ public void copyToLocalFile() throws Exception {
     Path src = new Path("/hdfs-api/test/kafka.tgz");
     Path dst = new Path("D:\\app\\");
     /*
-     * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;
-     * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;
-     * RawLocalFileSystem 默认为 false,通常情况下可以不设置,
-     * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),
-     * 此时可以将 RawLocalFileSystem 设置为 true
-     */
+    * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;
+    * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;
+    * RawLocalFileSystem 默认为 false,通常情况下可以不设置,
+    * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),
+    * 此时可以将 RawLocalFileSystem 设置为 true
+    */
     fileSystem.copyToLocalFile(false, src, dst, true);
 }
+
 ```
 
 ### 2.12 查看指定目录下所有文件的信息

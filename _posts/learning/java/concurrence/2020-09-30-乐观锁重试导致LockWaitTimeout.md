@@ -30,32 +30,33 @@ mysql数据库，用户余额表有一个version（版本号）字段，作为�
 - 更新的核心方法：
 ```java
 public boolean updateUserAccount(Long userId, int amount) {
-	boolean retryable;
-	int attemptNumber = 0;
-	do {
-		// 查询最新版本号
-		UserAccount userAccount = accountMapper.selectByPrimaryKey(userId);
-		long oldVersion = userAccount.getVersion();
-		// 更新
-		boolean success = accountMapper.updateBalance(amount, new Date(), userId, oldVersion) > 0;
-		if (success) {
-			return true;
-		} else {
-			attemptNumber++;
-			retryable = attemptNumber < 5;
-			if (attemptNumber == 5) {
-				log.error(“超过最大重试次数”);
-				break;
-			}
-			try {
-				Thread.sleep(300);
-			} catch (InterruptedException e) {
-				log.error(e);
-			}
-		}
-	} while (retryable);
-	return false;
+    boolean retryable;
+    int attemptNumber = 0;
+    do {
+        // 查询最新版本号
+        UserAccount userAccount = accountMapper.selectByPrimaryKey(userId);
+        long oldVersion = userAccount.getVersion();
+        // 更新
+        boolean success = accountMapper.updateBalance(amount, new Date(), userId, oldVersion) > 0;
+        if (success) {
+            return true;
+        } else {
+            attemptNumber++;
+            retryable = attemptNumber < 5;
+            if (attemptNumber == 5) {
+                log.error(“超过最大重试次数”);
+                break;
+            }
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            log.error(e);
+        }
 }
+} while (retryable);
+return false;
+}
+
 ```
 
 ```sql

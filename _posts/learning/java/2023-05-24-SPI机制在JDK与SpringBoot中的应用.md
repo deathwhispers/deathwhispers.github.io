@@ -186,8 +186,9 @@ public class DemoApplication {
         for (MessageService service : loaders) {
             System.out.println(service.getMessage());
         }
-    }
 }
+}
+
 ```
 
 运行结果如下：
@@ -339,16 +340,17 @@ public class MessageServicePostProcessor implements BeanPostProcessor {
                 public String getMessage() {
                     return ((MessageService) bean).getMessage() + " [Processed by Spring SPI]";
                 }
-            };
-        }
-        return bean;
+        };
     }
-
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-    }
+return bean;
 }
+
+@Override
+public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    return bean;
+}
+}
+
 ```
 
 修改 Spring 配置
@@ -366,16 +368,17 @@ public class MessageServiceConfig {
         return new HelloMessageService();
     }
 
-    @Bean
-    public MessageService hiMessageService() {
-        return new HiMessageService();
-    }
-
-    @Bean
-    public MessageServicePostProcessor messageServicePostProcessor() {
-        return new MessageServicePostProcessor();
-    }
+@Bean
+public MessageService hiMessageService() {
+    return new HiMessageService();
 }
+
+@Bean
+public MessageServicePostProcessor messageServicePostProcessor() {
+    return new MessageServicePostProcessor();
+}
+}
+
 ```
 
 执行程序
@@ -503,8 +506,9 @@ public class DemoApplication {
         for (MessageService service : services) {
             System.out.println(service.getMessage());
         }
-    }
 }
+}
+
 ```
 
 SpringFactoriesLoader.loadFactories 的第二个参数是类加载器，此处我们使用默认的类加载器，所以传递 null。
@@ -615,8 +619,9 @@ public class JdbcExample {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 }
+}
+
 ```
 
 在上述代码中，我们没有明确指定使用哪个 JDBC 驱动程序，因为 DriverManager 会自动为我们选择合适的驱动程序。
@@ -706,12 +711,13 @@ public class MessageAutoConfiguration {
         return new SmsService();
     }
 
-    @Bean
-    @ConditionalOnProperty(name = "message.type", havingValue = "email")
-    public MessageService emailService() {
-        return new EmailService();
-    }
+@Bean
+@ConditionalOnProperty(name = "message.type", havingValue = "email")
+public MessageService emailService() {
+    return new EmailService();
 }
+}
+
 ```
 
 这个类提供两个条件性的 beans（组件），分别是 SmsService 和 EmailService。这些 beans 的创建取决于 application.properties 文件中特定的属性值。

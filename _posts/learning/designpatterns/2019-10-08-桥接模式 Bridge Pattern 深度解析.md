@@ -96,7 +96,7 @@ public abstract class Shape {
         this.drawAPI = drawAPI;
     }
 
-    public abstract void draw();
+public abstract void draw();
 }
 
 // --- 4. 扩充抽象类 (RefinedAbstraction) ---
@@ -110,11 +110,11 @@ public class Circle extends Shape {
         this.radius = radius;
     }
 
-    @Override
-    public void draw() {
-        // 调用实现类的方法完成具体操作
-        drawAPI.drawCircle(radius, x, y);
-    }
+@Override
+public void draw() {
+    // 调用实现类的方法完成具体操作
+    drawAPI.drawCircle(radius, x, y);
+}
 }
 
 // --- 5. 客户端 (Client) ---
@@ -131,6 +131,7 @@ public class BridgePatternDemo {
         // 假设新增 Rectangle 形状和 BlueCircle 颜色，均不影响现有代码。
     }
 }
+
 ```
 
 ### 3.2. Python 代码示例

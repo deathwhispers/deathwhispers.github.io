@@ -82,15 +82,15 @@ public class RealCustomer extends AbstractCustomer {
         this.name = name;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
+@Override
+public String getName() {
+    return name;
+}
 
-    @Override
-    public boolean isNil() {
-        return false;
-    }
+@Override
+public boolean isNil() {
+    return false;
+}
 }
 
 // NullCustomer.java
@@ -100,11 +100,12 @@ public class NullCustomer extends AbstractCustomer {
         return "Not Available in Customer Database"; // 默认行为
     }
 
-    @Override
-    public boolean isNil() {
-        return true;
-    }
+@Override
+public boolean isNil() {
+    return true;
 }
+}
+
 ```
 
 #### 步骤 3: 工厂类 $CustomerFactory$
@@ -114,18 +115,25 @@ public class NullCustomer extends AbstractCustomer {
 ```java
 // CustomerFactory.java
 public class CustomerFactory {
-    public static final String[] names = {"Rob", "Joe", "Julie"};
-
-    public static AbstractCustomer getCustomer(String name) {
-        for (int i = 0; i < names.length; i++) {
-            if (names[i].equalsIgnoreCase(name)) {
-                return new RealCustomer(name);
-            }
-        }
-        // 如果未找到，返回 NullCustomer
-        return new NullCustomer();
+    public static final String[] names =
+    {
+        "Rob", "Joe", "Julie";
     }
+;
+
+public static AbstractCustomer getCustomer(String name) {
+    for (int i = 0;
+    i < names.length;
+    i++) {
+        if (names[i].equalsIgnoreCase(name)) {
+            return new RealCustomer(name);
+        }
 }
+// 如果未找到，返回 NullCustomer
+return new NullCustomer();
+}
+}
+
 ```
 
 #### 4\. 客户端演示 $NullPatternDemo$

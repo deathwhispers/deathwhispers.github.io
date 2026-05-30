@@ -102,8 +102,20 @@ streamSource.writeToSocket("192.168.0.226", 9999, new SimpleStringSchema()) ;
 Flink 提供了 addSink 方法用来调用自定义的 Sink 或者第三方的连接器，想要将计算结果写出到 Kafka，需要使用该方法来调用 Kafka 的生产者 FlinkKafkaProducer，具体代码如下：
 
 ```java
-final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();// 1.指定Kafka的相关配置属性Properties properties = new Properties();properties.setProperty("bootstrap.servers", "192.168.200.0:9092");// 2.接收Kafka上的数据DataStream<String> stream = env
-.addSource(new FlinkKafkaConsumer<>("flink-stream-in-topic", new SimpleStringSchema(), properties));// 3.定义计算结果到 Kafka ProducerRecord 的转换KafkaSerializationSchema<String> kafkaSerializationSchema = new KafkaSerializationSchema<String>() {    @Override    public ProducerRecord<byte[], byte[]> serialize(String element, @Nullable Long timestamp) {        return new ProducerRecord<>("flink-stream-out-topic", element.getBytes());    }};// 4. 定义Flink Kafka生产者FlinkKafkaProducer<String> kafkaProducer = new FlinkKafkaProducer<>("flink-stream-out-topic",                                                                    kafkaSerializationSchema,                                                                    properties,                                                                    FlinkKafkaProducer.Semantic.AT_LEAST_ONCE, 5);// 5. 将接收到输入元素*2后写出到Kafkastream.map((MapFunction<String, String>) value -> value + value).addSink(kafkaProducer);env.execute("Flink Streaming");
+final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+// 1.指定Kafka的相关配置属性Properties properties = new Properties();
+properties.setProperty("bootstrap.servers", "192.168.200.0:9092");
+// 2.接收Kafka上的数据DataStream<String> stream = env
+.addSource(new FlinkKafkaConsumer<>("flink-stream-in-topic", new SimpleStringSchema(), properties));// 3.定义计算结果到 Kafka ProducerRecord 的转换KafkaSerializationSchema<String> kafkaSerializationSchema = new KafkaSerializationSchema<String>()
+{
+    @Override    public ProducerRecord<byte[], byte[]> serialize(String element, @Nullable Long timestamp)
+    {
+        return new ProducerRecord<>("flink-stream-out-topic", element.getBytes();
+    }
+};
+}
+;// 4. 定义Flink Kafka生产者FlinkKafkaProducer<String> kafkaProducer = new FlinkKafkaProducer<>("flink-stream-out-topic",                                                                    kafkaSerializationSchema,                                                                    properties,                                                                    FlinkKafkaProducer.Semantic.AT_LEAST_ONCE, 5);// 5. 将接收到输入元素*2后写出到Kafkastream.map((MapFunction<String, String>) value -> value + value).addSink(kafkaProducer);env.execute("Flink Streaming");
+
 ```
 
 ### 3.2 创建输出主题
@@ -164,10 +176,33 @@ bin/kafka-console-consumer.sh --bootstrap-server hadoop001:9092 --topic flink-st
 ```java
 public class FlinkToMySQLSink extends RichSinkFunction<Employee>
 {
-    private PreparedStatement stmt;    private Connection conn;    @Override    public void open(Configuration parameters) throws Exception {        Class.forName("com.mysql.cj.jdbc.Driver");        conn = DriverManager.getConnection("jdbc:mysql://192.168.0.229:3306/employees" +                                           "?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
+    private PreparedStatement stmt;
+    private Connection conn;
+    @Override    public void open(Configuration parameters) throws Exception {        Class.forName("com.mysql.cj.jdbc.Driver");
+    conn = DriverManager.getConnection("jdbc:mysql://192.168.0.229:3306/employees" +                                           "?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
     "root",
-"123456");        String sql = "insert into emp(name, age, birthday) values(?, ?, ?)";        stmt = conn.prepareStatement(sql);    }    @Override    public void invoke(Employee value, Context context) throws Exception {        stmt.setString(1, value.getName());        stmt.setInt(2, value.getAge());        stmt.setDate(3, value.getBirthday());        stmt.executeUpdate();    }    @Override    public void close() throws Exception {        super.close();        if (stmt != null) {            stmt.close();        }        if (conn != null) {            conn.close();        }    }
+    "123456");        String sql = "insert into emp(name, age, birthday) values(?, ?, ?)";        stmt = conn.prepareStatement(sql);    }    @Override    public void invoke(Employee value, Context context) throws Exception
+    {
+        stmt.setString(1, value.getName());
+        stmt.setInt(2, value.getAge());
+        stmt.setDate(3, value.getBirthday());
+        stmt.executeUpdate();
+    }    @Override    public void close() throws Exception
+    {
+        super.close(;
+    }
+if (stmt != null)
+{
+    stmt.close(;
 }
+}        if (conn != null)
+{
+    conn.close(;
+}
+};
+}
+}
+
 ```
 
 ### 4.3 使用自定义 Sink

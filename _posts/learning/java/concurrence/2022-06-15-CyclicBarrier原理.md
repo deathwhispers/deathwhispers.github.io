@@ -42,14 +42,15 @@ java.util.concurrent.CyclicBarrier 的结构如下：
 
 ```java
 public CyclicBarrier(int parties, Runnable barrierAction) {
-  if (parties <= 0) throw new IllegalArgumentException();
-  this.parties = parties;
-  this.count = parties;
-  this.barrierCommand = barrierAction;
+    if (parties <= 0) throw new IllegalArgumentException();
+    this.parties = parties;
+    this.count = parties;
+    this.barrierCommand = barrierAction;
 }
 public CyclicBarrier(int parties) {
-  this(parties, null);
+    this(parties, null);
 }
+
 ```
 
 - parties 变量，表示拦截线程的**总**数量。
@@ -65,15 +66,16 @@ public CyclicBarrier(int parties) {
 
 ```java
 public int await() throws InterruptedException, BrokenBarrierException {
-  try {
-    return dowait(false, 0L);
-    //不超时等待 }
-  catch (TimeoutException toe) {
-    throw new Error(toe);
+    try {
+        return dowait(false, 0L);
+        //不超时等待 }
+    catch (TimeoutException toe) {
+        throw new Error(toe);
 
-// cannot
-    happen }
+        // cannot
+        happen }
 }
+
 ```
 
 - 内部调用 #dowait(boolean timed, long nanos) 方法，执行阻塞等待( timed=true )。详细解析，见 [「2.3 dowait」](https://www.iocoder.cn/JUC/sike/CyclicBarrier/#) 。
@@ -85,7 +87,11 @@ public int await() throws InterruptedException, BrokenBarrierException {
 #await(long timeout, TimeUnit unit) 方法，在 #await() 的基础上，增加了等待超时的特性。代码如下：
 
 ```java
-public int await(long timeout, TimeUnit unit) throws InterruptedException, BrokenBarrierException, TimeoutException { return dowait(true, unit.toNanos(timeout)); }
+public int await(long timeout, TimeUnit unit) throws InterruptedException, BrokenBarrierException, TimeoutException
+{
+    return dowait(true, unit.toNanos(timeout));
+}
+
 ```
 
 - 内部调用 #dowait(boolean timed, long nanos) 方法，执行阻塞等待( timed=true )。详细解析，见 [「2.3 dowait」](https://www.iocoder.cn/JUC/sike/CyclicBarrier/#) 。
@@ -96,11 +102,11 @@ public int await(long timeout, TimeUnit unit) throws InterruptedException, Broke
 
 ```java
 private int dowait(boolean timed, long nanos) throws InterruptedException, BrokenBarrierException, TimeoutException {
-//获取锁
+    //获取锁
     final ReentrantLock lock = this.lock;
     lock.lock();
     try {
-//分代
+        //分代
         final Generation g = generation;
         //当前generation“已损坏”，抛出BrokenBarrierException异常
         //抛出该异常一般都是某个线程在等待某个处于“断开”状态的CyclicBarrie
@@ -112,61 +118,62 @@ private int dowait(boolean timed, long nanos) throws InterruptedException, Broke
             breakBarrier();
             throw new InterruptedException();
         }
-        //进来一个线程 count - 1
-        int index = –count;
-        //count == 0 表示所有线程均已到位，触发Runnable任务
-        if (index == 0) {
-            // tripped
-            boolean ranAction = false;
-            try {
-                final Runnable command = barrierCommand;
-                //触发任务
-                if (command != null)
-                    command.run();
-                ranAction = true;
-                //唤醒所有等待线程，并更新generation
-                nextGeneration();
-                return 0;
-            } finally {
-                if (!ranAction)
-                    // 未执行，说明 barrierCommand 执行报错，或者线程打断等等情况。
-                    breakBarrier();
-            }
+    //进来一个线程 count - 1
+    int index = –count;
+    //count == 0 表示所有线程均已到位，触发Runnable任务
+    if (index == 0) {
+        // tripped
+        boolean ranAction = false;
+        try {
+            final Runnable command = barrierCommand;
+            //触发任务
+            if (command != null)
+            command.run();
+            ranAction = true;
+            //唤醒所有等待线程，并更新generation
+            nextGeneration();
+            return 0;
+        } finally {
+            if (!ranAction)
+            // 未执行，说明 barrierCommand 执行报错，或者线程打断等等情况。
+            breakBarrier();
         }
-        for (;;) {
-            try {
-                //如果不是超时等待，则调用Condition.await()方法等待
-                if (!timed) trip.await();
-                else if (nanos > 0L)
-                    //超时等待，调用Condition.awaitNanos()方法等待
-                    nanos = trip.awaitNanos(nanos);
-            } catch (InterruptedException ie) {
-                if (g == generation && ! g.broken) {
-                    breakBarrier();
-                    throw ie;
-                } else {
-                    // We’re about to finish waiting even
-                    if we had not
-                    // been interrupted, so this interrupt is deemed to
-                    // “belong” to subsequent execution.
-                    Thread.currentThread().interrupt();
-                }
-            }
-            if (g.broken)
-                throw new BrokenBarrierException();
-            //generation已经更新，返回index
-            if (g != generation) return index;
-            //“超时等待”，并且时间已到,终止CyclicBarrier，并抛出异常
-            if (timed && nanos <= 0L) {
-                breakBarrier();
-                throw new TimeoutException();
-            }
-        }
-    } finally {
-        //释放锁
-        lock.unlock();
-    }
 }
+for (;;) {
+    try {
+        //如果不是超时等待，则调用Condition.await()方法等待
+        if (!timed) trip.await();
+        else if (nanos > 0L)
+        //超时等待，调用Condition.awaitNanos()方法等待
+        nanos = trip.awaitNanos(nanos);
+    } catch (InterruptedException ie) {
+        if (g == generation && ! g.broken) {
+            breakBarrier();
+            throw ie;
+        } else {
+            // We’re about to finish waiting even
+            if we had not
+            // been interrupted, so this interrupt is deemed to
+            // “belong” to subsequent execution.
+            Thread.currentThread().interrupt();
+        }
+}
+if (g.broken)
+throw new BrokenBarrierException();
+//generation已经更新，返回index
+if (g != generation) return index;
+//“超时等待”，并且时间已到,终止CyclicBarrier，并抛出异常
+if (timed && nanos <= 0L) {
+    breakBarrier();
+    throw new TimeoutException();
+}
+}
+} finally {
+    //释放锁
+    lock.unlock();
+}
+}
+
 ```
 
 如果该线程不是到达的最后一个线程，则他会一直处于等待状态，除非发生以下情况：
@@ -189,7 +196,11 @@ private int dowait(boolean timed, long nanos) throws InterruptedException, Broke
 Generation 是 CyclicBarrier 内部静态类，描述了 CyclicBarrier 的更新换代。**在CyclicBarrier中，同一批线程属于同一代**。当有 parties 个线程全部到达 barrier 时，generation 就会被更新换代。其中 broken 属性，标识该当前 CyclicBarrier 是否已经处于中断状态。代码如下：
 
 ```java
-private static class Generation { boolean broken = false; }
+private static class Generation
+{
+    boolean broken = false;
+}
+
 ```
 
 - 默认 barrier 是没有损坏的。
@@ -200,10 +211,11 @@ private static class Generation { boolean broken = false; }
 
 ```java
 private void breakBarrier() {
-  generation.broken = true;
-  count = parties;
-  trip.signalAll();
+    generation.broken = true;
+    count = parties;
+    trip.signalAll();
 }
+
 ```
 
 - 在 breakBarrier() 方法中，中除了将 broken设置为 true ，还会调用 #signalAll() 方法，将在 CyclicBarrier 处于**等待状态的线程**全部唤醒。
@@ -219,7 +231,13 @@ private void breakBarrier() {
 代码如下：
 
 ```java
-private void nextGeneration() { trip.signalAll(); count = parties; generation = new Generation(); }
+private void nextGeneration()
+{
+    trip.signalAll();
+    count = parties;
+    generation = new Generation();
+}
+
 ```
 
 ## 2.7 reset
@@ -232,13 +250,14 @@ public void reset() {
     lock.lock();
     try {
         breakBarrier();
-				// break the current generation
+        // break the current generation
         nextGeneration();
-				// start a new generation
+        // start a new generation
     } finally {
-		    lock.unlock();
+        lock.unlock();
     }
 }
+
 ```
 
 - 通过组合 #breakBarrier() 和 #nextGeneration() 方法来实现。
@@ -248,7 +267,21 @@ public void reset() {
 #getNumberWaiting() 方法，获得等待的线程数。代码如下：
 
 ```java
-public int getNumberWaiting() { final ReentrantLock lock = this.lock; lock.lock(); try { return parties - count; } finally { lock.unlock(); } }
+public int getNumberWaiting()
+{
+    final ReentrantLock lock = this.lock;
+    lock.lock();
+    try
+    {
+        return parties - coun;
+    }
+} finally
+{
+    lock.unlock(;
+}
+};
+}
+
 ```
 
 ## 2.9 isBroken
@@ -288,18 +321,21 @@ public class CyclicBarrierTest {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-    public static void main(String[] args) {
-        cyclicBarrier = new CyclicBarrier(5, new Runnable() {
-            @Override
-            public void run() {
-                System.out.println(“人到齐了，开会吧….”);
-            }
-        });
-        for (int i = 0 ; i < 5 ; i++) {
-            new CyclicBarrierThread().start();
-        }
     }
 }
+public static void main(String[] args) {
+    cyclicBarrier = new CyclicBarrier(5, new Runnable() {
+        @Override
+        public void run() {
+            System.out.println(“人到齐了，开会吧….”);
+        }
+});
+for (int i = 0;
+i < 5;
+i++) {
+    new CyclicBarrierThread().start();
+}
+}
+}
+
 ```

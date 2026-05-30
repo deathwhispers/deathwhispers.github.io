@@ -45,10 +45,11 @@ Sync 是 ReentrantLock 的内部静态类，实现 AbstractQueuedSynchronizer �
 
 ```java
 /**
- * Performs {@link Lock#lock}.
- * The main reason for subclassing is to allow fast path for nonfair version.
- */
+* Performs {@link Lock#lock}.
+* The main reason for subclassing is to allow fast path for nonfair version.
+*/
 abstract void lock();
+
 ```
 
 - 执行锁。抽象了该方法的原因是，允许子类实现快速获得非公平锁的逻辑。
@@ -59,23 +60,24 @@ abstract void lock();
 
 ```java
 final boolean nonfairTryAcquire(int acquires) {
-  final Thread current = Thread.currentThread();
-  int c = getState();
-  if (c == 0) {
-    if (compareAndSetState(0, acquires)) {
-      setExclusiveOwnerThread(current);
-      return true;
-    }
-  } else if (current == getExclusiveOwnerThread()) {
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    if (c == 0) {
+        if (compareAndSetState(0, acquires)) {
+            setExclusiveOwnerThread(current);
+            return true;
+        }
+} else if (current == getExclusiveOwnerThread()) {
     int nextc = c + acquires;
     if (nextc < 0) {
-      throw new Error(“Maximum lock count exceeded”);
+        throw new Error(“Maximum lock count exceeded”);
     }
-    setState(nextc);
-    return true;
-  }
-  return false;
+setState(nextc);
+return true;
 }
+return false;
+}
+
 ```
 
 - 该方法主要逻辑：首先判断同步状态 state == 0 ?
@@ -87,18 +89,19 @@ final boolean nonfairTryAcquire(int acquires) {
 
 ```java
 protected final boolean tryRelease(int releases) {
-  int c = getState() - releases;
-  if (Thread.currentThread() != getExclusiveOwnerThread()) {
-    throw new IllegalMonitorStateException();
-  }
-  boolean free = false;
-  if (c == 0) {
+    int c = getState() - releases;
+    if (Thread.currentThread() != getExclusiveOwnerThread()) {
+        throw new IllegalMonitorStateException();
+    }
+boolean free = false;
+if (c == 0) {
     free = true;
     setExclusiveOwnerThread(null);
-  }
-  setState(c);
-  return free;
 }
+setState(c);
+return free;
+}
+
 ```
 
 - 通过判断判断是否为获得到锁的线程，保证该方法线程安全。
@@ -111,34 +114,35 @@ protected final boolean tryRelease(int releases) {
 ```java
 // 是否当前线程独占
 @Override protected final boolean isHeldExclusively() {
-  // While we must in general read state before owner,
-  // we don't need to do so to check if current thread is owner.
-  return getExclusiveOwnerThread() == Thread.currentThread();
+    // While we must in general read state before owner,
+    // we don't need to do so to check if current thread is owner.
+    return getExclusiveOwnerThread() == Thread.currentThread();
 }
 // 新生成条件
 final ConditionObject newCondition() {
-  return new ConditionObject();
+    return new ConditionObject();
 }
 // Methods relayed from outer class
 final Thread getOwner() {
-  return getState() == 0 ? null : getExclusiveOwnerThread();
+    return getState() == 0 ? null : getExclusiveOwnerThread();
 }
 // 获得当前线程持有锁的数量
 final int getHoldCount() {
-  return isHeldExclusively() ? getState() : 0;
+    return isHeldExclusively() ? getState() : 0;
 }
 // 是否被锁定
 final boolean isLocked() {
-  return getState() != 0;
+    return getState() != 0;
 }
 /**
- * Reconstitutes the instance from a stream (that is, deserializes it).
- */
+* Reconstitutes the instance from a stream (that is, deserializes it).
+*/
 private void readObject(java.io.ObjectInputStream s)
-    throws java.io.IOException, ClassNotFoundException {
-  s.defaultReadObject();
-  setState(0);
+throws java.io.IOException, ClassNotFoundException {
+    s.defaultReadObject();
+    setState(0);
 }
+
 ```
 
 - 从这些方法中，我们可以看到，ReentrantLock 是独占获取同步状态的模式。
@@ -155,9 +159,10 @@ NonfairSync 是 ReentrantLock 的内部静态类，实现 Sync 抽象类，非�
 
 ```java
 @Override final void lock() {
-  if (compareAndSetState(0, 1)) setExclusiveOwnerThread(Thread.currentThread());
-  else acquire(1);
+    if (compareAndSetState(0, 1)) setExclusiveOwnerThread(Thread.currentThread());
+    else acquire(1);
 }
+
 ```
 
 - 优先基于 AQS state 进行 CAS 操作，已经能体现出非公平锁的特点。因为，此时有可能有 N + 1 个线程正在获得锁，其中 1 个线程已经获得到锁，释放的瞬间，恰好被新的线程抢夺到，而不是排队的 N 个线程。
@@ -168,8 +173,9 @@ NonfairSync 是 ReentrantLock 的内部静态类，实现 Sync 抽象类，非�
 
 ```java
 protected final boolean tryAcquire(int acquires) {
-  return nonfairTryAcquire(acquires);
+    return nonfairTryAcquire(acquires);
 }
+
 ```
 
 - 用 #nonfairTryAcquire(int acquires) 方法，非公平锁的方式获得锁。
@@ -184,8 +190,9 @@ FairSync 是 ReentrantLock 的内部静态类，实现 Sync 抽象类，公平�
 
 ```java
 final void lock() {
-  acquire(1);
+    acquire(1);
 }
+
 ```
 
 - 直接执行 AQS 的正常的同步状态获取逻辑。
@@ -196,24 +203,25 @@ final void lock() {
 
 ```java
 protected final boolean tryAcquire(int acquires) {
-  final Thread current = Thread.currentThread();
-  int c = getState();
-  if (c == 0) {
-    if (!hasQueuedPredecessors() &&
- // <1>
-    compareAndSetState(0, acquires)) {
-      setExclusiveOwnerThread(current);
-      return true;
-    }
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    if (c == 0) {
+        if (!hasQueuedPredecessors() &&
+        // <1>
+        compareAndSetState(0, acquires)) {
+            setExclusiveOwnerThread(current);
+            return true;
+        }
 }
 else if (current == getExclusiveOwnerThread()) {
-  int nextc = c + acquires;
-  if (nextc < 0) throw new Error(“Maximum lock count exceeded”);
-  setState(nextc);
-  return true;
+    int nextc = c + acquires;
+    if (nextc < 0) throw new Error(“Maximum lock count exceeded”);
+    setState(nextc);
+    return true;
 }
 return false;
 }
+
 ```
 
 比较非公平锁和公平锁获取同步状态的过程，会发现两者唯一的区别就在于，公平锁在获取同步状态时多了一个限制条件 <1> 处的 #hasQueuedPredecessors() 方法，是否有前序节点，即自己不是首个等待获取同步状态的节点。代码如下：
@@ -221,15 +229,16 @@ return false;
 ```java
 // AbstractQueuedSynchronizer.java
 public final boolean hasQueuedPredecessors() {
-  Node t = tail;
-  //尾节点
-  Node h = head;
+    Node t = tail;
+    //尾节点
+    Node h = head;
 
-//头节点
-  Node s;
-  //头节点 != 尾节点 //同步队列第一个节点不为null //当前线程是同步队列第一个节点
-  return h != t && ((s = h.next) == null || s.thread != Thread.currentThread());
+    //头节点
+    Node s;
+    //头节点 != 尾节点 //同步队列第一个节点不为null //当前线程是同步队列第一个节点
+    return h != t && ((s = h.next) == null || s.thread != Thread.currentThread());
 }
+
 ```
 
 - 该方法主要做一件事情：主要是判断当前线程是否位于 CLH 同步队列中的第一个。如果是则返回 true ，否则返回 false 。
@@ -261,11 +270,12 @@ ReentrantLock 的实现方法，基本是对 Sync 的调用。
 
 ```java
 public ReentrantLock() {
-  sync = new NonfairSync();
+    sync = new NonfairSync();
 }
 public ReentrantLock(boolean fair) {
-  sync = fair ? new FairSync() : new NonfairSync();
+    sync = fair ? new FairSync() : new NonfairSync();
 }
+
 ```
 
 - 基于 fair 参数，创建 FairSync 还是 NonfairSync 对象。
@@ -274,16 +284,18 @@ public ReentrantLock(boolean fair) {
 
 ```java
 @Override public void lock() {
-  sync.lock();
+    sync.lock();
 }
+
 ```
 
 ## 4.3 lockInterruptibly
 
 ```java
 @Override public void lockInterruptibly() throws InterruptedException {
-  sync.acquireInterruptibly(1);
+    sync.acquireInterruptibly(1);
 }
+
 ```
 
 **4.4 tryLock**
@@ -303,24 +315,27 @@ If the lock is held by another thread then this method will return * immediately
 
 ```java
 @Override public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException {
-  return sync.tryAcquireNanos(1, unit.toNanos(timeout));
+    return sync.tryAcquireNanos(1, unit.toNanos(timeout));
 }
+
 ```
 
 ## 4.6 unlock
 
 ```java
 @Override public void unlock() {
-  sync.release(1);
+    sync.release(1);
 }
+
 ```
 
 ## 4.7 newCondition
 
 ```java
 @Override public Condition newCondition() {
-  return sync.newCondition();
+    return sync.newCondition();
 }
+
 ```
 
 ## 4.8 其他实现方法
@@ -329,47 +344,48 @@ If the lock is held by another thread then this method will return * immediately
 
 ```java
 public int getHoldCount() {
-  return sync.getHoldCount();
+    return sync.getHoldCount();
 }
 public boolean isHeldByCurrentThread() {
-  return sync.isHeldExclusively();
+    return sync.isHeldExclusively();
 }
 public boolean isLocked() {
-  return sync.isLocked();
+    return sync.isLocked();
 }
 public final boolean isFair() {
-  return sync instanceof FairSync;
+    return sync instanceof FairSync;
 }
 protected Thread getOwner() {
-  return sync.getOwner();
+    return sync.getOwner();
 }
 public final boolean hasQueuedThreads() {
-  return sync.hasQueuedThreads();
+    return sync.hasQueuedThreads();
 }
 public final boolean hasQueuedThread(Thread thread) {
-  return sync.isQueued(thread);
+    return sync.isQueued(thread);
 }
 public final int getQueueLength() {
-  return sync.getQueueLength();
+    return sync.getQueueLength();
 }
 protected Collection getQueuedThreads() {
-  return sync.getQueuedThreads();
+    return sync.getQueuedThreads();
 }
 public boolean hasWaiters(Condition condition) {
-  if (condition == null) throw new NullPointerException();
-  if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) throw new IllegalArgumentException(“not owner”);
-  return sync.hasWaiters((AbstractQueuedSynchronizer.ConditionObject)condition);
+    if (condition == null) throw new NullPointerException();
+    if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) throw new IllegalArgumentException(“not owner”);
+    return sync.hasWaiters((AbstractQueuedSynchronizer.ConditionObject)condition);
 }
 public int getWaitQueueLength(Condition condition) {
-  if (condition == null) throw new NullPointerException();
-  if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) throw new IllegalArgumentException(“not owner”);
-  return sync.getWaitQueueLength((AbstractQueuedSynchronizer.ConditionObject)condition);
+    if (condition == null) throw new NullPointerException();
+    if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) throw new IllegalArgumentException(“not owner”);
+    return sync.getWaitQueueLength((AbstractQueuedSynchronizer.ConditionObject)condition);
 }
 protected Collection getWaitingThreads(Condition condition) {
-  if (condition == null) throw new NullPointerException();
-  if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) throw new IllegalArgumentException(“not owner”);
-  return sync.getWaitingThreads((AbstractQueuedSynchronizer.ConditionObject)condition);
+    if (condition == null) throw new NullPointerException();
+    if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) throw new IllegalArgumentException(“not owner”);
+    return sync.getWaitingThreads((AbstractQueuedSynchronizer.ConditionObject)condition);
 }
+
 ```
 
 # 5. ReentrantLock 与 synchronized 的区别

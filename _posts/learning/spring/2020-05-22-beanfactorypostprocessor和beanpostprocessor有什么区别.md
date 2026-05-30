@@ -44,11 +44,12 @@ public interface BeanPostProcessor
     {
         return bean ;
     }
-    @Nullable default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException
-    {
-        return bean ;
-    }
+@Nullable default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException
+{
+    return bean ;
 }
+}
+
 ```
 
 可以看到，这里是两个方法，这两个方法都有一个 bean 对象，说明这里被触发的时候，Spring 已经将 Bean 初始化了，然后才会触发这里的两个方法，我们可以在这里对已经到手的 Bean 进行额外的处理。其中：
@@ -105,8 +106,8 @@ db.url=jdbc:mysql:///db01?serverTimezone=Asia/Shanghai
     {
         //这里主要是如果没有加载到 properties 文件，就会尝试从环境中加载
     }
-    //这个就是具体的属性转换的方法了 processProperties(beanFactory, new PropertySourcesPropertyResolver(this.propertySources)) ;
-    this.appliedPropertySources = this.propertySources ;
+//这个就是具体的属性转换的方法了 processProperties(beanFactory, new PropertySourcesPropertyResolver(this.propertySources)) ;
+this.appliedPropertySources = this.propertySources ;
 }
 /** * 这个属性转换方法中，对配置文件又做了一些预处理，最后调用 doProcessProperties 方法处理属性 */protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, final ConfigurablePropertyResolver propertyResolver) throws BeansException
 {
@@ -120,10 +121,10 @@ db.url=jdbc:mysql:///db01?serverTimezone=Asia/Shanghai
         {
             resolved = resolved.trim() ;
         }
-        return (resolved.equals(this.nullValue) ? null : resolved) ;
-    }
-    ;
-    doProcessProperties(beanFactoryToProcess, valueResolver) ;
+    return (resolved.equals(this.nullValue) ? null : resolved) ;
+}
+;
+doProcessProperties(beanFactoryToProcess, valueResolver) ;
 }
 protected void doProcessProperties(ConfigurableListableBeanFactory beanFactoryToProcess, StringValueResolver valueResolver)
 {
@@ -138,15 +139,16 @@ protected void doProcessProperties(ConfigurableListableBeanFactory beanFactoryTo
             {
                 visitor.visitBeanDefinition(bd) ;
             }
-            catch (Exception ex)
-            {
-                throw new BeanDefinitionStoreException(bd.getResourceDescription(), curName, ex.getMessage(), ex) ;
-            }
+        catch (Exception ex)
+        {
+            throw new BeanDefinitionStoreException(bd.getResourceDescription(), curName, ex.getMessage(), ex) ;
         }
-    }
-    // New in Spring 2.5: resolve placeholders in alias target names and aliases as well. beanFactoryToProcess.resolveAliases(valueResolver) ;
-    // New in Spring 3.0: resolve placeholders in embedded values such as annotation attributes. beanFactoryToProcess.addEmbeddedValueResolver(valueResolver) ;
 }
+}
+// New in Spring 2.5: resolve placeholders in alias target names and aliases as well. beanFactoryToProcess.resolveAliases(valueResolver) ;
+// New in Spring 3.0: resolve placeholders in embedded values such as annotation attributes. beanFactoryToProcess.addEmbeddedValueResolver(valueResolver) ;
+}
+
 ```
 
 上面第三个 doProcessProperties 方法我要稍微和小伙伴们说两句：
@@ -186,13 +188,14 @@ public class MyPropBeanFactoryPostProcessor implements BeanFactoryPostProcessor
                 {
                     return "javaboy666" ;
                 }
-                return strVal ;
-            }
-            ) ;
-            beanDefinitionVisitor.visitBeanDefinition(beanDefinition) ;
+            return strVal ;
         }
-    }
+    ) ;
+    beanDefinitionVisitor.visitBeanDefinition(beanDefinition) ;
 }
+}
+}
+
 ```
 
 这个 Bean 基本上是照着前面 2.1 小节的 Bean 来写的。我跟大家来大致说一下我的逻辑：
@@ -233,15 +236,16 @@ public class UserService implements InitializingBean
     {
         System.out.println("UserService>Constructor") ;
     }
-    public void init()
-    {
-        System.out.println("UserService>init") ;
-    }
-    @Override public void afterPropertiesSet() throws Exception
-    {
-        System.out.println("UserService>afterPropertiesSet") ;
-    }
+public void init()
+{
+    System.out.println("UserService>init") ;
 }
+@Override public void afterPropertiesSet() throws Exception
+{
+    System.out.println("UserService>afterPropertiesSet") ;
+}
+}
+
 ```
 
 再开发一个 BeanPostProcessor：
@@ -255,13 +259,14 @@ public class MyBeanPostProcessor implements BeanPostProcessor
         beanClass:"+bean.getClass()) ;
         return BeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName) ;
     }
-    @Override public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException
-    {
-        System.out.println("postProcessAfterInitialization:beanName"+beanName+" ;
-        beanClass:"+bean.getClass()) ;
-        return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName) ;
-    }
+@Override public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException
+{
+    System.out.println("postProcessAfterInitialization:beanName"+beanName+" ;
+    beanClass:"+bean.getClass()) ;
+    return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName) ;
 }
+}
+
 ```
 
 然后我们将这两个 Bean 都注册到 Spring 容器中：
@@ -285,10 +290,32 @@ BeanPostProcessor 其实有很多经典的应用，我在写文章的时候，�
 ```java
 public class BeanValidationPostProcessor implements BeanPostProcessor, InitializingBean
 {
-    @Nullable    private Validator validator;    private boolean afterInitialization = false;    public void setAfterInitialization(boolean afterInitialization) {        this.afterInitialization = afterInitialization;    }    @Override    public void afterPropertiesSet() {        if (this.validator == null) {            this.validator = Validation.buildDefaultValidatorFactory().getValidator();        }    }    @Override    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {        if (!this.afterInitialization) {            doValidate(bean);        }        return bean;    }    @Override    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {        if (this.afterInitialization) {            doValidate(bean);        }        return bean;    }    /**  * Perform validation of the given bean.  * @param bean the bean instance to validate
-    * @see jakarta.validation.Validator#validate
-*/    protected void doValidate(Object bean) {        //...    }
+    @Nullable    private Validator validator;    private boolean afterInitialization = false;    public void setAfterInitialization(boolean afterInitialization)
+    {
+        this.afterInitialization = afterInitialization;
+    }    @Override    public void afterPropertiesSet()
+    {
+        if (this.validator == null) {            this.validator = Validation.buildDefaultValidatorFactory().getValidator(;
+    }
+}    }    @Override    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException
+{
+    if (!this.afterInitialization) {            doValidate(bean;
 }
+}        return bean;
+}    @Override    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException
+{
+    if (this.afterInitialization) {            doValidate(bean;
+}
+}        return bean;
+}
+/**  * Perform validation of the given bean.  * @param bean the bean instance to validate
+* @see jakarta.validation.Validator#validate
+*/    protected void doValidate(Object bean)
+{
+    //...;
+}
+}
+
 ```
 
 这段代码其实很好懂，可以看到，我们可以控制是在具体是在 postProcessBeforeInitialization 还是 postProcessAfterInitialization 方法中进行数据校验。

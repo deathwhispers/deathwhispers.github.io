@@ -71,12 +71,12 @@ class Meal {
     public void addPart(String part) {
         parts.add(part);
     }
-    public void show() {
-        System.out.println("--- Meal Constructed ---");
-        for (String part : parts) {
-            System.out.println(part);
-        }
+public void show() {
+    System.out.println("--- Meal Constructed ---");
+    for (String part : parts) {
+        System.out.println(part);
     }
+}
 }
 
 // --- 2. 抽象建造者 (Builder) ---
@@ -95,16 +95,25 @@ abstract class MealBuilder {
 // --- 3. 具体建造者 (ConcreteBuilder) ---
 class VegMealBuilder extends MealBuilder {
     @Override
-    public void buildBurger() { meal.addPart("Veg Burger"); }
-    @Override
-    public void buildDrink() { meal.addPart("Coke"); }
+    public void buildBurger()
+    {
+        meal.addPart("Veg Burger");
+    }
+@Override
+public void buildDrink() { meal.addPart("Coke"); }
 }
 
 class NonVegMealBuilder extends MealBuilder {
     @Override
-    public void buildBurger() { meal.addPart("Chicken Burger"); }
-    @Override
-    public void buildDrink() { meal.addPart("Pepsi"); }
+    public void buildBurger()
+    {
+        meal.addPart("Chicken Burger");
+    }
+@Override
+public void buildDrink()
+{
+    meal.addPart("Pepsi");
+}
 }
 
 // --- 4. 指挥者 (Director) ---
@@ -115,13 +124,13 @@ class Director {
         this.builder = builder;
     }
 
-    // 负责控制产品的生成次序 (不变的构建过程)
-    public Meal construct() {
-        // 装配顺序：先装汉堡，再装饮料
-        builder.buildBurger();
-        builder.buildDrink();
-        return builder.getMeal();
-    }
+// 负责控制产品的生成次序 (不变的构建过程)
+public Meal construct() {
+    // 装配顺序：先装汉堡，再装饮料
+    builder.buildBurger();
+    builder.buildDrink();
+    return builder.getMeal();
+}
 }
 
 // --- 5. 客户端调用 (Client) ---
@@ -142,6 +151,7 @@ public class BuilderPatternDemo {
         nonVegMeal.show();
     }
 }
+
 ```
 
 ### 3.2. Python 代码示例（链式调用 - 流畅接口）

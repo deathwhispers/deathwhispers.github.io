@@ -59,8 +59,9 @@ public class TaskManagerImpl implements TaskManager
     {
         this.taskScheduler = taskScheduler;
     }
-    // ... 其他方法
+// ... 其他方法
 }
+
 ```
 
 但我的目标是接管所有`@Scheduled`任务啊！上一章咱也分析过，我不想自己写复杂的Bean扫描逻辑，最省事的就是用Spring自己扫出来的结果。而能拿到这个结果的，就是前面提过的`SchedulingConfigurer`接口。
@@ -79,12 +80,13 @@ public class HadokenSchedulerConfigurer implements SchedulingConfigurer
         this.taskManager = taskManager;
     }
 
-    @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar)
-    {
-        // 拿到Spring扫好的任务，交给taskManager处理...
-    }
+@Override
+public void configureTasks(ScheduledTaskRegistrar taskRegistrar)
+{
+    // 拿到Spring扫好的任务，交给taskManager处理...
 }
+}
+
 ```
 
 现在把这些依赖关系串起来，那个藏着的“幽灵”就现身了：

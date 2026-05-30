@@ -54,9 +54,10 @@ String v3 = op.orElseThrow(() -> new IllegalStateException("missing"));
 
 ```java
 Optional<String> name = userOpt
-    .map(User::getProfile)
-    .map(Profile::getName)
-    .filter(n -> !n.isBlank());
+.map(User::getProfile)
+.map(Profile::getName)
+.filter(n -> !n.isBlank());
+
 ```
 
 - `map`：值存在时转换

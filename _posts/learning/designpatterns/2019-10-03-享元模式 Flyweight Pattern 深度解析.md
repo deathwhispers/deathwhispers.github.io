@@ -86,12 +86,12 @@ public class Circle implements Shape {
         this.color = color;
     }
 
-    @Override
-    public void draw(int x, int y, int radius) {
-        // 这里的 x, y, radius 是外部状态，由客户端在运行时传入
-        System.out.println("Circle: Draw() [Color : " + color
-                + ", x : " + x + ", y :" + y + ", radius :" + radius + "]");
-    }
+@Override
+public void draw(int x, int y, int radius) {
+    // 这里的 x, y, radius 是外部状态，由客户端在运行时传入
+    System.out.println("Circle: Draw() [Color : " + color
+    + ", x : " + x + ", y :" + y + ", radius :" + radius + "]");
+}
 }
 
 // 3. 享元工厂类 (FlyweightFactory)
@@ -111,28 +111,39 @@ public class ShapeFactory {
         } else {
             System.out.println("Reusing existing circle of color : " + color);
         }
-        return circle;
-    }
+    return circle;
+}
 }
 
 // 4. 客户端调用
 public class FlyweightPatternDemo {
-    private static final String colors[] = { "Red", "Green", "Blue" };
-
-    public static void main(String[] args) {
-        // 模拟绘制 10 个圆，但实际上只会创建 3 个对象 (Red, Green, Blue)
-        for(int i=0; i < 10; ++i) {
-            String color = colors[(int)(Math.random()*colors.length)];
-            // 获取享元对象
-            Circle circle = (Circle)ShapeFactory.getCircle(color);
-            // 传入外部状态 (随机坐标)
-            circle.draw(getRandomX(), getRandomY(), 100);
-        }
+    private static final String colors[] =
+    {
+        "Red", "Green", "Blue";
     }
+;
 
-    private static int getRandomX() { return (int)(Math.random()*100 ); }
-    private static int getRandomY() { return (int)(Math.random()*100); }
+public static void main(String[] args) {
+    // 模拟绘制 10 个圆，但实际上只会创建 3 个对象 (Red, Green, Blue)
+    for(int i=0; i < 10; ++i) {
+        String color = colors[(int)(Math.random()*colors.length)];
+        // 获取享元对象
+        Circle circle = (Circle)ShapeFactory.getCircle(color);
+        // 传入外部状态 (随机坐标)
+        circle.draw(getRandomX(), getRandomY(), 100);
+    }
 }
+
+private static int getRandomX()
+{
+    return (int)(Math.random()*100 );
+}
+private static int getRandomY()
+{
+    return (int)(Math.random()*100);
+}
+}
+
 ```
 
 ### 4.2. Python 代码示例

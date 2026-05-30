@@ -39,7 +39,7 @@ public static void main(String[] args) {
 public int nextInt(int bound) {
     //边界检测
     if (bound <= 0)
-        throw new IllegalArgumentException(BadBound);
+    throw new IllegalArgumentException(BadBound);
     //获取下一随机数
     int r = next(31);
     //(*)此处以特定算法根据r计算出最终结果
@@ -57,6 +57,7 @@ protected int next(int bits) {
     } while (!seed.compareAndSet(oldseed, nextseed));
     return (int)(nextseed >>> (48 - bits));
 }
+
 ```
 
 由此可见，生成新的随机数需要两步：
@@ -95,7 +96,7 @@ public static ThreadLocalRandom current() {
     //检测是否初始化过
     //PROBE为Thread类中threadLocalRandomProb偏移
     if (UNSAFE.getInt(Thread.currentThread(), PROBE) == 0)
-        localInit();
+    localInit();
     return instance;
 }
 static final void localInit() {
@@ -107,6 +108,7 @@ static final void localInit() {
     UNSAFE.putLong(t, SEED, seed);
     UNSAFE.putInt(t, PROBE, probe);
 }
+
 ```
 
 如果线程中第一次调用current()方法，则调用localInit()进行初始化设置当前线程中的threadLocalRandomProb和threadLocalRandomSeed变量。
@@ -115,28 +117,29 @@ static final void localInit() {
 
 ```java
 public int nextInt(int bound) {
-   if (bound <= 0)
-       throw new IllegalArgumentException(BadBound);
-   //根据当前Thread中的threadLocalRandomSeed变量生成新种子
-   int r = mix32(nextSeed());
-   int m = bound - 1;
-   if ((bound & m) == 0) // power of two
-       r &= m;
-   else { // reject over-represented candidates
-       for (int u = r >>> 1;
-               u + m - (r = u % bound) < 0;
-               u = mix32(nextSeed()) >>> 1)
-           ;
-   }
-   return r;
+    if (bound <= 0)
+    throw new IllegalArgumentException(BadBound);
+    //根据当前Thread中的threadLocalRandomSeed变量生成新种子
+    int r = mix32(nextSeed());
+    int m = bound - 1;
+    if ((bound & m) == 0) // power of two
+    r &= m;
+    else { // reject over-represented candidates
+    for (int u = r >>> 1;
+    u + m - (r = u % bound) < 0;
+    u = mix32(nextSeed()) >>> 1)
+    ;
+}
+return r;
 }
 final long nextSeed() {
-   Thread t; long r;
-   //生成并存入新种子
-   UNSAFE.putLong(t = Thread.currentThread(), SEED,
-                   r = UNSAFE.getLong(t, SEED) + GAMMA);
-   return r;
+    Thread t; long r;
+    //生成并存入新种子
+    UNSAFE.putLong(t = Thread.currentThread(), SEED,
+    r = UNSAFE.getLong(t, SEED) + GAMMA);
+    return r;
 }
+
 ```
 
 如上，首先调用nextSeed()根据当前Thread中的threadLocalRandomSeed变量生成并存入新种子，然后经过特定算法得出了nextInt的值。

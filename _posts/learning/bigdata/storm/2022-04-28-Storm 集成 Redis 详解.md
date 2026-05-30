@@ -83,24 +83,25 @@ RedisLookupBolt、RedisStoreBolt、RedisFilterBolt 均继承自 AbstractRedisBol
     {
         this.spoutOutputCollector = spoutOutputCollector ;
     }
-    @Override public void nextTuple()
-    {
-        // 模拟产生数据 String lineData = productData() ;
-        spoutOutputCollector.emit(new Values(lineData)) ;
-        Utils.sleep(1000) ;
-    }
-    @Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
-    {
-        outputFieldsDeclarer.declare(new Fields("line")) ;
-    }
-    /** * 模拟数据 */ private String productData()
-    {
-        Collections.shuffle(list) ;
-        Random random = new Random() ;
-        int endIndex = random.nextInt(list.size()) % (list.size()) + 1 ;
-        return StringUtils.join(list.toArray(), "\t", 0, endIndex) ;
-    }
+@Override public void nextTuple()
+{
+    // 模拟产生数据 String lineData = productData() ;
+    spoutOutputCollector.emit(new Values(lineData)) ;
+    Utils.sleep(1000) ;
 }
+@Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
+{
+    outputFieldsDeclarer.declare(new Fields("line")) ;
+}
+/** * 模拟数据 */ private String productData()
+{
+    Collections.shuffle(list) ;
+    Random random = new Random() ;
+    int endIndex = random.nextInt(list.size()) % (list.size()) + 1 ;
+    return StringUtils.join(list.toArray(), "\t", 0, endIndex) ;
+}
+}
+
 ```
 
 产生的模拟数据格式如下：
@@ -127,20 +128,21 @@ Hadoop  Spark   HBase   Storm
     {
         this.collector = collector ;
     }
-    @Override public void execute(Tuple input)
+@Override public void execute(Tuple input)
+{
+    String line = input.getStringByField("line") ;
+    String[] words = line.split("\t") ;
+    for (String word : words)
     {
-        String line = input.getStringByField("line") ;
-        String[] words = line.split("\t") ;
-        for (String word : words)
-        {
-            collector.emit(new Values(word, String.valueOf(1))) ;
-        }
-    }
-    @Override public void declareOutputFields(OutputFieldsDeclarer declarer)
-    {
-        declarer.declare(new Fields("word", "count")) ;
+        collector.emit(new Values(word, String.valueOf(1))) ;
     }
 }
+@Override public void declareOutputFields(OutputFieldsDeclarer declarer)
+{
+    declarer.declare(new Fields("word", "count")) ;
+}
+}
+
 ```
 
 ### 2.5 CountBolt
@@ -154,23 +156,24 @@ Hadoop  Spark   HBase   Storm
     {
         this.collector=collector ;
     }
-    @Override public void execute(Tuple input)
+@Override public void execute(Tuple input)
+{
+    String word = input.getStringByField("word") ;
+    Integer count = counts.get(word) ;
+    if (count == null)
     {
-        String word = input.getStringByField("word") ;
-        Integer count = counts.get(word) ;
-        if (count == null)
-        {
-            count = 0 ;
-        }
-        count++ ;
-        counts.put(word, count) ;
-        // 输出 collector.emit(new Values(word, String.valueOf(count))) ;
+        count = 0 ;
     }
-    @Override public void declareOutputFields(OutputFieldsDeclarer declarer)
-    {
-        declarer.declare(new Fields("word", "count")) ;
-    }
+count++ ;
+counts.put(word, count) ;
+// 输出 collector.emit(new Values(word, String.valueOf(count))) ;
 }
+@Override public void declareOutputFields(OutputFieldsDeclarer declarer)
+{
+    declarer.declare(new Fields("word", "count")) ;
+}
+}
+
 ```
 
 ### 2.6 WordCountStoreMapper
@@ -186,19 +189,20 @@ Hadoop  Spark   HBase   Storm
     {
         description = new RedisDataTypeDescription( RedisDataTypeDescription.RedisDataType.HASH, hashKey) ;
     }
-    @Override public RedisDataTypeDescription getDataTypeDescription()
-    {
-        return description ;
-    }
-    @Override public String getKeyFromTuple(ITuple tuple)
-    {
-        return tuple.getStringByField("word") ;
-    }
-    @Override public String getValueFromTuple(ITuple tuple)
-    {
-        return tuple.getStringByField("count") ;
-    }
+@Override public RedisDataTypeDescription getDataTypeDescription()
+{
+    return description ;
 }
+@Override public String getKeyFromTuple(ITuple tuple)
+{
+    return tuple.getStringByField("word") ;
+}
+@Override public String getValueFromTuple(ITuple tuple)
+{
+    return tuple.getStringByField("count") ;
+}
+}
+
 ```
 
 ### 2.7 WordCountToRedisApp
@@ -228,18 +232,19 @@ Hadoop  Spark   HBase   Storm
             {
                 StormSubmitter.submitTopology("ClusterWordCountToRedisApp", new Config(), builder.createTopology()) ;
             }
-            catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
-            {
-                e.printStackTrace() ;
-            }
-        }
-        else
+        catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
         {
-            LocalCluster cluster = new LocalCluster() ;
-            cluster.submitTopology("LocalWordCountToRedisApp", new Config(), builder.createTopology()) ;
+            e.printStackTrace() ;
         }
-    }
 }
+else
+{
+    LocalCluster cluster = new LocalCluster() ;
+    cluster.submitTopology("LocalWordCountToRedisApp", new Config(), builder.createTopology()) ;
+}
+}
+}
+
 ```
 
 ### 2.8 启动测试
@@ -278,17 +283,18 @@ public abstract class AbstractRedisBolt extends BaseTickTupleAwareRichBolt
         {
             this.container = JedisCommandsContainerBuilder.build(jedisPoolConfig) ;
         }
-        else if (jedisClusterConfig != null)
-        {
-            this.container = JedisCommandsContainerBuilder.build(jedisClusterConfig) ;
-        }
-        else
-        {
-            throw new IllegalArgumentException("Jedis configuration not found") ;
-        }
+    else if (jedisClusterConfig != null)
+    {
+        this.container = JedisCommandsContainerBuilder.build(jedisClusterConfig) ;
     }
-    .......
+else
+{
+    throw new IllegalArgumentException("Jedis configuration not found") ;
 }
+}
+.......
+}
+
 ```
 
 JedisCommandsInstanceContainer 的 build() 方法如下，实际上就是创建 JedisPool 或 JedisCluster 并传入容器中。
@@ -326,61 +332,62 @@ public class RedisStoreBolt extends AbstractRedisBolt
         this.dataType = dataTypeDescription.getDataType() ;
         this.additionalKey = dataTypeDescription.getAdditionalKey() ;
     }
-    public RedisStoreBolt(JedisClusterConfig config, RedisStoreMapper storeMapper)
-    {
-        super(config) ;
-        this.storeMapper = storeMapper ;
-        RedisDataTypeDescription dataTypeDescription = storeMapper.getDataTypeDescription() ;
-        this.dataType = dataTypeDescription.getDataType() ;
-        this.additionalKey = dataTypeDescription.getAdditionalKey() ;
-    }
-    @Override public void process(Tuple input)
-    {
-        String key = storeMapper.getKeyFromTuple(input) ;
-        String value = storeMapper.getValueFromTuple(input) ;
-        JedisCommands jedisCommand = null ;
-        try
-        {
-            jedisCommand = getInstance() ;
-            switch (dataType)
-            {
-                case STRING: jedisCommand.set(key, value) ;
-                break ;
-                case LIST: jedisCommand.rpush(key, value) ;
-                break ;
-                case HASH: jedisCommand.hset(additionalKey, key, value) ;
-                break ;
-                case SET: jedisCommand.sadd(key, value) ;
-                break ;
-                case SORTED_SET: jedisCommand.zadd(additionalKey, Double.valueOf(value), key) ;
-                break ;
-                case HYPER_LOG_LOG: jedisCommand.pfadd(key, value) ;
-                break ;
-                case GEO: String[] array = value.split(":") ;
-                if (array.length != 2)
-                {
-                    throw new IllegalArgumentException("value structure should be longitude:latitude") ;
-                }
-                double longitude = Double.valueOf(array[0]) ;
-                double latitude = Double.valueOf(array[1]) ;
-                jedisCommand.geoadd(additionalKey, longitude, latitude, key) ;
-                break ;
-                default: throw new IllegalArgumentException("Cannot process such data type: " + dataType) ;
-            }
-            collector.ack(input) ;
-        }
-        catch (Exception e)
-        {
-            this.collector.reportError(e) ;
-            this.collector.fail(input) ;
-        }
-        finally
-        {
-            returnInstance(jedisCommand) ;
-        }
-    }
-    .........
+public RedisStoreBolt(JedisClusterConfig config, RedisStoreMapper storeMapper)
+{
+    super(config) ;
+    this.storeMapper = storeMapper ;
+    RedisDataTypeDescription dataTypeDescription = storeMapper.getDataTypeDescription() ;
+    this.dataType = dataTypeDescription.getDataType() ;
+    this.additionalKey = dataTypeDescription.getAdditionalKey() ;
 }
+@Override public void process(Tuple input)
+{
+    String key = storeMapper.getKeyFromTuple(input) ;
+    String value = storeMapper.getValueFromTuple(input) ;
+    JedisCommands jedisCommand = null ;
+    try
+    {
+        jedisCommand = getInstance() ;
+        switch (dataType)
+        {
+            case STRING: jedisCommand.set(key, value) ;
+            break ;
+            case LIST: jedisCommand.rpush(key, value) ;
+            break ;
+            case HASH: jedisCommand.hset(additionalKey, key, value) ;
+            break ;
+            case SET: jedisCommand.sadd(key, value) ;
+            break ;
+            case SORTED_SET: jedisCommand.zadd(additionalKey, Double.valueOf(value), key) ;
+            break ;
+            case HYPER_LOG_LOG: jedisCommand.pfadd(key, value) ;
+            break ;
+            case GEO: String[] array = value.split(":") ;
+            if (array.length != 2)
+            {
+                throw new IllegalArgumentException("value structure should be longitude:latitude") ;
+            }
+        double longitude = Double.valueOf(array[0]) ;
+        double latitude = Double.valueOf(array[1]) ;
+        jedisCommand.geoadd(additionalKey, longitude, latitude, key) ;
+        break ;
+        default: throw new IllegalArgumentException("Cannot process such data type: " + dataType) ;
+    }
+collector.ack(input) ;
+}
+catch (Exception e)
+{
+    this.collector.reportError(e) ;
+    this.collector.fail(input) ;
+}
+finally
+{
+    returnInstance(jedisCommand) ;
+}
+}
+.........
+}
+
 ```
 
 ### 3.3 JedisCommands
@@ -409,8 +416,13 @@ TupleMapper 主要定义了两个方法：
 ```java
 public class RedisDataTypeDescription implements Serializable
 {
-public enum RedisDataType { STRING, HASH, LIST, SET, SORTED_SET, HYPER_LOG_LOG, GEO }    ......
+    public enum RedisDataType
+    {
+        STRING, HASH, LIST, SET, SORTED_SET, HYPER_LOG_LOG, GEO;
+    }
+......
 }
+
 ```
 
 ### 3. RedisStoreMapper
@@ -435,30 +447,31 @@ class WordCountRedisLookupMapper implements RedisLookupMapper
     {
         description = new RedisDataTypeDescription( RedisDataTypeDescription.RedisDataType.HASH, hashKey) ;
     }
-    @Override public List<Values> toTuple(ITuple input, Object value)
-    {
-        String member = getKeyFromTuple(input) ;
-        List<Values> values = Lists.newArrayList() ;
-        values.add(new Values(member, value)) ;
-        return values ;
-    }
-    @Override public void declareOutputFields(OutputFieldsDeclarer declarer)
-    {
-        declarer.declare(new Fields("wordName", "count")) ;
-    }
-    @Override public RedisDataTypeDescription getDataTypeDescription()
-    {
-        return description ;
-    }
-    @Override public String getKeyFromTuple(ITuple tuple)
-    {
-        return tuple.getStringByField("word") ;
-    }
-    @Override public String getValueFromTuple(ITuple tuple)
-    {
-        return null ;
-    }
+@Override public List<Values> toTuple(ITuple input, Object value)
+{
+    String member = getKeyFromTuple(input) ;
+    List<Values> values = Lists.newArrayList() ;
+    values.add(new Values(member, value)) ;
+    return values ;
 }
+@Override public void declareOutputFields(OutputFieldsDeclarer declarer)
+{
+    declarer.declare(new Fields("wordName", "count")) ;
+}
+@Override public RedisDataTypeDescription getDataTypeDescription()
+{
+    return description ;
+}
+@Override public String getKeyFromTuple(ITuple tuple)
+{
+    return tuple.getStringByField("word") ;
+}
+@Override public String getValueFromTuple(ITuple tuple)
+{
+    return null ;
+}
+}
+
 ```
 
 ### 5. RedisFilterMapper
@@ -510,38 +523,39 @@ redis>
         this.dataType = dataTypeDescription.getDataType() ;
         this.additionalKey = dataTypeDescription.getAdditionalKey() ;
     }
-    @Override protected void process(Tuple tuple)
+@Override protected void process(Tuple tuple)
+{
+    String key = storeMapper.getKeyFromTuple(tuple) ;
+    String value = storeMapper.getValueFromTuple(tuple) ;
+    JedisCommands jedisCommand = null ;
+    try
     {
-        String key = storeMapper.getKeyFromTuple(tuple) ;
-        String value = storeMapper.getValueFromTuple(tuple) ;
-        JedisCommands jedisCommand = null ;
-        try
+        jedisCommand = getInstance() ;
+        if (dataType == RedisDataTypeDescription.RedisDataType.HASH)
         {
-            jedisCommand = getInstance() ;
-            if (dataType == RedisDataTypeDescription.RedisDataType.HASH)
-            {
-                jedisCommand.hincrBy(additionalKey, key, Long.valueOf(value)) ;
-            }
-            else
-            {
-                throw new IllegalArgumentException("Cannot process such data type for Count: " + dataType) ;
-            }
-            collector.ack(tuple) ;
+            jedisCommand.hincrBy(additionalKey, key, Long.valueOf(value)) ;
         }
-        catch (Exception e)
-        {
-            this.collector.reportError(e) ;
-            this.collector.fail(tuple) ;
-        }
-        finally
-        {
-            returnInstance(jedisCommand) ;
-        }
-    }
-    @Override public void declareOutputFields(OutputFieldsDeclarer declarer)
+    else
     {
+        throw new IllegalArgumentException("Cannot process such data type for Count: " + dataType) ;
     }
+collector.ack(tuple) ;
 }
+catch (Exception e)
+{
+    this.collector.reportError(e) ;
+    this.collector.fail(tuple) ;
+}
+finally
+{
+    returnInstance(jedisCommand) ;
+}
+}
+@Override public void declareOutputFields(OutputFieldsDeclarer declarer)
+{
+}
+}
+
 ```
 
 ### 4.4 CustomRedisCountApp
@@ -569,18 +583,19 @@ redis>
             {
                 StormSubmitter.submitTopology("ClusterCustomRedisCountApp", new Config(), builder.createTopology()) ;
             }
-            catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
-            {
-                e.printStackTrace() ;
-            }
-        }
-        else
+        catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
         {
-            LocalCluster cluster = new LocalCluster() ;
-            cluster.submitTopology("LocalCustomRedisCountApp", new Config(), builder.createTopology()) ;
+            e.printStackTrace() ;
         }
-    }
 }
+else
+{
+    LocalCluster cluster = new LocalCluster() ;
+    cluster.submitTopology("LocalCustomRedisCountApp", new Config(), builder.createTopology()) ;
+}
+}
+}
+
 ```
 
 ## 参考资料

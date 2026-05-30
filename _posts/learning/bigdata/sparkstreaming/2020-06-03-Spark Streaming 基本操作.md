@@ -29,7 +29,10 @@ updated: 2025-03-12 18:26
 
 ```java
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.
+{
+    Seconds, StreamingContext;
+}
 
 object NetworkWordCount {
     def main(args: Array[String]) {
@@ -45,6 +48,7 @@ object NetworkWordCount {
         ssc.awaitTermination()
     }
 }
+
 ```
 
 使用本地模式启动 Spark 程序，然后使用 nc -lk 9999 打开端口并输入测试数据：
@@ -111,9 +115,9 @@ DStream 是 Spark Streaming 提供的基本抽象。它表示连续的数据流�
 object NetworkWordCountV2 {
     def main(args: Array[String]) {
         /*
-         * 本地测试时最好指定 hadoop 用户名,否则会默认使用本地电脑的用户名,
-         * 此时在 HDFS 上创建目录时可能会抛出权限不足的异常
-         */
+        * 本地测试时最好指定 hadoop 用户名,否则会默认使用本地电脑的用户名,
+        * 此时在 HDFS 上创建目录时可能会抛出权限不足的异常
+        */
         System.setProperty("HADOOP_USER_NAME", "root")
 
         val sparkConf = new SparkConf().setAppName("NetworkWordCountV2").setMaster("local[2]")
@@ -131,19 +135,20 @@ object NetworkWordCountV2 {
         ssc.awaitTermination()
     }
 
-    /**
-    * 累计求和
-    *
-    * @param currentValues 当前的数据
-    * @param preValues     之前的数据
-    * @return 相加后的数据
-    */
-    def updateFunction(currentValues: Seq[Int], preValues: Option[Int]): Option[Int] = {
-        val current = currentValues.sum
-        val pre = preValues.getOrElse(0)
-        Some(current + pre)
-    }
+/**
+* 累计求和
+*
+* @param currentValues 当前的数据
+* @param preValues     之前的数据
+* @return 相加后的数据
+*/
+def updateFunction(currentValues: Seq[Int], preValues: Option[Int]): Option[Int] = {
+    val current = currentValues.sum
+    val pre = preValues.getOrElse(0)
+    Some(current + pre)
 }
+}
+
 ```
 
 使用 updateStateByKey 算子，你必须使用 ssc.checkpoint() 设置检查点，这样当使用 updateStateByKey 算子时，它会去检查点中取出上一次保存的信息，并使用自定义的 updateFunction 函数将上一次的数据和本次数据进行相加，然后返回。
@@ -209,7 +214,10 @@ Spark Streaming 支持以下输出操作：
 ```java
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.DStream
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.
+{
+    Seconds, StreamingContext;
+}
 import redis.clients.jedis.Jedis
 
 object NetworkWordCountToRedis {
@@ -223,23 +231,24 @@ object NetworkWordCountToRedis {
 
         /*保存数据到 Redis*/
         pairs.foreachRDD { rdd =>
-            rdd.foreachPartition { partitionOfRecords =>
-                var jedis: Jedis = null
-                try {
-                    jedis = JedisPoolUtil.getConnection
-                    partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
-                } catch {
-                    case ex: Exception =>
-                    ex.printStackTrace()
-                } finally {
-                    if (jedis != null) jedis.close()
-                }
-            }
+        rdd.foreachPartition { partitionOfRecords =>
+        var jedis: Jedis = null
+        try {
+            jedis = JedisPoolUtil.getConnection
+            partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
+        } catch {
+            case ex: Exception =>
+            ex.printStackTrace()
+        } finally {
+            if (jedis != null) jedis.close()
         }
-        ssc.start()
-        ssc.awaitTermination()
-    }
 }
+}
+ssc.start()
+ssc.awaitTermination()
+}
+}
+
 ```
 
 其中 JedisPoolUtil 的代码如下：
@@ -265,11 +274,12 @@ public class JedisPoolUtil {
                     config.setMaxIdle(10);
                     jedisPool = new JedisPool(config, HOST, PORT);
                 }
-            }
         }
-        return jedisPool.getResource();
-    }
 }
+return jedisPool.getResource();
+}
+}
+
 ```
 
 ### 3.3 代码说明
@@ -278,24 +288,26 @@ public class JedisPoolUtil {
 
 ```java
 pairs.foreachRDD { rdd =>
-    rdd.foreachPartition { partitionOfRecords =>
-        val jedis = JedisPoolUtil.getConnection
-        partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
-        jedis.close()
-    }
+rdd.foreachPartition { partitionOfRecords =>
+val jedis = JedisPoolUtil.getConnection
+partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
+jedis.close()
 }
+}
+
 ```
 
 这里可以看到一共使用了三次循环，分别是循环 RDD，循环分区，循环每条记录，上面我们的代码是在循环分区的时候获取连接，也就是为每一个分区获取一个连接。但是这里大家可能会有疑问：为什么不在循环 RDD 的时候，为每一个 RDD 获取一个连接，这样所需要的连接数会更少。实际上这是不可行的，如果按照这种情况进行改写，如下：
 
 ```java
 pairs.foreachRDD { rdd =>
-    val jedis = JedisPoolUtil.getConnection
-    rdd.foreachPartition { partitionOfRecords =>
-        partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
-    }
-    jedis.close()
+val jedis = JedisPoolUtil.getConnection
+rdd.foreachPartition { partitionOfRecords =>
+partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
 }
+jedis.close()
+}
+
 ```
 
 此时在执行时候就会抛出 Caused by: java.io.NotSerializableException: redis.clients.jedis.Jedis，这是因为在实际计算时，Spark 会将对 RDD 操作分解为多个 Task，Task 运行在具体的 Worker Node 上。在执行之前，Spark 会对任务进行闭包，之后闭包被序列化并发送给每个 Executor，而 Jedis 显然是不能被序列化的，所以会抛出异常。

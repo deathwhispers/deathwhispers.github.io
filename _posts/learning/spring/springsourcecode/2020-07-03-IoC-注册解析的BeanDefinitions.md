@@ -38,9 +38,10 @@ void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
             final decorated instance.
             BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
         }
-        catch (BeanDefinitionStoreException ex) {
-            getReaderContext().error("Failed to register bean definition with name '" +                                     bdHolder.getBeanName() + "'", ele, ex);
-} // 发出响应事件，通知相关的监听器，已完成该 Bean 标签的解析。        // Send registration event.        getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));    }}
+    catch (BeanDefinitionStoreException ex) {
+        getReaderContext().error("Failed to register bean definition with name '" +                                     bdHolder.getBeanName() + "'", ele, ex);
+    } // 发出响应事件，通知相关的监听器，已完成该 Bean 标签的解析。        // Send registration event.        getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));    }}
+
 ```
 
 - 解析工作分为三步：
@@ -68,8 +69,9 @@ BeanDefinitionStoreException {
         for (String alias : aliases) {
             registry.registerAlias(beanName, alias);
         }
-    }
 }
+}
+
 ```
 
 - 首先，通过 beanName 注册 BeanDefinition 。详细解析，见 [2.1 通过 beanName 注册](http://svip.iocoder.cn/Spring/IoC-register-BeanDefinitions-really/#) 。
@@ -105,53 +107,61 @@ public void registerBeanDefinition(String beanName, BeanDefinition beanDefinitio
         try {
             ((AbstractBeanDefinition) beanDefinition).validate();
         }
-        catch (BeanDefinitionValidationException ex) {
-            throw new BeanDefinitionStoreException(beanDefinition.getResourceDescription(), beanName,                                                   "Validation of bean definition failed", ex);
-        }
-    } // <2> 从缓存中获取指定 beanName 的 BeanDefinition    BeanDefinition existingDefinition =
-    this.beanDefinitionMap.get(beanName); // <3> 如果已经存在    if (existingDefinition !=
-    null) {
-        // 如果存在但是不允许覆盖，抛出异常
-        if (!isAllowBeanDefinitionOverriding()) {
-            throw
-            new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition); // 覆盖 beanDefinition 大于 被覆盖的 beanDefinition 的 ROLE ，打印 info 日志        }
-            else if (existingDefinition.getRole() < beanDefinition.getRole()) {
-                // e.g. was ROLE_APPLICATION, now overriding with ROLE_SUPPORT or ROLE_INFRASTRUCTURE            if (logger.isInfoEnabled()) {                logger.info("Overriding user-defined bean definition for bean '" + beanName +                            "' with a framework-generated bean definition: replacing [" +                            existingDefinition + "] with [" + beanDefinition + "]");            }            // 覆盖 beanDefinition 与 被覆盖的 beanDefinition 不相同，打印 debug 日志        }
-            else if (!beanDefinition.equals(existingDefinition)) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Overriding bean definition for bean '" + beanName +                             "' with a different definition: replacing [" + existingDefinition +                             "] with [" + beanDefinition + "]");
-            } // 其它，打印 debug 日志        }
-            else {
-                if (logger.isTraceEnabled()) {
-                    logger.trace("Overriding bean definition
-                    for bean '" + beanName +                        "' with an equivalent definition: replacing [" + existingDefinition +                        "] with [" + beanDefinition + "]");            }        }        // 允许覆盖，直接覆盖原有的 BeanDefinition 到 beanDefinitionMap 中。
-                    this.beanDefinitionMap.put(beanName, beanDefinition); // <4> 如果未存在    }
-                    else {
-                        // 检测创建 Bean 阶段是否已经开启，如果开启了则需要对 beanDefinitionMap 进行并发控制        if (hasBeanCreationStarted()) {            // beanDefinitionMap 为全局变量，避免并发情况            // Cannot
-                        modify startup-time collection elements anymore (for stable iteration)
-                        synchronized (this.beanDefinitionMap) {
-                            // 添加到
-                            BeanDefinition 到 beanDefinitionMap 中。                this.beanDefinitionMap.put(beanName, beanDefinition); // 添加 beanName 到 beanDefinitionNames 中
-                            List<String> updatedDefinitions = new ArrayList<>(this.beanDefinitionNames.size() + 1);
-                            updatedDefinitions.addAll(this.beanDefinitionNames);
-                            updatedDefinitions.add(beanName);
-                            this.beanDefinitionNames = updatedDefinitions; // 从 manualSingletonNames 移除 beanName
-                            if (this.manualSingletonNames.contains(beanName)) {
-                                Set<String> updatedSingletons = new LinkedHashSet<>(this.manualSingletonNames);
-                                updatedSingletons.remove(beanName);
-                                this.manualSingletonNames = updatedSingletons;
-                            }
-                        }
-                    }
-                    else {
-                        // Still in startup registration phase            // 添加到
-                        BeanDefinition 到 beanDefinitionMap 中。            this.beanDefinitionMap.put(beanName, beanDefinition); // 添加 beanName 到 beanDefinitionNames 中            this.beanDefinitionNames.add(beanName);            // 从 manualSingletonNames 移除 beanName            this.manualSingletonNames.remove(beanName);        }
-                        this.frozenBeanDefinitionNames = null;
-                    } // <5> 重新设置 beanName 对应的缓存
-                    if (existingDefinition != null || containsSingleton(beanName)) {
-                        resetBeanDefinition(beanName);
-                    }
-                }
+    catch (BeanDefinitionValidationException ex) {
+        throw new BeanDefinitionStoreException(beanDefinition.getResourceDescription(), beanName,                                                   "Validation of bean definition failed", ex);
+    }
+} // <2> 从缓存中获取指定 beanName 的 BeanDefinition    BeanDefinition existingDefinition =
+this.beanDefinitionMap.get(beanName); // <3> 如果已经存在    if (existingDefinition !=
+null) {
+    // 如果存在但是不允许覆盖，抛出异常
+    if (!isAllowBeanDefinitionOverriding()) {
+        throw
+        new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition); // 覆盖 beanDefinition 大于 被覆盖的 beanDefinition 的 ROLE ，打印 info 日志        }
+    else if (existingDefinition.getRole() < beanDefinition.getRole()) {
+        // e.g. was ROLE_APPLICATION, now overriding with ROLE_SUPPORT or ROLE_INFRASTRUCTURE            if (logger.isInfoEnabled())
+        {
+            logger.info("Overriding user-defined bean definition for bean '" + beanName +                            "' with a framework-generated bean definition: replacing [" +                            existingDefinition + "] with [" + beanDefinition + "]");
+        }            // 覆盖 beanDefinition 与 被覆盖的 beanDefinition 不相同，打印 debug 日志;
+    }
+else if (!beanDefinition.equals(existingDefinition)) {
+    if (logger.isDebugEnabled()) {
+        logger.debug("Overriding bean definition for bean '" + beanName +                             "' with a different definition: replacing [" + existingDefinition +                             "] with [" + beanDefinition + "]");
+    } // 其它，打印 debug 日志        }
+else {
+    if (logger.isTraceEnabled()) {
+        logger.trace("Overriding bean definition
+        for bean '" + beanName +                        "' with an equivalent definition: replacing [" + existingDefinition +                        "] with [" + beanDefinition + "]");            }        }        // 允许覆盖，直接覆盖原有的 BeanDefinition 到 beanDefinitionMap 中。
+        this.beanDefinitionMap.put(beanName, beanDefinition); // <4> 如果未存在    }
+    else {
+        // 检测创建 Bean 阶段是否已经开启，如果开启了则需要对 beanDefinitionMap 进行并发控制        if (hasBeanCreationStarted()) {            // beanDefinitionMap 为全局变量，避免并发情况            // Cannot
+        modify startup-time collection elements anymore (for stable iteration)
+        synchronized (this.beanDefinitionMap) {
+            // 添加到
+            BeanDefinition 到 beanDefinitionMap 中。                this.beanDefinitionMap.put(beanName, beanDefinition); // 添加 beanName 到 beanDefinitionNames 中
+            List<String> updatedDefinitions = new ArrayList<>(this.beanDefinitionNames.size() + 1);
+            updatedDefinitions.addAll(this.beanDefinitionNames);
+            updatedDefinitions.add(beanName);
+            this.beanDefinitionNames = updatedDefinitions; // 从 manualSingletonNames 移除 beanName
+            if (this.manualSingletonNames.contains(beanName)) {
+                Set<String> updatedSingletons = new LinkedHashSet<>(this.manualSingletonNames);
+                updatedSingletons.remove(beanName);
+                this.manualSingletonNames = updatedSingletons;
+            }
+    }
+}
+else {
+    // Still in startup registration phase            // 添加到
+    BeanDefinition 到 beanDefinitionMap 中。            this.beanDefinitionMap.put(beanName, beanDefinition);
+    // 添加 beanName 到 beanDefinitionNames 中            this.beanDefinitionNames.add(beanName);
+    // 从 manualSingletonNames 移除 beanName            this.manualSingletonNames.remove(beanName);
+}
+this.frozenBeanDefinitionNames = null;
+} // <5> 重新设置 beanName 对应的缓存
+if (existingDefinition != null || containsSingleton(beanName)) {
+    resetBeanDefinition(beanName);
+}
+}
+
 ```
 
 处理过程如下：
@@ -182,36 +192,40 @@ Map<String,
 String> aliasMap = new ConcurrentHashMap<>(16);
 @Override
 public void registerAlias(String name, String alias) {
-    // 校验 name 、 alias    Assert.hasText(name, "'name' must not be empty");    Assert.hasText(alias, "'alias' must not be empty");
+    // 校验 name 、 alias    Assert.hasText(name, "'name' must not be empty");
+    Assert.hasText(alias, "'alias' must not be empty");
     synchronized (this.aliasMap) {
         // name == alias 则去掉alias        if (alias.equals(name)) {
             this.aliasMap.remove(alias);
             if (logger.isDebugEnabled()) {
                 logger.debug("Alias definition '" + alias + "' ignored since it points to same name");
             }
+    }
+else {
+    // 获取 alias 已注册的 beanName
+    String registeredName = this.aliasMap.get(alias); // 已存在            if (registeredName !=
+    null) {
+        // 相同，则 return ，无需重复注册
+        if (registeredName.equals(name)) {
+            // An existing alias - no need to re-register
+            return;
+        } // 不允许覆盖，则抛出 IllegalStateException 异常
+        if (!allowAliasOverriding()) {
+            throw new IllegalStateException("Cannot define alias '" + alias + "' for name '" +                                                    name + "': It is already registered for name '" + registeredName + "'.");
         }
-        else {
-            // 获取 alias 已注册的 beanName
-            String registeredName = this.aliasMap.get(alias); // 已存在            if (registeredName !=
-            null) {
-                // 相同，则 return ，无需重复注册
-                if (registeredName.equals(name)) {
-                    // An existing alias - no need to re-register
-                    return;
-                } // 不允许覆盖，则抛出 IllegalStateException 异常
-                if (!allowAliasOverriding()) {
-                    throw new IllegalStateException("Cannot define alias '" + alias + "' for name '" +                                                    name + "': It is already registered for name '" + registeredName + "'.");
-                }
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Overriding alias '" + alias + "' definition for registered name '" +                                 registeredName + "' with
-                    new target name '" + name + "'");                }            }            // 校验，是否存在循环指向            checkForAliasCircle(name, alias);            // 注册 alias
-                    this.aliasMap.put(alias, name);
-                    if (logger.isTraceEnabled()) {
-                        logger.trace("Alias definition '" + alias + "' registered for name '" + name + "'");
-                    }
-                }
-            }
-        }
+    if (logger.isDebugEnabled()) {
+        logger.debug("Overriding alias '" + alias + "' definition for registered name '" +                                 registeredName + "' with
+        new target name '" + name + "'");
+    }            }            // 校验，是否存在循环指向            checkForAliasCircle(name, alias);
+    // 注册 alias
+    this.aliasMap.put(alias, name);
+    if (logger.isTraceEnabled()) {
+        logger.trace("Alias definition '" + alias + "' registered for name '" + name + "'");
+    }
+}
+}
+}
+
 ```
 
 - 注册 alias 和注册 BeanDefinition 的过程差不多。
@@ -231,10 +245,11 @@ public boolean hasAlias(String name, String alias) {
             if (registeredAlias.equals(alias) || hasAlias(registeredAlias, alias)) {
                 return true;
             }
-        }
     }
-    return false;
 }
+return false;
+}
+
 ```
 
 ```plain text

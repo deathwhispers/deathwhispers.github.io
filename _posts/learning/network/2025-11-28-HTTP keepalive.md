@@ -48,63 +48,64 @@ public DefaultHttpRequestRetryHandler(int retryCount, boolean requestSentRetryEn
 
 ```java
 /**
- * Used `retryCount` and `requestSentRetryEnabled` to determine
- * if the given method should be retried.
- */
+* Used `retryCount` and `requestSentRetryEnabled` to determine
+* if the given method should be retried.
+*/
 public boolean retryRequest(
-    final IOException exception,
-    int executionCount,
-    final HttpContext context) {
+final IOException exception,
+int executionCount,
+final HttpContext context) {
     if (exception == null) {
         throw new IllegalArgumentException("Exception parameter may not be null");
     }
-    if (context == null) {
-        throw new IllegalArgumentException("HTTP context may not be null");
-    }
+if (context == null) {
+    throw new IllegalArgumentException("HTTP context may not be null");
+}
 
-    // 如果重试次数大于 retryCount（默认为3次），则返回false，execute方法会抛出对应异常
-    if (executionCount > this.retryCount) {
-        // Do not retry if over max retry count
-        return false;
-    }
-
-    // NoHttpResponseException 是一种可以重试的异常
-    if (exception instanceof NoHttpResponseException) {
-        // Retry if the server dropped connection on us
-        return true;
-    }
-
-    // InterruptedIOException 是一种不可以重试的异常
-    if (exception instanceof InterruptedIOException) {
-        // Timeout
-        return false;
-    }
-
-    // UnknownHostException 是一种不可以重试的异常
-    if (exception instanceof UnknownHostException) {
-        // Unknown host
-        return false;
-    }
-
-    // SSLHandshakeException 是一种不可以重试的异常
-    if (exception instanceof SSLHandshakeException) {
-        // SSL handshake exception
-        return false;
-    }
-
-    Boolean b = (Boolean)
-        context.getAttribute(ExecutionContext.HTTP_REQ_SENT);
-    boolean sent = (b != null && b.booleanValue());
-
-    if (!sent || this.requestSentRetryEnabled) {
-        // Retry if the request has not been sent fully or
-        // if it's OK to retry methods that have been sent
-        return true;
-    }
-
-    // otherwise do not retry
+// 如果重试次数大于 retryCount（默认为3次），则返回false，execute方法会抛出对应异常
+if (executionCount > this.retryCount) {
+    // Do not retry if over max retry count
     return false;
 }
+
+// NoHttpResponseException 是一种可以重试的异常
+if (exception instanceof NoHttpResponseException) {
+    // Retry if the server dropped connection on us
+    return true;
+}
+
+// InterruptedIOException 是一种不可以重试的异常
+if (exception instanceof InterruptedIOException) {
+    // Timeout
+    return false;
+}
+
+// UnknownHostException 是一种不可以重试的异常
+if (exception instanceof UnknownHostException) {
+    // Unknown host
+    return false;
+}
+
+// SSLHandshakeException 是一种不可以重试的异常
+if (exception instanceof SSLHandshakeException) {
+    // SSL handshake exception
+    return false;
+}
+
+Boolean b = (Boolean)
+context.getAttribute(ExecutionContext.HTTP_REQ_SENT);
+boolean sent = (b != null && b.booleanValue());
+
+if (!sent || this.requestSentRetryEnabled) {
+    // Retry if the request has not been sent fully or
+    // if it's OK to retry methods that have been sent
+    return true;
+}
+
+// otherwise do not retry
+return false;
+}
+
 ```
 
 ## 6. 可重试与不可重试的异常

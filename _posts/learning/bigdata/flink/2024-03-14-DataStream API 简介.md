@@ -57,10 +57,11 @@ public class Person
     public Integer age;
     public Person()
     {
-        }    public Person(String name, Integer age) {
-    . . .    }
-    }
-    Person person = new Person("Fred Flintstone", 35);
+    }    public Person(String name, Integer age) {
+        . . .    }
+}
+Person person = new Person("Fred Flintstone", 35);
+
 ```
 
 Flink 的序列化器[支持的 POJO 类型数据结构升级](https://www.bookstack.cn/read/flink-1.15-zh/4e57547db68bc936.md#pojo-types)。
@@ -89,29 +90,30 @@ public class Example
             {
                 return person.age >= 18 ;
             }
-        }
-        ) ;
-        adults.print() ;
-        env.execute() ;
     }
-    public static class Person
-    {
-        public String name ;
-        public Integer age ;
-        public Person()
-        {
-        }
-        public Person(String name, Integer age)
-        {
-            this.name = name ;
-            this.age = age ;
-        }
-        public String toString()
-        {
-            return this.name.toString() + ": age " + this.age.toString() ;
-        }
-    }
+) ;
+adults.print() ;
+env.execute() ;
 }
+public static class Person
+{
+    public String name ;
+    public Integer age ;
+    public Person()
+    {
+    }
+public Person(String name, Integer age)
+{
+    this.name = name ;
+    this.age = age ;
+}
+public String toString()
+{
+    return this.name.toString() + ": age " + this.age.toString() ;
+}
+}
+}
+
 ```
 
 ### Stream 执行环境

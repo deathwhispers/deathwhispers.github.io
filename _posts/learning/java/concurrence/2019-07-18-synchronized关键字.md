@@ -42,16 +42,17 @@ public class Demo {
         synchronized (lock) {
             // 临界区
         }
-    }
-
-    public synchronized void methodB() {
-        // 锁 this
-    }
-
-    public static synchronized void methodC() {
-        // 锁 Demo.class
-    }
 }
+
+public synchronized void methodB() {
+    // 锁 this
+}
+
+public static synchronized void methodC() {
+    // 锁 Demo.class
+}
+}
+
 ```
 
 ## 语义速记

@@ -96,12 +96,13 @@ public class CustomIterator implements Iterator<Integer>, Serializable
     {
         return i < 100 ;
     }
-    @Override public Integer next()
-    {
-        i++ ;
-        return i ;
-    }
+@Override public Integer next()
+{
+    i++ ;
+    return i ;
 }
+}
+
 ```
 
 **5. fromParallelCollection(SplittableIterator, Class)**：方法接收两个参数，第二个参数用于定义输出元素的类型，第一个参数 SplittableIterator 是迭代器的抽象基类，它用于将原始迭代器的值拆分到多个不相交的迭代器中。
@@ -142,14 +143,15 @@ env.addSource(new SourceFunction<Long>()
             // 通过collect将输入发送出去 ctx.collect(count) ;
             count++ ;
         }
-    }
-    public void cancel()
-    {
-        isRunning = false ;
-    }
+}
+public void cancel()
+{
+    isRunning = false ;
+}
 }
 ).print() ;
 env.execute() ;
+
 ```
 
 ### 2.2 ParallelSourceFunction 和 RichParallelSourceFunction

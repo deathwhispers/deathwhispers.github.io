@@ -72,12 +72,12 @@ public class StoppedState implements PlayerState {
         // 状态转换：从 Stopped -> Playing
         context.setState(new PlayingState());
     }
-    @Override
-    public void handleStop(Context context) {
-        System.out.println("已经停止，无需操作。");
-    }
-    @Override
-    public String toString() { return "Stopped"; }
+@Override
+public void handleStop(Context context) {
+    System.out.println("已经停止，无需操作。");
+}
+@Override
+public String toString() { return "Stopped"; }
 }
 
 // --- 3. 具体状态类 B: 播放状态 (PlayingState) ---
@@ -88,14 +88,14 @@ public class PlayingState implements PlayerState {
         // 状态转换：从 Playing -> Stopped
         context.setState(new StoppedState());
     }
-    @Override
-    public void handleStop(Context context) {
-        System.out.println("-> 停止播放。");
-        // 状态转换：从 Playing -> Stopped
-        context.setState(new StoppedState());
-    }
-    @Override
-    public String toString() { return "Playing"; }
+@Override
+public void handleStop(Context context) {
+    System.out.println("-> 停止播放。");
+    // 状态转换：从 Playing -> Stopped
+    context.setState(new StoppedState());
+}
+@Override
+public String toString() { return "Playing"; }
 }
 
 // --- 4. 环境类 (Context) ---
@@ -108,20 +108,20 @@ public class Context {
         System.out.println("Initial State: " + currentState);
     }
 
-    public void setState(PlayerState newState) {
-        this.currentState = newState;
-        System.out.println("State Changed to: " + newState);
-    }
+public void setState(PlayerState newState) {
+    this.currentState = newState;
+    System.out.println("State Changed to: " + newState);
+}
 
-    // 委托给当前状态对象处理
-    public void pressPlayPause() {
-        System.out.print("Current State [" + currentState + "]: ");
-        currentState.handlePlayPause(this);
-    }
-    public void pressStop() {
-        System.out.print("Current State [" + currentState + "]: ");
-        currentState.handleStop(this);
-    }
+// 委托给当前状态对象处理
+public void pressPlayPause() {
+    System.out.print("Current State [" + currentState + "]: ");
+    currentState.handlePlayPause(this);
+}
+public void pressStop() {
+    System.out.print("Current State [" + currentState + "]: ");
+    currentState.handleStop(this);
+}
 }
 
 // --- 5. 客户端调用 (Client) ---
@@ -135,6 +135,7 @@ public class StatePatternDemo {
         player.pressStop();      // Playing -> Stopped
     }
 }
+
 ```
 
 ### 3.2. Python 代码示例

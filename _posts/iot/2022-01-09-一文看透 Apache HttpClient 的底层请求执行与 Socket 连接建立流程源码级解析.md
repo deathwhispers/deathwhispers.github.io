@@ -122,17 +122,18 @@ if (followup == null) {
         if (entity != null) {
             entity.consumeContent();
         }
-        managedConn.markReusable();
-    } else {
-        managedConn.close();
-    }
-
-    if (!followup.getRoute().equals(roureq.getRoute())) {
-        releaseConnection();
-    }
-
-    roureq = followup;
+    managedConn.markReusable();
+} else {
+    managedConn.close();
 }
+
+if (!followup.getRoute().equals(roureq.getRoute())) {
+    releaseConnection();
+}
+
+roureq = followup;
+}
+
 ```
 
 ✅ 触发场景：
@@ -147,8 +148,8 @@ if (followup == null) {
 
 ```java
 if ((response == null)
-    || (response.getEntity() == null)
-    || !response.getEntity().isStreaming()) {
+|| (response.getEntity() == null)
+|| !response.getEntity().isStreaming()) {
 
     if (reuse) managedConn.markReusable();
     releaseConnection();
@@ -158,6 +159,7 @@ if ((response == null)
     entity = new BasicManagedEntity(entity, managedConn, reuse);
     response.setEntity(entity);
 }
+
 ```
 
 ✅ 这一段的核心目的只有一个：
@@ -172,20 +174,21 @@ if ((response == null)
 
 ```java
 public final ClientConnectionRequest requestConnection(
-        final HttpRoute route,
-        final Object state) {
+final HttpRoute route,
+final Object state) {
 
     return new ClientConnectionRequest() {
 
         public void abortRequest() {}
 
-        public ManagedClientConnection getConnection(
-                long timeout, TimeUnit tunit) {
+    public ManagedClientConnection getConnection(
+    long timeout, TimeUnit tunit) {
 
-            return SingleClientConnManager.this.getConnection(route, state);
-        }
-    };
+        return SingleClientConnManager.this.getConnection(route, state);
+    }
+};
 }
+
 ```
 
 ✅ 这里做了两件事：
@@ -201,7 +204,7 @@ public final ClientConnectionRequest requestConnection(
 public ManagedClientConnection getConnection(HttpRoute route, Object state) {
 
     if (managedConn != null)
-        revokeConnection();
+    revokeConnection();
 
     closeExpiredConnections();
 
@@ -211,12 +214,13 @@ public ManagedClientConnection getConnection(HttpRoute route, Object state) {
         recreate = true;
     }
 
-    if (recreate)
-        uniquePoolEntry = new PoolEntry();
+if (recreate)
+uniquePoolEntry = new PoolEntry();
 
-    managedConn = new ConnAdapter(uniquePoolEntry, route);
-    return managedConn;
+managedConn = new ConnAdapter(uniquePoolEntry, route);
+return managedConn;
 }
+
 ```
 
 ✅ 核心职责总结：
@@ -236,18 +240,19 @@ public ManagedClientConnection getConnection(HttpRoute route, Object state) {
 
 ```java
 public void open(HttpRoute route,
-                 HttpContext context,
-                 HttpParams params) throws IOException {
+HttpContext context,
+HttpParams params) throws IOException {
 
     this.tracker = new RouteTracker(route);
 
     connOperator.openConnection(
-        this.connection,
-        route.getTargetHost(),
-        route.getLocalAddress(),
-        context, params
+    this.connection,
+    route.getTargetHost(),
+    route.getLocalAddress(),
+    context, params
     );
 }
+
 ```
 
 这里第一次真正触发 **网络通信级别的操作**。
@@ -267,19 +272,21 @@ DefaultClientConnectionOperator.openConnection(...)
 ```java
 InetAddress[] addresses = InetAddress.getAllByName(target.getHostName());
 
-for (int i = 0; i < addresses.length; ++i) {
+for (int i = 0;
+i < addresses.length;
+++i) {
 
     Socket sock = socketFactory.createSocket();
     conn.opening(sock, target);
 
     try {
         Socket connsock = socketFactory.connectSocket(
-            sock,
-            addresses[i].getHostAddress(),
-            target.getPort(),
-            local,
-            0,
-            params
+        sock,
+        addresses[i].getHostAddress(),
+        target.getPort(),
+        local,
+        0,
+        params
         );
 
         prepareSocket(connsock, context, params);
@@ -290,8 +297,9 @@ for (int i = 0; i < addresses.length; ++i) {
         if (i == addresses.length - 1) {
             throw new HttpHostConnectException(target, ex);
         }
-    }
 }
+}
+
 ```
 
 ✅ 这一段完成了真正的底层动作：

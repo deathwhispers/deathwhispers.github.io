@@ -44,25 +44,26 @@ CommitLog 的数据只有一种，那就是按照一定格式组成 byte 组数�
 ```java
 public CommitLogSegment.CommitLogContext write(RowMutation rowMutation,
 Object serializedRow){
-        long currentPosition = -1L;
-...
-            Checksum checkum = new CRC32();
-            if (serializedRow instanceof DataOutputBuffer){
-                DataOutputBuffer buffer = (DataOutputBuffer) serializedRow;
-                logWriter.writeLong(buffer.getLength());
-                logWriter.write(buffer.getData(), 0, buffer.getLength());
-                checkum.update(buffer.getData(), 0, buffer.getLength());
-            }
-            else{
-                assert serializedRow instanceof byte[];
-                byte[] bytes = (byte[]) serializedRow;
-                logWriter.writeLong(bytes.length);
-                logWriter.write(bytes);
-                checkum.update(bytes, 0, bytes.length);
-            }
-            logWriter.writeLong(checkum.getValue());
+    long currentPosition = -1L;
+    ...
+    Checksum checkum = new CRC32();
+    if (serializedRow instanceof DataOutputBuffer){
+        DataOutputBuffer buffer = (DataOutputBuffer) serializedRow;
+        logWriter.writeLong(buffer.getLength());
+        logWriter.write(buffer.getData(), 0, buffer.getLength());
+        checkum.update(buffer.getData(), 0, buffer.getLength());
+    }
+else{
+    assert serializedRow instanceof byte[];
+    byte[] bytes = (byte[]) serializedRow;
+    logWriter.writeLong(bytes.length);
+    logWriter.write(bytes);
+    checkum.update(bytes, 0, bytes.length);
+}
+logWriter.writeLong(checkum.getValue());
 ...
 }
+
 ```
 
 这个代码的主要作用就是如果当前这个根据 columnFamily 的 id 还没有被序列化过，将会根据这个 id 生成一个 CommitLogHeader 对象，记录下在当前的 CommitLog 文件中的位置，并将这个 header 序列化，覆盖以前的 header。这个 header 中可能包含多个没有被序列化到磁盘中的 RowMutation 对应的 columnFamily 的 id。如果已经存在，直接把 RowMutation 对象的序列化结果写到 CommitLog 的文件缓存区中后面再加一个 CRC32 校验码。Byte 数组的格式如下：
@@ -79,27 +80,31 @@ CommitLog 的作用是为恢复没有被写到磁盘中的数据，那如何根�
 
 ```java
 public static void recover(File[] clogs) throws IOException{
-...
-        final CommitLogHeader clHeader = CommitLogHeader.readCommitLogHeader(reader);
-        int lowPos = CommitLogHeader.getLowestPosition(clHeader);
-           if (lowPos == 0) break;
-           reader.seek(lowPos);
-           while (!reader.isEOF()){
-               try{
-                   bytes = new byte[(int) reader.readLong()];
-                   reader.readFully(bytes);
-                   claimedCRC32 = reader.readLong();
-               }
-...
-               ByteArrayInputStream bufIn = new ByteArrayInputStream(bytes);
-               Checksum checksum = new CRC32();
-               checksum.update(bytes, 0, bytes.length);
-               if (claimedCRC32 != checksum.getValue()){continue;}
-           final RowMutation rm =
-             RowMutation.serializer().deserialize(new DataInputStream(bufIn));
-           }
+    ...
+    final CommitLogHeader clHeader = CommitLogHeader.readCommitLogHeader(reader);
+    int lowPos = CommitLogHeader.getLowestPosition(clHeader);
+    if (lowPos == 0) break;
+    reader.seek(lowPos);
+    while (!reader.isEOF()){
+        try{
+            bytes = new byte[(int) reader.readLong()];
+            reader.readFully(bytes);
+            claimedCRC32 = reader.readLong();
+        }
+    ...
+    ByteArrayInputStream bufIn = new ByteArrayInputStream(bytes);
+    Checksum checksum = new CRC32();
+    checksum.update(bytes, 0, bytes.length);
+    if (claimedCRC32 != checksum.getValue())
+    {
+        continue;
+    }
+final RowMutation rm =
+RowMutation.serializer().deserialize(new DataInputStream(bufIn));
+}
 ...
 }
+
 ```
 
 这段代码的思路是：反序列化 CommitLog 文件的 header 为 CommitLogHeader 对象，寻找 header 对象中没有被回写的最小 RowMutation 位置，然后根据这个位置取出这个 RowMutation 对象的序列化数据，然后反序列化为 RowMutation 对象，然后取出 RowMutation 对象中的数据重新保存到 Memtable 中，而不是直接写到磁盘中。CommitLog 的操作过程可以用下图来清楚的表示：

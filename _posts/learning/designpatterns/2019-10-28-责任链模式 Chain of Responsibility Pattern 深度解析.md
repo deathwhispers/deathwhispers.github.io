@@ -54,16 +54,17 @@ updated: 2019-03-12 22:17
 public final Response handleMessage(Request request){
     Response response = null;
     if(this.canHandle(request)){ // 1. 判断是否是自己的处理级别/条件
-        response = this.echo(request);
-    }else{
-        if(this.nextHandler != null){ // 2. 转发给下一个处理者
-            response = this.nextHandler.handleMessage(request);
-        }else{
-            // 3. 链尾处理（如抛出异常或默认处理）
-        }
-    }
-    return response;
+    response = this.echo(request);
+}else{
+    if(this.nextHandler != null){ // 2. 转发给下一个处理者
+    response = this.nextHandler.handleMessage(request);
+}else{
+    // 3. 链尾处理（如抛出异常或默认处理）
 }
+}
+return response;
+}
+
 ```
 
 ## 💻 3. 代码示例：日志记录链 (Java/Python)
@@ -87,20 +88,20 @@ public abstract class AbstractLogger {
         this.nextLogger = nextLogger;
     }
 
-    // 核心的请求处理/转发方法
-    public void logMessage(int level, String message){
-        if(this.level <= level){
-             // 如果当前处理者能够处理该级别的消息
-            write(message);
-        }
-        // 不管当前处理者是否处理，都传递给下一个处理者
-        if(nextLogger !=null){
-            nextLogger.logMessage(level, message);
-        }
+// 核心的请求处理/转发方法
+public void logMessage(int level, String message){
+    if(this.level <= level){
+        // 如果当前处理者能够处理该级别的消息
+        write(message);
     }
+// 不管当前处理者是否处理，都传递给下一个处理者
+if(nextLogger !=null){
+    nextLogger.logMessage(level, message);
+}
+}
 
-    // 具体处理任务的抽象方法
-    abstract protected void write(String message);
+// 具体处理任务的抽象方法
+abstract protected void write(String message);
 }
 
 // 2. 具体处理者：ConsoleLogger
@@ -108,10 +109,10 @@ public class ConsoleLogger extends AbstractLogger {
     public ConsoleLogger(int level){
         this.level = level;
     }
-    @Override
-    protected void write(String message) {
-        System.out.println("Standard Console::Logger: " + message);
-    }
+@Override
+protected void write(String message) {
+    System.out.println("Standard Console::Logger: " + message);
+}
 }
 
 // 3. 具体处理者：ErrorLogger
@@ -120,10 +121,10 @@ public class ErrorLogger extends AbstractLogger {
     public ErrorLogger(int level){
         this.level = level;
     }
-    @Override
-    protected void write(String message) {
-        System.out.println("Error Console::Logger: " + message);
-    }
+@Override
+protected void write(String message) {
+    System.out.println("Error Console::Logger: " + message);
+}
 }
 
 // 4. 客户端配置与调用
@@ -140,17 +141,18 @@ public class ChainPatternDemo {
         return errorLogger;
     }
 
-    public static void main(String[] args) {
-        AbstractLogger loggerChain = getChainOfLoggers();
+public static void main(String[] args) {
+    AbstractLogger loggerChain = getChainOfLoggers();
 
-        // 消息级别：INFO (1)
-        loggerChain.logMessage(AbstractLogger.INFO, "This is an information.");
-        // 消息级别：DEBUG (2)
-        loggerChain.logMessage(AbstractLogger.DEBUG, "This is a debug level information.");
-        // 消息级别：ERROR (3)
-        loggerChain.logMessage(AbstractLogger.ERROR, "This is an error information.");
-    }
+    // 消息级别：INFO (1)
+    loggerChain.logMessage(AbstractLogger.INFO, "This is an information.");
+    // 消息级别：DEBUG (2)
+    loggerChain.logMessage(AbstractLogger.DEBUG, "This is a debug level information.");
+    // 消息级别：ERROR (3)
+    loggerChain.logMessage(AbstractLogger.ERROR, "This is an error information.");
 }
+}
+
 ```
 
 **运行结果分析:**

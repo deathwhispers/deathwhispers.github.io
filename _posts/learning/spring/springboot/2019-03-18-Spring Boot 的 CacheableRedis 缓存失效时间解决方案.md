@@ -32,9 +32,9 @@ week: 2019-W14
 @Bean
 public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
     return new RedisCacheManager(
-            RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory),
-            this.getRedisCacheConfigurationWithTtl(30*60), // 默认策略，未配置的 key 会使用这个
-            this.getRedisCacheConfigurationMap() // 指定 key 策略
+    RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory),
+    this.getRedisCacheConfigurationWithTtl(30*60), // 默认策略，未配置的 key 会使用这个
+    this.getRedisCacheConfigurationMap() // 指定 key 策略
     );
 }
 
@@ -54,9 +54,9 @@ private RedisCacheConfiguration getRedisCacheConfigurationWithTtl(Integer second
     jackson2JsonRedisSerializer.setObjectMapper(om);
     RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
     redisCacheConfiguration = redisCacheConfiguration.serializeValuesWith(
-            RedisSerializationContext
-                    .SerializationPair
-                    .fromSerializer(jackson2JsonRedisSerializer)
+    RedisSerializationContext
+    .SerializationPair
+    .fromSerializer(jackson2JsonRedisSerializer)
     ).entryTtl(Duration.ofSeconds(seconds));
     return redisCacheConfiguration;
 }
@@ -72,13 +72,18 @@ public KeyGenerator wiselyKeyGenerator() {
             if(params==null||params.length==0||params[0]==null){
                 return null;
             }
-            String join = String.join("&", Arrays.stream(params).map(Object::toString).collect(Collectors.toList()));
-            String format = String.format("%s{%s}", sb.toString(), join);
-            // log.info("缓存key：" + format);
-            return format;
+        String join = String.join("&", Arrays.stream(params).map(Object::toString).collect(Collectors.toList()));
+        String format = String.format("%s
+        {
+            %s;
         }
-    };
+    ", sb.toString(), join);
+    // log.info("缓存key：" + format);
+    return format;
 }
+};
+}
+
 ```
 
 ## 使用方式

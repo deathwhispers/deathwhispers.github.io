@@ -71,14 +71,15 @@ public abstract class SpringApplicationEvent extends ApplicationEvent {
         this.args = args;
     }
 
-    public SpringApplication getSpringApplication() {
-        return (SpringApplication) getSource();
-    }
-
-    public final String[] getArgs() {
-        return this.args;
-    }
+public SpringApplication getSpringApplication() {
+    return (SpringApplication) getSource();
 }
+
+public final String[] getArgs() {
+    return this.args;
+}
+}
+
 ```
 
 它是抽象类，扩展自Spring Framwork的ApplicationEvent，确保了事件和应用实体SpringApplication产生关联（当然还有String[] args）。它有如下实现子类（7个）：

@@ -103,110 +103,111 @@ public class MyHandler extends TextWebSocketHandler {
         users = new HashMap<>();
     }
 
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println("成功建立连接");
-        Integer userId = getClientId(session);
+@Override
+public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    System.out.println("成功建立连接");
+    Integer userId = getClientId(session);
+    System.out.println(userId);
+    if (userId != null) {
+        users.put(userId, session);
+        session.sendMessage(new TextMessage("成功建立socket连接"));
         System.out.println(userId);
-        if (userId != null) {
-            users.put(userId, session);
-            session.sendMessage(new TextMessage("成功建立socket连接"));
-            System.out.println(userId);
-            System.out.println(session);
-        }
-    }
-
-    @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) {
-        System.out.println(message.getPayload());
-        WebSocketMessage message1 = new TextMessage("hi " + message.getPayload());
-        try {
-            session.sendMessage(message1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 发送信息给指定用户
-     *
-     * @param clientId
-     * @param message
-     * @return
-     */
-    public boolean sendMessageToUser(Integer clientId, TextMessage message) {
-        if (users.get(clientId) == null) return false;
-        WebSocketSession session = users.get(clientId);
-        System.out.println("sendMessage:" + session);
-        if (!session.isOpen()) return false;
-        try {
-            session.sendMessage(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 广播信息
-     *
-     * @param message
-     * @return
-     */
-    public boolean sendMessageToAllUsers(TextMessage message) {
-        boolean allSendSuccess = true;
-        Set<Integer> clientIds = users.keySet();
-        WebSocketSession session = null;
-        for (Integer clientId : clientIds) {
-            try {
-                session = users.get(clientId);
-                if (session.isOpen()) {
-                    session.sendMessage(message);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                allSendSuccess = false;
-            }
-        }
-        return allSendSuccess;
-    }
-
-    @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        if (session.isOpen()) {
-            session.close();
-        }
-        System.out.println("连接出错");
-        users.remove(getClientId(session));
-    }
-
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        System.out.println("连接已关闭：" + status);
-        users.remove(getClientId(session));
-    }
-
-    @Override
-    public boolean supportsPartialMessages() {
-        return false;
-    }
-
-    /**
-     * 获取用户标识
-     *
-     * @param session
-     * @return
-     */
-    private Integer getClientId(WebSocketSession session) {
-        try {
-            Integer clientId = Integer.valueOf(String.valueOf(session.getAttributes().get(CLIENT_ID)));
-            return clientId;
-        } catch (Exception e) {
-            return null;
-        }
+        System.out.println(session);
     }
 }
+
+@Override
+public void handleTextMessage(WebSocketSession session, TextMessage message) {
+    System.out.println(message.getPayload());
+    WebSocketMessage message1 = new TextMessage("hi " + message.getPayload());
+    try {
+        session.sendMessage(message1);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+/**
+* 发送信息给指定用户
+*
+* @param clientId
+* @param message
+* @return
+*/
+public boolean sendMessageToUser(Integer clientId, TextMessage message) {
+    if (users.get(clientId) == null) return false;
+    WebSocketSession session = users.get(clientId);
+    System.out.println("sendMessage:" + session);
+    if (!session.isOpen()) return false;
+    try {
+        session.sendMessage(message);
+    } catch (IOException e) {
+        e.printStackTrace();
+        return false;
+    }
+return true;
+}
+
+/**
+* 广播信息
+*
+* @param message
+* @return
+*/
+public boolean sendMessageToAllUsers(TextMessage message) {
+    boolean allSendSuccess = true;
+    Set<Integer> clientIds = users.keySet();
+    WebSocketSession session = null;
+    for (Integer clientId : clientIds) {
+        try {
+            session = users.get(clientId);
+            if (session.isOpen()) {
+                session.sendMessage(message);
+            }
+    } catch (IOException e) {
+        e.printStackTrace();
+        allSendSuccess = false;
+    }
+}
+return allSendSuccess;
+}
+
+@Override
+public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+    if (session.isOpen()) {
+        session.close();
+    }
+System.out.println("连接出错");
+users.remove(getClientId(session));
+}
+
+@Override
+public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    System.out.println("连接已关闭：" + status);
+    users.remove(getClientId(session));
+}
+
+@Override
+public boolean supportsPartialMessages() {
+    return false;
+}
+
+/**
+* 获取用户标识
+*
+* @param session
+* @return
+*/
+private Integer getClientId(WebSocketSession session) {
+    try {
+        Integer clientId = Integer.valueOf(String.valueOf(session.getAttributes().get(CLIENT_ID)));
+        return clientId;
+    } catch (Exception e) {
+        return null;
+    }
+}
+}
+
 ```
 
 对每个函数功能不作解释，有二点要注意
@@ -252,21 +253,22 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
     // handler处理前调用,attributes属性最终在WebSocketSession里,可能通过webSocketSession.getAttributes().get(key值)获得
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
-        WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+    WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         if(request instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest serverHttpRequest = (ServletServerHttpRequest) request;
             Object clientId = serverHttpRequest.getServletRequest().getParameter("clientId");
             System.out.println(clientId);
             attributes.put("clientId", clientId);
         }
-        return true;
-    }
-
-    // handler处理后调用
-    @Override
-    public void afterHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Exception e) {
-    }
+    return true;
 }
+
+// handler处理后调用
+@Override
+public void afterHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Exception e) {
+}
+}
+
 ```
 
 attributes属性最终在WebSocketSession里,可能通过webSocketSession.getAttributes().get(key值)获得。
@@ -360,13 +362,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // registry.setUserDestinationPrefix("/user/");
     }
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/gs-guide-websocket")
-        .setAllowedOrigins("*")
-        .withSockJS();
-    }
+@Override
+public void registerStompEndpoints(StompEndpointRegistry registry) {
+    registry.addEndpoint("/gs-guide-websocket")
+    .setAllowedOrigins("*")
+    .withSockJS();
 }
+}
+
 ```
 
 登录后复制
@@ -409,13 +412,14 @@ public class GreetingController {
         return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
     }
 
-    @SubscribeMapping("/topic6/greetings")
-    @SendTo("/topic6/greetings")
-    public Greeting sub() {
-        logger.info("XXX用户订阅了我。。。");
-        return new Greeting("感谢你订阅了我。。。");
-    }
+@SubscribeMapping("/topic6/greetings")
+@SendTo("/topic6/greetings")
+public Greeting sub() {
+    logger.info("XXX用户订阅了我。。。");
+    return new Greeting("感谢你订阅了我。。。");
 }
+}
+
 ```
 
 @MessageMapping是接收客户端发送的消息映射，看名字也知道。由于上面定义了controll层拦截请求的前缀，所以请求/app/hello才能进入controller层。

@@ -83,12 +83,13 @@ public class ExcelGenerator
 
             System.out.println("Excel 文件生成成功！");
 
-            } catch (IOException e) {
+        } catch (IOException e) {
             // 在实际项目中，应使用日志库记录异常，而不是简单地忽略
             e.printStackTrace();
         }
-    }
 }
+}
+
 ```
 
 ## 3. 解析 Excel 文件
@@ -116,7 +117,9 @@ public class ExcelParser
 
             // 3. 遍历工作表的每一行 (通常跳过表头，所以从 i = 1 开始)
             // getLastRowNum() 返回最后一行的索引 (从0开始)
-            for (int i = 1; i <= sheet.getLastRowNum(); i++)
+            for (int i = 1;
+            i <= sheet.getLastRowNum();
+            i++)
             {
                 Row row = sheet.getRow(i);
                 if (row == null) continue; // 避免空行导致 NullPointerException
@@ -132,12 +135,13 @@ public class ExcelParser
                 System.out.println("姓名：" + name + "，年龄：" + (int)age + "，手机：" + phone);
             }
 
-            } catch (IOException e) {
-            // 在实际项目中，应使用日志库记录异常
-            e.printStackTrace();
-        }
+    } catch (IOException e) {
+        // 在实际项目中，应使用日志库记录异常
+        e.printStackTrace();
     }
 }
+}
+
 ```
 
 > **提示**

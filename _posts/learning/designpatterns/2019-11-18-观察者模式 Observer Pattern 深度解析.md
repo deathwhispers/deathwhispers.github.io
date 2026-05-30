@@ -81,28 +81,28 @@ public class Subject {
         return state;
     }
 
-    // 状态改变时，通知所有观察者
-    public void setState(int state) {
-        System.out.println("\nSubject: State changed from " + this.state + " to " + state);
-        this.state = state;
-        notifyAllObservers();
-    }
+// 状态改变时，通知所有观察者
+public void setState(int state) {
+    System.out.println("\nSubject: State changed from " + this.state + " to " + state);
+    this.state = state;
+    notifyAllObservers();
+}
 
-    public void attach(Observer observer) {
-        observers.add(observer);
-        // 通常在 attach 时执行一次初始化更新
+public void attach(Observer observer) {
+    observers.add(observer);
+    // 通常在 attach 时执行一次初始化更新
+    observer.update();
+}
+
+public void detach(Observer observer) {
+    observers.remove(observer);
+}
+
+public void notifyAllObservers() {
+    for (Observer observer : observers) {
         observer.update();
     }
-
-    public void detach(Observer observer) {
-        observers.remove(observer);
-    }
-
-    public void notifyAllObservers() {
-        for (Observer observer : observers) {
-            observer.update();
-        }
-    }
+}
 }
 
 // --- 3. 具体观察者 A: 二进制观察者 ---
@@ -112,10 +112,10 @@ public class BinaryObserver extends Observer {
         this.subject.attach(this);
     }
 
-    @Override
-    public void update() {
-        System.out.println("Binary Observer: " + Integer.toBinaryString(subject.getState()));
-    }
+@Override
+public void update() {
+    System.out.println("Binary Observer: " + Integer.toBinaryString(subject.getState()));
+}
 }
 
 // --- 4. 具体观察者 B: 十六进制观察者 ---
@@ -125,10 +125,10 @@ public class HexaObserver extends Observer {
         this.subject.attach(this);
     }
 
-    @Override
-    public void update() {
-        System.out.println("Hexa Observer: " + Integer.toHexString(subject.getState()).toUpperCase());
-    }
+@Override
+public void update() {
+    System.out.println("Hexa Observer: " + Integer.toHexString(subject.getState()).toUpperCase());
+}
 }
 
 // --- 5. 客户端调用 (Client) ---
@@ -147,6 +147,7 @@ public class ObserverPatternDemo {
         subject.setState(10);
     }
 }
+
 ```
 
 ### 3.2. Python 代码示例 (使用抽象基类实现标准模式)

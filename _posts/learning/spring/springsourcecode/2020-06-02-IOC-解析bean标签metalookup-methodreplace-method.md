@@ -54,7 +54,10 @@ BeanDefinitionParserDelegate.javapublic void parseMetaElements(Element ele, Bean
             String key = metaElement.getAttribute(KEY_ATTRIBUTE); // key
             String value = metaElement.getAttribute(VALUE_ATTRIBUTE); // value            // 创建 BeanMetadataAttribute 对象            BeanMetadataAttribute attribute =
             new BeanMetadataAttribute(key, value);
-            attribute.setSource(extractSource(metaElement)); // 添加到 BeanMetadataAttributeAccessor 中            attributeAccessor.addMetadataAttribute(attribute);        }    }}
+            attribute.setSource(extractSource(metaElement));
+            // 添加到 BeanMetadataAttributeAccessor 中            attributeAccessor.addMetadataAttribute(attribute);
+        }    }}
+
 ```
 
 - 解析过程较为简单，获取相应的 key - value 构建 BeanMetadataAttribute 对象，然后调用
@@ -91,10 +94,11 @@ Object value) {
     if (value != null) {
         this.attributes.put(name, value);
     }
-    else {
-        removeAttribute(name);
-    }
+else {
+    removeAttribute(name);
 }
+}
+
 ```
 
 org.springframework.core.AttributeAccessorSupport ，是接口 AttributeAccessor 的实现者。 AttributeAccessor 接口定义了与其他对象的元数据进行连接和访问的约定，可以通过该接口对属性进行获取、设置、删除操作。
@@ -144,13 +148,14 @@ public abstract class Display {
     public void display(){
         getCar().display();
     }
-    public abstract Car getCar();
+public abstract Car getCar();
 }
 public static void main(String[] args) {
     ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring.xml");
     Display display = (Display) context.getBean("display");
     display.display();
 }
+
 ```
 
 XML 配置内容如下：
@@ -191,7 +196,10 @@ BeanDefinitionParserDelegate.javapublic void parseLookupOverrideSubElements(Elem
             String methodName = ele.getAttribute(NAME_ATTRIBUTE); // name
             String beanRef = ele.getAttribute(BEAN_ELEMENT); // bean            // 创建 LookupOverride 对象            LookupOverride override =
             new LookupOverride(methodName, beanRef);
-            override.setSource(extractSource(ele)); // 添加到 MethodOverrides 中            overrides.addOverride(override);        }    }}
+            override.setSource(extractSource(ele));
+            // 添加到 MethodOverrides 中            overrides.addOverride(override);
+        }    }}
+
 ```
 
 解析过程和 meta 子元素没有多大区别，同样是解析 methodName、beanRef 构造一个 LookupOverride 对象，然后记录到 AbstractBeanDefinition 中的 methodOverrides 属性中。
@@ -269,17 +277,23 @@ public void parseReplacedMethodSubElements(Element beanEle, MethodOverrides over
         if (isCandidateElement(node) && nodeNameEquals(node, REPLACED_METHOD_ELEMENT)) {
             // 标签名为 replace-method
             Element replacedMethodEle = (Element) node;
-            String name = replacedMethodEle.getAttribute(NAME_ATTRIBUTE); // name            String callback = replacedMethodEle.getAttribute(REPLACER_ATTRIBUTE); // replacer            // 创建 ReplaceOverride 对象            ReplaceOverride replaceOverride =
+            String name = replacedMethodEle.getAttribute(NAME_ATTRIBUTE);
+            // name            String callback = replacedMethodEle.getAttribute(REPLACER_ATTRIBUTE);
+            // replacer            // 创建 ReplaceOverride 对象            ReplaceOverride replaceOverride =
             new ReplaceOverride(name, callback); // Look
             for arg-type match elements. 参见 《spring bean中lookup-method属性 replaced-method属性》 http://linql2010-126-com.iteye.com/blog/2018385
             List<Element> argTypeEles = DomUtils.getChildElementsByTagName(replacedMethodEle, ARG_TYPE_ELEMENT); // arg-type 子标签
             for (Element argTypeEle : argTypeEles) {
-                String match = argTypeEle.getAttribute(ARG_TYPE_MATCH_ATTRIBUTE); // arg-type 子标签的 match 属性                match = (StringUtils.hasText(match) ? match : DomUtils.getTextValue(argTypeEle));
+                String match = argTypeEle.getAttribute(ARG_TYPE_MATCH_ATTRIBUTE);
+                // arg-type 子标签的 match 属性                match = (StringUtils.hasText(match) ? match : DomUtils.getTextValue(argTypeEle));
                 if (StringUtils.hasText(match)) {
                     replaceOverride.addTypeIdentifier(match);
                 }
-            }
-            replaceOverride.setSource(extractSource(replacedMethodEle)); // 添加到 MethodOverrides 中            overrides.addOverride(replaceOverride);        }    }}
+        }
+    replaceOverride.setSource(extractSource(replacedMethodEle));
+    // 添加到 MethodOverrides 中            overrides.addOverride(replaceOverride);
+}    }}
+
 ```
 
 该子元素和 lookup-method 标签的解析过程差不多，同样是提取 name 和 replacer 属性构建 ReplaceOverride 对象，然后记录到 AbstractBeanDefinition 中的 methodOverrides 属性中。

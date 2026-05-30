@@ -75,21 +75,22 @@ public class DataSyncService
         log.info("【数据源A】同步完成。");
     }
 
-    // 同步数据源B
-    public void syncFromSourceB()
-    {
-        log.info("【数据源B】开始同步数据...");
-        // 实际逻辑：连B的数据库、查数据、同步到自己库
-        log.info("【数据源B】同步完成。");
-    }
-
-    // 以后加新数据源，在这儿加方法就行
-    public void syncFromSourceC()
-    {
-        log.info("【数据源C】开始同步...");
-        // ...
-    }
+// 同步数据源B
+public void syncFromSourceB()
+{
+    log.info("【数据源B】开始同步数据...");
+    // 实际逻辑：连B的数据库、查数据、同步到自己库
+    log.info("【数据源B】同步完成。");
 }
+
+// 以后加新数据源，在这儿加方法就行
+public void syncFromSourceC()
+{
+    log.info("【数据源C】开始同步...");
+    // ...
+}
+}
+
 ```
 
 **为啥这么设计？** 因为框架的动态任务只能调用“无参方法”，所以咱把每个数据源的同步逻辑拆成独立方法，后面用API创建任务时，指定“调用哪个Bean的哪个方法”就行。

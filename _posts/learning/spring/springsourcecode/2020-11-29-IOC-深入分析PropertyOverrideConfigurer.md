@@ -160,17 +160,18 @@ protectedvoidprocessProperties(ConfigurableListableBeanFactory beanFactory, Prop
         try{
             processKey(beanFactory, key, props.getProperty(key));
         }
-        catch(BeansException ex) {
-            String msg ="Could not process key '"+ key +"' in PropertyOverrideConfigurer";
-            if(!this.ignoreInvalidKeys) {
-                thrownewBeanInitializationException(msg, ex);
-            }
-            if(logger.isDebugEnabled()) {
-                logger.debug(msg, ex);
-            }
+    catch(BeansException ex) {
+        String msg ="Could not process key '"+ key +"' in PropertyOverrideConfigurer";
+        if(!this.ignoreInvalidKeys) {
+            thrownewBeanInitializationException(msg, ex);
         }
+    if(logger.isDebugEnabled()) {
+        logger.debug(msg, ex);
     }
 }
+}
+}
+
 ```
 
 - 迭代
@@ -196,11 +197,13 @@ protected void processKey(ConfigurableListableBeanFactory factory, String key, S
         new BeanInitializationException("Invalid key '"+ key +"': expected 'beanName"+this.beanNameSeparator +"property'");
     } // 得到 beanName    String beanName = key.substring(0, separatorIndex);    // 得到属性值
     String beanProperty = key.substring(separatorIndex+1);
-    this.beanNames.add(beanName); // 替换    applyPropertyValue(factory, beanName, beanProperty, value);
+    this.beanNames.add(beanName);
+    // 替换    applyPropertyValue(factory, beanName, beanProperty, value);
     if(logger.isDebugEnabled()) {
         logger.debug("Property '"+ key +"' set to value ["+ value +"]");
     }
 }
+
 ```
 
 ```plain text
@@ -214,7 +217,8 @@ void applyPropertyValue(ConfigurableListableBeanFactory factory,
 String beanName,
 String property,
 String value) {
-    // 获得 BeanDefinition 对象    BeanDefinition bd = factory.getBeanDefinition(beanName);    BeanDefinition bdToUse = bd;
+    // 获得 BeanDefinition 对象    BeanDefinition bd = factory.getBeanDefinition(beanName);
+    BeanDefinition bdToUse = bd;
     while(bd !=null) {
         bdToUse = bd;
         bd = bd.getOriginatingBeanDefinition();
@@ -224,6 +228,7 @@ String value) {
     bdToUse
     .getPropertyValues()    .addPropertyValue(pv);
 }
+
 ```
 
 ```plain text
@@ -238,10 +243,14 @@ publicMutablePropertyValuesaddPropertyValue(PropertyValue pv) {
     i++) {
         PropertyValue currentPv =this.propertyValueList.get(i); // 匹配
         if(currentPv.getName().equals(pv.getName())) {
-            // 合并属性            pv = mergeIfRequired(pv, currentPv);            // 覆盖属性            setPropertyValueAt(pv, i);returnthis;        }    }    // 未匹配到，添加到 propertyValueList 中
-            this.propertyValueList.add(pv);
-            return this;
-        }
+            // 合并属性            pv = mergeIfRequired(pv, currentPv);
+            // 覆盖属性            setPropertyValueAt(pv, i);
+            returnthis;
+        }    }    // 未匹配到，添加到 propertyValueList 中
+        this.propertyValueList.add(pv);
+        return this;
+    }
+
 ```
 
 ```plain text

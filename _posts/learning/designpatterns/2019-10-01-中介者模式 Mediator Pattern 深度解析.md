@@ -163,15 +163,16 @@ import java.util.Date;
 
 public class ChatRoom {
     /**
-     * 静态方法模拟消息转发和协调行为
-     */
+    * 静态方法模拟消息转发和协调行为
+    */
     public static void showMessage(User user, String message) {
         // 协调行为：增加时间戳、过滤等逻辑可以在此处实现
         String filteredMessage = message.replace("日", "*"); // 示例：过滤不雅字符
         System.out.println(new Date().toString()
-                + " [" + user.getName() + "] : " + filteredMessage);
+        + " [" + user.getName() + "] : " + filteredMessage);
     }
 }
+
 ```
 
 **`User.java` (ConcreteColleague)**
@@ -184,15 +185,16 @@ public class User {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void sendMessage(String message) {
-        // 核心：将消息发送（委托）给中介者
-        ChatRoom.showMessage(this, message);
-    }
+public String getName() {
+    return name;
 }
+
+public void sendMessage(String message) {
+    // 核心：将消息发送（委托）给中介者
+    ChatRoom.showMessage(this, message);
+}
+}
+
 ```
 
 **`MediatorPatternDemo.java`**

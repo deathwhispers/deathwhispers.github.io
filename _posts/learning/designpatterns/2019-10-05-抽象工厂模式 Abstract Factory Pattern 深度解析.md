@@ -81,16 +81,28 @@ interface AbstractTextField {
 
 // --- 2. 具体产品 ---
 class WinButton implements AbstractButton {
-    @Override public void paint() { System.out.println("Win Button painted."); }
+    @Override public void paint()
+    {
+        System.out.println("Win Button painted.");
+    }
 }
 class MacButton implements AbstractButton {
-    @Override public void paint() { System.out.println("Mac Button painted."); }
+    @Override public void paint()
+    {
+        System.out.println("Mac Button painted.");
+    }
 }
 class WinTextField implements AbstractTextField {
-    @Override public void display() { System.out.println("Win TextField displayed."); }
+    @Override public void display()
+    {
+        System.out.println("Win TextField displayed.");
+    }
 }
 class MacTextField implements AbstractTextField {
-    @Override public void display() { System.out.println("Mac TextField displayed."); }
+    @Override public void display()
+    {
+        System.out.println("Mac TextField displayed.");
+    }
 }
 
 // --- 3. 抽象工厂 (声明创建产品族的方法) ---
@@ -102,15 +114,27 @@ interface AbstractFactory {
 // --- 4. 具体工厂 (创建某一产品族) ---
 class WinFactory implements AbstractFactory {
     @Override
-    public AbstractButton createButton() { return new WinButton(); }
-    @Override
-    public AbstractTextField createTextField() { return new WinTextField(); }
+    public AbstractButton createButton()
+    {
+        return new WinButton();
+    }
+@Override
+public AbstractTextField createTextField()
+{
+    return new WinTextField();
+}
 }
 class MacFactory implements AbstractFactory {
     @Override
-    public AbstractButton createButton() { return new MacButton(); }
-    @Override
-    public AbstractTextField createTextField() { return new MacTextField(); }
+    public AbstractButton createButton()
+    {
+        return new MacButton();
+    }
+@Override
+public AbstractTextField createTextField()
+{
+    return new MacTextField();
+}
 }
 
 // --- 5. 客户端 (Client) ---
@@ -134,6 +158,7 @@ public class AbstractFactoryDemo {
         txt.display(); // Mac TextField displayed.
     }
 }
+
 ```
 
 ## 4\. 模式优点、缺点与扩展

@@ -154,13 +154,13 @@ public class SqlSessionFactoryUtils
             {
                 SQLSESSIONFACTORY = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml")) ;
             }
-            catch (IOException e)
-            {
-                e.printStackTrace() ;
-            }
+        catch (IOException e)
+        {
+            e.printStackTrace() ;
         }
-        return SQLSESSIONFACTORY ;
-    }
+}
+return SQLSESSIONFACTORY ;
+}
 }
 public class Main
 {
@@ -173,9 +173,10 @@ public class Main
         {
             System.out.println("user = " + user) ;
         }
-        sqlSession.close() ;
-    }
+    sqlSession.close() ;
 }
+}
+
 ```
 
 小伙伴们看到，无论是 SqlSessionFactory 还是 SqlSession，都不是正经 new 出来的，其实这两个都是接口，显然不可能 new 出来，前者通过建造者模式去配置各种属性，最后生成一个 SqlSessionFactory 的实例，后者则通过前者这个工厂去生成，最终拿到的都是这两个接口的子类的对象。
@@ -194,17 +195,18 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
         {
             afterPropertiesSet() ;
         }
-        return this.sqlSessionFactory ;
-    }
-    @Override public Class<? extends SqlSessionFactory> getObjectType()
-    {
-        return this.sqlSessionFactory == null ? SqlSessionFactory.class : this.sqlSessionFactory.getClass() ;
-    }
-    @Override public boolean isSingleton()
-    {
-        return true ;
-    }
+    return this.sqlSessionFactory ;
 }
+@Override public Class<? extends SqlSessionFactory> getObjectType()
+{
+    return this.sqlSessionFactory == null ? SqlSessionFactory.class : this.sqlSessionFactory.getClass() ;
+}
+@Override public boolean isSingleton()
+{
+    return true ;
+}
+}
+
 ```
 
 大家看一下，SqlSessionFactoryBean 需要实现 FactoryBean 接口，并且在实现接口的时候指定泛型是 SqlSessionFactory，也就是 SqlSessionFactoryBean 最终产出的 Bean 是 SqlSessionFactory。实现了 FactoryBean 接口之后，就需要实现接口中的三个方法：
@@ -229,15 +231,16 @@ public class Author
     private Author()
     {
     }
-    public static Author init(String name, Integer age)
-    {
-        Author author = new Author() ;
-        author.setAge(age) ;
-        author.setName(name) ;
-        return author ;
-    }
-    //省略 getter/setter/toString
+public static Author init(String name, Integer age)
+{
+    Author author = new Author() ;
+    author.setAge(age) ;
+    author.setName(name) ;
+    return author ;
 }
+//省略 getter/setter/toString
+}
+
 ```
 
 这个类的特点就是构造方法是私有的，你没法从外面去 new，现在我想将这个类的对象注册到 Spring 容器中，那么我可以提供一个 AuthorFactoryBean：
@@ -249,15 +252,16 @@ public class AuthorFactoryBean implements FactoryBean<Author>
     {
         return Author.init("javaboy", 99) ;
     }
-    @Override public Class<?> getObjectType()
-    {
-        return Author.class ;
-    }
-    @Override public boolean isSingleton()
-    {
-        return true ;
-    }
+@Override public Class<?> getObjectType()
+{
+    return Author.class ;
 }
+@Override public boolean isSingleton()
+{
+    return true ;
+}
+}
+
 ```
 
 然后在 Spring 容器中配置 AuthorFactoryBean 即可：

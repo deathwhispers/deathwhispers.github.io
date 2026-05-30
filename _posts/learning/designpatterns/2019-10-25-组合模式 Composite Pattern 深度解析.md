@@ -79,18 +79,18 @@ public abstract class EmployeeComponent {
         this.role = role;
     }
 
-    public abstract void displayDetails();
+public abstract void displayDetails();
 
-    // 管理子构件的方法（透明式，Leaf 也需要实现）
-    public void add(EmployeeComponent c) {
-        throw new UnsupportedOperationException();
-    }
-    public void remove(EmployeeComponent c) {
-        throw new UnsupportedOperationException();
-    }
-    public List<EmployeeComponent> getSubordinates() {
-        return null;
-    }
+// 管理子构件的方法（透明式，Leaf 也需要实现）
+public void add(EmployeeComponent c) {
+    throw new UnsupportedOperationException();
+}
+public void remove(EmployeeComponent c) {
+    throw new UnsupportedOperationException();
+}
+public List<EmployeeComponent> getSubordinates() {
+    return null;
+}
 }
 
 // --- 2. 叶子构件 (Leaf) ---
@@ -100,11 +100,11 @@ public class BasicEmployee extends EmployeeComponent {
         super(name, "Staff");
     }
 
-    @Override
-    public void displayDetails() {
-        System.out.println(String.format("  -> Staff: %s", name));
-    }
-    // 不支持管理方法，保留空实现或抛出异常
+@Override
+public void displayDetails() {
+    System.out.println(String.format("  -> Staff: %s", name));
+}
+// 不支持管理方法，保留空实现或抛出异常
 }
 
 // --- 3. 树枝构件 (Composite) ---
@@ -116,26 +116,26 @@ public class Manager extends EmployeeComponent {
         super(name, role);
     }
 
-    @Override
-    public void add(EmployeeComponent c) {
-        subordinates.add(c);
-    }
-    @Override
-    public void remove(EmployeeComponent c) {
-        subordinates.remove(c);
-    }
-    @Override
-    public List<EmployeeComponent> getSubordinates() {
-        return subordinates;
-    }
+@Override
+public void add(EmployeeComponent c) {
+    subordinates.add(c);
+}
+@Override
+public void remove(EmployeeComponent c) {
+    subordinates.remove(c);
+}
+@Override
+public List<EmployeeComponent> getSubordinates() {
+    return subordinates;
+}
 
-    @Override
-    public void displayDetails() {
-        System.out.println(String.format("== Manager: %s (%s) ==", name, role));
-        for (EmployeeComponent sub : subordinates) {
-            sub.displayDetails(); // 递归调用
-        }
+@Override
+public void displayDetails() {
+    System.out.println(String.format("== Manager: %s (%s) ==", name, role));
+    for (EmployeeComponent sub : subordinates) {
+        sub.displayDetails(); // 递归调用
     }
+}
 }
 
 // --- 4. 客户端调用 (Client) ---
@@ -159,6 +159,7 @@ public class CompositePatternDemo {
         ceo.displayDetails();
     }
 }
+
 ```
 
 ### 3.2. Python 代码示例

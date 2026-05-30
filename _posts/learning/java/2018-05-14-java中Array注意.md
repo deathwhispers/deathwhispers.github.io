@@ -45,12 +45,13 @@ public Object[] toArray() {
 ```java
 public Object[] toArray(Object a[]) {
     if (a.length < size)
-        a = (Object[]) java.lang.reflect.Array.newInstance(a.getass().getComponentType(), size);
+    a = (Object[]) java.lang.reflect.Array.newInstance(a.getass().getComponentType(), size);
     System.arraycopy(elementData, 0, a, 0, size);
     if (a.length > size)
-        a[size] = null;
+    a[size] = null;
     return a;
 }
+
 ```
 
 因此在使用toArray的时候可以参考以下三种方式

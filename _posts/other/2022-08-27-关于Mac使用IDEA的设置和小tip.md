@@ -81,8 +81,9 @@ Setting - Editor - Font
 
 ```java
 public static void main(String[] args){
- $END$
+    $END$
 }
+
 ```
 
 - 自定义关于日志输出的快捷键模版：

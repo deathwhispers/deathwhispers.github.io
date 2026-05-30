@@ -51,13 +51,16 @@ public class YoungMan {
         beautifulGirl =
         new BeautifulGirl();
     }
-    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {
-        this.beautifulGirl = beautifulGirl;
-    }
-    public static void main(String[] args){
-        YoungMan you = new YoungMan();
-        BeautifulGirl beautifulGirl = new BeautifulGirl("你的各种条件");
-        beautifulGirl.setxxx("各种投其所好"); // 然后你有女票了        you.setBeautifulGirl(beautifulGirl);    }}
+public void setBeautifulGirl(BeautifulGirl beautifulGirl) {
+    this.beautifulGirl = beautifulGirl;
+}
+public static void main(String[] args){
+    YoungMan you = new YoungMan();
+    BeautifulGirl beautifulGirl = new BeautifulGirl("你的各种条件");
+    beautifulGirl.setxxx("各种投其所好");
+    // 然后你有女票了        you.setBeautifulGirl(beautifulGirl);
+}}
+
 ```
 
 这就是我们通常做事的方式，如果我们需要某个对象，一般都是采用这种直接创建的方式(new BeautifulGirl())，这个过程复杂而又繁琐，而且我们必须要面对每个环节，而且使用完成之后我们还要复杂销毁它，这种情况下我们的对象与它所依赖的对象耦合在一起。

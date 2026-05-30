@@ -66,79 +66,84 @@ updated: 2019-03-12 22:17
 ```java
 // --- 1. 抽象元素 (Element) ---
 public interface ComputerPart {
-   // 接受访问者的方法，将自身引用传入
-   public void accept(ComputerPartVisitor computerPartVisitor);
+    // 接受访问者的方法，将自身引用传入
+    public void accept(ComputerPartVisitor computerPartVisitor);
 }
 
 // --- 2. 具体元素 A: 鼠标 ---
 public class Mouse  implements ComputerPart {
-   @Override
-   public void accept(ComputerPartVisitor computerPartVisitor) {
-      // 双重分派的关键：调用访问者对应 Mouse 类型的 visit 方法
-      computerPartVisitor.visit(this);
-   }
+    @Override
+    public void accept(ComputerPartVisitor computerPartVisitor) {
+        // 双重分派的关键：调用访问者对应 Mouse 类型的 visit 方法
+        computerPartVisitor.visit(this);
+    }
 }
 
 // --- 3. 具体元素 B: 计算机 (组合结构) ---
 public class Computer implements ComputerPart {
-   ComputerPart[] parts;
+    ComputerPart[] parts;
 
-   public Computer(){
-      parts = new ComputerPart[] {new Mouse(), new Keyboard(), new Monitor()};
-   }
+    public Computer(){
+        parts = new ComputerPart[]
+        {
+            new Mouse(), new Keyboard(), new Monitor();
+        }
+    ;
+}
 
-   @Override
-   public void accept(ComputerPartVisitor computerPartVisitor) {
-      // 遍历所有子元素，让它们都接受访问
-      for (ComputerPart part : parts) {
-         part.accept(computerPartVisitor);
-      }
-      // 访问者访问 Computer 自身
-      computerPartVisitor.visit(this);
-   }
+@Override
+public void accept(ComputerPartVisitor computerPartVisitor) {
+    // 遍历所有子元素，让它们都接受访问
+    for (ComputerPart part : parts) {
+        part.accept(computerPartVisitor);
+    }
+// 访问者访问 Computer 自身
+computerPartVisitor.visit(this);
+}
 }
 // (Keyboard 和 Monitor 类结构类似 Mouse，此处省略)
 
 // --- 4. 抽象访问者 (Visitor) ---
 public interface ComputerPartVisitor {
-   // 为每一个 ConcreteElement 定义一个重载的 visit 方法
-   public void visit(Computer computer);
-   public void visit(Mouse mouse);
-   public void visit(Keyboard keyboard);
-   // ...
+    // 为每一个 ConcreteElement 定义一个重载的 visit 方法
+    public void visit(Computer computer);
+    public void visit(Mouse mouse);
+    public void visit(Keyboard keyboard);
+    // ...
 }
 
 // --- 5. 具体访问者 A: 显示组件名称 ---
 public class ComputerPartDisplayVisitor implements ComputerPartVisitor {
-   @Override
-   public void visit(Computer computer) {
-      System.out.println("Displaying Computer.");
-   }
-   @Override
-   public void visit(Mouse mouse) {
-      System.out.println("Displaying Mouse.");
-   }
-   @Override
-   public void visit(Keyboard keyboard) {
-      System.out.println("Displaying Keyboard.");
-   }
-   // ...
+    @Override
+    public void visit(Computer computer) {
+        System.out.println("Displaying Computer.");
+    }
+@Override
+public void visit(Mouse mouse) {
+    System.out.println("Displaying Mouse.");
+}
+@Override
+public void visit(Keyboard keyboard) {
+    System.out.println("Displaying Keyboard.");
+}
+// ...
 }
 
 // --- 6. 客户端调用 (Client) ---
 public class VisitorPatternDemo {
-   public static void main(String[] args) {
-      ComputerPart computer = new Computer(); // 这是一个组合结构
+    public static void main(String[] args) {
+        ComputerPart computer = new Computer(); // 这是一个组合结构
 
-      // 客户端创建具体的访问者并将其传入元素结构
-      System.out.println("--- 执行 Display 操作 ---");
-      computer.accept(new ComputerPartDisplayVisitor());
+        // 客户端创建具体的访问者并将其传入元素结构
+        System.out.println("--- 执行 Display 操作 ---");
+        computer.accept(new ComputerPartDisplayVisitor());
 
-      // 如果要新增一个 CheckHealth 操作，只需新增一个 ConcreteVisitor 即可：
-      // System.out.println("\n--- 执行 CheckHealth 操作 ---");
-      // computer.accept(new ComputerPartHealthCheckVisitor()); // 无需修改 Computer 或 Part 接口
-   }
+        // 如果要新增一个 CheckHealth 操作，只需新增一个 ConcreteVisitor 即可：
+        // System.out.println("\n--- 执行 CheckHealth 操作 ---");
+        // computer.accept(new ComputerPartHealthCheckVisitor()); // 无需修改 Computer 或 Part 接口
+    }
 }
+
 ```
 
 ### 3.2. Python 代码示例

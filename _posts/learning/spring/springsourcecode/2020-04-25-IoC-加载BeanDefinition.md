@@ -98,36 +98,37 @@ public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefin
         currentResources = new HashSet<>(4);
         this.resourcesCurrentlyBeingLoaded.set(currentResources);
     }
-    if (!currentResources.add(encodedResource)) {
-        // 将当前资源加入记录中。如果已存在，抛出异常
-        throw
-        new
-        BeanDefinitionStoreException("Detected cyclic loading of " + encodedResource + " - check your import definitions!");
-    }
+if (!currentResources.add(encodedResource)) {
+    // 将当前资源加入记录中。如果已存在，抛出异常
+    throw
+    new
+    BeanDefinitionStoreException("Detected cyclic loading of " + encodedResource + " - check your import definitions!");
+}
+try {
+    // <2> 从 EncodedResource 获取封装的 Resource ，并从
+    Resource 中获取其中的 InputStream        InputStream inputStream = encodedResource.getResource().getInputStream();
     try {
-        // <2> 从 EncodedResource 获取封装的 Resource ，并从
-        Resource 中获取其中的 InputStream        InputStream inputStream = encodedResource.getResource().getInputStream();
-        try {
-            InputSource inputSource = new InputSource(inputStream);
-            if (encodedResource.getEncoding() != null) {
-                // 设置编码                inputSource.setEncoding(encodedResource.getEncoding());            }            // 核心逻辑部分，执行加载 BeanDefinition
-                return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
-            }
-            finally {
-                inputStream.close();
-            }
+        InputSource inputSource = new InputSource(inputStream);
+        if (encodedResource.getEncoding() != null) {
+            // 设置编码                inputSource.setEncoding(encodedResource.getEncoding());            }            // 核心逻辑部分，执行加载 BeanDefinition
+            return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
         }
-        catch (IOException ex) {
-            throw new
-            BeanDefinitionStoreException("IOException parsing XML document from " + encodedResource.getResource(), ex);
-        }
-        finally {
-            // 从缓存中剔除该资源 <3>        currentResources.remove(encodedResource);
-            if (currentResources.isEmpty()) {
-                this.resourcesCurrentlyBeingLoaded.remove();
-            }
-        }
+    finally {
+        inputStream.close();
     }
+}
+catch (IOException ex) {
+    throw new
+    BeanDefinitionStoreException("IOException parsing XML document from " + encodedResource.getResource(), ex);
+}
+finally {
+    // 从缓存中剔除该资源 <3>        currentResources.remove(encodedResource);
+    if (currentResources.isEmpty()) {
+        this.resourcesCurrentlyBeingLoaded.remove();
+    }
+}
+}
+
 ```
 
 - <1>
@@ -170,27 +171,28 @@ protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)t
         if (logger.isDebugEnabled()) {
             logger.debug("Loaded " + count + " bean definitions from " + resource);
         }
-        return count;
-    }
-    catch (BeanDefinitionStoreException ex) {
-        throw ex;
-    }
-    catch (SAXParseException ex) {
-        throw new XmlBeanDefinitionStoreException(resource.getDescription(),                                                  "Line " + ex.getLineNumber() + " in XML document from " + resource + " is invalid", ex);
-    }
-    catch (SAXException ex) {
-        throw new XmlBeanDefinitionStoreException(resource.getDescription(),                                                  "XML document from " + resource + " is invalid", ex);
-    }
-    catch (ParserConfigurationException ex) {
-        throw new BeanDefinitionStoreException(resource.getDescription(),                                               "Parser configuration exception parsing XML from " + resource, ex);
-    }
-    catch (IOException ex) {
-        throw new BeanDefinitionStoreException(resource.getDescription(),                                               "IOException parsing XML document from " + resource, ex);
-    }
-    catch (Throwable ex) {
-        throw new BeanDefinitionStoreException(resource.getDescription(),                                               "Unexpected exception parsing XML document from " + resource, ex);
-    }
+    return count;
 }
+catch (BeanDefinitionStoreException ex) {
+    throw ex;
+}
+catch (SAXParseException ex) {
+    throw new XmlBeanDefinitionStoreException(resource.getDescription(),                                                  "Line " + ex.getLineNumber() + " in XML document from " + resource + " is invalid", ex);
+}
+catch (SAXException ex) {
+    throw new XmlBeanDefinitionStoreException(resource.getDescription(),                                                  "XML document from " + resource + " is invalid", ex);
+}
+catch (ParserConfigurationException ex) {
+    throw new BeanDefinitionStoreException(resource.getDescription(),                                               "Parser configuration exception parsing XML from " + resource, ex);
+}
+catch (IOException ex) {
+    throw new BeanDefinitionStoreException(resource.getDescription(),                                               "IOException parsing XML document from " + resource, ex);
+}
+catch (Throwable ex) {
+    throw new BeanDefinitionStoreException(resource.getDescription(),                                               "Unexpected exception parsing XML document from " + resource, ex);
+}
+}
+
 ```
 
 - 在

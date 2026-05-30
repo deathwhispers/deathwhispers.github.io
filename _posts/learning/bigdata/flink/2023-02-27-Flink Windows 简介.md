@@ -43,10 +43,11 @@ streamSource.flatMap(new FlatMapFunction<String, Tuple2<String, Long>>()
         {
             out.collect(new Tuple2<>(word, 1L)) ;
         }
-    }
+}
 }
 ).keyBy(0).timeWindow(Time.seconds(3)).sum(1).print() ;
 //每隔3秒统计一次每个单词出现的数量env.execute("Flink Streaming") ;
+
 ```
 
 测试结果如下：

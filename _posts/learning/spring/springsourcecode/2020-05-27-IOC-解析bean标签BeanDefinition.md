@@ -177,18 +177,21 @@ String parentName, @Nullable
 String className, @Nullable
 ClassLoader classLoader) throws ClassNotFoundException {
     // 创建 GenericBeanDefinition 对象    GenericBeanDefinition bd =
-    new GenericBeanDefinition(); // 设置 parentName    bd.setParentName(parentName);    if (className !=
+    new GenericBeanDefinition();
+    // 设置 parentName    bd.setParentName(parentName);
+    if (className !=
     null) {
         // 设置 beanClass
         if (classLoader != null) {
             bd.setBeanClass(ClassUtils.forName(className,
             classLoader)); // 设置 beanClassName        }
-            else {
-                bd.setBeanClassName(className);
-            }
+        else {
+            bd.setBeanClassName(className);
         }
-        return bd;
-    }
+}
+return bd;
+}
+
 ```
 
 ```plain text
@@ -204,19 +207,30 @@ ClassLoader classLoader) throws ClassNotFoundException {
 BeanDefinitionParserDelegate.javapublic AbstractBeanDefinition parseBeanDefinitionAttributes(Element ele,
 String beanName,                                                            @Nullable
 BeanDefinition containingBean, AbstractBeanDefinition bd) {
-    // 解析 scope 属性    if (ele.hasAttribute(SINGLETON_ATTRIBUTE)) {        error("Old 1.x 'singleton' attribute in use - upgrade to 'scope' declaration", ele);    }
-    else if (ele.hasAttribute(SCOPE_ATTRIBUTE)) {
-        bd.setScope(ele.getAttribute(SCOPE_ATTRIBUTE));
+    // 解析 scope 属性    if (ele.hasAttribute(SINGLETON_ATTRIBUTE))
+    {
+        error("Old 1.x 'singleton' attribute in use - upgrade to 'scope' declaration", ele);
     }
-    else
-    if (containingBean != null) {
-        // Take
-        default from containing bean in case of an inner bean definition.        bd.setScope(containingBean.getScope());
-    } // 解析
-    abstract 属性    if (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) {
-        bd.setAbstract(TRUE_VALUE.equals(ele.getAttribute(ABSTRACT_ATTRIBUTE)));
-} // 解析 lazy-init 属性    String lazyInit = ele.getAttribute(LAZY_INIT_ATTRIBUTE);    if (DEFAULT_VALUE.equals(lazyInit)) {        lazyInit = this.defaults.getLazyInit();    }
-bd.setLazyInit(TRUE_VALUE.equals(lazyInit)); // 解析 autowire 属性    String autowire = ele.getAttribute(AUTOWIRE_ATTRIBUTE);    bd.setAutowireMode(getAutowireMode(autowire));    // 解析 depends-on 属性    if (ele.hasAttribute(DEPENDS_ON_ATTRIBUTE)) {        String dependsOn = ele.getAttribute(DEPENDS_ON_ATTRIBUTE);        bd.setDependsOn(StringUtils.tokenizeToStringArray(dependsOn, MULTI_VALUE_ATTRIBUTE_DELIMITERS));    }    // 解析 autowire-candidate 属性    String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);    if ("".equals(autowireCandidate) || DEFAULT_VALUE.equals(autowireCandidate)) {        String candidatePattern =
+else if (ele.hasAttribute(SCOPE_ATTRIBUTE)) {
+    bd.setScope(ele.getAttribute(SCOPE_ATTRIBUTE));
+}
+else
+if (containingBean != null) {
+    // Take
+    default from containing bean in case of an inner bean definition.        bd.setScope(containingBean.getScope());
+} // 解析
+abstract 属性    if (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) {
+    bd.setAbstract(TRUE_VALUE.equals(ele.getAttribute(ABSTRACT_ATTRIBUTE)));
+} // 解析 lazy-init 属性    String lazyInit = ele.getAttribute(LAZY_INIT_ATTRIBUTE);    if (DEFAULT_VALUE.equals(lazyInit))
+{
+    lazyInit = this.defaults.getLazyInit();
+}
+bd.setLazyInit(TRUE_VALUE.equals(lazyInit)); // 解析 autowire 属性    String autowire = ele.getAttribute(AUTOWIRE_ATTRIBUTE);    bd.setAutowireMode(getAutowireMode(autowire));    // 解析 depends-on 属性    if (ele.hasAttribute(DEPENDS_ON_ATTRIBUTE))
+{
+    String dependsOn = ele.getAttribute(DEPENDS_ON_ATTRIBUTE);
+    bd.setDependsOn(StringUtils.tokenizeToStringArray(dependsOn, MULTI_VALUE_ATTRIBUTE_DELIMITERS));
+}
+// 解析 autowire-candidate 属性    String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);    if ("".equals(autowireCandidate) || DEFAULT_VALUE.equals(autowireCandidate)) {        String candidatePattern =
 this.defaults.getAutowireCandidates();
 if (candidatePattern != null) {
     String[] patterns = StringUtils.commaDelimitedListToStringArray(candidatePattern);
@@ -225,10 +239,18 @@ if (candidatePattern != null) {
 }
 else {
     bd.setAutowireCandidate(TRUE_VALUE.equals(autowireCandidate));
-} // 解析 primary 标签    if (ele.hasAttribute(PRIMARY_ATTRIBUTE)) {        bd.setPrimary(TRUE_VALUE.equals(ele.getAttribute(PRIMARY_ATTRIBUTE)));    }    // 解析 init-method 属性    if (ele.hasAttribute(INIT_METHOD_ATTRIBUTE)) {        String initMethodName = ele.getAttribute(INIT_METHOD_ATTRIBUTE);        bd.setInitMethodName(initMethodName);    }
+} // 解析 primary 标签    if (ele.hasAttribute(PRIMARY_ATTRIBUTE))
+{
+    bd.setPrimary(TRUE_VALUE.equals(ele.getAttribute(PRIMARY_ATTRIBUTE)));
+}    // 解析 init-method 属性    if (ele.hasAttribute(INIT_METHOD_ATTRIBUTE))
+{
+    String initMethodName = ele.getAttribute(INIT_METHOD_ATTRIBUTE;
+}
+bd.setInitMethodName(initMethodName);
+}
 else if (this.defaults.getInitMethod() != null) {
-bd.setInitMethodName(this.defaults.getInitMethod());
-bd.setEnforceInitMethod(false);
+    bd.setInitMethodName(this.defaults.getInitMethod());
+    bd.setEnforceInitMethod(false);
 } // 解析 destroy-method 属性
 if (ele.hasAttribute(DESTROY_METHOD_ATTRIBUTE)) {
     String destroyMethodName = ele.getAttribute(DESTROY_METHOD_ATTRIBUTE);
@@ -237,12 +259,16 @@ if (ele.hasAttribute(DESTROY_METHOD_ATTRIBUTE)) {
 else if (this.defaults.getDestroyMethod() != null) {
     bd.setDestroyMethodName(this.defaults.getDestroyMethod());
     bd.setEnforceDestroyMethod(false);
-} // 解析 factory-method 属性    if (ele.hasAttribute(FACTORY_METHOD_ATTRIBUTE)) {        bd.setFactoryMethodName(ele.getAttribute(FACTORY_METHOD_ATTRIBUTE));    }
+} // 解析 factory-method 属性    if (ele.hasAttribute(FACTORY_METHOD_ATTRIBUTE))
+{
+    bd.setFactoryMethodName(ele.getAttribute(FACTORY_METHOD_ATTRIBUTE));
+}
 if (ele.hasAttribute(FACTORY_BEAN_ATTRIBUTE)) {
-bd.setFactoryBeanName(ele.getAttribute(FACTORY_BEAN_ATTRIBUTE));
+    bd.setFactoryBeanName(ele.getAttribute(FACTORY_BEAN_ATTRIBUTE));
 }
 return bd;
 }
+
 ```
 
 从上面代码我们可以清晰地看到对 bean 标签属性的解析，这些属性我们在工作中都或多或少用到过。

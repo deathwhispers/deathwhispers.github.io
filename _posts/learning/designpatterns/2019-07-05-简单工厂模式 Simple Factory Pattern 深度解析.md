@@ -86,16 +86,18 @@ public class ShapeFactory {
             return null;
         }
 
-        // 核心：集中了所有产品创建的判断逻辑
-        if (shapeType.equalsIgnoreCase("CIRCLE")) {
-            return new Circle();
-        } else if (shapeType.equalsIgnoreCase("RECTANGLE")) {
-            return new Rectangle();
-        }
-        // 增加新产品必须修改这里的逻辑！
-
-        throw new IllegalArgumentException("Unknown shape type: " + shapeType);
+    // 核心：集中了所有产品创建的判断逻辑
+    if (shapeType.equalsIgnoreCase("CIRCLE")) {
+        return new Circle();
+    } else if (shapeType.equalsIgnoreCase("RECTANGLE"))
+    {
     }
+return new Rectangle();
+}
+// 增加新产品必须修改这里的逻辑！
+
+throw new IllegalArgumentException("Unknown shape type: " + shapeType);
+}
 }
 
 // --- 4. 客户端调用 (Client) ---
@@ -109,6 +111,7 @@ public class SimpleFactoryDemo {
         shape2.draw();
     }
 }
+
 ```
 
 ### 3.2. Python 简单工厂示例

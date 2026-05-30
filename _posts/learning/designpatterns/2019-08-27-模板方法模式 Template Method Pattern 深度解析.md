@@ -78,15 +78,15 @@ public abstract class Game {
             this.startPlay();
         }
 
-        // 3. 结束游戏
-        this.endPlay();
-    }
+    // 3. 结束游戏
+    this.endPlay();
+}
 
-    // 钩子方法 (Hook Method)：提供默认实现，子类可选重写
-    protected boolean shouldStart() {
-        // 默认总是开始
-        return true;
-    }
+// 钩子方法 (Hook Method)：提供默认实现，子类可选重写
+protected boolean shouldStart() {
+    // 默认总是开始
+    return true;
+}
 }
 
 // --- 2. 具体子类 (ConcreteClass) ---
@@ -95,14 +95,14 @@ public class Cricket extends Game {
     protected void initialize() {
         System.out.println("Cricket Game Initialized!");
     }
-    @Override
-    protected void startPlay() {
-        System.out.println("Cricket Game Started. (Toss coin, Bat first)");
-    }
-    @Override
-    protected void endPlay() {
-        System.out.println("Cricket Game Finished!");
-    }
+@Override
+protected void startPlay() {
+    System.out.println("Cricket Game Started. (Toss coin, Bat first)");
+}
+@Override
+protected void endPlay() {
+    System.out.println("Cricket Game Finished!");
+}
 }
 
 public class Football extends Game {
@@ -110,21 +110,21 @@ public class Football extends Game {
     protected void initialize() {
         System.out.println("Football Game Initialized!");
     }
-    @Override
-    protected void startPlay() {
-        System.out.println("Football Game Started. (Kick off)");
-    }
-    @Override
-    protected void endPlay() {
-        System.out.println("Football Game Finished!");
-    }
+@Override
+protected void startPlay() {
+    System.out.println("Football Game Started. (Kick off)");
+}
+@Override
+protected void endPlay() {
+    System.out.println("Football Game Finished!");
+}
 
-    // 重写钩子方法，改变了默认行为
-    @Override
-    protected boolean shouldStart() {
-        System.out.println("Checking weather conditions...");
-        return true;
-    }
+// 重写钩子方法，改变了默认行为
+@Override
+protected boolean shouldStart() {
+    System.out.println("Checking weather conditions...");
+    return true;
+}
 }
 
 // --- 3. 客户端调用 (Client) ---
@@ -139,6 +139,7 @@ public class TemplatePatternDemo {
         football.play();
     }
 }
+
 ```
 
 ### 4.2. Python 代码示例

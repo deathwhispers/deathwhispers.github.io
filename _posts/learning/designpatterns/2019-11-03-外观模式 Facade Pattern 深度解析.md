@@ -57,70 +57,71 @@ updated: 2019-03-12 22:17
 ```java
 // --- 子系统角色 (SubSystem) ---
 public interface Shape {
-   void draw();
+    void draw();
 }
 
 public class Circle implements Shape {
-   @Override
-   public void draw() {
-      System.out.println("SubSystem: Drawing Circle...");
-   }
+    @Override
+    public void draw() {
+        System.out.println("SubSystem: Drawing Circle...");
+    }
 }
 
 public class Rectangle implements Shape {
-   @Override
-   public void draw() {
-      System.out.println("SubSystem: Drawing Rectangle...");
-   }
+    @Override
+    public void draw() {
+        System.out.println("SubSystem: Drawing Rectangle...");
+    }
 }
 
 // --- 外观角色 (Facade) ---
 public class ShapeMaker {
-   private Shape circle;
-   private Shape rectangle;
+    private Shape circle;
+    private Shape rectangle;
 
-   public ShapeMaker() {
-      // 外观对象负责实例化子系统组件
-      this.circle = new Circle();
-      this.rectangle = new Rectangle();
-   }
+    public ShapeMaker() {
+        // 外观对象负责实例化子系统组件
+        this.circle = new Circle();
+        this.rectangle = new Rectangle();
+    }
 
-   // 提供统一的简化接口
-   public void drawCircle() {
-      // 外观对象负责协调子系统内部的调用顺序和逻辑
-      circle.draw();
-   }
+// 提供统一的简化接口
+public void drawCircle() {
+    // 外观对象负责协调子系统内部的调用顺序和逻辑
+    circle.draw();
+}
 
-   public void drawRectangle() {
-      rectangle.draw();
-   }
+public void drawRectangle() {
+    rectangle.draw();
+}
 
-   // 复杂操作的简化接口：例如，绘制一个组合图形
-   public void drawComplexShape() {
-       System.out.println("Facade: Starting complex drawing sequence.");
-       circle.draw();
-       rectangle.draw();
-       System.out.println("Facade: Complex drawing complete.");
-   }
+// 复杂操作的简化接口：例如，绘制一个组合图形
+public void drawComplexShape() {
+    System.out.println("Facade: Starting complex drawing sequence.");
+    circle.draw();
+    rectangle.draw();
+    System.out.println("Facade: Complex drawing complete.");
+}
 }
 
 // --- 客户端调用 (Client) ---
 public class FacadeDemo {
-   public static void main(String[] args) {
-      ShapeMaker shapeMaker = new ShapeMaker();
+    public static void main(String[] args) {
+        ShapeMaker shapeMaker = new ShapeMaker();
 
-      // 客户端只需要调用外观对象，无需关心 Circle 和 Rectangle 的存在
-      shapeMaker.drawCircle();
-      shapeMaker.drawComplexShape();
+        // 客户端只需要调用外观对象，无需关心 Circle 和 Rectangle 的存在
+        shapeMaker.drawCircle();
+        shapeMaker.drawComplexShape();
 
-      // 输出结果：
-      // SubSystem: Drawing Circle...
-      // Facade: Starting complex drawing sequence.
-      // SubSystem: Drawing Circle...
-      // SubSystem: Drawing Rectangle...
-      // Facade: Complex drawing complete.
-   }
+        // 输出结果：
+        // SubSystem: Drawing Circle...
+        // Facade: Starting complex drawing sequence.
+        // SubSystem: Drawing Circle...
+        // SubSystem: Drawing Rectangle...
+        // Facade: Complex drawing complete.
+    }
 }
+
 ```
 
 ### 3.2. Python 代码示例

@@ -109,8 +109,9 @@ public ApplicationRunner runner() {
 }
 public static void main(String[] args) {
     SpringApplication.run(DubboRegistryZooKeeperConsumerBootstrap.class) // 启动
-        .close(); // <X> 关闭
+    .close(); // <X> 关闭
 }
+
 ```
 
 -
@@ -243,12 +244,13 @@ com.alibaba.boot.dubbo.autoconfigure.DubboAutoConfiguration ，Dubbo 自动配�
 // DubboAutoConfiguration.java
 @Configuration // 配置类
 @ConditionalOnProperty(prefix = DUBBO_PREFIX, name = "enabled", matchIfMissing = true, havingValue = "true")
-    // 要求配置了 "dubbo.enabled=true" 或者，"dubbo.enabled" 未配置
+// 要求配置了 "dubbo.enabled=true" 或者，"dubbo.enabled" 未配置
 @ConditionalOnClass(AbstractConfig.class)
-    // AbstractConfig 类存在的时候，即用于判断有 Dubbo 库
+// AbstractConfig 类存在的时候，即用于判断有 Dubbo 库
 public class DubboAutoConfiguration {
     // ... 省略其它代码
 }
+
 `````
 
 - 类上的每个注解的作用，请看其后的注释。
@@ -260,9 +262,9 @@ public class DubboAutoConfiguration {
 ```java
 // DubboAutoConfiguration.java
 @ConditionalOnProperty(name = BASE_PACKAGES_PROPERTY_NAME)
-    // 配置了 "dubbo.scan.base-package" 属性，即要扫描 Dubbo 注解的包
+// 配置了 "dubbo.scan.base-package" 属性，即要扫描 Dubbo 注解的包
 @ConditionalOnClass(ConfigurationPropertySources.class)
-    // 有 Spring Boot 配置加载的功能
+// 有 Spring Boot 配置加载的功能
 @Bean
 public ServiceAnnotationBeanPostProcessor serviceAnnotationBeanPostProcessor(Environment environment) {
     // <1> 获得 "dubbo.scan.base-package" 属性
@@ -270,6 +272,7 @@ public ServiceAnnotationBeanPostProcessor serviceAnnotationBeanPostProcessor(Env
     // <2> 创建 ServiceAnnotationBeanPostProcessor 对象
     return new ServiceAnnotationBeanPostProcessor(packagesToScan);
 }
+
 `````
 
 - <1>
@@ -329,27 +332,28 @@ public RelaxedDubboConfigBinder relaxedDubboConfigBinder() {
 ```java
 // DubboAutoConfiguration.java
 /**
- * Single Dubbo Config Configuration
- *
- * @see EnableDubboConfig
- * @see DubboConfigConfiguration.Single
- */
+* Single Dubbo Config Configuration
+*
+* @see EnableDubboConfig
+* @see DubboConfigConfiguration.Single
+*/
 @EnableDubboConfig
 protected static class SingleDubboConfigConfiguration {
 }
 
 /**
- * Multiple Dubbo Config Configuration , equals
- * @EnableDubboConfig.multiple() == <code>true</code>
- *
- * @see EnableDubboConfig
- * @see DubboConfigConfiguration.Multiple
- */
+* Multiple Dubbo Config Configuration , equals
+* @EnableDubboConfig.multiple() == <code>true</code>
+*
+* @see EnableDubboConfig
+* @see DubboConfigConfiguration.Multiple
+*/
 @ConditionalOnProperty(name = MULTIPLE_CONFIG_PROPERTY_NAME, havingValue = "true")
-    // 要求配置 "dubbo.config.multiple=true" 。默认情况下，Dubbo 自带 "dubbo.config.multiple=true"
+// 要求配置 "dubbo.config.multiple=true" 。默认情况下，Dubbo 自带 "dubbo.config.multiple=true"
 @EnableDubboConfig(multiple = true)
 protected static class MultipleDubboConfigConfiguration {
 }
+
 `````
 
 - 关于 [《Dubbo 新编程模型之外部化配置 —— @EnableDubboConfig》](https://segmentfault.com/a/1190000012661402#articleHeader4)
@@ -460,13 +464,14 @@ private BindHandler getBindHandler() {
     if (isIgnoreInvalidFields()) {
         handler = new IgnoreErrorsBindHandler(handler);
     }
-    // 进一步包装成 NoUnboundElementsBindHandler 对象
-    if (!isIgnoreUnknownFields()) {
-        UnboundElementsSourceFilter filter = new UnboundElementsSourceFilter();
-        handler = new NoUnboundElementsBindHandler(handler, filter);
-    }
-    return handler;
+// 进一步包装成 NoUnboundElementsBindHandler 对象
+if (!isIgnoreUnknownFields()) {
+    UnboundElementsSourceFilter filter = new UnboundElementsSourceFilter();
+    handler = new NoUnboundElementsBindHandler(handler, filter);
 }
+return handler;
+}
+
 `````
 
 ```plain text
@@ -529,29 +534,35 @@ public void postProcessEnvironment(ConfigurableEnvironment environment, SpringAp
 ```java
 // DubboDefaultPropertiesEnvironmentPostProcessor.java
 /**
- * The property name of Spring Application
- *
- * @see ContextIdApplicationContextInitializer
- */
+* The property name of Spring Application
+*
+* @see ContextIdApplicationContextInitializer
+*/
 private static final String SPRING_APPLICATION_NAME_PROPERTY = "spring.application.name";
 
 /**
- * The property name of {@link ApplicationConfig}
- *
- * @see EnableDubboConfig
- * @see EnableDubboConfigBinding
- */
+* The property name of {@link ApplicationConfig}
+*
+* @see EnableDubboConfig
+* @see EnableDubboConfigBinding
+*/
 private static final String DUBBO_APPLICATION_NAME_PROPERTY = "dubbo.application.name";
 
 /**
- * The property name of {@link EnableDubboConfig#multiple()}
- * @EnableDubboConfig.multiple()
- */
+* The property name of
+{
+    @link EnableDubboConfig#multiple();
+}
+* @EnableDubboConfig.multiple()
+*/
 private static final String DUBBO_CONFIG_MULTIPLE_PROPERTY = "dubbo.config.multiple";
 
 /**
- * The property name of {@link ApplicationConfig#getQosEnable() application's QOS enable}
- */
+* The property name of
+{
+    @link ApplicationConfig#getQosEnable() application's QOS enable;
+}
+*/
 private static final String DUBBO_APPLICATION_QOS_ENABLE_PROPERTY = "dubbo.application.qos-enable";
 
 private Map<String, Object> createDefaultProperties(ConfigurableEnvironment environment) {
@@ -579,6 +590,7 @@ private void setDubboConfigMultipleProperty(Map<String, Object> defaultPropertie
 private void setDubboApplicationQosEnableProperty(Map<String, Object> defaultProperties) {
     defaultProperties.put(DUBBO_APPLICATION_QOS_ENABLE_PROPERTY, Boolean.FALSE.toString());
 }
+
 ``````
 
 ```plain text
@@ -607,17 +619,18 @@ private void addOrReplace(MutablePropertySources propertySources, Map<String, Ob
                 if (!target.containsProperty(key)) {
                     target.getSource().put(key, map.get(key));
                 }
-            }
         }
-    }
-    // 情况二，不存在 "defaultProperties" 对应的 PropertySource 对象，则进行添加
-    if (target == null) {
-        target = new MapPropertySource(PROPERTY_SOURCE_NAME, map);
-    }
-    if (!propertySources.contains(PROPERTY_SOURCE_NAME)) {
-        propertySources.addLast(target);
-    }
 }
+}
+// 情况二，不存在 "defaultProperties" 对应的 PropertySource 对象，则进行添加
+if (target == null) {
+    target = new MapPropertySource(PROPERTY_SOURCE_NAME, map);
+}
+if (!propertySources.contains(PROPERTY_SOURCE_NAME)) {
+    propertySources.addLast(target);
+}
+}
+
 ``````
 
 ```plain text
@@ -635,10 +648,10 @@ com.alibaba.boot.dubbo.context.event.WelcomeLogoApplicationListener ，实现 Ap
 @Order(LoggingApplicationListener.DEFAULT_ORDER + 1)
 public class WelcomeLogoApplicationListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
     /**
-     * 是否执行过
-     *
-     * 通过该变量，保证有且仅处理一次 ApplicationEnvironmentPreparedEvent 事件
-     */
+    * 是否执行过
+    *
+    * 通过该变量，保证有且仅处理一次 ApplicationEnvironmentPreparedEvent 事件
+    */
     private static AtomicBoolean processed = new AtomicBoolean(false);
 
     @Override
@@ -648,42 +661,43 @@ public class WelcomeLogoApplicationListener implements ApplicationListener<Appli
         if (processed.get()) {
             return;
         }
-        // 获得 Logger 对象
-        /**
-         * Gets Logger After LoggingSystem configuration ready
-         *
-         * @see LoggingApplicationListener
-         */
-        final Logger logger = LoggerFactory.getLogger(getClass());
-        // 获得 Dubbo Banner 文本
-        String bannerText = buildBannerText();
-        if (logger.isInfoEnabled()) {
-            logger.info(bannerText);
-        } else {
-            System.out.print(bannerText);
-        }
-        // mark processed to be true
-        // 标记已执行
-        processed.compareAndSet(false, true);
+    // 获得 Logger 对象
+    /**
+    * Gets Logger After LoggingSystem configuration ready
+    *
+    * @see LoggingApplicationListener
+    */
+    final Logger logger = LoggerFactory.getLogger(getClass());
+    // 获得 Dubbo Banner 文本
+    String bannerText = buildBannerText();
+    if (logger.isInfoEnabled()) {
+        logger.info(bannerText);
+    } else {
+        System.out.print(bannerText);
     }
-
-    String buildBannerText() {
-        StringBuilder bannerTextBuilder = new StringBuilder();
-        bannerTextBuilder
-            .append(LINE_SEPARATOR)
-            .append(LINE_SEPARATOR)
-            .append(" :: Dubbo Spring Boot (v").append(Version.getVersion(getClass(), "1.0.0")).append(") : ")
-            .append(DUBBO_SPRING_BOOT_GITHUB_URL)
-            .append(LINE_SEPARATOR)
-            .append(" :: Dubbo (v").append(Version.getVersion()).append(") : ")
-            .append(DUBBO_GITHUB_URL)
-            .append(LINE_SEPARATOR)
-            .append(" :: Discuss group : ")
-            .append(DUBBO_MAILING_LIST)
-            .append(LINE_SEPARATOR);
-        return bannerTextBuilder.toString();
-    }
+// mark processed to be true
+// 标记已执行
+processed.compareAndSet(false, true);
 }
+
+String buildBannerText() {
+    StringBuilder bannerTextBuilder = new StringBuilder();
+    bannerTextBuilder
+    .append(LINE_SEPARATOR)
+    .append(LINE_SEPARATOR)
+    .append(" :: Dubbo Spring Boot (v").append(Version.getVersion(getClass(), "1.0.0")).append(") : ")
+    .append(DUBBO_SPRING_BOOT_GITHUB_URL)
+    .append(LINE_SEPARATOR)
+    .append(" :: Dubbo (v").append(Version.getVersion()).append(") : ")
+    .append(DUBBO_GITHUB_URL)
+    .append(LINE_SEPARATOR)
+    .append(" :: Discuss group : ")
+    .append(DUBBO_MAILING_LIST)
+    .append(LINE_SEPARATOR);
+    return bannerTextBuilder.toString();
+}
+}
+
 ``````
 
 - 简单，就不多做解释了。
@@ -700,10 +714,10 @@ public class OverrideDubboConfigApplicationListener implements ApplicationListen
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
         // 获得 Logger 对象
         /**
-         * Gets Logger After LoggingSystem configuration ready
-         *
-         * @see LoggingApplicationListener
-         */
+        * Gets Logger After LoggingSystem configuration ready
+        *
+        * @see LoggingApplicationListener
+        */
         final Logger logger = LoggerFactory.getLogger(getClass());
         // <1> 获得 "dubbo.config.override" 属性对应的值。默认情况下为 true
         ConfigurableEnvironment environment = event.getEnvironment();
@@ -715,15 +729,25 @@ public class OverrideDubboConfigApplicationListener implements ApplicationListen
             // <2.2> 添加到 Dubbo Properties 中
             ConfigUtils.getProperties().putAll(dubboProperties);
             if (logger.isInfoEnabled()) {
-                logger.info("Dubbo Config was overridden by externalized configuration {}", dubboProperties);
-            }
-        } else {
-            if (logger.isInfoEnabled()) {
-                logger.info("Disable override Dubbo Config caused by property {} = {}", OVERRIDE_CONFIG_PROPERTY_NAME, override);
-            }
+                logger.info("Dubbo Config was overridden by externalized configuration
+                {
+                }
+            ", dubboProperties);
         }
-    }
+} else {
+    if (logger.isInfoEnabled()) {
+        logger.info("Disable override Dubbo Config caused by property
+        {
+        } =
+        {
+        }
 }
+", OVERRIDE_CONFIG_PROPERTY_NAME, override);
+}
+}
+}
+}
+
 ``````
 
 - <1>
@@ -736,16 +760,20 @@ true
 ```java
 // DubboUtils.java
 /**
- * The property name of override Dubbo config
- * <p>
- * The default value is {@link #DEFAULT_OVERRIDE_CONFIG_PROPERTY_VALUE}
- */
+* The property name of override Dubbo config
+* <p>
+* The default value is
+{
+    @link #DEFAULT_OVERRIDE_CONFIG_PROPERTY_VALUE;
+}
+*/
 public static final String OVERRIDE_CONFIG_PROPERTY_NAME = DUBBO_CONFIG_PREFIX + PROPERTY_NAME_SEPARATOR + "override";
 
 /**
- * The default property value of override Dubbo config
- */
+* The default property value of override Dubbo config
+*/
 public static final boolean DEFAULT_OVERRIDE_CONFIG_PROPERTY_VALUE = true;
+
 ``````
 
 - <2>
@@ -762,21 +790,27 @@ environment
 ```java
 // DubboUtils.java
 /**
- * The separator of property name
- */
+* The separator of property name
+*/
 public static final String PROPERTY_NAME_SEPARATOR = ".";
 
 /**
- * The prefix of property name of Dubbo
- */
+* The prefix of property name of Dubbo
+*/
 public static final String DUBBO_PREFIX = "dubbo";
 
 /**
- * Filters Dubbo Properties from {@link ConfigurableEnvironment}
- *
- * @param environment {@link ConfigurableEnvironment}
- * @return Read-only SortedMap
- */
+* Filters Dubbo Properties from
+{
+    @link ConfigurableEnvironment;
+}
+*
+* @param environment
+{
+    @link ConfigurableEnvironment;
+}
+* @return Read-only SortedMap
+*/
 public static SortedMap<String, Object> filterDubboProperties(ConfigurableEnvironment environment) {
     SortedMap<String, Object> dubboProperties = new TreeMap<>();
     // 获得所有的配置
@@ -787,10 +821,11 @@ public static SortedMap<String, Object> filterDubboProperties(ConfigurableEnviro
         if (propertyName.startsWith(DUBBO_PREFIX + PROPERTY_NAME_SEPARATOR) && entry.getValue() != null) {
             dubboProperties.put(propertyName, entry.getValue().toString());
         }
-    }
-    // 返回 dubboProperties
-    return Collections.unmodifiableSortedMap(dubboProperties);
 }
+// 返回 dubboProperties
+return Collections.unmodifiableSortedMap(dubboProperties);
+}
+
 ``````
 
 ```plain text
@@ -817,7 +852,7 @@ com.alibaba.boot.dubbo.context.event.AwaitingNonWebApplicationListener ，实现
 ```java
 // AwaitingNonWebApplicationListener.java
 private static final Class<? extends ApplicationEvent>[] SUPPORTED_APPLICATION_EVENTS =
-    of(ApplicationReadyEvent.class, ContextClosedEvent.class);
+of(ApplicationReadyEvent.class, ContextClosedEvent.class);
 
 @Override
 public boolean supportsEventType(Class<? extends ApplicationEvent> eventType) {
@@ -827,6 +862,7 @@ public boolean supportsEventType(Class<? extends ApplicationEvent> eventType) {
 private static <T> T[] of(T... values) {
     return values;
 }
+
 ``````
 
 - 为什么呢，我们接着往下看。
@@ -884,9 +920,10 @@ protected void onApplicationReadyEvent(ApplicationReadyEvent event) {
     if (!WebApplicationType.NONE.equals(springApplication.getWebApplicationType())) {
         return;
     }
-    // <2> 启动一个用户线程，从而实现等待
-    await();
+// <2> 启动一个用户线程，从而实现等待
+await();
 }
+
 ``````
 
 - <1>
@@ -899,8 +936,8 @@ protected void onApplicationReadyEvent(ApplicationReadyEvent event) {
 ```java
 // AwaitingNonWebApplicationListener.java
 /**
- * 是否已经等待完成
- */
+* 是否已经等待完成
+*/
 private static final AtomicBoolean awaited = new AtomicBoolean(false);
 
 private final Lock lock = new ReentrantLock();
@@ -913,19 +950,19 @@ protected void await() {
     if (awaited.get()) {
         return;
     }
-    // 创建任务，实现阻塞
-    executorService.execute(() -> executeMutually(() -> {
-        while (!awaited.get()) {
-            if (logger.isInfoEnabled()) {
-                logger.info(" [Dubbo] Current Spring Boot Application is await...");
-            }
-            try {
-                condition.await();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+// 创建任务，实现阻塞
+executorService.execute(() -> executeMutually(() -> {
+    while (!awaited.get()) {
+        if (logger.isInfoEnabled()) {
+            logger.info(" [Dubbo] Current Spring Boot Application is await...");
         }
-    }));
+    try {
+        condition.await();
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+    }
+}
+}));
 }
 
 private void executeMutually(Runnable runnable) {
@@ -937,6 +974,7 @@ private void executeMutually(Runnable runnable) {
         lock.unlock();
     }
 }
+
 ``````
 
 ```plain text
@@ -972,11 +1010,12 @@ protected void release() {
             if (logger.isInfoEnabled()) {
                 logger.info(" [Dubbo] Current Spring Boot Application is about to shutdown...");
             }
-            // 通知 Condition
-            condition.signalAll();
-        }
-    });
+        // 通知 Condition
+        condition.signalAll();
+    }
+});
 }
+
 ``````
 
 ```plain text
@@ -1055,7 +1094,7 @@ com.alibaba.boot.dubbo.actuate.autoconfigure.DubboEndpointsAutoConfiguration ，
 // DubboEndpointsAutoConfiguration.java
 @Configuration
 @PropertySource(name = "Dubbo Endpoints Default Properties", value = "classpath:/META-INF/dubbo-endpoins-default.properties")
-    // 导入该配置文件
+// 导入该配置文件
 public class DubboEndpointsAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
@@ -1064,41 +1103,42 @@ public class DubboEndpointsAutoConfiguration {
         return new DubboEndpoint();
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
-    public DubboConfigsMetadataEndpoint dubboConfigsMetadataEndpoint() {
-        return new DubboConfigsMetadataEndpoint();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
-    public DubboPropertiesEndpoint dubboPropertiesEndpoint() {
-        return new DubboPropertiesEndpoint();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
-    public DubboReferencesMetadataEndpoint dubboReferencesMetadataEndpoint() {
-        return new DubboReferencesMetadataEndpoint();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
-    public DubboServicesMetadataEndpoint dubboServicesMetadataEndpoint() {
-        return new DubboServicesMetadataEndpoint();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
-    public DubboShutdownEndpoint dubboShutdownEndpoint() {
-        return new DubboShutdownEndpoint();
-    }
+@Bean
+@ConditionalOnMissingBean
+@ConditionalOnEnabledEndpoint
+public DubboConfigsMetadataEndpoint dubboConfigsMetadataEndpoint() {
+    return new DubboConfigsMetadataEndpoint();
 }
+
+@Bean
+@ConditionalOnMissingBean
+@ConditionalOnEnabledEndpoint
+public DubboPropertiesEndpoint dubboPropertiesEndpoint() {
+    return new DubboPropertiesEndpoint();
+}
+
+@Bean
+@ConditionalOnMissingBean
+@ConditionalOnEnabledEndpoint
+public DubboReferencesMetadataEndpoint dubboReferencesMetadataEndpoint() {
+    return new DubboReferencesMetadataEndpoint();
+}
+
+@Bean
+@ConditionalOnMissingBean
+@ConditionalOnEnabledEndpoint
+public DubboServicesMetadataEndpoint dubboServicesMetadataEndpoint() {
+    return new DubboServicesMetadataEndpoint();
+}
+
+@Bean
+@ConditionalOnMissingBean
+@ConditionalOnEnabledEndpoint
+public DubboShutdownEndpoint dubboShutdownEndpoint() {
+    return new DubboShutdownEndpoint();
+}
+}
+
 ``````
 
 - 每个方法，创建一个 Dubbo Endpint Bean 。一共有 6 个。
@@ -1139,8 +1179,16 @@ com.alibaba.boot.dubbo.actuate.autoconfigure.DubboHealthIndicatorAutoConfigurati
 ```java
 // DubboHealthIndicatorAutoConfiguration.java
 @Configuration
-@ConditionalOnClass({HealthIndicator.class}) // 存在 HealthIndicator 类的情况
-@AutoConfigureBefore({EndpointAutoConfiguration.class}) // 在 EndpointAutoConfiguration 自动配置类之前初始化
+@ConditionalOnClass(
+{
+    HealthIndicator.class;
+}
+) // 存在 HealthIndicator 类的情况
+@AutoConfigureBefore(
+{
+    EndpointAutoConfiguration.class;
+}
+) // 在 EndpointAutoConfiguration 自动配置类之前初始化
 @AutoConfigureAfter(DubboAutoConfiguration.class) // 在 DubboAutoConfiguration 自动配置类之后初始化
 @ConditionalOnEnabledHealthIndicator("dubbo")
 @EnableConfigurationProperties(DubboHealthIndicatorProperties.class) // 自动配置 DubboHealthIndicatorProperties 类
@@ -1151,6 +1199,7 @@ public class DubboHealthIndicatorAutoConfiguration {
         return new DubboHealthIndicator();
     }
 }
+
 ``````
 
 - 每个注解，看后面的代码注释。
@@ -1166,48 +1215,56 @@ com.alibaba.boot.dubbo.actuate.health.DubboHealthIndicatorProperties ，Dubbo He
 @ConfigurationProperties(prefix = PREFIX, ignoreUnknownFields = false) // "management.health.dubbo" 开头的配置
 public class DubboHealthIndicatorProperties {
     /**
-     * The prefix of {@link DubboHealthIndicatorProperties}
-     */
-    public static final String PREFIX = "management.health.dubbo";
-
-    private Status status = new Status();
-
-    // ... 省略 setting/getting 方法
-
-    /**
-     * The nested class for {@link StatusChecker}'s names
-     * <pre>
-     * registry=com.alibaba.dubbo.registry.status.RegistryStatusChecker
-     * spring=com.alibaba.dubbo.config.spring.status.SpringStatusChecker
-     * datasource=com.alibaba.dubbo.config.spring.status.DataSourceStatusChecker
-     * memory=com.alibaba.dubbo.common.status.support.MemoryStatusChecker
-     * load=com.alibaba.dubbo.common.status.support.LoadStatusChecker
-     * server=com.alibaba.dubbo.rpc.protocol.dubbo.status.ServerStatusChecker
-     * threadpool=com.alibaba.dubbo.rpc.protocol.dubbo.status.ThreadPoolStatusChecker
-     * </pre>
-     *
-     * @see StatusChecker
-     */
-    public static class Status {
-        /**
-         * The defaults names of {@link StatusChecker}
-         * <p>
-         * The defaults : "memory", "load"
-         */
-        private Set<String> defaults = new LinkedHashSet<>(Arrays.asList("memory", "load"));
-
-        /**
-         * The extra names of {@link StatusChecker}
-         *
-         * 配置的 "management.health.dubbo.extras" 集合
-         *
-         * 每个元素，是 StatusChecker 的实现类
-         */
-        private Set<String> extras = new LinkedHashSet<>();
-
-        // ... 省略 setting/getting 方法
+    * The prefix of
+    {
+        @link DubboHealthIndicatorProperties;
     }
+*/
+public static final String PREFIX = "management.health.dubbo";
+
+private Status status = new Status();
+
+// ... 省略 setting/getting 方法
+
+/**
+* The nested class for
+{
+    @link StatusChecker;
 }
+'s names
+* <pre>
+* registry=com.alibaba.dubbo.registry.status.RegistryStatusChecker
+* spring=com.alibaba.dubbo.config.spring.status.SpringStatusChecker
+* datasource=com.alibaba.dubbo.config.spring.status.DataSourceStatusChecker
+* memory=com.alibaba.dubbo.common.status.support.MemoryStatusChecker
+* load=com.alibaba.dubbo.common.status.support.LoadStatusChecker
+* server=com.alibaba.dubbo.rpc.protocol.dubbo.status.ServerStatusChecker
+* threadpool=com.alibaba.dubbo.rpc.protocol.dubbo.status.ThreadPoolStatusChecker
+* </pre>
+*
+* @see StatusChecker
+*/
+public static class Status {
+    /**
+    * The defaults names of {@link StatusChecker}
+* <p>
+* The defaults : "memory", "load"
+*/
+private Set<String> defaults = new LinkedHashSet<>(Arrays.asList("memory", "load"));
+
+/**
+* The extra names of {@link StatusChecker}
+*
+* 配置的 "management.health.dubbo.extras" 集合
+*
+* 每个元素，是 StatusChecker 的实现类
+*/
+private Set<String> extras = new LinkedHashSet<>();
+
+// ... 省略 setting/getting 方法
+}
+}
+
 ``````
 
 - 读取以
@@ -1254,25 +1311,26 @@ protected void doHealthCheck(Health.Builder builder) throws Exception {
         com.alibaba.dubbo.common.status.Status.Level level = status.getLevel();
         // <7.2> 如果是 ERROR 检验结果，则标记 hasError 为 true ，并标记 builder 状态为 down
         if (!hasError // 不存在 hasError 的时候
-                && level.equals(com.alibaba.dubbo.common.status.Status.Level.ERROR)) {
+        && level.equals(com.alibaba.dubbo.common.status.Status.Level.ERROR)) {
             hasError = true;
             builder.down();
         }
-        // <7.3> 如果是 UNKNOWN 检验结果，则标记 hasUnknown 为 true ，并标记 builder 状态为 unknown
-        if (!hasError && !hasUnknown // 不存在 hasError 且不存在 hasUnknown
-                && level.equals(com.alibaba.dubbo.common.status.Status.Level.UNKNOWN)) {
-            hasUnknown = true;
-            builder.unknown();
-        }
-        // <8.1> 创建 detail Map
-        Map<String, Object> detail = new LinkedHashMap<>();
-        // <8.2> 设置 detail 属性值
-        detail.put("source", source);
-        detail.put("status", status); // 校验结果
-        // <8.3> 添加到 builder 中
-        builder.withDetail(statusCheckerName, detail);
+    // <7.3> 如果是 UNKNOWN 检验结果，则标记 hasUnknown 为 true ，并标记 builder 状态为 unknown
+    if (!hasError && !hasUnknown // 不存在 hasError 且不存在 hasUnknown
+    && level.equals(com.alibaba.dubbo.common.status.Status.Level.UNKNOWN)) {
+        hasUnknown = true;
+        builder.unknown();
     }
+// <8.1> 创建 detail Map
+Map<String, Object> detail = new LinkedHashMap<>();
+// <8.2> 设置 detail 属性值
+detail.put("source", source);
+detail.put("status", status); // 校验结果
+// <8.3> 添加到 builder 中
+builder.withDetail(statusCheckerName, detail);
 }
+}
+
 ``````
 
 - 大体比较简单，胖友顺着注释来瞅瞅即可。
@@ -1294,15 +1352,19 @@ builder
 ```java
 // DubboHealthIndicator.java
 /**
- * Resolves the map of {@link StatusChecker}'s name and its' source.
- *
- * 解析 StatusChecker 的名字的 Map
- *
- * KEY：StatusChecker 的名字
- * VALUE：配置的来源
- *
- * @return non-null {@link Map}
- */
+* Resolves the map of
+{
+    @link StatusChecker;
+}
+'s name and its' source.
+*
+* 解析 StatusChecker 的名字的 Map
+*
+* KEY：StatusChecker 的名字
+* VALUE：配置的来源
+*
+* @return non-null {@link Map}
+*/
 protected Map<String, String> resolveStatusCheckerNamesMap() {
     // 创建 Map
     Map<String, String> statusCheckerNamesMap = new LinkedHashMap<>();
@@ -1314,6 +1376,7 @@ protected Map<String, String> resolveStatusCheckerNamesMap() {
     statusCheckerNamesMap.putAll(resolveStatusCheckerNamesMapFromProviderConfig());
     return statusCheckerNamesMap;
 }
+
 ``````
 
 - <1>
@@ -1335,12 +1398,13 @@ private Map<String, String> resolveStatusCheckerNamesMapFromDubboHealthIndicator
     for (String statusName : status.getDefaults()) {
         statusCheckerNamesMap.put(statusName, PREFIX + ".status.defaults");
     }
-    // 2. 读取 extras 属性
-    for (String statusName : status.getExtras()) {
-        statusCheckerNamesMap.put(statusName, PREFIX + ".status.extras");
-    }
-    return statusCheckerNamesMap;
+// 2. 读取 extras 属性
+for (String statusName : status.getExtras()) {
+    statusCheckerNamesMap.put(statusName, PREFIX + ".status.extras");
 }
+return statusCheckerNamesMap;
+}
+
 ``````
 
 - <2>
@@ -1371,8 +1435,8 @@ private Map<String, String> resolveStatusCheckerNamesMapFromProtocolConfigs() {
             // 添加到 statusCheckerNamesMap 中
             statusCheckerNamesMap.put(statusCheckerName, source);
         }
-    }
-    return statusCheckerNamesMap;
+}
+return statusCheckerNamesMap;
 }
 
 private Set<String> getStatusCheckerNames(ProtocolConfig protocolConfig) {
@@ -1388,6 +1452,7 @@ private Set<String> getStatusCheckerNames(ProviderConfig providerConfig) {
 private String buildSource(String beanName, Object bean) {
     return beanName + "@" + bean.getClass().getSimpleName() + ".getStatus()";
 }
+
 ``````
 
 - <3>
@@ -1418,9 +1483,10 @@ private Map<String, String> resolveStatusCheckerNamesMapFromProviderConfig() {
             // 添加到 statusCheckerNamesMap 中
             statusCheckerNamesMap.put(statusCheckerName, source);
         }
-    }
-    return statusCheckerNamesMap;
 }
+return statusCheckerNamesMap;
+}
+
 `````
 
 - 最终的结果，示例如下图：
@@ -1477,22 +1543,23 @@ protected Map<String, Object> resolveBeanMetadata(final Object bean) {
                 Object value = readMethod.invoke(bean);
                 beanMetadata.put(name, value);
             }
-        }
-    } catch (Exception e) {
-        throw new RuntimeException(e);
     }
-    return beanMetadata;
+} catch (Exception e) {
+    throw new RuntimeException(e);
+}
+return beanMetadata;
 }
 
 private static boolean isSimpleType(Class<?> type) {
     return isPrimitiveOrWrapper(type) // 基本类型 or 包装类型
-            || type == String.class
-            || type == BigDecimal.class
-            || type == BigInteger.class
-            || type == Date.class
-            || type == URL.class
-            || type == Class.class;
+    || type == String.class
+    || type == BigDecimal.class
+    || type == BigInteger.class
+    || type == Date.class
+    || type == URL.class
+    || type == Class.class;
 }
+
 ``````
 
 - 目的是读取 Bean 的基本属性。示例如下图：
@@ -1539,8 +1606,12 @@ com.alibaba.boot.dubbo.actuate.endpoint.DubboEndpoint ，Dubbo Endpoint ，获�
 ```java
 // DubboEndpoint.java
 /**
- * Actuator {@link Endpoint} to expose Dubbo Meta Data
- */
+* Actuator
+{
+    @link Endpoint;
+}
+to expose Dubbo Meta Data
+*/
 @Endpoint(id = "dubbo")
 public class DubboEndpoint {
     @ReadOperation
@@ -1565,6 +1636,7 @@ public class DubboEndpoint {
         return metaData;
     }
 }
+
 ``````
 
 ## 5.8 DubboConfigsMetadataEndpoint
@@ -1574,8 +1646,8 @@ com.alibaba.boot.dubbo.actuate.endpoint.DubboConfigsMetadataEndpoint ，继承 A
 ```java
 // DubboConfigsMetadataEndpoint.java
 /**
- * Dubbo Configs Metadata {@link Endpoint}
- */
+* Dubbo Configs Metadata {@link Endpoint}
+*/
 @Endpoint(id = "dubboconfigs")
 public class DubboConfigsMetadataEndpoint extends AbstractDubboEndpoint {
     @ReadOperation
@@ -1599,29 +1671,30 @@ public class DubboConfigsMetadataEndpoint extends AbstractDubboEndpoint {
         return configsMap;
     }
 
-    private void addDubboConfigBeans(Class<? extends AbstractConfig> dubboConfigClass,
-            Map<String, Map<String, Map<String, Object>>> configsMap) {
-        // 获得指定类 dubboConfigClass 的 Map
-        Map<String, ? extends AbstractConfig> dubboConfigBeans =
-            BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, dubboConfigClass);
-        // 获得类的简称。例如：ApplicationConfig、ConsumerConfig
-        String name = dubboConfigClass.getSimpleName();
-        // 创建 Map
-        Map<String, Map<String, Object>> beansMetadata = new TreeMap<>();
-        // 遍历 dubboConfigBeans 数组
-        for (Map.Entry<String, ? extends AbstractConfig> entry : dubboConfigBeans.entrySet()) {
-            // 获得 Bean 的名字
-            String beanName = entry.getKey();
-            // 获得 Bean 的元数据
-            AbstractConfig configBean = entry.getValue();
-            Map<String, Object> configBeanMeta = super.resolveBeanMetadata(configBean);
-            // 添加到 beansMetadata 中
-            beansMetadata.put(beanName, configBeanMeta);
-        }
-        // 添加到 configsMap 中
-        configsMap.put(name, beansMetadata);
+private void addDubboConfigBeans(Class<? extends AbstractConfig> dubboConfigClass,
+Map<String, Map<String, Map<String, Object>>> configsMap) {
+    // 获得指定类 dubboConfigClass 的 Map
+    Map<String, ? extends AbstractConfig> dubboConfigBeans =
+    BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, dubboConfigClass);
+    // 获得类的简称。例如：ApplicationConfig、ConsumerConfig
+    String name = dubboConfigClass.getSimpleName();
+    // 创建 Map
+    Map<String, Map<String, Object>> beansMetadata = new TreeMap<>();
+    // 遍历 dubboConfigBeans 数组
+    for (Map.Entry<String, ? extends AbstractConfig> entry : dubboConfigBeans.entrySet()) {
+        // 获得 Bean 的名字
+        String beanName = entry.getKey();
+        // 获得 Bean 的元数据
+        AbstractConfig configBean = entry.getValue();
+        Map<String, Object> configBeanMeta = super.resolveBeanMetadata(configBean);
+        // 添加到 beansMetadata 中
+        beansMetadata.put(beanName, configBeanMeta);
     }
+// 添加到 configsMap 中
+configsMap.put(name, beansMetadata);
 }
+}
+
 ``````
 
 ## 5.7 DubboPropertiesEndpoint
@@ -1631,8 +1704,8 @@ com.alibaba.boot.dubbo.actuate.endpoint.DubboPropertiesEndpoint ，继承 Abstra
 ```java
 // DubboPropertiesEndpoint.java
 /**
- * Dubbo Properties {@link Endpoint}
- */
+* Dubbo Properties {@link Endpoint}
+*/
 @Endpoint(id = "dubboproperties")
 public class DubboPropertiesEndpoint extends AbstractDubboEndpoint {
     @ReadOperation
@@ -1640,6 +1713,7 @@ public class DubboPropertiesEndpoint extends AbstractDubboEndpoint {
         return DubboUtils.filterDubboProperties(environment);
     }
 }
+
 ``````
 
 ## 5.8 DubboReferencesMetadataEndpoint
@@ -1649,8 +1723,14 @@ com.alibaba.boot.dubbo.actuate.endpoint.DubboReferencesMetadataEndpoint ，继�
 ```java
 // DubboReferencesMetadataEndpoint.java
 /**
- * Dubbo {@link Reference} Metadata {@link Endpoint}
- */
+* Dubbo
+{
+    @link Reference} Metadata
+    {
+        @link Endpoin;
+    }
+}
+*/
 @Endpoint(id = "dubboreferences")
 public class DubboReferencesMetadataEndpoint extends AbstractDubboEndpoint {
     @ReadOperation
@@ -1668,27 +1748,28 @@ public class DubboReferencesMetadataEndpoint extends AbstractDubboEndpoint {
         return referencesMetadata;
     }
 
-    private Map<String, Map<String, Object>> buildReferencesMetadata(
-            Map<InjectionMetadata.InjectedElement, ReferenceBean<?>> injectedElementReferenceBeanMap) {
-        // 创建 Map
-        // KEY：Bean 的名字
-        // VALUE：Bean 的元数据
-        Map<String, Map<String, Object>> referencesMetadata = new LinkedHashMap<>();
-        // 遍历 injectedElementReferenceBeanMap 元素
-        for (Map.Entry<InjectionMetadata.InjectedElement, ReferenceBean<?>> entry : injectedElementReferenceBeanMap.entrySet()) {
-            InjectionMetadata.InjectedElement injectedElement = entry.getKey();
-            // 获得 ReferenceBean 对象
-            ReferenceBean<?> referenceBean = entry.getValue();
-            // 获得 Bean 元数据
-            Map<String, Object> beanMetadata = super.resolveBeanMetadata(referenceBean);
-            // 获得 invoker 属性
-            beanMetadata.put("invoker", super.resolveBeanMetadata(referenceBean.get()));
-            // 添加到 referencesMetadata 中
-            referencesMetadata.put(String.valueOf(injectedElement.getMember()), beanMetadata);
-        }
-        return referencesMetadata;
+private Map<String, Map<String, Object>> buildReferencesMetadata(
+Map<InjectionMetadata.InjectedElement, ReferenceBean<?>> injectedElementReferenceBeanMap) {
+    // 创建 Map
+    // KEY：Bean 的名字
+    // VALUE：Bean 的元数据
+    Map<String, Map<String, Object>> referencesMetadata = new LinkedHashMap<>();
+    // 遍历 injectedElementReferenceBeanMap 元素
+    for (Map.Entry<InjectionMetadata.InjectedElement, ReferenceBean<?>> entry : injectedElementReferenceBeanMap.entrySet()) {
+        InjectionMetadata.InjectedElement injectedElement = entry.getKey();
+        // 获得 ReferenceBean 对象
+        ReferenceBean<?> referenceBean = entry.getValue();
+        // 获得 Bean 元数据
+        Map<String, Object> beanMetadata = super.resolveBeanMetadata(referenceBean);
+        // 获得 invoker 属性
+        beanMetadata.put("invoker", super.resolveBeanMetadata(referenceBean.get()));
+        // 添加到 referencesMetadata 中
+        referencesMetadata.put(String.valueOf(injectedElement.getMember()), beanMetadata);
     }
+return referencesMetadata;
 }
+}
+
 ``````
 
 ## 5.9 DubboServicesMetadataEndpoint
@@ -1698,8 +1779,8 @@ com.alibaba.boot.dubbo.actuate.endpoint.DubboServicesMetadataEndpoint ，继承 
 ```java
 // DubboServicesMetadataEndpoint.java
 /**
- * Dubbo {@link Service} Metadata {@link Endpoint}
- */
+* Dubbo {@link Service} Metadata {@link Endpoint}
+*/
 @Endpoint(id = "dubboservices")
 public class DubboServicesMetadataEndpoint extends AbstractDubboEndpoint {
     @ReadOperation
@@ -1724,24 +1805,25 @@ public class DubboServicesMetadataEndpoint extends AbstractDubboEndpoint {
                 // Add Service implementation class
                 serviceBeanMetadata.put("serviceClass", service.getClass().getName());
             }
-            // 添加到 servicesMetadata 中
-            servicesMetadata.put(serviceBeanName, serviceBeanMetadata);
-        }
-        return servicesMetadata;
+        // 添加到 servicesMetadata 中
+        servicesMetadata.put(serviceBeanName, serviceBeanMetadata);
     }
-
-    private Object resolveServiceBean(String serviceBeanName, ServiceBean serviceBean) {
-        int index = serviceBeanName.indexOf("#");
-        if (index > -1) {
-            Class<?> interfaceClass = serviceBean.getInterfaceClass();
-            String serviceName = serviceBeanName.substring(index + 1);
-            if (applicationContext.containsBean(serviceName)) {
-                return applicationContext.getBean(serviceName, interfaceClass);
-            }
-        }
-        return null;
-    }
+return servicesMetadata;
 }
+
+private Object resolveServiceBean(String serviceBeanName, ServiceBean serviceBean) {
+    int index = serviceBeanName.indexOf("#");
+    if (index > -1) {
+        Class<?> interfaceClass = serviceBean.getInterfaceClass();
+        String serviceName = serviceBeanName.substring(index + 1);
+        if (applicationContext.containsBean(serviceName)) {
+            return applicationContext.getBean(serviceName, interfaceClass);
+        }
+}
+return null;
+}
+}
+
 ``````
 
 ## 5.10 DubboShutdownEndpoint
@@ -1751,8 +1833,8 @@ com.alibaba.boot.dubbo.actuate.endpoint.DubboShutdownEndpoint ，继承 Abstract
 ```java
 // DubboShutdownEndpoint.java
 /**
- * Dubbo Shutdown
- */
+* Dubbo Shutdown
+*/
 @Endpoint(id = "dubboshutdown")
 public class DubboShutdownEndpoint extends AbstractDubboEndpoint {
     @WriteOperation
@@ -1777,24 +1859,25 @@ public class DubboShutdownEndpoint extends AbstractDubboEndpoint {
             for (ServiceBean serviceBean : serviceBeansMap.values()) {
                 serviceBean.destroy();
             }
-        }
-        // 添加到 shutdownCountData 中
-        shutdownCountData.put("services", serviceBeansMap.size());
-        // Reference Beans
-        // 获得 ReferenceAnnotationBeanPostProcessor 对象
-        ReferenceAnnotationBeanPostProcessor beanPostProcessor = super.getReferenceAnnotationBeanPostProcessor();
-        // 获得 Reference Bean 的数量
-        int referencesCount = beanPostProcessor.getReferenceBeans().size();
-        // 销毁所有 Reference Bean
-        beanPostProcessor.destroy();
-        // 添加到 shutdownCountData 中
-        shutdownCountData.put("references", referencesCount);
-        // Set Result to complete
-        Map<String, Object> shutdownData = new TreeMap<>();
-        shutdownData.put("shutdown.count", shutdownCountData);
-        return shutdownData;
     }
+// 添加到 shutdownCountData 中
+shutdownCountData.put("services", serviceBeansMap.size());
+// Reference Beans
+// 获得 ReferenceAnnotationBeanPostProcessor 对象
+ReferenceAnnotationBeanPostProcessor beanPostProcessor = super.getReferenceAnnotationBeanPostProcessor();
+// 获得 Reference Bean 的数量
+int referencesCount = beanPostProcessor.getReferenceBeans().size();
+// 销毁所有 Reference Bean
+beanPostProcessor.destroy();
+// 添加到 shutdownCountData 中
+shutdownCountData.put("references", referencesCount);
+// Set Result to complete
+Map<String, Object> shutdownData = new TreeMap<>();
+shutdownData.put("shutdown.count", shutdownCountData);
+return shutdownData;
 }
+}
+
 ``````
 
 - 通过调用该接口，我们就可以远程关闭 Dubbo 服务。

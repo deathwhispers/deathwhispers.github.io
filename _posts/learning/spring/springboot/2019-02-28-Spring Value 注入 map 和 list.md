@@ -54,10 +54,11 @@ public class ScioCloudConfig {
         this.list = list;
     }
 
-    public void setMaps(Map<String,String> maps) {
-        this.maps = maps;
-    }
+public void setMaps(Map<String,String> maps) {
+    this.maps = maps;
 }
+}
+
 ```
 
 yml常规

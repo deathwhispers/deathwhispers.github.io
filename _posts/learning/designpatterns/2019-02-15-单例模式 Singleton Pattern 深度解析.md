@@ -81,10 +81,11 @@ public class SingletonEager {
     // 私有构造函数
     private SingletonEager (){}
 
-    public static SingletonEager getInstance() {
-        return instance;
-    }
+public static SingletonEager getInstance() {
+    return instance;
 }
+}
+
 ```
 
 ### 3.2. 懒汉式 - 双重校验锁 (DCL)
@@ -98,21 +99,22 @@ public class SingletonDCL {
 
     private SingletonDCL (){}
 
-    public static SingletonDCL getInstance() {
-        // 第一次检查：若已创建，则无需进入同步块
-        if (instance == null) {
-            // 同步块：保证同一时间只有一个线程实例化
-            synchronized (SingletonDCL.class) {
-                // 第二次检查：在同步块内再次检查，防止多线程竞争时重复创建
-                if (instance == null) {
-                    instance = new SingletonDCL();
-                }
+public static SingletonDCL getInstance() {
+    // 第一次检查：若已创建，则无需进入同步块
+    if (instance == null) {
+        // 同步块：保证同一时间只有一个线程实例化
+        synchronized (SingletonDCL.class) {
+            // 第二次检查：在同步块内再次检查，防止多线程竞争时重复创建
+            if (instance == null) {
+                instance = new SingletonDCL();
             }
-        }
-        return instance;
     }
 }
+return instance;
+}
+}
 // 注意：该方法在 JDK 1.5 之前的版本，即使加了 volatile 也无法完全保证线程安全。
+
 ```
 
 ### 3.3. 登记式 / 静态内部类 (Singleton Holder)
@@ -123,16 +125,17 @@ public class SingletonDCL {
 public class SingletonHolder {
     private SingletonHolder(){}
 
-    // 静态内部类：只有显式调用 getInstance() 时，才会被虚拟机装载
-    private static class SingletonHolderInner {
-        private static final SingletonHolder INSTANCE = new SingletonHolder();
-    }
-
-    public static final SingletonHolder getInstance() {
-        // 利用 ClassLoader 机制保证初始化 INSTANCE 时只有一个线程
-        return SingletonHolderInner.INSTANCE;
-    }
+// 静态内部类：只有显式调用 getInstance() 时，才会被虚拟机装载
+private static class SingletonHolderInner {
+    private static final SingletonHolder INSTANCE = new SingletonHolder();
 }
+
+public static final SingletonHolder getInstance() {
+    // 利用 ClassLoader 机制保证初始化 INSTANCE 时只有一个线程
+    return SingletonHolderInner.INSTANCE;
+}
+}
+
 ```
 
 ### 3.4. 枚举 (Enum)

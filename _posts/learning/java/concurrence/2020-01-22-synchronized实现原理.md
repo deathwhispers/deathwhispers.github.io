@@ -38,13 +38,14 @@ Java 中每一个对象都可以作为锁，这是 synchronized 实现同步的�
 
 ```java
 public class SynchronizedTest {
-  public synchronized void test1() {
-  }
+    public synchronized void test1() {
+    }
 public void test2() {
-  synchronized(this) {
-  }
+    synchronized(this) {
+    }
 }
 }
+
 ```
 
 利用 Javap 工具查看生成的 class 文件信息来分析 synchronized 的实现
@@ -172,12 +173,15 @@ JDK 1.6 引入了更加聪明的自旋锁，即自适应自旋锁。
 
 ```java
 public void vectorTest(){
-  Vector vector = new Vector();
-  for (int i = 0 ; i < 10 ; i++){
-    vector.add(i + ““);
-  }
+    Vector vector = new Vector();
+    for (int i = 0;
+    i < 10;
+    i++){
+        vector.add(i + ““);
+    }
 System.out.println(vector);
 }
+
 ```
 
 在运行这段代码时，JVM 可以明显检测到变量 vector 没有逃逸出方法 #vectorTest() 之外，所以 JVM 可以大胆地将 vector 内部的加锁操作消除。

@@ -56,11 +56,12 @@ public class PersonService {
         return personMapper.selectOne(id);
     }
 
-    @CacheEvict(value = "person", key = "#person.id")
-    public void update(Person person) {
-        personMapper.updateById(person);
-    }
+@CacheEvict(value = "person", key = "#person.id")
+public void update(Person person) {
+    personMapper.updateById(person);
 }
+}
+
 ```
 
 - @Cacheable是最主要的注解，它指定了被注解方法的返回值是可被缓存的

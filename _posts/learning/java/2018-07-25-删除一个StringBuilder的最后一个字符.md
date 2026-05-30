@@ -143,20 +143,24 @@ public String join(Collection<String> collection, String seperator) {
         sb.append(seperator);
         sb.append(iter.next());
     }
-    return sb.toString();
+return sb.toString();
 }
+
 ```
 
 I am doing something like this:
 
 ```java
 StringBuilder stringBuilder = new StringBuilder();
-for (int i = 0; i < value.length; i++) {
+for (int i = 0;
+i < value.length;
+i++) {
     stringBuilder.append(values[i]);
     if (i < value.length - 1) {
         stringBuilder.append(", ");
     }
 }
+
 ```
 
 With Java-8 you can use static method of String class,
@@ -188,9 +192,10 @@ String prefix = "";
 for (String item : list) {
     sb.append(prefix);
     if (TextUtils.isEmpty(prefix))
-        prefix = ",";
+    prefix = ",";
     sb.append(item);
 }
+
 ```
 
 Yet another solution similar to the “prefix” solution above avoids multiple prefix assignments in the loop. i.e. Just in case the optimizer does not unroll the first loop iteration.
@@ -201,11 +206,12 @@ boolean firstEntry = true;
 
 for (String serverId : serverIds) {
     if (firstEntry)
-        firstEntry = false;
+    firstEntry = false;
     else
-        sb.append(",");
+    sb.append(",");
     sb.append(serverId);
 }
+
 ```
 
 You can use:

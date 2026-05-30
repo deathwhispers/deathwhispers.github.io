@@ -196,10 +196,11 @@ public String getMessage(String code, @Nullable Object[] args, @Nullable String 
 private MessageSource getMessageSource() throws IllegalStateException {
     if (this.messageSource == null) {
         throw new IllegalStateException("MessageSource not initialized - " +
-            "call 'refresh' before accessing messages via the context: " + this);
+        "call 'refresh' before accessing messages via the context: " + this);
     }
-    return this.messageSource;
+return this.messageSource;
 }
+
 ```
 
 - 真正实现逻辑，是在 AbstractMessageSource 中，代码如下：
@@ -211,11 +212,12 @@ public final String getMessage(String code, @Nullable Object[] args, @Nullable S
     if (msg != null) {
         return msg;
     }
-    if (defaultMessage == null) {
-        return getDefaultMessage(code);
-    }
-    return renderDefaultMessage(defaultMessage, args, locale);
+if (defaultMessage == null) {
+    return getDefaultMessage(code);
 }
+return renderDefaultMessage(defaultMessage, args, locale);
+}
+
 ```
 
 ```plain text
@@ -252,24 +254,25 @@ protected void publishEvent(Object event, @Nullable ResolvableType eventType) {
         if (eventType == null) {
             eventType = ((PayloadApplicationEvent) applicationEvent).getResolvableType();
         }
-    }
+}
 
-    // Multicast right now if possible - or lazily once the multicaster is initialized
-    if (this.earlyApplicationEvents != null) {
-        this.earlyApplicationEvents.add(applicationEvent);
+// Multicast right now if possible - or lazily once the multicaster is initialized
+if (this.earlyApplicationEvents != null) {
+    this.earlyApplicationEvents.add(applicationEvent);
+} else {
+    getApplicationEventMulticaster().multicastEvent(applicationEvent, eventType);
+}
+
+// Publish event via parent context as well...
+if (this.parent != null) {
+    if (this.parent instanceof AbstractApplicationContext) {
+        ((AbstractApplicationContext) this.parent).publishEvent(event, eventType);
     } else {
-        getApplicationEventMulticaster().multicastEvent(applicationEvent, eventType);
-    }
-
-    // Publish event via parent context as well...
-    if (this.parent != null) {
-        if (this.parent instanceof AbstractApplicationContext) {
-            ((AbstractApplicationContext) this.parent).publishEvent(event, eventType);
-        } else {
-            this.parent.publishEvent(event);
-        }
+        this.parent.publishEvent(event);
     }
 }
+}
+
 ```
 
 - 如果指定的事件不是 ApplicationEvent，则它将包装在PayloadApplicationEvent 中。
@@ -282,13 +285,14 @@ ResourcePatternResolver 接口继承 ResourceLoader 接口，为将 location 解
 ```java
 // AbstractApplicationContext.java
 /**
- * ResourcePatternResolver used by this context.
- */
+* ResourcePatternResolver used by this context.
+*/
 private ResourcePatternResolver resourcePatternResolver;
 
 public Resource[] getResources(String locationPattern) throws IOException {
     return this.resourcePatternResolver.getResources(locationPattern);
 }
+
 ```
 
 - 如果小伙伴对 Spring 的 ResourceLoader 比较熟悉的话，你会发现最终是在 PathMatchingResourcePatternResolver 中实现，该类是 ResourcePatternResolver 接口的实现者。
@@ -303,8 +307,9 @@ public ConfigurableEnvironment getEnvironment() {
     if (this.environment == null) {
         this.environment = createEnvironment();
     }
-    return this.environment;
+return this.environment;
 }
+
 ```
 
 - 如果持有的
@@ -333,8 +338,8 @@ Lifecycle ，一个用于管理声明周期的接口。
 ```java
 // AbstractApplicationContext.java
 /**
- * LifecycleProcessor for managing the lifecycle of beans within this context.
- */
+* LifecycleProcessor for managing the lifecycle of beans within this context.
+*/
 @Nullable
 private LifecycleProcessor lifecycleProcessor;
 
@@ -354,6 +359,7 @@ public void stop() {
 public boolean isRunning() {
     return (this.lifecycleProcessor != null && this.lifecycleProcessor.isRunning());
 }
+
 ```
 
 - 在启动、停止的时候会分别发布 ContextStartedEvent 和 ContextStoppedEvent 事件。
@@ -376,9 +382,10 @@ public void close() {
             } catch (IllegalStateException ex) {
                 // ignore - VM is already shutting down
             }
-        }
     }
 }
+}
+
 ```
 
 - 调用
@@ -395,12 +402,13 @@ protected void doClose() {
     } catch (Throwable ex) {
         logger.warn("Exception thrown from ApplicationListener handling ContextClosedEvent", ex);
     }
-    // ... 省略部分代码
-    destroyBeans();
-    closeBeanFactory();
-    onClose();
-    this.active.set(false);
+// ... 省略部分代码
+destroyBeans();
+closeBeanFactory();
+onClose();
+this.active.set(false);
 }
+
 ```
 
 ## **3.7 InitializingBean**

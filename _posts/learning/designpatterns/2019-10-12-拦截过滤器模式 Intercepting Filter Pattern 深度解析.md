@@ -49,8 +49,9 @@ updated: 2019-03-12 22:17
 
 ```java
 public interface Filter {
-   public void execute(String request);
+    public void execute(String request);
 }
+
 ```
 
 #### 2\. 过滤器链 (Filter Chain)
@@ -60,45 +61,47 @@ import java.util.ArrayList;
 import java.util.List;
 // 负责顺序执行过滤器，最后执行 Target
 public class FilterChain {
-   private List<Filter> filters = new ArrayList<Filter>();
-   private Target target;
+    private List<Filter> filters = new ArrayList<Filter>();
+    private Target target;
 
-   public void addFilter(Filter filter){
-      filters.add(filter);
-   }
+    public void addFilter(Filter filter){
+        filters.add(filter);
+    }
 
-   public void execute(String request){
-      for (Filter filter : filters) {
-         filter.execute(request); // 依次执行过滤器
-      }
-      target.execute(request); // 最后执行 Target
-   }
-
-   public void setTarget(Target target){
-      this.target = target;
-   }
+public void execute(String request){
+    for (Filter filter : filters) {
+        filter.execute(request); // 依次执行过滤器
+    }
+target.execute(request); // 最后执行 Target
 }
+
+public void setTarget(Target target){
+    this.target = target;
+}
+}
+
 ```
 
 #### 3\. 过滤管理器 (Filter Manager)
 
 ```java
 public class FilterManager {
-   FilterChain filterChain;
+    FilterChain filterChain;
 
-   public FilterManager(Target target){
-      filterChain = new FilterChain();
-      filterChain.setTarget(target);
-   }
+    public FilterManager(Target target){
+        filterChain = new FilterChain();
+        filterChain.setTarget(target);
+    }
 
-   public void setFilter(Filter filter){
-      filterChain.addFilter(filter);
-   }
-
-   public void filterRequest(String request){
-      filterChain.execute(request); // 客户端通过 Manager 触发链的执行
-   }
+public void setFilter(Filter filter){
+    filterChain.addFilter(filter);
 }
+
+public void filterRequest(String request){
+    filterChain.execute(request); // 客户端通过 Manager 触发链的执行
+}
+}
+
 ```
 
 ## 🌐 3. 模式应用
@@ -156,8 +159,9 @@ public class Person {
 ```java
 import java.util.List;
 public interface Criteria {
-   public List<Person> meetCriteria(List<Person> persons);
+    public List<Person> meetCriteria(List<Person> persons);
 }
+
 ```
 
 #### 3\. 具体标准 (CriteriaSingle)
@@ -166,17 +170,18 @@ public interface Criteria {
 import java.util.ArrayList;
 import java.util.List;
 public class CriteriaSingle implements Criteria {
-   @Override
-   public List<Person> meetCriteria(List<Person> persons) {
-      List<Person> singlePersons = new ArrayList<Person>();
-      for (Person person : persons) {
-         if(person.getMaritalStatus().equalsIgnoreCase("SINGLE")){
-            singlePersons.add(person);
-         }
-      }
-      return singlePersons;
-   }
+    @Override
+    public List<Person> meetCriteria(List<Person> persons) {
+        List<Person> singlePersons = new ArrayList<Person>();
+        for (Person person : persons) {
+            if(person.getMaritalStatus().equalsIgnoreCase("SINGLE")){
+                singlePersons.add(person);
+            }
+    }
+return singlePersons;
 }
+}
+
 ```
 
 #### 4\. 组合标准 (AndCriteria)
@@ -184,22 +189,23 @@ public class CriteriaSingle implements Criteria {
 ```java
 import java.util.List;
 public class AndCriteria implements Criteria {
-   private Criteria criteria;
-   private Criteria otherCriteria;
+    private Criteria criteria;
+    private Criteria otherCriteria;
 
-   public AndCriteria(Criteria criteria, Criteria otherCriteria) {
-      this.criteria = criteria;
-      this.otherCriteria = otherCriteria;
-   }
+    public AndCriteria(Criteria criteria, Criteria otherCriteria) {
+        this.criteria = criteria;
+        this.otherCriteria = otherCriteria;
+    }
 
-   @Override
-   public List<Person> meetCriteria(List<Person> persons) {
-      // 链式执行第一个标准
-      List<Person> firstCriteriaPersons = criteria.meetCriteria(persons);
-      // 在第一个标准的结果上执行第二个标准（即逻辑 AND）
-      return otherCriteria.meetCriteria(firstCriteriaPersons);
-   }
+@Override
+public List<Person> meetCriteria(List<Person> persons) {
+    // 链式执行第一个标准
+    List<Person> firstCriteriaPersons = criteria.meetCriteria(persons);
+    // 在第一个标准的结果上执行第二个标准（即逻辑 AND）
+    return otherCriteria.meetCriteria(firstCriteriaPersons);
 }
+}
+
 ```
 
 ## 🌐 3. 模式应用

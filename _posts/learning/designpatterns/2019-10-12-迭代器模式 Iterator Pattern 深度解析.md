@@ -68,61 +68,68 @@ updated: 2019-03-12 22:17
 ```java
 // --- 1. 抽象迭代器 (Iterator) ---
 public interface Iterator {
-   public boolean hasNext();
-   public Object next();
+    public boolean hasNext();
+    public Object next();
 }
 
 // --- 2. 抽象聚合器 (Container/Aggregate) ---
 public interface Container {
-   public Iterator getIterator();
+    public Iterator getIterator();
 }
 
 // --- 3. 具体聚合器 (NameRepository) ---
 public class NameRepository implements Container {
-   public String[] names = {"Robert" , "John" ,"Julie" , "Lora"};
+    public String[] names =
+    {
+        "Robert" , "John" ,"Julie" , "Lora";
+    }
+;
 
-   @Override
-   public Iterator getIterator() {
-      // 聚合器负责创建并返回一个具体迭代器
-      return new NameIterator();
-   }
+@Override
+public Iterator getIterator() {
+    // 聚合器负责创建并返回一个具体迭代器
+    return new NameIterator();
+}
 
-   // --- 4. 具体迭代器 (NameIterator) ---
-   // 通常作为具体聚合器的内部类，以便访问其内部数据
-   private class NameIterator implements Iterator {
-      int index;
+// --- 4. 具体迭代器 (NameIterator) ---
+// 通常作为具体聚合器的内部类，以便访问其内部数据
+private class NameIterator implements Iterator {
+    int index;
 
-      @Override
-      public boolean hasNext() {
-         if(index < names.length){
+    @Override
+    public boolean hasNext() {
+        if(index < names.length){
             return true;
-         }
-         return false;
-      }
+        }
+    return false;
+}
 
-      @Override
-      public Object next() {
-         if(this.hasNext()){
-            // 返回元素，并更新游标位置
-            return names[index++];
-         }
-         return null;
-      }
-   }
+@Override
+public Object next() {
+    if(this.hasNext()){
+        // 返回元素，并更新游标位置
+        return names[index++];
+    }
+return null;
+}
+}
 }
 
 // --- 5. 客户端调用 (Client) ---
 public class IteratorPatternDemo {
-   public static void main(String[] args) {
-      NameRepository namesRepository = new NameRepository();
+    public static void main(String[] args) {
+        NameRepository namesRepository = new NameRepository();
 
-      // 客户端通过统一的 getIterator() 方法获取迭代器
-      for(Iterator iter = namesRepository.getIterator(); iter.hasNext();){
-         String name = (String)iter.next();
-         System.out.println("Name : " + name);
-      }
-   }
+        // 客户端通过统一的 getIterator() 方法获取迭代器
+        for(Iterator iter = namesRepository.getIterator();
+        iter.hasNext();
+        ){
+            String name = (String)iter.next();
+            System.out.println("Name : " + name);
+        }
 }
+}
+
 ```
 
 ### 3.2. Python 代码示例 (Pythonic Iterator Pattern)

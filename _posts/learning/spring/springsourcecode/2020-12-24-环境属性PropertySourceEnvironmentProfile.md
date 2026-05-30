@@ -260,17 +260,18 @@ Class<T> targetType) {
     if (targetType == null) {
         return (T) value;
     }
-    ConversionService conversionServiceToUse = this.conversionService;
-    if (conversionServiceToUse == null) {
-        //
-        Avoid initialization of shared DefaultConversionService if        // no standard type conversion is needed in the first place...
-        if (ClassUtils.isAssignableValue(targetType, value)) {
-            return (T) value;
-        }
-        conversionServiceToUse = DefaultConversionService.getSharedInstance();
-    } // 执行转换
-    return conversionServiceToUse.convert(value, targetType);
+ConversionService conversionServiceToUse = this.conversionService;
+if (conversionServiceToUse == null) {
+    //
+    Avoid initialization of shared DefaultConversionService if        // no standard type conversion is needed in the first place...
+    if (ClassUtils.isAssignableValue(targetType, value)) {
+        return (T) value;
+    }
+conversionServiceToUse = DefaultConversionService.getSharedInstance();
+} // 执行转换
+return conversionServiceToUse.convert(value, targetType);
 }
+
 ```
 
 - 首先，获取类型转换服务
@@ -329,14 +330,19 @@ Environment 类图
 public
 interface ConfigurableEnvironment extends
 Environment, ConfigurablePropertyResolver {
-    // 指定该环境下的 profile 集    void setActiveProfiles(String... profiles);    // 增加此环境的 profile    void addActiveProfile(String profile);    // 设置默认的 profile
+    // 指定该环境下的 profile 集    void setActiveProfiles(String... profiles);
+    // 增加此环境的 profile    void addActiveProfile(String profile);
+    // 设置默认的 profile
     void setDefaultProfiles(String... profiles); // 返回此环境的
-    PropertySources    MutablePropertySources getPropertySources(); // 尝试返回 System.getenv() 的值，若失败则返回通过 System.getenv(string) 的来访问各个键的映射    Map<String, Object> getSystemEnvironment();    // 尝试返回 System.getProperties() 的值，若失败则返回通过
+    PropertySources    MutablePropertySources getPropertySources();
+    // 尝试返回 System.getenv() 的值，若失败则返回通过 System.getenv(string) 的来访问各个键的映射    Map<String, Object> getSystemEnvironment();
+    // 尝试返回 System.getProperties() 的值，若失败则返回通过
     System.getProperties(string) 的来访问各个键的映射
     Map<String,
     Object> getSystemProperties();
     void merge(ConfigurableEnvironment parent);
 }
+
 ```
 
 ## 3.2 AbstractEnvironment

@@ -88,15 +88,15 @@ public class Context {
         this.strategy = strategy;
     }
 
-    public void setStrategy(Strategy strategy) {
-        this.strategy = strategy;
-    }
+public void setStrategy(Strategy strategy) {
+    this.strategy = strategy;
+}
 
-    // 算法执行：将请求委托给当前策略对象
-    public int executeStrategy(int num1, int num2) {
-        System.out.println("Executing strategy: " + strategy.getClass().getSimpleName());
-        return strategy.execute(num1, num2);
-    }
+// 算法执行：将请求委托给当前策略对象
+public int executeStrategy(int num1, int num2) {
+    System.out.println("Executing strategy: " + strategy.getClass().getSimpleName());
+    return strategy.execute(num1, num2);
+}
 }
 
 // --- 5. 客户端调用 (Client) ---
@@ -113,6 +113,7 @@ public class StrategyPatternDemo {
         System.out.println("Result: 10 * 5 = " + resultMultiply); // 50
     }
 }
+
 ```
 
 ### 3.2. Python 代码示例

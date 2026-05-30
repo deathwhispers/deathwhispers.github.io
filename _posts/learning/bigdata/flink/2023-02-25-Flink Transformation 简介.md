@@ -56,10 +56,11 @@ stringDataStream.flatMap(new FlatMapFunction<String, String>()
         {
             out.collect(s) ;
         }
-    }
+}
 }
 ).print() ;
 // 输出每一个独立的单词，为节省排版，这里去掉换行，后文亦同one one one two two third third third four
+
 ```
 
 ### 2.3 Filter [DataStream → DataStream]
@@ -82,7 +83,11 @@ env.fromElements(1, 2, 3, 4, 5).filter(x -> x > 3).print() ;
 ```java
 DataStream<Tuple2<String, Integer>> tuple2DataStream = env.fromElements(new Tuple2<>("a", 1),                                                                        new Tuple2<>("a", 2),
 new Tuple2<>("b", 3),
-new Tuple2<>("b", 5));KeyedStream<Tuple2<String, Integer>, Tuple> keyedStream = tuple2DataStream.keyBy(0);keyedStream.reduce((ReduceFunction<Tuple2<String, Integer>>) (value1, value2) ->                    new Tuple2<>(value1.f0, value1.f1 + value2.f1)).print();// 持续进行求和计算，输出：(a,1)(a,3)(b,3)(b,8)
+new Tuple2<>("b", 5));
+KeyedStream<Tuple2<String, Integer>, Tuple> keyedStream = tuple2DataStream.keyBy(0);
+keyedStream.reduce((ReduceFunction<Tuple2<String, Integer>>) (value1, value2) ->                    new Tuple2<>(value1.f0, value1.f1 + value2.f1)).print();
+// 持续进行求和计算，输出：(a,1)(a,3)(b,3)(b,8)
+
 ```
 
 KeyBy 操作存在以下两个限制：
@@ -118,7 +123,10 @@ keyedStream.maxBy("key") ;
 ```java
 DataStreamSource<Tuple2<String, Integer>> streamSource01 = env.fromElements(new Tuple2<>("a", 1),
 new Tuple2<>("a", 2));DataStreamSource<Tuple2<String, Integer>> streamSource02 = env.fromElements(new Tuple2<>("b", 1),
-new Tuple2<>("b", 2));streamSource01.union(streamSource02);streamSource01.union(streamSource01,streamSource02);
+new Tuple2<>("b", 2));
+streamSource01.union(streamSource02);
+streamSource01.union(streamSource01,streamSource02);
+
 ```
 
 ### 2.7 Connect [DataStream,DataStream → ConnectedStreams]
@@ -127,7 +135,20 @@ Connect 操作用于连接两个或者多个类型不同的 DataStream ，其返
 
 ```java
 DataStreamSource<Tuple2<String, Integer>> streamSource01 = env.fromElements(new Tuple2<>("a", 3),
-new Tuple2<>("b", 5));DataStreamSource<Integer> streamSource02 = env.fromElements(2, 3, 9);// 使用connect进行连接ConnectedStreams<Tuple2<String, Integer>, Integer> connect = streamSource01.connect(streamSource02);connect.map(new CoMapFunction<Tuple2<String, Integer>, Integer, Integer>() {    @Override    public Integer map1(Tuple2<String, Integer> value) throws Exception {        return value.f1;    }    @Override    public Integer map2(Integer value) throws Exception {        return value;    }}).map(x -> x * 100).print();// 输出：300 500 200 900 300
+new Tuple2<>("b", 5));DataStreamSource<Integer> streamSource02 = env.fromElements(2, 3, 9);// 使用connect进行连接ConnectedStreams<Tuple2<String, Integer>, Integer> connect = streamSource01.connect(streamSource02);connect.map(new CoMapFunction<Tuple2<String, Integer>, Integer, Integer>()
+{
+    @Override    public Integer map1(Tuple2<String, Integer> value) throws Exception
+    {
+        return value.f;
+    }
+}    @Override    public Integer map2(Integer value) throws Exception
+{
+    return valu;
+}
+};
+}
+).map(x -> x * 100).print();// 输出：300 500 200 900 300
+
 ```
 
 ### 2.8 Split 和 Select

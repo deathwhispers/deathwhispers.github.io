@@ -41,38 +41,39 @@ public interface Resource extends InputStreamSource {
     default boolean isReadable() {
         return true;
     }
-    /**     * 资源所代表的句柄是否被一个 stream 打开了     */
-    default boolean isOpen() {
-        return false;
-    }
-    /**     * 是否为 File
-    */
-    default boolean isFile() {
-        return false;
-    }
-    /**     * 返回资源的 URL 的句柄     */
-    URL getURL() throws IOException;
-    /**     * 返回资源的 URI 的句柄     */
-    URI getURI() throws IOException;
-    /**     * 返回资源的 File 的句柄     */
-    File getFile() throws IOException;
-    /**     * 返回 ReadableByteChannel
-    */
-    default ReadableByteChannel readableChannel() throws IOException {
-        return java.nio.channels.Channels.newChannel(getInputStream());
-    }
-    /**     * 资源内容的长度     */
-    long contentLength() throws IOException;
-    /**     * 资源最后的修改时间     */
-    long lastModified() throws IOException;
-    /**     * 根据资源的相对路径创建新资源     */
-    Resource createRelative(String relativePath) throws IOException;
-    /**     * 资源的文件名     */
-    @Nullable
-    String getFilename();
-    /**     * 资源的描述     */
-    String getDescription();
+/**     * 资源所代表的句柄是否被一个 stream 打开了     */
+default boolean isOpen() {
+    return false;
 }
+/**     * 是否为 File
+*/
+default boolean isFile() {
+    return false;
+}
+/**     * 返回资源的 URL 的句柄     */
+URL getURL() throws IOException;
+/**     * 返回资源的 URI 的句柄     */
+URI getURI() throws IOException;
+/**     * 返回资源的 File 的句柄     */
+File getFile() throws IOException;
+/**     * 返回 ReadableByteChannel
+*/
+default ReadableByteChannel readableChannel() throws IOException {
+    return java.nio.channels.Channels.newChannel(getInputStream());
+}
+/**     * 资源内容的长度     */
+long contentLength() throws IOException;
+/**     * 资源最后的修改时间     */
+long lastModified() throws IOException;
+/**     * 根据资源的相对路径创建新资源     */
+Resource createRelative(String relativePath) throws IOException;
+/**     * 资源的文件名     */
+@Nullable
+String getFilename();
+/**     * 资源的描述     */
+String getDescription();
+}
+
 ```
 
 ## 1.1 子类结构
@@ -108,119 +109,120 @@ public abstract class AbstractResource implements Resource {
             // 基于
             File 进行判断            return getFile().exists();
         }
-        catch (IOException ex) {
-            // Fall back to stream existence: can we open the stream?            // 基于 InputStream 进行判断
-            try {
-                InputStream is = getInputStream();
-                is.close();
-                return true;
-            }
-            catch (Throwable isEx) {
-                return false;
-            }
-        }
-    }
-    /**     * 直接返回true，表示可读     */
-    @Override
-    public boolean isReadable() {
-        return true;
-    }
-    /**     * 直接返回 false，表示未被打开     */
-    @Override
-    public boolean isOpen() {
-        return false;
-    }
-    /**     * 直接返回false，表示不为 File
-    */
-    @Override
-    public boolean isFile() {
-        return false;
-    }
-    /**     * 抛出 FileNotFoundException 异常，交给子类实现     */
-    @Override
-    public URL getURL() throws IOException {
-        throw new FileNotFoundException(getDescription() + " cannot be resolved to URL");
-    }
-    /**     * 基于 getURL() 返回的 URL 构建 URI
-    */
-    @Override
-    public URI getURI() throws IOException {
-        URL url = getURL();
+    catch (IOException ex) {
+        // Fall back to stream existence: can we open the stream?            // 基于 InputStream 进行判断
         try {
-            return ResourceUtils.toURI(url);
+            InputStream is = getInputStream();
+            is.close();
+            return true;
         }
-        catch (URISyntaxException ex) {
-            throw new NestedIOException("Invalid URI [" + url + "]", ex);
-        }
-    }
-    /**     * 抛出 FileNotFoundException 异常，交给子类实现     */
-    @Override
-    public File getFile() throws IOException {
-        throw new FileNotFoundException(getDescription() + " cannot be resolved to absolute file path");
-    }
-    /**     * 根据 getInputStream() 的返回结果构建 ReadableByteChannel
-    */
-    @Override
-    public ReadableByteChannel readableChannel() throws IOException {
-        return Channels.newChannel(getInputStream());
-    }
-    /**     * 获取资源的长度     *     * 这个资源内容长度实际就是资源的字节长度，通过全部读取一遍来判断     */
-    @Override
-    public long contentLength() throws IOException {
-        InputStream is = getInputStream();
-        try {
-            long size = 0;
-            byte[] buf = new byte[255]; // 每次最多读取 255 字节
-            int read;
-            while ((read = is.read(buf)) != -1) {
-                size += read;
-            }
-            return size;
-        }
-        finally {
-            try {
-                is.close();
-            }
-            catch (IOException ex) {
-            }
-        }
-    }
-    /**     * 返回资源最后的修改时间     */
-    @Override
-    public long lastModified() throws IOException {
-        long lastModified = getFileForLastModifiedCheck().lastModified();
-        if (lastModified == 0L) {
-            throw new FileNotFoundException(getDescription() +                    " cannot be resolved in the file system for resolving its last-modified timestamp");
-        }
-        return lastModified;
-    }
-    protected File getFileForLastModifiedCheck() throws IOException {
-        return getFile();
-    }
-    /**     * 抛出 FileNotFoundException 异常，交给子类实现     */
-    @Override
-    public Resource createRelative(String relativePath) throws IOException {
-        throw new FileNotFoundException("Cannot create a relative resource for " + getDescription());
-    }
-    /**     * 获取资源名称，默认返回 null ，交给子类实现     */
-    @Override    @Nullable
-    public String getFilename() {
-        return null;
-    }
-    /**     * 返回资源的描述     */
-    @Override
-    public String toString() {
-        return getDescription();
-    }
-    @Override
-    public boolean equals(Object obj) {
-        return (obj == this ||            (obj instanceof Resource && ((Resource) obj).getDescription().equals(getDescription())));
-    }
-    @Override
-    public int hashCode() {
-        return getDescription().hashCode();
+    catch (Throwable isEx) {
+        return false;
     }
 }
+}
+/**     * 直接返回true，表示可读     */
+@Override
+public boolean isReadable() {
+    return true;
+}
+/**     * 直接返回 false，表示未被打开     */
+@Override
+public boolean isOpen() {
+    return false;
+}
+/**     * 直接返回false，表示不为 File
+*/
+@Override
+public boolean isFile() {
+    return false;
+}
+/**     * 抛出 FileNotFoundException 异常，交给子类实现     */
+@Override
+public URL getURL() throws IOException {
+    throw new FileNotFoundException(getDescription() + " cannot be resolved to URL");
+}
+/**     * 基于 getURL() 返回的 URL 构建 URI
+*/
+@Override
+public URI getURI() throws IOException {
+    URL url = getURL();
+    try {
+        return ResourceUtils.toURI(url);
+    }
+catch (URISyntaxException ex) {
+    throw new NestedIOException("Invalid URI [" + url + "]", ex);
+}
+}
+/**     * 抛出 FileNotFoundException 异常，交给子类实现     */
+@Override
+public File getFile() throws IOException {
+    throw new FileNotFoundException(getDescription() + " cannot be resolved to absolute file path");
+}
+/**     * 根据 getInputStream() 的返回结果构建 ReadableByteChannel
+*/
+@Override
+public ReadableByteChannel readableChannel() throws IOException {
+    return Channels.newChannel(getInputStream());
+}
+/**     * 获取资源的长度     *     * 这个资源内容长度实际就是资源的字节长度，通过全部读取一遍来判断     */
+@Override
+public long contentLength() throws IOException {
+    InputStream is = getInputStream();
+    try {
+        long size = 0;
+        byte[] buf = new byte[255]; // 每次最多读取 255 字节
+        int read;
+        while ((read = is.read(buf)) != -1) {
+            size += read;
+        }
+    return size;
+}
+finally {
+    try {
+        is.close();
+    }
+catch (IOException ex) {
+}
+}
+}
+/**     * 返回资源最后的修改时间     */
+@Override
+public long lastModified() throws IOException {
+    long lastModified = getFileForLastModifiedCheck().lastModified();
+    if (lastModified == 0L) {
+        throw new FileNotFoundException(getDescription() +                    " cannot be resolved in the file system for resolving its last-modified timestamp");
+    }
+return lastModified;
+}
+protected File getFileForLastModifiedCheck() throws IOException {
+    return getFile();
+}
+/**     * 抛出 FileNotFoundException 异常，交给子类实现     */
+@Override
+public Resource createRelative(String relativePath) throws IOException {
+    throw new FileNotFoundException("Cannot create a relative resource for " + getDescription());
+}
+/**     * 获取资源名称，默认返回 null ，交给子类实现     */
+@Override    @Nullable
+public String getFilename() {
+    return null;
+}
+/**     * 返回资源的描述     */
+@Override
+public String toString() {
+    return getDescription();
+}
+@Override
+public boolean equals(Object obj) {
+    return (obj == this ||            (obj instanceof Resource && ((Resource) obj).getDescription().equals(getDescription())));
+}
+@Override
+public int hashCode() {
+    return getDescription().hashCode();
+}
+}
+
 ```
 
 如果我们想要实现自定义的 Resource ，记住不要实现 Resource 接口，而应该继承 AbstractResource 抽象类，然后根据当前的具体资源特性覆盖相应的方法即可。
@@ -332,27 +334,28 @@ public Resource getResource(String location) {
         if (resource != null) {
             return resource;
         }
-    } // 其次，以 / 开头，返回 ClassPathContextResource 类型的资源
-    if (location.startsWith("/")) {
-        return getResourceByPath(location); // 再次，以
-        classpath: 开头，返回 ClassPathResource 类型的资源
+} // 其次，以 / 开头，返回 ClassPathContextResource 类型的资源
+if (location.startsWith("/")) {
+    return getResourceByPath(location); // 再次，以
+    classpath: 开头，返回 ClassPathResource 类型的资源
+}
+else if (location.startsWith(CLASSPATH_URL_PREFIX)) {
+    return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader()); // 然后，根据是否为文件 URL ，是则返回 FileUrlResource 类型的资源，否则返回 UrlResource 类型的资源    }
+else {
+    try {
+        // Try to parse the location as a URL...            URL url =
+        new
+        URL(location);
+        return (ResourceUtils.isFileURL(url) ? new
+        FileUrlResource(url) : new UrlResource(url));
     }
-    else if (location.startsWith(CLASSPATH_URL_PREFIX)) {
-        return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader()); // 然后，根据是否为文件 URL ，是则返回 FileUrlResource 类型的资源，否则返回 UrlResource 类型的资源    }
-        else {
-            try {
-                // Try to parse the location as a URL...            URL url =
-                new
-                URL(location);
-                return (ResourceUtils.isFileURL(url) ? new
-                FileUrlResource(url) : new UrlResource(url));
-            }
-            catch (MalformedURLException ex) {
-                // 最后，返回 ClassPathContextResource 类型的资源            // No
-                URL -> resolve as resource path.            return getResourceByPath(location);
-            }
-        }
-    }
+catch (MalformedURLException ex) {
+    // 最后，返回 ClassPathContextResource 类型的资源            // No
+    URL -> resolve as resource path.            return getResourceByPath(location);
+}
+}
+}
+
 ```
 
 - 首先，通过 ProtocolResolver 来加载资源，成功返回 Resource 。
@@ -395,11 +398,15 @@ ProtocolResolver 接口，仅有一个方法 Resource resolve(String location, R
     @code Resource
 }
 handle if the given location
-* matches this resolver's protocol, or {@code null}
+* matches this resolver's protocol, or
+{
+    @code null;
+}
 otherwise 返回为相应的 Resource
 */
 @Nullable
 Resource resolve(String location, ResourceLoader resourceLoader);
+
 ```
 
 ---
@@ -463,10 +470,15 @@ urlResource2
 ```java
 @Override
 protected Resource getResourceByPath(String path) {
-    // 截取首 /if (path.startsWith("/")) {    path = path.substring(1);}// 创建 FileSystemContextResource 类型的资源return
-    new
-    FileSystemContextResource(path);
+    // 截取首 /if (path.startsWith("/"))
+    {
+        path = path.substring(1);
+    }
+// 创建 FileSystemContextResource 类型的资源return
+new
+FileSystemContextResource(path);
 }
+
 ```
 
 ### 2.2.1 FileSystemContextResource
@@ -480,11 +492,12 @@ private static class FileSystemContextResource extends FileSystemResource implem
     public FileSystemContextResource(String path) {
         super(path);
     }
-    @Override
-    public String getPathWithinContext() {
-        return getPath();
-    }
+@Override
+public String getPathWithinContext() {
+    return getPath();
 }
+}
+
 ```
 
 - 在构造器中，也是调用 FileSystemResource 的构造函数来构造 FileSystemResource 的。
@@ -580,28 +593,29 @@ public Resource[] getResources(String locationPattern) throws IOException {
     if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
         // a class path resource pattern
         return findPathMatchingResources(locationPattern); // 路径不包含通配符        }
-        else {
-            // all
-            class path resources with the given name            return findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));
-    } // 不以 "classpath*:" 开头    }
     else {
-        // Generally only look
-        for a pattern after a prefix here, // 通常只在这里的前缀后面查找模式        // and on Tomcat only after the "*/
-        " separator for its "war:" protocol. 而在 Tomcat 上只有在 “*/
-        ”分隔符之后才为其 “war:” 协议        int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/
-        ") + 1 :                locationPattern.indexOf(':') + 1);        // 路径包含通配符
-        if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
-            // a file pattern            return findPathMatchingResources(locationPattern);        // 路径不包含通配符        }
-            else {
-                // a single resource with the given name
-                return
-                new
-                Resource[] {
-                    getResourceLoader().getResource(locationPattern)
-                };
-            }
-        }
+        // all
+        class path resources with the given name            return findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));
+    } // 不以 "classpath*:" 开头    }
+else {
+    // Generally only look
+    for a pattern after a prefix here, // 通常只在这里的前缀后面查找模式        // and on Tomcat only after the "*/
+    " separator for its "war:" protocol. 而在 Tomcat 上只有在 “*/
+    ”分隔符之后才为其 “war:” 协议        int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/
+    ") + 1 :                locationPattern.indexOf(':') + 1);        // 路径包含通配符
+    if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
+        // a file pattern            return findPathMatchingResources(locationPattern);        // 路径不包含通配符        }
+    else {
+        // a single resource with the given name
+        return
+        new
+        Resource[] {
+            getResourceLoader().getResource(locationPattern)
+        };
     }
+}
+}
+
 ```
 
 处理逻辑如下图：
@@ -652,8 +666,9 @@ protected Set<Resource> doFindAllClassPathResources(String path) throws IOExcept
         pointers to each of the jar files on the
         classpath as well...        addAllClassLoaderJarRoots(cl, result);
     }
-    return result;
+return result;
 }
+
 ```
 
 <1> 处，根据 ClassLoader 加载路径下的所有资源。在加载资源过程时，如果在构造 PathMatchingResourcePatternResolver 实例的时候如果传入了 ClassLoader，则调用该 ClassLoader 的 #getResources() 方法，否则调用 ClassLoader#getSystemResources(path) 方法。另外，ClassLoader#getResources() 方法，代码如下:
@@ -667,12 +682,13 @@ IOException {
     if (parent != null) {
         tmp[0] = parent.getResources(name);
     }
-    else {
-        tmp[0] = getBootstrapResources(name);
-    }
-    tmp[1] = findResources(name);
-    return new CompoundEnumeration<>(tmp);
+else {
+    tmp[0] = getBootstrapResources(name);
 }
+tmp[1] = findResources(name);
+return new CompoundEnumeration<>(tmp);
+}
+
 ```
 
 ```plain text
@@ -721,13 +737,17 @@ protected Resource[] findPathMatchingResources(String locationPattern) throws IO
             if (resolvedUrl != null) {
                 rootDirUrl = resolvedUrl;
             }
-            rootDirResource = new UrlResource(rootDirUrl);
-    } // vfs 资源类型        if (rootDirUrl.getProtocol().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) {            result.addAll(VfsResourceMatchingDelegate.findMatchingResources(rootDirUrl, subPattern, getPathMatcher()));        // jar 资源类型        }
+        rootDirResource = new UrlResource(rootDirUrl);
+    } // vfs 资源类型        if (rootDirUrl.getProtocol().startsWith(ResourceUtils.URL_PROTOCOL_VFS))
+    {
+        result.addAll(VfsResourceMatchingDelegate.findMatchingResources(rootDirUrl, subPattern, getPathMatcher()));
+        // jar 资源类型;
+    }
 else if (ResourceUtils.isJarURL(rootDirUrl) || isJarResource(rootDirResource)) {
     result.addAll(doFindPathMatchingJarResources(rootDirResource, rootDirUrl, subPattern)); // 其它资源类型        }
-    else {
-        result.addAll(doFindPathMatchingFileResources(rootDirResource, subPattern));
-    }
+else {
+    result.addAll(doFindPathMatchingFileResources(rootDirResource, subPattern));
+}
 }
 if (logger.isTraceEnabled()) {
     logger.trace("Resolved location pattern [" + locationPattern + "] to resources " + result);
@@ -735,6 +755,7 @@ if (logger.isTraceEnabled()) {
 return result.toArray(new
 Resource[0]);
 }
+
 ```
 
 方法有点儿长，但是思路还是很清晰的，主要分两步：

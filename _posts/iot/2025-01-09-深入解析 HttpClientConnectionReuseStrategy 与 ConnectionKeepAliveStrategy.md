@@ -73,10 +73,11 @@ if (reuse) {
         } else {
             s = "indefinitely";
         }
-        this.log.debug("Connection can be kept alive " + s);
-    }
-    managedConn.setIdleDuration(duration, TimeUnit.MILLISECONDS);
+    this.log.debug("Connection can be kept alive " + s);
 }
+managedConn.setIdleDuration(duration, TimeUnit.MILLISECONDS);
+}
+
 ```
 
 这段代码表明，在一次 HTTP 请求完成后，连接不会立即关闭，而是通过一个**可重用策略（`ConnectionReuseStrategy`）**来判断连接是否可以保持以及可以保持多长时间。
@@ -95,50 +96,51 @@ public boolean keepAlive(final HttpResponse response, final HttpContext context)
         if (clh != null) {
             // ... 检查 Content-Length 是否大于 0 ...
         }
-        Header teh = response.getFirstHeader(HTTP.TRANSFER_ENCODING);
-        if (teh != null) {
-            return false;
-        }
-    }
-
-    // 2. 检查请求头中是否包含 "Connection: close"，如果包含，则不重用。
-    HttpRequest request = (HttpRequest) context.getAttribute(HttpCoreContext.HTTP_REQUEST);
-    if (request != null) {
-        // ... 遍历 Connection 头 ...
-        if (HTTP.CONN_CLOSE.equalsIgnoreCase(token)) {
-            return false;
-        }
-    }
-
-    // 3. 检查响应实体是否是自终止的。如果实体结束的标志是关闭连接，则无法保持 Keep-Alive。
-    // - Transfer-Encoding 存在但值不是 "chunked"，则不重用。
-    // - 如果响应可以有实体，但 Content-Length 头不合法（不存在、多于一个或值为负），则不重用。
-    final ProtocolVersion ver = response.getStatusLine().getProtocolVersion();
-    final Header teh = response.getFirstHeader(HTTP.TRANSFER_ENCODING);
+    Header teh = response.getFirstHeader(HTTP.TRANSFER_ENCODING);
     if (teh != null) {
-        if (!HTTP.CHUNK_CODING.equalsIgnoreCase(teh.getValue())) {
-            return false;
-        }
-    } else {
-        if (canResponseHaveBody(request, response)) {
-            // ... 校验 Content-Length ...
-        }
+        return false;
     }
-
-    // 4. 检查响应头中的 "Connection" 或 "Proxy-Connection"。
-    HeaderIterator headerIterator = response.headerIterator(HTTP.CONN_DIRECTIVE);
-    if (!headerIterator.hasNext()) {
-        headerIterator = response.headerIterator("Proxy-Connection");
-    }
-    if (headerIterator.hasNext()) {
-        // ... 遍历头信息 ...
-        // 如果存在 "close"，则返回 false。
-        // 如果存在 "keep-alive"，则标记为 true。
-    }
-
-    // 5. 默认策略：HTTP/1.1 及以上版本默认为持久连接，HTTP/1.0 及以下版本默认为非持久连接。
-    return !ver.lessEquals(HttpVersion.HTTP_1_0);
 }
+
+// 2. 检查请求头中是否包含 "Connection: close"，如果包含，则不重用。
+HttpRequest request = (HttpRequest) context.getAttribute(HttpCoreContext.HTTP_REQUEST);
+if (request != null) {
+    // ... 遍历 Connection 头 ...
+    if (HTTP.CONN_CLOSE.equalsIgnoreCase(token)) {
+        return false;
+    }
+}
+
+// 3. 检查响应实体是否是自终止的。如果实体结束的标志是关闭连接，则无法保持 Keep-Alive。
+// - Transfer-Encoding 存在但值不是 "chunked"，则不重用。
+// - 如果响应可以有实体，但 Content-Length 头不合法（不存在、多于一个或值为负），则不重用。
+final ProtocolVersion ver = response.getStatusLine().getProtocolVersion();
+final Header teh = response.getFirstHeader(HTTP.TRANSFER_ENCODING);
+if (teh != null) {
+    if (!HTTP.CHUNK_CODING.equalsIgnoreCase(teh.getValue())) {
+        return false;
+    }
+} else {
+    if (canResponseHaveBody(request, response)) {
+        // ... 校验 Content-Length ...
+    }
+}
+
+// 4. 检查响应头中的 "Connection" 或 "Proxy-Connection"。
+HeaderIterator headerIterator = response.headerIterator(HTTP.CONN_DIRECTIVE);
+if (!headerIterator.hasNext()) {
+    headerIterator = response.headerIterator("Proxy-Connection");
+}
+if (headerIterator.hasNext()) {
+    // ... 遍历头信息 ...
+    // 如果存在 "close"，则返回 false。
+    // 如果存在 "keep-alive"，则标记为 true。
+}
+
+// 5. 默认策略：HTTP/1.1 及以上版本默认为持久连接，HTTP/1.0 及以下版本默认为非持久连接。
+return !ver.lessEquals(HttpVersion.HTTP_1_0);
+}
+
 ```
 
 #### `Proxy-Connection` 说明
@@ -172,7 +174,7 @@ public boolean keepAlive(final HttpResponse response, final HttpContext context)
 public long getKeepAliveDuration(final HttpResponse response, final HttpContext context) {
     Args.notNull(response, "HTTP response");
     final HeaderElementIterator it = new BasicHeaderElementIterator(
-            response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+    response.headerIterator(HTTP.CONN_KEEP_ALIVE));
     while (it.hasNext()) {
         final HeaderElement he = it.nextElement();
         final String param = he.getName();
@@ -182,10 +184,11 @@ public long getKeepAliveDuration(final HttpResponse response, final HttpContext 
                 return Long.parseLong(value) * 1000;
             } catch(final NumberFormatException ignore) {
             }
-        }
     }
-    return -1;
 }
+return -1;
+}
+
 ```
 
 该方法解析响应头中的 `Keep-Alive` 字段。例如，如果响应头为 `Keep-Alive: timeout=5, max=100`，该方法会提取 `timeout` 的值 `5`，并将其转换为毫秒（5000ms）作为连接的空闲超时时间。

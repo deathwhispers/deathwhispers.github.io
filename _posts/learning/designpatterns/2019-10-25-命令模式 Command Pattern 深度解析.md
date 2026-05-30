@@ -64,12 +64,12 @@ public class Television {
     public void turnOn() {
         System.out.println("Television: The TV is ON!");
     }
-    public void turnOff() {
-        System.out.println("Television: The TV is OFF!");
-    }
-    public void changeChannel() {
-        System.out.println("Television: Channel switched.");
-    }
+public void turnOff() {
+    System.out.println("Television: The TV is OFF!");
+}
+public void changeChannel() {
+    System.out.println("Television: Channel switched.");
+}
 }
 
 // 2. 抽象命令类 (Command)
@@ -86,10 +86,10 @@ public class TurnOnCommand implements Command {
         this.tv = tv;
     }
 
-    @Override
-    public void execute() {
-        tv.turnOn(); // 将请求转发给接收者
-    }
+@Override
+public void execute() {
+    tv.turnOn(); // 将请求转发给接收者
+}
 }
 // 更多命令类如 TurnOffCommand, ChangeChannelCommand 略
 
@@ -101,10 +101,10 @@ public class RemoteControl {
         this.command = command;
     }
 
-    public void pressButton() {
-        System.out.println("RemoteControl: Button pressed.");
-        command.execute();
-    }
+public void pressButton() {
+    System.out.println("RemoteControl: Button pressed.");
+    command.execute();
+}
 }
 
 // 5. 客户端 (Client)
@@ -131,6 +131,7 @@ public class CommandDemo {
         remote.pressButton();
     }
 }
+
 ```
 
 ### 3.2. Python 代码示例 (队列和宏命令)
