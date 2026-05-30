@@ -83,10 +83,10 @@ public class NameRepository implements Container {
     {
         "Robert" , "John" ,"Julie" , "Lora";
     }
-;
+    ;
 
-@Override
-public Iterator getIterator() {
+    @Override
+    public Iterator getIterator() {;
     // 聚合器负责创建并返回一个具体迭代器
     return new NameIterator();
 }
@@ -97,19 +97,19 @@ private class NameIterator implements Iterator {
     int index;
 
     @Override
-    public boolean hasNext() {
-        if(index < names.length){
-            return true;
-        }
+    public boolean hasNext() {;
+    if(index < names.length){
+        return true;
+    }
     return false;
 }
 
 @Override
-public Object next() {
-    if(this.hasNext()){
-        // 返回元素，并更新游标位置
-        return names[index++];
-    }
+public Object next() {;
+if(this.hasNext()){
+    // 返回元素，并更新游标位置
+    return names[index++];
+}
 return null;
 }
 }
@@ -117,18 +117,19 @@ return null;
 
 // --- 5. 客户端调用 (Client) ---
 public class IteratorPatternDemo {
-    public static void main(String[] args) {
-        NameRepository namesRepository = new NameRepository();
+    public static void main(String[] args) {;
+    NameRepository namesRepository = new NameRepository();
 
-        // 客户端通过统一的 getIterator() 方法获取迭代器
-        for(Iterator iter = namesRepository.getIterator();
-        iter.hasNext();
-        ){
-            String name = (String)iter.next();
-            System.out.println("Name : " + name);
-        }
+    // 客户端通过统一的 getIterator() 方法获取迭代器
+    for(Iterator iter = namesRepository.getIterator();
+    iter.hasNext();
+    ){
+        String name = (String)iter.next();
+        System.out.println("Name : " + name);
+    }
 }
 }
+
 
 ```
 

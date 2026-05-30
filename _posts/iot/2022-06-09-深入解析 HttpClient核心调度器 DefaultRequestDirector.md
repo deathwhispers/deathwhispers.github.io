@@ -103,31 +103,31 @@ throws HttpException, IOException {
                 if (orig instanceof AbortableHttpRequest) {
                     ((AbortableHttpRequest) orig).setConnectionRequest(connRequest);
                 }
-            try {
-                managedConn = connRequest.getConnection(timeout, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException interrupted) {
+                try {
+                    managedConn = connRequest.getConnection(timeout, TimeUnit.MILLISECONDS);
+                } catch (InterruptedException interrupted) {;
                 throw new InterruptedIOException();
             }
+        }
+
+        // 2. 连接过时检查 (Stale Check)
+        if (HttpConnectionParams.isStaleCheckingEnabled(params)) {
+            if (managedConn.isStale()) {
+                managedConn.close();
+            }
+        }
+
+        // 3. 打开连接
+        if (!managedConn.isOpen()) {
+            managedConn.open(route, context, params);
+        } else {
+        managedConn.setSocketTimeout(HttpConnectionParams.getSoTimeout(params));
     }
 
-// 2. 连接过时检查 (Stale Check)
-if (HttpConnectionParams.isStaleCheckingEnabled(params)) {
-    if (managedConn.isStale()) {
-        managedConn.close();
-    }
-}
-
-// 3. 打开连接
-if (!managedConn.isOpen()) {
-    managedConn.open(route, context, params);
-} else {
-    managedConn.setSocketTimeout(HttpConnectionParams.getSoTimeout(params));
-}
-
-// 4. 建立路由 (Tunneling for HTTPS)
-try {
-    establishRoute(route, context);
-} catch (TunnelRefusedException ex) {
+    // 4. 建立路由 (Tunneling for HTTPS)
+    try {
+        establishRoute(route, context);
+    } catch (TunnelRefusedException ex) {;
     response = ex.getResponse();
     break;
 }
@@ -147,20 +147,20 @@ while (retrying) {
     if (wrapper.getExecCount() > 1 && !wrapper.isRepeatable()) {
         throw new NonRepeatableRequestException("Cannot retry request with a non-repeatable request entity");
     }
-try {
-    response = requestExec.execute(wrapper, managedConn, context);
-    retrying = false;
-} catch (IOException ex) {
+    try {
+        response = requestExec.execute(wrapper, managedConn, context);
+        retrying = false;
+    } catch (IOException ex) {;
     managedConn.close();
     if (retryHandler.retryRequest(ex, execCount, context)) {
         // If we have a direct route to the target host, just re-open connection and re-try
         if (route.getHopCount() == 1) {
             managedConn.open(route, context, params);
         } else {
-            throw ex;
-        }
+        throw ex;
+    }
 } else {
-    throw ex;
+throw ex;
 }
 }
 }
@@ -180,14 +180,14 @@ RoutedRequest followup = handleResponse(roureq, response, context);
 if (followup == null) {
     done = true;
 } else {
-    if (reuse) {
-        HttpEntity entity = response.getEntity();
-        if (entity != null) {
-            entity.consumeContent();
-        }
+if (reuse) {
+    HttpEntity entity = response.getEntity();
+    if (entity != null) {
+        entity.consumeContent();
+    }
     managedConn.markReusable();
 } else {
-    managedConn.close();
+managedConn.close();
 }
 if (!followup.getRoute().equals(roureq.getRoute())) {
     releaseConnection();
@@ -207,11 +207,11 @@ if ((response == null) || (response.getEntity() == null) || !response.getEntity(
     if (reuse) {
         managedConn.markReusable();
     }
-releaseConnection();
+    releaseConnection();
 } else {
-    HttpEntity entity = response.getEntity();
-    entity = new BasicManagedEntity(entity, managedConn, reuse);
-    response.setEntity(entity);
+HttpEntity entity = response.getEntity();
+entity = new BasicManagedEntity(entity, managedConn, reuse);
+response.setEntity(entity);
 }
 return response;
 
@@ -223,6 +223,7 @@ throw ex;
 }
 }
 
+
 ```
 
 ### 步骤 1：获取连接 (`getConnection`)
@@ -231,17 +232,18 @@ throw ex;
 
 ```java
 // SingleClientConnManager.java
-public final ClientConnectionRequest requestConnection(final HttpRoute route, final Object state) {
-    return new ClientConnectionRequest() {
-        public void abortRequest() {
-            // Nothing to abort, since requests are immediate.
-        }
+public final ClientConnectionRequest requestConnection(final HttpRoute route, final Object state) {;
+return new ClientConnectionRequest() {;
+public void abortRequest() {;
+// Nothing to abort, since requests are immediate.
+}
 
-    public ManagedClientConnection getConnection(long timeout, TimeUnit tunit) {
-        return SingleClientConnManager.this.getConnection(route, state);
-    }
+public ManagedClientConnection getConnection(long timeout, TimeUnit tunit) {;
+return SingleClientConnManager.this.getConnection(route, state);
+}
 };
 }
+
 
 ```
 
@@ -249,10 +251,10 @@ public final ClientConnectionRequest requestConnection(final HttpRoute route, fi
 
 ```java
 // SingleClientConnManager.java
-public ManagedClientConnection getConnection(HttpRoute route, Object state) {
-    if (route == null) {
-        throw new IllegalArgumentException("Route may not be null.");
-    }
+public ManagedClientConnection getConnection(HttpRoute route, Object state) {;
+if (route == null) {
+    throw new IllegalArgumentException("Route may not be null.");
+}
 assertStillUp();
 
 // 检查并关闭过期或无效的连接
@@ -265,16 +267,16 @@ if (uniquePoolEntry.connection.isOpen()) {
     RouteTracker tracker = uniquePoolEntry.tracker;
     shutdown = (tracker == null || !tracker.toRoute().equals(route));
 } else {
-    recreate = true;
+recreate = true;
 }
 
 if (shutdown) {
     recreate = true;
     try {
         uniquePoolEntry.shutdown();
-    } catch (IOException iox) {
-        log.debug("Problem shutting down connection.", iox);
-    }
+    } catch (IOException iox) {;
+    log.debug("Problem shutting down connection.", iox);
+}
 }
 
 if (recreate) {
@@ -284,6 +286,7 @@ if (recreate) {
 managedConn = new ConnAdapter(uniquePoolEntry, route);
 return managedConn;
 }
+
 
 ```
 
@@ -304,20 +307,21 @@ return managedConn;
 
 ```java
 // AbstractPoolEntry.java
-public void open(HttpRoute route, HttpContext context, HttpParams params) throws IOException {
-    // ...
-    this.tracker = new RouteTracker(route);
-    final HttpHost proxy = route.getProxyHost();
+public void open(HttpRoute route, HttpContext context, HttpParams params) throws IOException {;
+// ...
+this.tracker = new RouteTracker(route);
+final HttpHost proxy = route.getProxyHost();
 
-    connOperator.openConnection(
-    this.connection,
-    (proxy != null) ? proxy : route.getTargetHost(),
-    route.getLocalAddress(),
-    context,
-    params
-    );
-    // ...
+connOperator.openConnection(
+this.connection,
+(proxy != null) ? proxy : route.getTargetHost(),
+route.getLocalAddress(),
+context,
+params
+);
+// ...
 }
+
 
 ```
 
@@ -329,39 +333,40 @@ public void open(HttpRoute route, HttpContext context, HttpParams params) throws
 
 ```java
 // DefaultClientConnectionOperator.java
-public void openConnection(OperatedClientConnection conn, HttpHost target, ...) throws IOException {
-    // ...
-    final Scheme schm = schemeRegistry.getScheme(target.getSchemeName());
-    final SocketFactory sf = schm.getSocketFactory();
-    final SocketFactory plain_sf;
-    final LayeredSocketFactory layered_sf;
-    // ...
+public void openConnection(OperatedClientConnection conn, HttpHost target, ...) throws IOException {;
+// ...
+final Scheme schm = schemeRegistry.getScheme(target.getSchemeName());
+final SocketFactory sf = schm.getSocketFactory();
+final SocketFactory plain_sf;
+final LayeredSocketFactory layered_sf;
+// ...
 
-    InetAddress[] addresses = InetAddress.getAllByName(target.getHostName());
+InetAddress[] addresses = InetAddress.getAllByName(target.getHostName());
 
-    for (int i = 0;
-    i < addresses.length;
-    ++i) {
-        Socket sock = plain_sf.createSocket();
-        conn.opening(sock, target);
+for (int i = 0;
+i < addresses.length;
+++i) {
+    Socket sock = plain_sf.createSocket();
+    conn.opening(sock, target);
 
-        try {
-            Socket connsock = plain_sf.connectSocket(sock, ...);
-            // ...
-            prepareSocket(sock, context, params);
+    try {
+        Socket connsock = plain_sf.connectSocket(sock, ...);
+        // ...
+        prepareSocket(sock, context, params);
 
-            if (layered_sf != null) {
-                Socket layeredsock = layered_sf.createSocket(sock, ...);
-                conn.openCompleted(sf.isSecure(layeredsock), params);
-            } else {
-                conn.openCompleted(sf.isSecure(sock), params);
-            }
-        break;
-    } catch (SocketException ex) {
-        // ... handle exceptions ...
+        if (layered_sf != null) {
+            Socket layeredsock = layered_sf.createSocket(sock, ...);
+            conn.openCompleted(sf.isSecure(layeredsock), params);
+        } else {
+        conn.openCompleted(sf.isSecure(sock), params);
     }
+    break;
+} catch (SocketException ex) {;
+// ... handle exceptions ...
 }
 }
+}
+
 
 ```
 
@@ -430,13 +435,13 @@ public void openConnection(OperatedClientConnection conn, HttpHost target, ...) 
 
 ```java
 // SingleClientConnManager.java
-public ManagedClientConnection getConnection(HttpRoute route, Object state) {
+public ManagedClientConnection getConnection(HttpRoute route, Object state) {;
+// ...
+// 检查并关闭过期或无效的连接
+closeExpiredConnections();
+if (uniquePoolEntry.connection.isOpen()) {
     // ...
-    // 检查并关闭过期或无效的连接
-    closeExpiredConnections();
-    if (uniquePoolEntry.connection.isOpen()) {
-        // ...
-    }
+}
 // ...
 // 创建一个新的 PoolEntry
 if (recreate)
@@ -446,6 +451,7 @@ uniquePoolEntry = new PoolEntry();
 managedConn = new ConnAdapter(uniquePoolEntry, route);
 return managedConn;
 }
+
 
 ```
 
@@ -467,26 +473,27 @@ return managedConn;
 
 ```java
 // DefaultClientConnectionOperator.java
-public void openConnection(...) throws IOException {
+public void openConnection(...) throws IOException {;
+// ...
+final Scheme schm = schemeRegistry.getScheme(target.getSchemeName());
+final SocketFactory sf = schm.getSocketFactory();
+
+// 创建 Socket
+Socket sock = sf.createSocket();
+conn.opening(sock, target);
+
+// 连接 Socket
+Socket connsock = sf.connectSocket(sock, ...);
+
+// ...
+// 对于 HTTPS，创建分层套接字 (Layered Socket)
+if (layered_sf != null) {
+    Socket layeredsock = layered_sf.createSocket(sock, ...);
     // ...
-    final Scheme schm = schemeRegistry.getScheme(target.getSchemeName());
-    final SocketFactory sf = schm.getSocketFactory();
-
-    // 创建 Socket
-    Socket sock = sf.createSocket();
-    conn.opening(sock, target);
-
-    // 连接 Socket
-    Socket connsock = sf.connectSocket(sock, ...);
-
-    // ...
-    // 对于 HTTPS，创建分层套接字 (Layered Socket)
-    if (layered_sf != null) {
-        Socket layeredsock = layered_sf.createSocket(sock, ...);
-        // ...
-    }
+}
 // ...
 }
+
 
 ```
 

@@ -59,10 +59,11 @@ public void myTask()
         {
             // ...真正的业务逻辑...
         }
-} finally {
+    } finally {
     lock.unlock();
 }
 }
+
 
 ```
 
@@ -122,9 +123,10 @@ public interface DistributedLockProvider
         void close(); // close() 负责释放锁
     }
 
-// 尝试获取锁
-Optional<Lock> tryLock(String lockKey, Duration lockAtMostFor);
+    // 尝试获取锁
+    Optional<Lock> tryLock(String lockKey, Duration lockAtMostFor);
 }
+
 
 ```
 
@@ -155,9 +157,9 @@ public void run()
         // 如果需要，就走带锁的逻辑
         executeWithLock(lockConfig);
     } else {
-        // 否则，走原来的逻辑
-        executeTaskLogic();
-    }
+    // 否则，走原来的逻辑
+    executeTaskLogic();
+}
 }
 
 private void executeWithLock(String lockConfig)
@@ -175,11 +177,12 @@ private void executeWithLock(String lockConfig)
             // 拿到锁了，执行核心逻辑
             executeTaskLogic();
         }
-} else {
+    } else {
     // 没拿到锁，打印日志，直接跳过
     log.debug("无法获取任务 '{}' 的锁。跳过执行。", taskId);
 }
 }
+
 
 ```
 

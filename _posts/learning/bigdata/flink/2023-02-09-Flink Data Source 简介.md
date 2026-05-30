@@ -96,12 +96,13 @@ public class CustomIterator implements Iterator<Integer>, Serializable
     {
         return i < 100 ;
     }
-@Override public Integer next()
-{
-    i++ ;
-    return i ;
+    @Override public Integer next()
+    {
+        i++ ;
+        return i ;
+    }
 }
-}
+
 
 ```
 
@@ -143,14 +144,15 @@ env.addSource(new SourceFunction<Long>()
             // 通过collect将输入发送出去 ctx.collect(count) ;
             count++ ;
         }
-}
-public void cancel()
-{
-    isRunning = false ;
-}
+    }
+    public void cancel()
+    {
+        isRunning = false ;
+    }
 }
 ).print() ;
 env.execute() ;
+
 
 ```
 

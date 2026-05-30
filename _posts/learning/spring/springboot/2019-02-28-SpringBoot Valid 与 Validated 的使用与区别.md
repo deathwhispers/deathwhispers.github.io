@@ -31,13 +31,14 @@ private Integer age;
 
 ```java
 @PostMapping("/girls")
-public Girl addGirl(@Valid Girl girl, BindingResult bindingResult) {
-    if(bindingResult.hasErrors()){
-        System.out.println(bindingResult.getFieldError().getDefaultMessage());
-        return null;
-    }
+public Girl addGirl(@Valid Girl girl, BindingResult bindingResult) {;
+if(bindingResult.hasErrors()){
+    System.out.println(bindingResult.getFieldError().getDefaultMessage());
+    return null;
+}
 return girlResposity.save(girl);
 }
+
 
 ```
 
@@ -48,13 +49,14 @@ return girlResposity.save(girl);
 public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public JsonResult violationException(MethodArgumentNotValidException exception) {
-        // 不带任何参数访问接口,会抛出 BindException
-        // 因此，我们只需捕获这个异常，并返回我们设置的 message 即可
-        String message = exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        return JsonResult.fail(message);
-    }
+    public JsonResult violationException(MethodArgumentNotValidException exception) {;
+    // 不带任何参数访问接口,会抛出 BindException
+    // 因此，我们只需捕获这个异常，并返回我们设置的 message 即可
+    String message = exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+    return JsonResult.fail(message);
 }
+}
+
 ```
 
 ### @Validated：

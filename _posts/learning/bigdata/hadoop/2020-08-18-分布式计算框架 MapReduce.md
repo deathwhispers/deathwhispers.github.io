@@ -163,8 +163,9 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritabl
         for (String word : words) {
             context.write(new Text(word), new IntWritable(1));
         }
+    }
 }
-}
+
 
 ```
 
@@ -227,9 +228,10 @@ public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritab
         for (IntWritable value : values) {
             count += value.get();
         }
-    context.write(key, new IntWritable(count));
+        context.write(key, new IntWritable(count));
+    }
 }
-}
+
 
 ```
 
@@ -250,12 +252,12 @@ public class WordCountApp {
     private static final String HDFS_URL = "hdfs://192.168.0.107:8020";
     private static final String HADOOP_USER_NAME = "root";
 
-    public static void main(String[] args) throws Exception {
-        //  文件输入路径和输出路径由外部传参指定
-        if (args.length < 2) {
-            System.out.println("Input and output paths are necessary!");
-            return;
-        }
+    public static void main(String[] args) throws Exception {;
+    //  文件输入路径和输出路径由外部传参指定
+    if (args.length < 2) {
+        System.out.println("Input and output paths are necessary!");
+        return;
+    }
     // 需要指明 hadoop 用户名，否则在 HDFS 上创建目录时可能会抛出权限不足的异常
     System.setProperty("HADOOP_USER_NAME", HADOOP_USER_NAME);
 
@@ -288,20 +290,21 @@ public class WordCountApp {
         fileSystem.delete(outputPath, true);
     }
 
-// 设置作业输入文件和输出文件的路径
-FileInputFormat.setInputPaths(job, new Path(args[0]));
-FileOutputFormat.setOutputPath(job, outputPath);
+    // 设置作业输入文件和输出文件的路径
+    FileInputFormat.setInputPaths(job, new Path(args[0]));
+    FileOutputFormat.setOutputPath(job, outputPath);
 
-// 将作业提交到群集并等待它完成，参数设置为 true 代表打印显示对应的进度
-boolean result = job.waitForCompletion(true);
+    // 将作业提交到群集并等待它完成，参数设置为 true 代表打印显示对应的进度
+    boolean result = job.waitForCompletion(true);
 
-// 关闭之前创建的 fileSystem
-fileSystem.close();
+    // 关闭之前创建的 fileSystem
+    fileSystem.close();
 
-// 根据作业结果,终止当前运行的 Java 虚拟机,退出程序
-System.exit(result ? 0 : -1);
+    // 根据作业结果,终止当前运行的 Java 虚拟机,退出程序
+    System.exit(result ? 0 : -1);
 }
 }
+
 
 ```
 
@@ -374,10 +377,11 @@ numReduceTasks 取余。其实现如下：
 
 ```java
 public class HashPartitioner<K, V> extends Partitioner<K, V> {
-    public int getPartition(K key, V value, int numReduceTasks) {
-        return (key.hashCode() & Integer.MAX_VALUE) % numReduceTasks;
-    }
+    public int getPartition(K key, V value, int numReduceTasks) {;
+    return (key.hashCode() & Integer.MAX_VALUE) % numReduceTasks;
 }
+}
+
 ```
 
 ### 6.2 自定义Partitioner
@@ -386,10 +390,11 @@ public class HashPartitioner<K, V> extends Partitioner<K, V> {
 
 ```java
 public class CustomPartitioner extends Partitioner<Text, IntWritable> {
-    public int getPartition(Text text, IntWritable intWritable, int numPartitions) {
-        return WordCountDataUtils.WORD_LIST.indexOf(text.toString());
-    }
+    public int getPartition(Text text, IntWritable intWritable, int numPartitions) {;
+    return WordCountDataUtils.WORD_LIST.indexOf(text.toString());
 }
+}
+
 ```
 
 在构建 job 时候指定使用我们自己的分类规则，并设置 reduce 的个数：

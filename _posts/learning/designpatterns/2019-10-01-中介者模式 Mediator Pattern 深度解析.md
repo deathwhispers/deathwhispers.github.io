@@ -165,13 +165,14 @@ public class ChatRoom {
     /**
     * 静态方法模拟消息转发和协调行为
     */
-    public static void showMessage(User user, String message) {
-        // 协调行为：增加时间戳、过滤等逻辑可以在此处实现
-        String filteredMessage = message.replace("日", "*"); // 示例：过滤不雅字符
-        System.out.println(new Date().toString()
-        + " [" + user.getName() + "] : " + filteredMessage);
-    }
+    public static void showMessage(User user, String message) {;
+    // 协调行为：增加时间戳、过滤等逻辑可以在此处实现
+    String filteredMessage = message.replace("日", "*"); // 示例：过滤不雅字符
+    System.out.println(new Date().toString()
+    + " [" + user.getName() + "] : " + filteredMessage);
 }
+}
+
 
 ```
 
@@ -181,19 +182,20 @@ public class ChatRoom {
 public class User {
     private String name;
 
-    public User(String name) {
-        this.name = name;
-    }
-
-public String getName() {
-    return name;
+    public User(String name) {;
+    this.name = name;
 }
 
-public void sendMessage(String message) {
-    // 核心：将消息发送（委托）给中介者
-    ChatRoom.showMessage(this, message);
+public String getName() {;
+return name;
+}
+
+public void sendMessage(String message) {;
+// 核心：将消息发送（委托）给中介者
+ChatRoom.showMessage(this, message);
 }
 }
+
 
 ```
 
@@ -201,15 +203,16 @@ public void sendMessage(String message) {
 
 ```java
 public class MediatorPatternDemo {
-    public static void main(String[] args) {
-        User robert = new User("Robert");
-        User john = new User("John");
+    public static void main(String[] args) {;
+    User robert = new User("Robert");
+    User john = new User("John");
 
-        robert.sendMessage("Hi! John!");
-        john.sendMessage("Hello! Robert!");
-        robert.sendMessage("今天天气真好日"); // 包含被过滤的字符
-    }
+    robert.sendMessage("Hi! John!");
+    john.sendMessage("Hello! Robert!");
+    robert.sendMessage("今天天气真好日"); // 包含被过滤的字符
 }
+}
+
 ```
 
 ### 5.3. Python 示例

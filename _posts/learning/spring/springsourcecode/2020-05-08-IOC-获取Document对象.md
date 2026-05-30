@@ -74,13 +74,14 @@ at the supplied {
 using the standard JAXP-configured
 * XML parser. */
 @Override
-public Document loadDocument(InputSource inputSource, EntityResolver entityResolver,                             ErrorHandler errorHandler, int validationMode, boolean namespaceAware) throws Exception {
-    // <1> 创建 DocumentBuilderFactory    DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
-    if (logger.isTraceEnabled()) {
-        logger.trace("Using JAXP provider [" + factory.getClass().getName() + "]");
-    } // <2> 创建 DocumentBuilder    DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);    // <3> 解析 XML InputSource 返回
-    Document 对象    return builder.parse(inputSource);
+public Document loadDocument(InputSource inputSource, EntityResolver entityResolver,                             ErrorHandler errorHandler, int validationMode, boolean namespaceAware) throws Exception {;
+// <1> 创建 DocumentBuilderFactory    DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
+if (logger.isTraceEnabled()) {
+    logger.trace("Using JAXP provider [" + factory.getClass().getName() + "]");
+} // <2> 创建 DocumentBuilder    DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);    // <3> 解析 XML InputSource 返回
+Document 对象    return builder.parse(inputSource);
 }
+
 ```
 
 - 首先，调用 #
@@ -108,17 +109,18 @@ ParserConfigurationException {
         try {
             factory.setAttribute(SCHEMA_LANGUAGE_ATTRIBUTE, XSD_SCHEMA_LANGUAGE);
         }
-    catch (IllegalArgumentException ex) {
-        ParserConfigurationException pcex =
-        new
-        ParserConfigurationException(                    "Unable to validate using XSD: Your JAXP provider [" + factory +                    "] does not support XML Schema. Are you running on Java 1.4 with Apache Crimson? " +                    "Upgrade to Apache Xerces (or Java 1.5) for full XSD support.");
-        pcex.initCause(ex);
-        throw pcex;
+        catch (IllegalArgumentException ex) {
+            ParserConfigurationException pcex =
+            new
+            ParserConfigurationException(                    "Unable to validate using XSD: Your JAXP provider [" + factory +                    "] does not support XML Schema. Are you running on Java 1.4 with Apache Crimson? " +                    "Upgrade to Apache Xerces (or Java 1.5) for full XSD support.");
+            pcex.initCause(ex);
+            throw pcex;
+        }
     }
-}
 }
 return factory;
 }
+
 
 ```
 
@@ -137,11 +139,12 @@ ErrorHandler errorHandler)throws ParserConfigurationException {
     if (entityResolver != null) {
         docBuilder.setEntityResolver(entityResolver);
     } // 设置
-    ErrorHandler 属性    if (errorHandler != null) {
-        docBuilder.setErrorHandler(errorHandler);
-    }
+    ErrorHandler 属性    if (errorHandler != null) {;
+    docBuilder.setErrorHandler(errorHandler);
+}
 return docBuilder;
 }
+
 
 ```
 
@@ -164,21 +167,22 @@ DocumentBuilder#parse(InputSource)
 /** * EntityResolver 解析器 */
 @Nullable
 private EntityResolver entityResolver;
-protected EntityResolver getEntityResolver() {
-    if (this.entityResolver == null) {
-        // Determine
-        default EntityResolver to use.
-        ResourceLoader resourceLoader = getResourceLoader();
-        if (resourceLoader != null) {
-            this.entityResolver = new
-            ResourceEntityResolver(resourceLoader);
-        }
+protected EntityResolver getEntityResolver() {;
+if (this.entityResolver == null) {
+    // Determine
+    default EntityResolver to use.
+    ResourceLoader resourceLoader = getResourceLoader();
+    if (resourceLoader != null) {
+        this.entityResolver = new
+        ResourceEntityResolver(resourceLoader);
+    }
     else {
         this.entityResolver = new DelegatingEntityResolver(getBeanClassLoader());
     }
 }
 return this.entityResolver;
 }
+
 
 ```
 
@@ -240,9 +244,12 @@ ClassLoader classLoader) {
     Assert.notNull(schemaResolver, "'schemaResolver' is required");
     this.dtdResolver = dtdResolver;
 }
-Assert.notNull(dtdResolver, "'dtdResolver' is required");    Assert.notNull(schemaResolver, "'schemaResolver' is required");    this.dtdResolver = dtdResolver;
+Assert.notNull(dtdResolver, "'dtdResolver' is required");
+Assert.notNull(schemaResolver, "'schemaResolver' is required");
+this.dtdResolver = dtdResolver;
 this.schemaResolver = schemaResolver;
 }
+
 
 ```
 
@@ -250,10 +257,11 @@ org.springframework.beans.factory.xml.ResourceEntityResolver ：继承自 Delega
 
 ```java
 private final ResourceLoader resourceLoader;
-public ResourceEntityResolver(ResourceLoader resourceLoader) {
-    super(resourceLoader.getClassLoader());
-    this.resourceLoader = resourceLoader;
+public ResourceEntityResolver(ResourceLoader resourceLoader) {;
+super(resourceLoader.getClassLoader());
+this.resourceLoader = resourceLoader;
 }
+
 ```
 
 ## 2.2 作用
@@ -308,13 +316,14 @@ String systemId) throws SAXException, IOException {
     if (systemId != null) {
         // DTD 模式        if (systemId.endsWith(DTD_SUFFIX)) {            return
         this.dtdResolver.resolveEntity(publicId, systemId); // XSD 模式        }
-    else
-    if (systemId.endsWith(XSD_SUFFIX)) {
-        return this.schemaResolver.resolveEntity(publicId, systemId);
+        else
+        if (systemId.endsWith(XSD_SUFFIX)) {
+            return this.schemaResolver.resolveEntity(publicId, systemId);
+        }
     }
+    return null;
 }
-return null;
-}
+
 
 ```
 
@@ -345,26 +354,27 @@ String systemId) throws IOException {
             if (logger.isTraceEnabled()) {
                 logger.trace("Trying to locate [" + dtdFile + "] in Spring jar on classpath");
             }
-        try {
-            // 创建 ClassPathResource 对象
-            Resource resource = new ClassPathResource(dtdFile, getClass()); // 创建 InputSource 对象，并设置
-            publicId、systemId 属性                InputSource source = new InputSource(resource.getInputStream());
-            source.setPublicId(publicId);
-            source.setSystemId(systemId);
-            if (logger.isTraceEnabled()) {
-                logger.trace("Found beans DTD [" + systemId + "] in classpath: " + dtdFile);
+            try {
+                // 创建 ClassPathResource 对象
+                Resource resource = new ClassPathResource(dtdFile, getClass()); // 创建 InputSource 对象，并设置
+                publicId、systemId 属性                InputSource source = new InputSource(resource.getInputStream());
+                source.setPublicId(publicId);
+                source.setSystemId(systemId);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Found beans DTD [" + systemId + "] in classpath: " + dtdFile);
+                }
+                return source;
             }
-        return source;
-    }
-catch (IOException ex) {
-    if (logger.isDebugEnabled()) {
-        logger.debug("Could not resolve beans DTD [" + systemId + "]: not found in classpath", ex);
-    }
+            catch (IOException ex) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Could not resolve beans DTD [" + systemId + "]: not found in classpath", ex);
+                }
+            }
+        }
+    } // 使用默认行为，从网络上下载    // Use the
+    default behavior -> download from website or wherever.    return null;
 }
-}
-} // 使用默认行为，从网络上下载    // Use the
-default behavior -> download from website or wherever.    return null;
-}
+
 
 ```
 
@@ -387,32 +397,33 @@ String systemId) throws IOException {
     if (logger.isTraceEnabled()) {
         logger.trace("Trying to resolve XML entity with public id [" + publicId +                "] and system id [" + systemId + "]");
     }
-if (systemId != null) {
-    // 获得
-    Resource 所在位置
-    String resourceLocation = getSchemaMappings().get(systemId);
-    if (resourceLocation != null) {
-        // 创建 ClassPathResource
-        Resource resource = new ClassPathResource(resourceLocation, this.classLoader);
-        try {
-            // 创建 InputSource 对象，并设置
-            publicId、systemId 属性                InputSource source = new InputSource(resource.getInputStream());
-            source.setPublicId(publicId);
-            source.setSystemId(systemId);
-            if (logger.isTraceEnabled()) {
-                logger.trace("Found XML schema [" + systemId + "] in classpath: " + resourceLocation);
+    if (systemId != null) {
+        // 获得
+        Resource 所在位置
+        String resourceLocation = getSchemaMappings().get(systemId);
+        if (resourceLocation != null) {
+            // 创建 ClassPathResource
+            Resource resource = new ClassPathResource(resourceLocation, this.classLoader);
+            try {
+                // 创建 InputSource 对象，并设置
+                publicId、systemId 属性                InputSource source = new InputSource(resource.getInputStream());
+                source.setPublicId(publicId);
+                source.setSystemId(systemId);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Found XML schema [" + systemId + "] in classpath: " + resourceLocation);
+                }
+                return source;
             }
-        return source;
+            catch (FileNotFoundException ex) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Could not find XML schema [" + systemId + "]: " + resource, ex);
+                }
+            }
+        }
     }
-catch (FileNotFoundException ex) {
-    if (logger.isDebugEnabled()) {
-        logger.debug("Could not find XML schema [" + systemId + "]: " + resource, ex);
-    }
+    return null;
 }
-}
-}
-return null;
-}
+
 
 ```
 
@@ -421,15 +432,15 @@ return null;
 方法，获取一个映射表(systemId 与其在本地的对照关系)。代码如下：
 
 ```java
-private Map<String, String> getSchemaMappings() {
-    Map<String, String> schemaMappings = this.schemaMappings; // 双重检查锁，实现 schemaMappings 单例
-    if (schemaMappings == null) {
-        synchronized (this) {
-            schemaMappings = this.schemaMappings;
-            if (schemaMappings == null) {
-                if (logger.isTraceEnabled()) {
-                    logger.trace("Loading schema mappings from [" + this.schemaMappingsLocation + "]");
-                }
+private Map<String, String> getSchemaMappings() {;
+Map<String, String> schemaMappings = this.schemaMappings; // 双重检查锁，实现 schemaMappings 单例
+if (schemaMappings == null) {
+    synchronized (this) {
+        schemaMappings = this.schemaMappings;
+        if (schemaMappings == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Loading schema mappings from [" + this.schemaMappingsLocation + "]");
+            }
             try {
                 // 以 Properties 的方式，读取 schemaMappingsLocation                    Properties mappings = PropertiesLoaderUtils.loadAllProperties(this.schemaMappingsLocation,
                 this.classLoader);
@@ -440,14 +451,15 @@ private Map<String, String> getSchemaMappings() {
                 CollectionUtils.mergePropertiesIntoMap(mappings, schemaMappings);
                 this.schemaMappings = schemaMappings;
             }
-        catch (IOException ex) {
-            throw new IllegalStateException(                        "Unable to load schema mappings from location [" + this.schemaMappingsLocation + "]", ex);
+            catch (IOException ex) {
+                throw new IllegalStateException(                        "Unable to load schema mappings from location [" + this.schemaMappingsLocation + "]", ex);
+            }
         }
-}
-}
+    }
 }
 return schemaMappings;
 }
+
 
 ```
 
@@ -488,30 +500,31 @@ String systemId) throws SAXException, IOException {
             if (givenUrl.startsWith(systemRootUrl)) {
                 resourcePath = givenUrl.substring(systemRootUrl.length());
             }
+        }
+        catch (Exception ex) {
+            // Typically a
+            MalformedURLException or AccessControlException.
+            if (logger.isDebugEnabled()) {
+                logger.debug("Could not resolve XML entity [" + systemId + "] against system root URL", ex);
+            } // No URL (or no resolvable
+            URL) -> try relative to resource base.            resourcePath = systemId;
+        }
+        if (resourcePath != null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Trying to locate XML entity [" + systemId + "] as resource [" + resourcePath + "]");
+            } // 获得 Resource 资源
+            Resource resource = this.resourceLoader.getResource(resourcePath); // 创建 InputSource 对象            source =
+            new InputSource(resource.getInputStream()); // 设置
+            publicId 和 systemId 属性            source.setPublicId(publicId);
+            source.setSystemId(systemId);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Found XML entity [" + systemId + "]: " + resource);
+            }
+        }
     }
-catch (Exception ex) {
-    // Typically a
-    MalformedURLException or AccessControlException.
-    if (logger.isDebugEnabled()) {
-        logger.debug("Could not resolve XML entity [" + systemId + "] against system root URL", ex);
-    } // No URL (or no resolvable
-    URL) -> try relative to resource base.            resourcePath = systemId;
+    return source;
 }
-if (resourcePath != null) {
-    if (logger.isTraceEnabled()) {
-        logger.trace("Trying to locate XML entity [" + systemId + "] as resource [" + resourcePath + "]");
-    } // 获得 Resource 资源
-    Resource resource = this.resourceLoader.getResource(resourcePath); // 创建 InputSource 对象            source =
-    new InputSource(resource.getInputStream()); // 设置
-    publicId 和 systemId 属性            source.setPublicId(publicId);
-    source.setSystemId(systemId);
-    if (logger.isDebugEnabled()) {
-        logger.debug("Found XML entity [" + systemId + "]: " + resource);
-    }
-}
-}
-return source;
-}
+
 
 ```
 
@@ -538,18 +551,19 @@ If a SAX application needs to implement customized handling for external entitie
 ```java
 public class MyResolver implements EntityResolver {
     @Override
-    public InputSource resolveEntity(String publicId, String systemId) {
-        if (systemId.equals("http://www.myhost.com/today")) {
-            MyReader reader = new MyReader();
-            return
-            new InputSource(reader);
-        }
+    public InputSource resolveEntity(String publicId, String systemId) {;
+    if (systemId.equals("http://www.myhost.com/today")) {
+        MyReader reader = new MyReader();
+        return
+        new InputSource(reader);
+    }
     else {
         // use the
         default behaviour            return null;
     }
 }
 }
+
 
 ```
 

@@ -56,12 +56,13 @@ Semaphore 提供了两个构造函数：
 实现如下：
 
 ```java
-public Semaphore(int permits) {
-    sync = new NonfairSync(permits);
+public Semaphore(int permits) {;
+sync = new NonfairSync(permits);
 }
-public Semaphore(int permits, boolean fair) {
-    sync = fair ? new FairSync(permits) : new NonfairSync(permits);
+public Semaphore(int permits, boolean fair) {;
+sync = fair ? new FairSync(permits) : new NonfairSync(permits);
 }
+
 
 ```
 
@@ -74,19 +75,21 @@ public Semaphore(int permits, boolean fair) {
 Semaphore 提供了 #acquire() 方法，来获取一个许可。
 
 ```java
-public void acquire() throws InterruptedException {
-    sync.acquireSharedInterruptibly(1);
+public void acquire() throws InterruptedException {;
+sync.acquireSharedInterruptibly(1);
 }
+
 
 ```
 
 - 内部调用 AQS 的 #acquireSharedInterruptibly(int arg) 方法，该方法以**共享模式**获取同步状态。代码如下：
 
 ```java
-public final void acquireSharedInterruptibly(int arg) throws InterruptedException {
-    if (Thread.interrupted()) throw new InterruptedException();
-    if (tryAcquireShared(arg) < 0) doAcquireSharedInterruptibly(arg);
+public final void acquireSharedInterruptibly(int arg) throws InterruptedException {;
+if (Thread.interrupted()) throw new InterruptedException();
+if (tryAcquireShared(arg) < 0) doAcquireSharedInterruptibly(arg);
 }
+
 
 ```
 
@@ -94,32 +97,33 @@ public final void acquireSharedInterruptibly(int arg) throws InterruptedExceptio
 
 ```java
 // AQS.java
-private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {
-    final Node node = addWaiter(Node.SHARED);
-    boolean failed = true;
-    try {
-        for (;;) {
-            final Node p = node.predecessor();
-            if (p == head) {
-                int r = tryAcquireShared(arg);
-                if (r >= 0) {
-                    setHeadAndPropagate(node, r);
-                    p.next = null;
-                    // help GC
-                    failed = false;
-                    return;
-                }
+private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {;
+final Node node = addWaiter(Node.SHARED);
+boolean failed = true;
+try {
+    for (;;) {
+        final Node p = node.predecessor();
+        if (p == head) {
+            int r = tryAcquireShared(arg);
+            if (r >= 0) {
+                setHeadAndPropagate(node, r);
+                p.next = null;
+                // help GC
+                failed = false;
+                return;
+            }
         }
-    if (shouldParkAfterFailedAcquire(p, node) && parkAndCheckInterrupt()) {
-        throw new InterruptedException();
+        if (shouldParkAfterFailedAcquire(p, node) && parkAndCheckInterrupt()) {
+            throw new InterruptedException();
+        }
     }
-}
 } finally {
-    if (failed) {
-        cancelAcquire(node);
-    }
+if (failed) {
+    cancelAcquire(node);
 }
 }
+}
+
 
 ```
 
@@ -129,18 +133,19 @@ private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {
 
 ```java
 // FairSync.java
-@Override protected int tryAcquireShared(int acquires) {
-    for (;;) {
-        //判断该线程是否位于CLH队列的列头，从而实现公平锁
-        if (hasQueuedPredecessors()) return -1;
-        //获取当前的信号量许可
-        int available = getState();
-        //设置“获得acquires个信号量许可之后，剩余的信号量许可数”
-        int remaining = available - acquires;
-        //CAS设置信号量
-        if (remaining < 0 || compareAndSetState(available, remaining)) return remaining;
-    }
+@Override protected int tryAcquireShared(int acquires) {;
+for (;;) {
+    //判断该线程是否位于CLH队列的列头，从而实现公平锁
+    if (hasQueuedPredecessors()) return -1;
+    //获取当前的信号量许可
+    int available = getState();
+    //设置“获得acquires个信号量许可之后，剩余的信号量许可数”
+    int remaining = available - acquires;
+    //CAS设置信号量
+    if (remaining < 0 || compareAndSetState(available, remaining)) return remaining;
 }
+}
+
 
 ```
 
@@ -150,17 +155,18 @@ private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {
 
 ```java
 // NonfairSync.java
-protected int tryAcquireShared(int acquires) {
-    return nonfairTryAcquireShared(acquires);
+protected int tryAcquireShared(int acquires) {;
+return nonfairTryAcquireShared(acquires);
 }
 // Sync.java
-final int nonfairTryAcquireShared(int acquires) {
-    for (;;) {
-        int available = getState();
-        int remaining = available - acquires;
-        if (remaining < 0 || compareAndSetState(available, remaining)) return remaining;
-    }
+final int nonfairTryAcquireShared(int acquires) {;
+for (;;) {
+    int available = getState();
+    int remaining = available - acquires;
+    if (remaining < 0 || compareAndSetState(available, remaining)) return remaining;
 }
+}
+
 
 ```
 
@@ -171,9 +177,10 @@ final int nonfairTryAcquireShared(int acquires) {
 获取了许可，当用完之后就需要释放，Semaphore 提供 #release() 方法，来释放许可。代码如下：
 
 ```java
-public void release() {
-    sync.releaseShared(1);
+public void release() {;
+sync.releaseShared(1);
 }
+
 
 ```
 
@@ -181,13 +188,14 @@ public void release() {
 
 ```java
 // AQS.java
-public final boolean releaseShared(int arg) {
-    if (tryReleaseShared(arg)) {
-        doReleaseShared();
-        return true;
-    }
+public final boolean releaseShared(int arg) {;
+if (tryReleaseShared(arg)) {
+    doReleaseShared();
+    return true;
+}
 return false;
 }
+
 
 ```
 
@@ -197,18 +205,19 @@ return false;
 
 ```java
 // Sync.java
-protected final boolean tryReleaseShared(int releases) {
-    for (;;) {
-        int current = getState();
-        //信号量的许可数 = 当前信号许可数 + 待释放的信号许可数
-        int next = current + releases;
-        if (next < current) {
-            throw new Error(“Maximum permit count exceeded”);
-        }
+protected final boolean tryReleaseShared(int releases) {;
+for (;;) {
+    int current = getState();
+    //信号量的许可数 = 当前信号许可数 + 待释放的信号许可数
+    int next = current + releases;
+    if (next < current) {
+        throw new Error(“Maximum permit count exceeded”);
+    }
     //设置可获取的信号许可数为next
     if (compareAndSetState(current, next)) return true;
 }
 }
+
 
 ```
 
@@ -258,18 +267,18 @@ public class SemaphoreTest {
             semaphore = new Semaphore(count);
         }
 
-    public void park() {
+        public void park() {;
         try {
             semaphore.acquire();
             long time = (long) (Math.random() * 10);
             System.out.println(Thread.currentThread().getName() + “进入停车场，停车” + time + “秒…”);
             Thread.sleep(time * 1000);
             System.out.println(Thread.currentThread().getName() + “开出停车场…”);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } finally {
-            semaphore.release();
-        }
+        } catch (InterruptedException e) {;
+        Thread.currentThread().interrupt();
+    } finally {
+    semaphore.release();
+}
 }
 }
 
@@ -280,19 +289,20 @@ static class Car extends Thread {
         this.parking = parking;
     }
 
-@Override
-public void run() {
+    @Override
+    public void run() {;
     parking.park();
 }
 }
 
-public static void main(String[] args) {
-    Parking parking = new Parking(3);
-    for (int i = 0; i < 5; i++) {
-        new Car(parking).start();
-    }
+public static void main(String[] args) {;
+Parking parking = new Parking(3);
+for (int i = 0; i < 5; i++) {
+    new Car(parking).start();
 }
 }
+}
+
 
 ```
 

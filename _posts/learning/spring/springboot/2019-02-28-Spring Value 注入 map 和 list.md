@@ -19,11 +19,15 @@ week: 2019-W09
 **EL表达式+JSON写法**
 
 ```java
-@Value("#{'${scio.cloud.list}'.split(',')}")
+@Value("# {
+    '${scio.cloud.list;
+}
+'.split(',')}")
 private List<String> list;
 
 @Value("#{${scio.cloud.maps}}")
 private Map<String,String> maps;
+
 ```
 
 yml文件
@@ -50,14 +54,15 @@ public class ScioCloudConfig {
     private List<String> list;
     private Map<String,String> maps;
 
-    public void setList(List<String> list) {
-        this.list = list;
-    }
+    public void setList(List<String> list) {;
+    this.list = list;
+}
 
-public void setMaps(Map<String,String> maps) {
-    this.maps = maps;
+public void setMaps(Map<String,String> maps) {;
+this.maps = maps;
 }
 }
+
 
 ```
 

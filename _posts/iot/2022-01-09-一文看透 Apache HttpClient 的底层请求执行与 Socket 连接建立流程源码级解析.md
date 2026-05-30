@@ -61,8 +61,9 @@ if (route.getHopCount() == 1) {
     this.log.debug("Reopening the direct connection.");
     managedConn.open(route, context, params);
 } else {
-    throw ex;
+throw ex;
 }
+
 ```
 
 ✅ 核心逻辑：
@@ -117,14 +118,14 @@ RoutedRequest followup = handleResponse(roureq, response, context);
 if (followup == null) {
     done = true;
 } else {
-    if (reuse) {
-        HttpEntity entity = response.getEntity();
-        if (entity != null) {
-            entity.consumeContent();
-        }
+if (reuse) {
+    HttpEntity entity = response.getEntity();
+    if (entity != null) {
+        entity.consumeContent();
+    }
     managedConn.markReusable();
 } else {
-    managedConn.close();
+managedConn.close();
 }
 
 if (!followup.getRoute().equals(roureq.getRoute())) {
@@ -133,6 +134,7 @@ if (!followup.getRoute().equals(roureq.getRoute())) {
 
 roureq = followup;
 }
+
 
 ```
 
@@ -155,10 +157,11 @@ if ((response == null)
     releaseConnection();
 
 } else {
-    HttpEntity entity = response.getEntity();
-    entity = new BasicManagedEntity(entity, managedConn, reuse);
-    response.setEntity(entity);
+HttpEntity entity = response.getEntity();
+entity = new BasicManagedEntity(entity, managedConn, reuse);
+response.setEntity(entity);
 }
+
 
 ```
 
@@ -177,9 +180,10 @@ public final ClientConnectionRequest requestConnection(
 final HttpRoute route,
 final Object state) {
 
-    return new ClientConnectionRequest() {
+    return new ClientConnectionRequest() {;
 
-        public void abortRequest() {}
+    public void abortRequest() {
+    }
 
     public ManagedClientConnection getConnection(
     long timeout, TimeUnit tunit) {
@@ -188,6 +192,7 @@ final Object state) {
     }
 };
 }
+
 
 ```
 
@@ -201,18 +206,18 @@ final Object state) {
 # 八、核心连接获取逻辑：getConnection()
 
 ```java
-public ManagedClientConnection getConnection(HttpRoute route, Object state) {
+public ManagedClientConnection getConnection(HttpRoute route, Object state) {;
 
-    if (managedConn != null)
-    revokeConnection();
+if (managedConn != null)
+revokeConnection();
 
-    closeExpiredConnections();
+closeExpiredConnections();
 
-    boolean recreate = false;
+boolean recreate = false;
 
-    if (!uniquePoolEntry.connection.isOpen()) {
-        recreate = true;
-    }
+if (!uniquePoolEntry.connection.isOpen()) {
+    recreate = true;
+}
 
 if (recreate)
 uniquePoolEntry = new PoolEntry();
@@ -220,6 +225,7 @@ uniquePoolEntry = new PoolEntry();
 managedConn = new ConnAdapter(uniquePoolEntry, route);
 return managedConn;
 }
+
 
 ```
 
@@ -293,12 +299,13 @@ i < addresses.length;
         conn.openCompleted(isSecure, params);
         break;
 
-    } catch (Exception ex) {
-        if (i == addresses.length - 1) {
-            throw new HttpHostConnectException(target, ex);
-        }
+    } catch (Exception ex) {;
+    if (i == addresses.length - 1) {
+        throw new HttpHostConnectException(target, ex);
+    }
 }
 }
+
 
 ```
 

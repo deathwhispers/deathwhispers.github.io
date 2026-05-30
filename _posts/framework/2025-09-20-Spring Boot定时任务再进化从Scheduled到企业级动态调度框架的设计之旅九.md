@@ -56,8 +56,9 @@ public class JpaTaskStore implements TaskStore
         taskRepo.save(entity); // 用JPA存数据
     }
 
-// ... 实现TaskStore接口的其他方法（findById、deleteById这些）
+    // ... 实现TaskStore接口的其他方法（findById、deleteById这些）
 }
+
 
 ```
 
@@ -181,14 +182,15 @@ public class NacosTaskListener
         syncTasks(newTasks, currentTasks);
     }
 
-private void syncTasks(List<TaskDefinition> newTasks, List<ManagedTask> currentTasks)
-{
-    // 这里写具体的同步逻辑：
-    // - 遍历currentTasks，不在newTasks里的就删
-    // - 遍历newTasks，不在currentTasks里的就加
-    // - 状态不一样的就改（比如配置里是RUNNING，当前是STOPPED就启动）
+    private void syncTasks(List<TaskDefinition> newTasks, List<ManagedTask> currentTasks)
+    {
+        // 这里写具体的同步逻辑：
+        // - 遍历currentTasks，不在newTasks里的就删
+        // - 遍历newTasks，不在currentTasks里的就加
+        // - 状态不一样的就改（比如配置里是RUNNING，当前是STOPPED就启动）
+    }
 }
-}
+
 
 ```
 
@@ -248,11 +250,12 @@ private Runnable resolveTaskDefinition(TaskDefinition definition)
         try
         {
             method.invoke(bean, definition); // 把任务定义传过去
-        } catch (Exception e) {
-            throw new RuntimeException("任务执行失败", e);
-        }
+        } catch (Exception e) {;
+        throw new RuntimeException("任务执行失败", e);
+    }
 };
 }
+
 
 ```
 

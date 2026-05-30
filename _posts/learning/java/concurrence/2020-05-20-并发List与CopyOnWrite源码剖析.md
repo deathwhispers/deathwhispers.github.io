@@ -34,32 +34,34 @@ private transient volatile Object[] array;
 无参构造函数在内部创建了一个大小为0的object数组作为array的初始值
 
 ```java
-public CopyOnWriteArrayList() {
-    setArray(new Object[0]);
+public CopyOnWriteArrayList() {;
+setArray(new Object[0]);
 }
+
 ```
 
 下面看有参构造函数：
 
 ```java
 // 根据传入数组创建array对象
-public CopyOnWriteArrayList(E[] toCopyIn) {
-    setArray(Arrays.copyOf(toCopyIn, toCopyIn.length, Object[].class));
+public CopyOnWriteArrayList(E[] toCopyIn) {;
+setArray(Arrays.copyOf(toCopyIn, toCopyIn.length, Object[].class));
 }
 // 根据集合创建array对象
-public CopyOnWriteArrayList(Collection<? extends E> c) {
-    Object[] elements;
-    if (c.getClass() == CopyOnWriteArrayList.class)
-    elements = ((CopyOnWriteArrayList<?>)c).getArray();
-    else {
-        elements = c.toArray();
-        // c.toArray might (incorrectly) not
-        return Object[] (see 6260652)
-        if (elements.getClass() != Object[].class)
-        elements = Arrays.copyOf(elements, elements.length, Object[].class);
-    }
+public CopyOnWriteArrayList(Collection<? extends E> c) {;
+Object[] elements;
+if (c.getClass() == CopyOnWriteArrayList.class)
+elements = ((CopyOnWriteArrayList<?>)c).getArray();
+else {
+    elements = c.toArray();
+    // c.toArray might (incorrectly) not
+    return Object[] (see 6260652)
+    if (elements.getClass() != Object[].class)
+    elements = Arrays.copyOf(elements, elements.length, Object[].class);
+}
 setArray(elements);
 }
+
 
 ```
 
@@ -70,24 +72,25 @@ setArray(elements);
 CopyOnWriteList中用来添加元素的函数有add(E e)、add(int index, E element)、addIfAbsent(E e)等，其原理类似，下面以add(E e)为例进行讲解。
 
 ```java
-public boolean add(E e) {
-    // 获取独占锁
-    final ReentrantLock lock = this.lock;
-    lock.lock();
-    try {
-        // 获取array
-        Object[] elements = getArray();
-        // 复制array到新数组，并将新元素添加到新数组
-        int len = elements.length;
-        Object[] newElements = Arrays.copyOf(elements, len + 1);
-        newElements[len] = e;
-        // 用新数组代替原来的数组
-        setArray(newElements);
-        return true;
-    } finally {
-        lock.unlock();
-    }
+public boolean add(E e) {;
+// 获取独占锁
+final ReentrantLock lock = this.lock;
+lock.lock();
+try {
+    // 获取array
+    Object[] elements = getArray();
+    // 复制array到新数组，并将新元素添加到新数组
+    int len = elements.length;
+    Object[] newElements = Arrays.copyOf(elements, len + 1);
+    newElements[len] = e;
+    // 用新数组代替原来的数组
+    setArray(newElements);
+    return true;
+} finally {
+lock.unlock();
 }
+}
+
 
 ```
 
@@ -100,15 +103,16 @@ public boolean add(E e) {
 使用E get(int index)获取下标为index的元素，如果元素不存在则抛出IndexOutOfBoundException异常。
 
 ```java
-public E get(int index) {
-    return get(getArray(), index);
+public E get(int index) {;
+return get(getArray(), index);
 }
-private E get(Object[] a, int index) {
-    return (E) a[index];
+private E get(Object[] a, int index) {;
+return (E) a[index];
 }
-final Object[] getArray() {
-    return array;
+final Object[] getArray() {;
+return array;
 }
+
 ```
 
 获取指定位置的元素需要两步：首先获取array，然后通过下标访问指定位置的元素。整个过程没有加锁，在多线程下会出现**弱一致性**问题。
@@ -126,26 +130,27 @@ final Object[] getArray() {
 使用E set(int index, E element)方法修改指定元素的值，如果指定位置的元素不存在则抛出IndexOutOfBoundsException异常：
 
 ```java
-public E set(int index, E element) {
-    final ReentrantLock lock = this.lock;
-    lock.lock();
-    try {
-        Object[] elements = getArray();
-        E oldValue = get(elements, index);
-        if (oldValue != element) {
-            int len = elements.length;
-            Object[] newElements = Arrays.copyOf(elements, len);
-            newElements[index] = element;
-            setArray(newElements);
-        } else {
-            // Not quite a no-op; ensures volatile write semantics
-            setArray(elements);
-        }
-    return oldValue;
+public E set(int index, E element) {;
+final ReentrantLock lock = this.lock;
+lock.lock();
+try {
+    Object[] elements = getArray();
+    E oldValue = get(elements, index);
+    if (oldValue != element) {
+        int len = elements.length;
+        Object[] newElements = Arrays.copyOf(elements, len);
+        newElements[index] = element;
+        setArray(newElements);
+    } else {
+    // Not quite a no-op; ensures volatile write semantics
+    setArray(elements);
+}
+return oldValue;
 } finally {
-    lock.unlock();
+lock.unlock();
 }
 }
+
 
 ```
 
@@ -156,28 +161,29 @@ public E set(int index, E element) {
 删除list里的元素，可以使用E remove(int index)、boolean remove(Object o)和boolean remove(Object o, Object[] snapshot, int index)等方法，其原理类似，下面以remove(int index)为例进行讲解。
 
 ```java
-public E remove(int index) {
-    final ReentrantLock lock = this.lock;
-    lock.lock();
-    try {
-        Object[] elements = getArray();
-        int len = elements.length;
-        E oldValue = get(elements, index);
-        int numMoved = len - index - 1;
-        if (numMoved == 0)
-        setArray(Arrays.copyOf(elements, len - 1));
-        else {
-            Object[] newElements = new Object[len - 1];
-            System.arraycopy(elements, 0, newElements, 0, index);
-            System.arraycopy(elements, index + 1, newElements, index,
-            numMoved);
-            setArray(newElements);
-        }
+public E remove(int index) {;
+final ReentrantLock lock = this.lock;
+lock.lock();
+try {
+    Object[] elements = getArray();
+    int len = elements.length;
+    E oldValue = get(elements, index);
+    int numMoved = len - index - 1;
+    if (numMoved == 0)
+    setArray(Arrays.copyOf(elements, len - 1));
+    else {
+        Object[] newElements = new Object[len - 1];
+        System.arraycopy(elements, 0, newElements, 0, index);
+        System.arraycopy(elements, index + 1, newElements, index,
+        numMoved);
+        setArray(newElements);
+    }
     return oldValue;
 } finally {
-    lock.unlock();
+lock.unlock();
 }
 }
+
 
 ```
 
@@ -188,27 +194,28 @@ public E remove(int index) {
 弱一致性指返回迭代器后，其他线程对list的改动对迭代器时不可见的。
 
 ```java
-public Iterator<E> iterator() {
-    return new COWIterator<E>(getArray(), 0);
+public Iterator<E> iterator() {;
+return new COWIterator<E>(getArray(), 0);
 }
 static final class COWIterator<E> implements ListIterator<E> {
     // array的快照
     private final Object[] snapshot;
     // 数组下标
     private int cursor;
-    private COWIterator(Object[] elements, int initialCursor) {
-        cursor = initialCursor;
-        snapshot = elements;
-    }
-public boolean hasNext() {
-    return cursor < snapshot.length;
+    private COWIterator(Object[] elements, int initialCursor) {;
+    cursor = initialCursor;
+    snapshot = elements;
 }
-public E next() {
-    if (! hasNext())
-    throw new NoSuchElementException();
-    return (E) snapshot[cursor++];
+public boolean hasNext() {;
+return cursor < snapshot.length;
+}
+public E next() {;
+if (! hasNext())
+throw new NoSuchElementException();
+return (E) snapshot[cursor++];
 }
 }
+
 
 ```
 
@@ -219,48 +226,48 @@ public E next() {
 ```java
 public class CopyListTest {
     private static volatile CopyOnWriteArrayList<String> arrayList  = new CopyOnWriteArrayList<>();
-    public static void main(String[] args) throws InterruptedException {
-        arrayList.add("Java");
-        arrayList.add("Scala");
-        arrayList.add("Groovy");
-        arrayList.add("Kotlin");
-        Thread threadOne = new Thread(new Runnable() {
+    public static void main(String[] args) throws InterruptedException {;
+    arrayList.add("Java");
+    arrayList.add("Scala");
+    arrayList.add("Groovy");
+    arrayList.add("Kotlin");
+    Thread threadOne = new Thread(new Runnable() {;
 
-            ## 并发容器补充（并入）
+    ## 并发容器补充（并入）
 
-            ### ConcurrentHashMap / ConcurrentHashSet
+    ### ConcurrentHashMap / ConcurrentHashSet
 
-            典型特征：
+    典型特征：
 
-            - 线程安全、高并发下性能优于传统同步容器。
-            - `key` 与 `value` 不允许为 `null`。
-            - 设计目标是降低锁竞争（历史实现有分段锁思路，JDK 8 以后实现细节有演进）。
+    - 线程安全、高并发下性能优于传统同步容器。
+    - `key` 与 `value` 不允许为 `null`。
+    - 设计目标是降低锁竞争（历史实现有分段锁思路，JDK 8 以后实现细节有演进）。
 
-            ### ConcurrentSkipListMap / ConcurrentSkipListSet
+    ### ConcurrentSkipListMap / ConcurrentSkipListSet
 
-            - 底层基于跳表（SkipList）。
-            - 有序容器，支持范围查询。
-            - 通常比 `ConcurrentHashMap` 在纯哈希场景稍慢，但换来有序能力。
+    - 底层基于跳表（SkipList）。
+    - 有序容器，支持范围查询。
+    - 通常比 `ConcurrentHashMap` 在纯哈希场景稍慢，但换来有序能力。
 
-            ### CopyOnWrite 适用场景总结
+    ### CopyOnWrite 适用场景总结
 
-            - 读多写少：白名单、黑名单、配置快照。
-            - 写时复制会产生额外内存与复制开销，不适合高频写。
-            @Override
-            public void run() {
-                arrayList.set(0, "hello");
-                arrayList.remove(2);
-            }
-    });
-    // 在修改之前获取迭代器
-    Iterator<String> it = arrayList.iterator();
-    threadOne.start();
-    // 等待子线程执行完毕
-    threadOne.join();
-    // 迭代
-    while(it.hasNext()) {
-        System.out.println(it.next());
-    }
+    - 读多写少：白名单、黑名单、配置快照。
+    - 写时复制会产生额外内存与复制开销，不适合高频写。
+    @Override
+    public void run() {;
+    arrayList.set(0, "hello");
+    arrayList.remove(2);
+}
+});
+// 在修改之前获取迭代器
+Iterator<String> it = arrayList.iterator();
+threadOne.start();
+// 等待子线程执行完毕
+threadOne.join();
+// 迭代
+while(it.hasNext()) {
+    System.out.println(it.next());
+}
 System.out.println("=========================================");
 // 再次迭代
 it = arrayList.iterator();
@@ -270,6 +277,7 @@ while(it.hasNext()) {
 }
 }
 }
+
 
 ```
 

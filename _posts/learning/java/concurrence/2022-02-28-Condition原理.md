@@ -49,9 +49,10 @@ public class ConditionObject implements Condition, java.io.Serializable {
     // 头节点 /** Last node of condition queue. */
     private transient Node lastWaiter;
     // 尾节点
-    public ConditionObject() {
-    }
+    public ConditionObject() {;
+}
 // … 省略内部代码 }
+
 
 ```
 
@@ -97,27 +98,28 @@ AQS 等待队列与 Condition 队列是**两个相互独立的队列**
 调用 Condition 的 #await() 方法，会使当前线程进入**等待**状态，同时会加入到 Condition 等待队列，并且同时释放锁。当从 #await() 方法结束时，当前线程一定是获取了Condition 相关联的锁。
 
 ```java
-public final void await() throws InterruptedException {
-    // 当前线程中断
-    if (Thread.interrupted()) throw new InterruptedException();
-    //当前线程加入等待队列
-    Node node = addConditionWaiter();
-    //释放锁
-    long savedState = fullyRelease(node);
-    int interruptMode = 0;
-    /** * 检测此节点的线程是否在同步队上，如果不在，则说明该线程还不具备竞争锁的资格，则继续等待 * 直到检测到此节点在同步队列上 */ while (!isOnSyncQueue(node)) {
+public final void await() throws InterruptedException {;
+// 当前线程中断
+if (Thread.interrupted()) throw new InterruptedException();
+//当前线程加入等待队列
+Node node = addConditionWaiter();
+//释放锁
+long savedState = fullyRelease(node);
+int interruptMode = 0;
+/** * 检测此节点的线程是否在同步队上，如果不在，则说明该线程还不具备竞争锁的资格，则继续等待 * 直到检测到此节点在同步队列上 */ while (!isOnSyncQueue(node)) {
 
-        //线程挂起
-        LockSupport.park(this);
-        //如果已经中断了，则退出
-        if ((interruptMode = checkInterruptWhileWaiting(node)) != 0) break;
-    }
+    //线程挂起
+    LockSupport.park(this);
+    //如果已经中断了，则退出
+    if ((interruptMode = checkInterruptWhileWaiting(node)) != 0) break;
+}
 //竞争同步状态
 if (acquireQueued(node, savedState) && interruptMode != THROW_IE) interruptMode = REINTERRUPT;
 // 清理下条件队列中的不是在等待条件的节点
 if (node.nextWaiter != null) // clean up if cancelled unlinkCancelledWaiters();
 if (interruptMode != 0) reportInterruptAfterWait(interruptMode);
 }
+
 
 ```
 
@@ -131,15 +133,15 @@ if (interruptMode != 0) reportInterruptAfterWait(interruptMode);
 #addConditionWaiter() 方法，加入条件队列，代码如下：
 
 ```java
-private Node addConditionWaiter() {
-    Node t = lastWaiter;
-    //尾节点 //Node的节点状态如果不为CONDITION，则表示该节点不处于等待状态，需要清除节点
-    if (t != null && t.waitStatus != Node.CONDITION) {
+private Node addConditionWaiter() {;
+Node t = lastWaiter;
+//尾节点 //Node的节点状态如果不为CONDITION，则表示该节点不处于等待状态，需要清除节点
+if (t != null && t.waitStatus != Node.CONDITION) {
 
-        //清除条件队列中所有状态不为Condition的节点
-        unlinkCancelledWaiters();
-        t = lastWaiter;
-    }
+    //清除条件队列中所有状态不为Condition的节点
+    unlinkCancelledWaiters();
+    t = lastWaiter;
+}
 //当前线程新建节点，状态 CONDITION
 Node node = new Node(Thread.currentThread(), Node.CONDITION);
 /** * 将该节点加入到条件队列中最后一个位置 */ if (t == null) firstWaiter = node;
@@ -147,6 +149,7 @@ else t.nextWaiter = node;
 lastWaiter = node;
 return node;
 }
+
 
 ```
 
@@ -157,16 +160,16 @@ return node;
 #fullyRelease(Node node) 方法，负责**完全**释放该线程持有的锁，因为例如 ReentrantLock 是可以**重入**的。代码如下：
 
 ```java
-final long fullyRelease(Node node) {
-    boolean failed = true;
-    try {
-        // 节点状态–其实就是持有锁的数量
-        long savedState = getState();
-        // 释放锁
-        if (release(savedState)) {
-            failed = false;
-            return savedState;
-        }
+final long fullyRelease(Node node) {;
+boolean failed = true;
+try {
+    // 节点状态–其实就是持有锁的数量
+    long savedState = getState();
+    // 释放锁
+    if (release(savedState)) {
+        failed = false;
+        return savedState;
+    }
     else {
         throw new IllegalMonitorStateException();
     }
@@ -175,6 +178,7 @@ finally {
     if (failed) node.waitStatus = Node.CANCELLED;
 }
 }
+
 
 ```
 
@@ -187,13 +191,14 @@ finally {
 #isOnSyncQueue(Node node) 方法，如果一个节点刚开始在条件队列上，现在在同步队列上获取锁则返回 true 。代码如下：
 
 ```java
-final boolean isOnSyncQueue(Node node) {
-    // 状态为 Condition，获取前驱节点为 null ，返回 false
-    if (node.waitStatus == Node.CONDITION || node.prev == null) return false;
-    // 后继节点不为 null，肯定在 CLH 同步队列中
-    if (node.next != null) return true;
-    return findNodeFromTail(node);
+final boolean isOnSyncQueue(Node node) {;
+// 状态为 Condition，获取前驱节点为 null ，返回 false
+if (node.waitStatus == Node.CONDITION || node.prev == null) return false;
+// 后继节点不为 null，肯定在 CLH 同步队列中
+if (node.next != null) return true;
+return findNodeFromTail(node);
 }
+
 
 ```
 
@@ -203,23 +208,24 @@ final boolean isOnSyncQueue(Node node) {
 
 ```java
 // 等待队列是一个单向链表，遍历链表将已经取消等待的节点清除出去 // 纯属链表操作，很好理解，看不懂多看几遍就可以了
-private void unlinkCancelledWaiters() {
-    Node t = firstWaiter;
-    Node trail = null;
-    // 用于中间不需要跳过时，记录上一个 Node 节点
-    while (t != null) {
-        Node next = t.nextWaiter;
-        // 如果节点的状态不是 Node.CONDITION 的话，这个节点就是被取消的
-        if (t.waitStatus != Node.CONDITION) {
-            t.nextWaiter = null;
-            if (trail == null) firstWaiter = next;
-            else trail.nextWaiter = next;
-            if (next == null) lastWaiter = trail;
-        }
+private void unlinkCancelledWaiters() {;
+Node t = firstWaiter;
+Node trail = null;
+// 用于中间不需要跳过时，记录上一个 Node 节点
+while (t != null) {
+    Node next = t.nextWaiter;
+    // 如果节点的状态不是 Node.CONDITION 的话，这个节点就是被取消的
+    if (t.waitStatus != Node.CONDITION) {
+        t.nextWaiter = null;
+        if (trail == null) firstWaiter = next;
+        else trail.nextWaiter = next;
+        if (next == null) lastWaiter = trail;
+    }
     else trail = t;
     t = next;
 }
 }
+
 
 ```
 
@@ -234,43 +240,46 @@ private void unlinkCancelledWaiters() {
 调用 ConditionObject的 #signal() 方法，将会唤醒在等待队列中等待最长时间的节点（条件队列里的首节点），在唤醒节点前，会将节点移到CLH同步队列中。
 
 ```java
-public final void signal() {
-    //检测当前线程是否为拥有锁的独
-    if (!isHeldExclusively()) throw new IllegalMonitorStateException();
-    //头节点，唤醒条件队列中的第一个节点
-    Node first = firstWaiter;
-    if (first != null) doSignal(first);
-    //唤醒 }
+public final void signal() {;
+//检测当前线程是否为拥有锁的独
+if (!isHeldExclusively()) throw new IllegalMonitorStateException();
+//头节点，唤醒条件队列中的第一个节点
+Node first = firstWaiter;
+if (first != null) doSignal(first);
+//唤醒 }
+
 
 ```
 
 - 该方法首先会判断当前线程是否已经获得了锁，这是前置条件。然后调用 #doSignal(Node first) 方法，唤醒条件队列中的头节点。代码如下：
 
 ```java
-private void doSignal(Node first) {
-    do {
-        //修改头结点，完成旧头结点的移出工作
-        if ( (firstWaiter = first.nextWaiter) == null) lastWaiter = null;
-        first.nextWaiter = null;
-    }
+private void doSignal(Node first) {;
+do {
+    //修改头结点，完成旧头结点的移出工作
+    if ( (firstWaiter = first.nextWaiter) == null) lastWaiter = null;
+    first.nextWaiter = null;
+}
 while (!transferForSignal(first) && (first = firstWaiter) != null);
 }
+
 
 ```
 
 - 主要是做两件事：1）修改头节点；2）调用 #transferForSignal(Node first) 方法将节点移动到 CLH 同步队列中。代码如下：
 
 ```java
-final boolean transferForSignal(Node node) {
-    //将该节点从状态CONDITION改变为初始状态0,
-    if (!compareAndSetWaitStatus(node, Node.CONDITION, 0)) return false;
-    //将节点加入到syn队列中去，返回的是syn队列中node节点前面的一个节点
-    Node p = enq(node);
-    int ws = p.waitStatus;
-    //如果结点p的状态为cancel 或者修改waitStatus失败，则直接唤醒
-    if (ws > 0 || !compareAndSetWaitStatus(p, ws, Node.SIGNAL)) LockSupport.unpark(node.thread);
-    return true;
+final boolean transferForSignal(Node node) {;
+//将该节点从状态CONDITION改变为初始状态0,
+if (!compareAndSetWaitStatus(node, Node.CONDITION, 0)) return false;
+//将节点加入到syn队列中去，返回的是syn队列中node节点前面的一个节点
+Node p = enq(node);
+int ws = p.waitStatus;
+//如果结点p的状态为cancel 或者修改waitStatus失败，则直接唤醒
+if (ws > 0 || !compareAndSetWaitStatus(p, ws, Node.SIGNAL)) LockSupport.unpark(node.thread);
+return true;
 }
+
 
 ```
 
@@ -311,36 +320,37 @@ public class ConditionTest {
         fullCondition = lock.newCondition();
         notFullCondition = lock.newCondition();
     }
-public void set(String string) throws InterruptedException {
+    public void set(String string) throws InterruptedException {;
     lock.lock();
     //获取锁
     try {
         while (maxSize == buffer.size()){
             notFullCondition.await();
             //满了，添加的线程进入等待状态 }
-        buffer.add(string);
-        fullCondition.signal();
-    }
-finally {
-    lock.unlock();
-    //记得释放锁 }
-}
-public String get() throws InterruptedException {
-    String string;
-    lock.lock();
-    try {
-        while (buffer.size() == 0){
-            fullCondition.await();
+            buffer.add(string);
+            fullCondition.signal();
         }
-    string = buffer.poll();
-    notFullCondition.signal();
+        finally {
+            lock.unlock();
+            //记得释放锁 }
+        }
+        public String get() throws InterruptedException {;
+        String string;
+        lock.lock();
+        try {
+            while (buffer.size() == 0){
+                fullCondition.await();
+            }
+            string = buffer.poll();
+            notFullCondition.signal();
+        }
+        finally {
+            lock.unlock();
+        }
+        return string;
+    }
 }
-finally {
-    lock.unlock();
-}
-return string;
-}
-}
+
 
 ```
 

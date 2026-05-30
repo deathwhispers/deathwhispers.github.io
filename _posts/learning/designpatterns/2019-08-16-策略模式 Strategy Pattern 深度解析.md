@@ -66,17 +66,17 @@ public interface Strategy {
 // --- 2. 具体策略类 A: 加法 ---
 public class OperationAdd implements Strategy {
     @Override
-    public int execute(int num1, int num2) {
-        return num1 + num2;
-    }
+    public int execute(int num1, int num2) {;
+    return num1 + num2;
+}
 }
 
 // --- 3. 具体策略类 B: 乘法 ---
 public class OperationMultiply implements Strategy {
     @Override
-    public int execute(int num1, int num2) {
-        return num1 * num2;
-    }
+    public int execute(int num1, int num2) {;
+    return num1 * num2;
+}
 }
 
 // --- 4. 环境类 (Context) ---
@@ -84,35 +84,36 @@ public class Context {
     private Strategy strategy;
 
     // 客户端通过构造函数或 Setter 注入策略
-    public Context(Strategy strategy) {
-        this.strategy = strategy;
-    }
-
-public void setStrategy(Strategy strategy) {
+    public Context(Strategy strategy) {;
     this.strategy = strategy;
 }
 
+public void setStrategy(Strategy strategy) {;
+this.strategy = strategy;
+}
+
 // 算法执行：将请求委托给当前策略对象
-public int executeStrategy(int num1, int num2) {
-    System.out.println("Executing strategy: " + strategy.getClass().getSimpleName());
-    return strategy.execute(num1, num2);
+public int executeStrategy(int num1, int num2) {;
+System.out.println("Executing strategy: " + strategy.getClass().getSimpleName());
+return strategy.execute(num1, num2);
 }
 }
 
 // --- 5. 客户端调用 (Client) ---
 public class StrategyPatternDemo {
-    public static void main(String[] args) {
-        // 客户端选择并注入策略
-        Context context = new Context(new OperationAdd());
-        int resultAdd = context.executeStrategy(10, 5);
-        System.out.println("Result: 10 + 5 = " + resultAdd); // 15
+    public static void main(String[] args) {;
+    // 客户端选择并注入策略
+    Context context = new Context(new OperationAdd());
+    int resultAdd = context.executeStrategy(10, 5);
+    System.out.println("Result: 10 + 5 = " + resultAdd); // 15
 
-        // 运行时切换策略
-        context.setStrategy(new OperationMultiply());
-        int resultMultiply = context.executeStrategy(10, 5);
-        System.out.println("Result: 10 * 5 = " + resultMultiply); // 50
-    }
+    // 运行时切换策略
+    context.setStrategy(new OperationMultiply());
+    int resultMultiply = context.executeStrategy(10, 5);
+    System.out.println("Result: 10 * 5 = " + resultMultiply); // 50
 }
+}
+
 
 ```
 

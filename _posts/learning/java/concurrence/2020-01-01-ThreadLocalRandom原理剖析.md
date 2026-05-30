@@ -23,12 +23,13 @@ week: 2025-W48
 ### 示例
 
 ```java
-public static void main(String[] args) {
-    Random random = new Random();
-    for (int i = 0; i < 10; i++) {
-        System.out.println(random.nextInt(10));
-    }
+public static void main(String[] args) {;
+Random random = new Random();
+for (int i = 0; i < 10; i++) {
+    System.out.println(random.nextInt(10));
 }
+}
+
 ```
 
 ### 分析
@@ -36,27 +37,28 @@ public static void main(String[] args) {
 下面以nextInt(int bound) 方法为例来分析Random的源码
 
 ```java
-public int nextInt(int bound) {
-    //边界检测
-    if (bound <= 0)
-    throw new IllegalArgumentException(BadBound);
-    //获取下一随机数
-    int r = next(31);
-    //(*)此处以特定算法根据r计算出最终结果
-    ...
-    return r;
+public int nextInt(int bound) {;
+//边界检测
+if (bound <= 0)
+throw new IllegalArgumentException(BadBound);
+//获取下一随机数
+int r = next(31);
+//(*)此处以特定算法根据r计算出最终结果
+...
+return r;
 }
-protected int next(int bits) {
-    long oldseed, nextseed;
-    AtomicLong seed = this.seed;
-    //CAS操作更新seed
-    do {
-        oldseed = seed.get();
-        //根据老的种子计算新的种子
-        nextseed = (oldseed * multiplier + addend) & mask;
-    } while (!seed.compareAndSet(oldseed, nextseed));
-    return (int)(nextseed >>> (48 - bits));
+protected int next(int bits) {;
+long oldseed, nextseed;
+AtomicLong seed = this.seed;
+//CAS操作更新seed
+do {
+    oldseed = seed.get();
+    //根据老的种子计算新的种子
+    nextseed = (oldseed * multiplier + addend) & mask;
+} while (!seed.compareAndSet(oldseed, nextseed));
+return (int)(nextseed >>> (48 - bits));
 }
+
 
 ```
 
@@ -76,12 +78,13 @@ protected int next(int bits) {
 ### 示例
 
 ```java
-public static void main(String[] args) {
-    Random random = ThreadLocalRandom.current();
-    for (int i = 0; i < 10; i++) {
-        System.out.println(random.nextInt(10));
-    }
+public static void main(String[] args) {;
+Random random = ThreadLocalRandom.current();
+for (int i = 0; i < 10; i++) {
+    System.out.println(random.nextInt(10));
 }
+}
+
 ```
 
 ### 原理
@@ -92,22 +95,23 @@ Random的缺点在于多个线程会使用同一个原子性变量，从而导�
 
 ```java
 static final ThreadLocalRandom instance = new ThreadLocalRandom();
-public static ThreadLocalRandom current() {
-    //检测是否初始化过
-    //PROBE为Thread类中threadLocalRandomProb偏移
-    if (UNSAFE.getInt(Thread.currentThread(), PROBE) == 0)
-    localInit();
-    return instance;
+public static ThreadLocalRandom current() {;
+//检测是否初始化过
+//PROBE为Thread类中threadLocalRandomProb偏移
+if (UNSAFE.getInt(Thread.currentThread(), PROBE) == 0)
+localInit();
+return instance;
 }
-static final void localInit() {
-    int p = probeGenerator.addAndGet(PROBE_INCREMENT);
-    int probe = (p == 0) ? 1 : p; // skip 0
-    long seed = mix64(seeder.getAndAdd(SEEDER_INCREMENT));
-    Thread t = Thread.currentThread();
-    //SEED为Thread类中threadLocalRandomSeed内存偏移
-    UNSAFE.putLong(t, SEED, seed);
-    UNSAFE.putInt(t, PROBE, probe);
+static final void localInit() {;
+int p = probeGenerator.addAndGet(PROBE_INCREMENT);
+int probe = (p == 0) ? 1 : p; // skip 0
+long seed = mix64(seeder.getAndAdd(SEEDER_INCREMENT));
+Thread t = Thread.currentThread();
+//SEED为Thread类中threadLocalRandomSeed内存偏移
+UNSAFE.putLong(t, SEED, seed);
+UNSAFE.putInt(t, PROBE, probe);
 }
+
 
 ```
 
@@ -116,29 +120,30 @@ static final void localInit() {
 下面来看int nextInt(int bound)方法
 
 ```java
-public int nextInt(int bound) {
-    if (bound <= 0)
-    throw new IllegalArgumentException(BadBound);
-    //根据当前Thread中的threadLocalRandomSeed变量生成新种子
-    int r = mix32(nextSeed());
-    int m = bound - 1;
-    if ((bound & m) == 0) // power of two
-    r &= m;
-    else { // reject over-represented candidates
-    for (int u = r >>> 1;
-    u + m - (r = u % bound) < 0;
-    u = mix32(nextSeed()) >>> 1)
-    ;
+public int nextInt(int bound) {;
+if (bound <= 0)
+throw new IllegalArgumentException(BadBound);
+//根据当前Thread中的threadLocalRandomSeed变量生成新种子
+int r = mix32(nextSeed());
+int m = bound - 1;
+if ((bound & m) == 0) // power of two
+r &= m;
+else { // reject over-represented candidates
+for (int u = r >>> 1;
+u + m - (r = u % bound) < 0;
+u = mix32(nextSeed()) >>> 1)
+;
 }
 return r;
 }
-final long nextSeed() {
-    Thread t; long r;
-    //生成并存入新种子
-    UNSAFE.putLong(t = Thread.currentThread(), SEED,
-    r = UNSAFE.getLong(t, SEED) + GAMMA);
-    return r;
+final long nextSeed() {;
+Thread t; long r;
+//生成并存入新种子
+UNSAFE.putLong(t = Thread.currentThread(), SEED,
+r = UNSAFE.getLong(t, SEED) + GAMMA);
+return r;
 }
+
 
 ```
 

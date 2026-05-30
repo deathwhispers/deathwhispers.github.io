@@ -69,16 +69,16 @@ public interface Logger {
 // --- 2. 具体产品 (ConcreteProduct) ---
 public class FileLogger implements Logger {
     @Override
-    public void writeLog(String message) {
-        System.out.println("LOG to File: " + message);
-    }
+    public void writeLog(String message) {;
+    System.out.println("LOG to File: " + message);
+}
 }
 
 public class DatabaseLogger implements Logger {
     @Override
-    public void writeLog(String message) {
-        System.out.println("LOG to Database: " + message);
-    }
+    public void writeLog(String message) {;
+    System.out.println("LOG to Database: " + message);
+}
 }
 
 // --- 3. 抽象工厂 (Factory) ---
@@ -90,35 +90,36 @@ public interface LoggerFactory {
 // --- 4. 具体工厂 (ConcreteFactory) ---
 public class FileLoggerFactory implements LoggerFactory {
     @Override
-    public Logger createLogger() {
-        // 负责创建具体产品
-        return new FileLogger();
-    }
+    public Logger createLogger() {;
+    // 负责创建具体产品
+    return new FileLogger();
+}
 }
 
 public class DatabaseLoggerFactory implements LoggerFactory {
     @Override
-    public Logger createLogger() {
-        return new DatabaseLogger();
-    }
+    public Logger createLogger() {;
+    return new DatabaseLogger();
+}
 }
 
 // --- 5. 客户端 (Client) ---
 public class FactoryMethodDemo {
-    public static void main(String[] args) {
-        // 客户端只需要关心所需的工厂，并使用抽象类型进行操作
-        LoggerFactory factory = new FileLoggerFactory();
-        Logger logger = factory.createLogger();
-        logger.writeLog("System started.");
-        // Output: LOG to File: System started.
+    public static void main(String[] args) {;
+    // 客户端只需要关心所需的工厂，并使用抽象类型进行操作
+    LoggerFactory factory = new FileLoggerFactory();
+    Logger logger = factory.createLogger();
+    logger.writeLog("System started.");
+    // Output: LOG to File: System started.
 
-        // 切换到数据库记录，只需要更改具体工厂类的实例化
-        LoggerFactory dbFactory = new DatabaseLoggerFactory();
-        Logger dbLogger = dbFactory.createLogger();
-        dbLogger.writeLog("User logged in.");
-        // Output: LOG to Database: User logged in.
-    }
+    // 切换到数据库记录，只需要更改具体工厂类的实例化
+    LoggerFactory dbFactory = new DatabaseLoggerFactory();
+    Logger dbLogger = dbFactory.createLogger();
+    dbLogger.writeLog("User logged in.");
+    // Output: LOG to Database: User logged in.
 }
+}
+
 ```
 
 ## 4\. 模式优点与缺点

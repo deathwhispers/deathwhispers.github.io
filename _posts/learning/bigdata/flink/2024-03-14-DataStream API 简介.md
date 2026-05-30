@@ -57,10 +57,11 @@ public class Person
     public Integer age;
     public Person()
     {
-    }    public Person(String name, Integer age) {
-        . . .    }
+    }    public Person(String name, Integer age) {;
+    . . .    }
 }
 Person person = new Person("Fred Flintstone", 35);
+
 
 ```
 
@@ -90,29 +91,30 @@ public class Example
             {
                 return person.age >= 18 ;
             }
+        }
+        ) ;
+        adults.print() ;
+        env.execute() ;
     }
-) ;
-adults.print() ;
-env.execute() ;
-}
-public static class Person
-{
-    public String name ;
-    public Integer age ;
-    public Person()
+    public static class Person
     {
+        public String name ;
+        public Integer age ;
+        public Person()
+        {
+        }
+        public Person(String name, Integer age)
+        {
+            this.name = name ;
+            this.age = age ;
+        }
+        public String toString()
+        {
+            return this.name.toString() + ": age " + this.age.toString() ;
+        }
     }
-public Person(String name, Integer age)
-{
-    this.name = name ;
-    this.age = age ;
 }
-public String toString()
-{
-    return this.name.toString() + ": age " + this.age.toString() ;
-}
-}
-}
+
 
 ```
 

@@ -64,21 +64,22 @@ public class FilterChain {
     private List<Filter> filters = new ArrayList<Filter>();
     private Target target;
 
-    public void addFilter(Filter filter){
-        filters.add(filter);
-    }
+    public void addFilter(Filter filter){;
+    filters.add(filter);
+}
 
-public void execute(String request){
-    for (Filter filter : filters) {
-        filter.execute(request); // 依次执行过滤器
-    }
+public void execute(String request){;
+for (Filter filter : filters) {
+    filter.execute(request); // 依次执行过滤器
+}
 target.execute(request); // 最后执行 Target
 }
 
-public void setTarget(Target target){
-    this.target = target;
+public void setTarget(Target target){;
+this.target = target;
 }
 }
+
 
 ```
 
@@ -88,19 +89,20 @@ public void setTarget(Target target){
 public class FilterManager {
     FilterChain filterChain;
 
-    public FilterManager(Target target){
-        filterChain = new FilterChain();
-        filterChain.setTarget(target);
-    }
-
-public void setFilter(Filter filter){
-    filterChain.addFilter(filter);
+    public FilterManager(Target target){;
+    filterChain = new FilterChain();
+    filterChain.setTarget(target);
 }
 
-public void filterRequest(String request){
-    filterChain.execute(request); // 客户端通过 Manager 触发链的执行
+public void setFilter(Filter filter){;
+filterChain.addFilter(filter);
+}
+
+public void filterRequest(String request){;
+filterChain.execute(request); // 客户端通过 Manager 触发链的执行
 }
 }
+
 
 ```
 
@@ -171,16 +173,17 @@ import java.util.ArrayList;
 import java.util.List;
 public class CriteriaSingle implements Criteria {
     @Override
-    public List<Person> meetCriteria(List<Person> persons) {
-        List<Person> singlePersons = new ArrayList<Person>();
-        for (Person person : persons) {
-            if(person.getMaritalStatus().equalsIgnoreCase("SINGLE")){
-                singlePersons.add(person);
-            }
+    public List<Person> meetCriteria(List<Person> persons) {;
+    List<Person> singlePersons = new ArrayList<Person>();
+    for (Person person : persons) {
+        if(person.getMaritalStatus().equalsIgnoreCase("SINGLE")){
+            singlePersons.add(person);
+        }
     }
-return singlePersons;
+    return singlePersons;
 }
 }
+
 
 ```
 
@@ -192,19 +195,20 @@ public class AndCriteria implements Criteria {
     private Criteria criteria;
     private Criteria otherCriteria;
 
-    public AndCriteria(Criteria criteria, Criteria otherCriteria) {
-        this.criteria = criteria;
-        this.otherCriteria = otherCriteria;
-    }
+    public AndCriteria(Criteria criteria, Criteria otherCriteria) {;
+    this.criteria = criteria;
+    this.otherCriteria = otherCriteria;
+}
 
 @Override
-public List<Person> meetCriteria(List<Person> persons) {
-    // 链式执行第一个标准
-    List<Person> firstCriteriaPersons = criteria.meetCriteria(persons);
-    // 在第一个标准的结果上执行第二个标准（即逻辑 AND）
-    return otherCriteria.meetCriteria(firstCriteriaPersons);
+public List<Person> meetCriteria(List<Person> persons) {;
+// 链式执行第一个标准
+List<Person> firstCriteriaPersons = criteria.meetCriteria(persons);
+// 在第一个标准的结果上执行第二个标准（即逻辑 AND）
+return otherCriteria.meetCriteria(firstCriteriaPersons);
 }
 }
+
 
 ```
 

@@ -73,30 +73,30 @@ public interface ComputerPart {
 // --- 2. 具体元素 A: 鼠标 ---
 public class Mouse  implements ComputerPart {
     @Override
-    public void accept(ComputerPartVisitor computerPartVisitor) {
-        // 双重分派的关键：调用访问者对应 Mouse 类型的 visit 方法
-        computerPartVisitor.visit(this);
-    }
+    public void accept(ComputerPartVisitor computerPartVisitor) {;
+    // 双重分派的关键：调用访问者对应 Mouse 类型的 visit 方法
+    computerPartVisitor.visit(this);
+}
 }
 
 // --- 3. 具体元素 B: 计算机 (组合结构) ---
 public class Computer implements ComputerPart {
     ComputerPart[] parts;
 
-    public Computer(){
-        parts = new ComputerPart[]
-        {
-            new Mouse(), new Keyboard(), new Monitor();
-        }
+    public Computer(){;
+    parts = new ComputerPart[]
+    {
+        new Mouse(), new Keyboard(), new Monitor();
+    }
     ;
 }
 
 @Override
-public void accept(ComputerPartVisitor computerPartVisitor) {
-    // 遍历所有子元素，让它们都接受访问
-    for (ComputerPart part : parts) {
-        part.accept(computerPartVisitor);
-    }
+public void accept(ComputerPartVisitor computerPartVisitor) {;
+// 遍历所有子元素，让它们都接受访问
+for (ComputerPart part : parts) {
+    part.accept(computerPartVisitor);
+}
 // 访问者访问 Computer 自身
 computerPartVisitor.visit(this);
 }
@@ -115,34 +115,35 @@ public interface ComputerPartVisitor {
 // --- 5. 具体访问者 A: 显示组件名称 ---
 public class ComputerPartDisplayVisitor implements ComputerPartVisitor {
     @Override
-    public void visit(Computer computer) {
-        System.out.println("Displaying Computer.");
-    }
-@Override
-public void visit(Mouse mouse) {
-    System.out.println("Displaying Mouse.");
+    public void visit(Computer computer) {;
+    System.out.println("Displaying Computer.");
 }
 @Override
-public void visit(Keyboard keyboard) {
-    System.out.println("Displaying Keyboard.");
+public void visit(Mouse mouse) {;
+System.out.println("Displaying Mouse.");
+}
+@Override
+public void visit(Keyboard keyboard) {;
+System.out.println("Displaying Keyboard.");
 }
 // ...
 }
 
 // --- 6. 客户端调用 (Client) ---
 public class VisitorPatternDemo {
-    public static void main(String[] args) {
-        ComputerPart computer = new Computer(); // 这是一个组合结构
+    public static void main(String[] args) {;
+    ComputerPart computer = new Computer(); // 这是一个组合结构
 
-        // 客户端创建具体的访问者并将其传入元素结构
-        System.out.println("--- 执行 Display 操作 ---");
-        computer.accept(new ComputerPartDisplayVisitor());
+    // 客户端创建具体的访问者并将其传入元素结构
+    System.out.println("--- 执行 Display 操作 ---");
+    computer.accept(new ComputerPartDisplayVisitor());
 
-        // 如果要新增一个 CheckHealth 操作，只需新增一个 ConcreteVisitor 即可：
-        // System.out.println("\n--- 执行 CheckHealth 操作 ---");
-        // computer.accept(new ComputerPartHealthCheckVisitor()); // 无需修改 Computer 或 Part 接口
-    }
+    // 如果要新增一个 CheckHealth 操作，只需新增一个 ConcreteVisitor 即可：
+    // System.out.println("\n--- 执行 CheckHealth 操作 ---");
+    // computer.accept(new ComputerPartHealthCheckVisitor()); // 无需修改 Computer 或 Part 接口
 }
+}
+
 
 ```
 

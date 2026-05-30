@@ -114,7 +114,10 @@ properties.setProperty("bootstrap.servers", "192.168.200.0:9092");
     }
 };
 }
-;// 4. 定义Flink Kafka生产者FlinkKafkaProducer<String> kafkaProducer = new FlinkKafkaProducer<>("flink-stream-out-topic",                                                                    kafkaSerializationSchema,                                                                    properties,                                                                    FlinkKafkaProducer.Semantic.AT_LEAST_ONCE, 5);// 5. 将接收到输入元素*2后写出到Kafkastream.map((MapFunction<String, String>) value -> value + value).addSink(kafkaProducer);env.execute("Flink Streaming");
+// 4. 定义Flink Kafka生产者FlinkKafkaProducer<String> kafkaProducer = new FlinkKafkaProducer<>("flink-stream-out-topic",                                                                    kafkaSerializationSchema,                                                                    properties,                                                                    FlinkKafkaProducer.Semantic.AT_LEAST_ONCE, 5);
+// 5. 将接收到输入元素*2后写出到Kafkastream.map((MapFunction<String, String>) value -> value + value).addSink(kafkaProducer);
+env.execute("Flink Streaming");
+
 
 ```
 
@@ -181,16 +184,19 @@ public class FlinkToMySQLSink extends RichSinkFunction<Employee>
     @Override    public void open(Configuration parameters) throws Exception {        Class.forName("com.mysql.cj.jdbc.Driver");
     conn = DriverManager.getConnection("jdbc:mysql://192.168.0.229:3306/employees" +                                           "?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false",
     "root",
-    "123456");        String sql = "insert into emp(name, age, birthday) values(?, ?, ?)";        stmt = conn.prepareStatement(sql);    }    @Override    public void invoke(Employee value, Context context) throws Exception
-    {
-        stmt.setString(1, value.getName());
-        stmt.setInt(2, value.getAge());
-        stmt.setDate(3, value.getBirthday());
-        stmt.executeUpdate();
-    }    @Override    public void close() throws Exception
-    {
-        super.close(;
-    }
+    "123456");
+    String sql = "insert into emp(name, age, birthday) values(?, ?, ?)";
+    stmt = conn.prepareStatement(sql);
+}    @Override    public void invoke(Employee value, Context context) throws Exception;
+{
+    stmt.setString(1, value.getName());
+    stmt.setInt(2, value.getAge());
+    stmt.setDate(3, value.getBirthday());
+    stmt.executeUpdate();
+}    @Override    public void close() throws Exception
+{
+    super.close(;
+}
 if (stmt != null)
 {
     stmt.close(;
@@ -202,6 +208,7 @@ if (stmt != null)
 };
 }
 }
+
 
 ```
 

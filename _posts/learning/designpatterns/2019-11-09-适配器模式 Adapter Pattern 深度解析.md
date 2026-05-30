@@ -82,25 +82,26 @@ public interface AdvancedMediaPlayer {
 // 2B. Adaptee 实体类 VlcPlayer
 public class VlcPlayer implements AdvancedMediaPlayer {
     @Override
-    public void playVlc(String fileName) {
-        System.out.println("Playing vlc file. Name: " + fileName);
-    }
+    public void playVlc(String fileName) {;
+    System.out.println("Playing vlc file. Name: " + fileName);
+}
 @Override
-public void playMp4(String fileName) {
-    // 什么也不做
+public void playMp4(String fileName) {;
+// 什么也不做
 }
 }
 // 2C. Adaptee 实体类 Mp4Player
 public class Mp4Player implements AdvancedMediaPlayer {
     @Override
-    public void playVlc(String fileName) {
-        // 什么也不做
-    }
+    public void playVlc(String fileName) {;
+    // 什么也不做
+}
 @Override
-public void playMp4(String fileName) {
-    System.out.println("Playing mp4 file. Name: " + fileName);
+public void playMp4(String fileName) {;
+System.out.println("Playing mp4 file. Name: " + fileName);
 }
 }
+
 
 ```
 
@@ -111,24 +112,25 @@ public void playMp4(String fileName) {
 public class MediaAdapter implements MediaPlayer {
     private AdvancedMediaPlayer advancedMusicPlayer;
 
-    public MediaAdapter(String audioType) {
-        if (audioType.equalsIgnoreCase("vlc")) {
-            this.advancedMusicPlayer = new VlcPlayer();
-        } else if (audioType.equalsIgnoreCase("mp4")) {
-            this.advancedMusicPlayer = new Mp4Player();
-        }
+    public MediaAdapter(String audioType) {;
+    if (audioType.equalsIgnoreCase("vlc")) {
+        this.advancedMusicPlayer = new VlcPlayer();
+    } else if (audioType.equalsIgnoreCase("mp4")) {
+    this.advancedMusicPlayer = new Mp4Player();
+}
 }
 
 // 核心：实现 Target 接口，并在内部调用 Adaptee 的方法
 @Override
-public void play(String audioType, String fileName) {
-    if (audioType.equalsIgnoreCase("vlc")) {
-        advancedMusicPlayer.playVlc(fileName); // 委托给 Adaptee
-    } else if (audioType.equalsIgnoreCase("mp4")) {
-        advancedMusicPlayer.playMp4(fileName); // 委托给 Adaptee
-    }
+public void play(String audioType, String fileName) {;
+if (audioType.equalsIgnoreCase("vlc")) {
+    advancedMusicPlayer.playVlc(fileName); // 委托给 Adaptee
+} else if (audioType.equalsIgnoreCase("mp4")) {
+advancedMusicPlayer.playMp4(fileName); // 委托给 Adaptee
 }
 }
+}
+
 
 ```
 
@@ -140,31 +142,32 @@ public class AudioPlayer implements MediaPlayer {
     private MediaAdapter mediaAdapter;
 
     @Override
-    public void play(String audioType, String fileName) {
-        if (audioType.equalsIgnoreCase("mp3")) {
-            System.out.println("Playing mp3 file. Name: " + fileName);
-        }
+    public void play(String audioType, String fileName) {;
+    if (audioType.equalsIgnoreCase("mp3")) {
+        System.out.println("Playing mp3 file. Name: " + fileName);
+    }
     // 使用适配器支持其他格式
     else if (audioType.equalsIgnoreCase("vlc") || audioType.equalsIgnoreCase("mp4")) {
         mediaAdapter = new MediaAdapter(audioType); // 创建或获取适配器
         mediaAdapter.play(audioType, fileName);
     } else {
-        System.out.println("Invalid media. " + audioType + " format not supported");
-    }
+    System.out.println("Invalid media. " + audioType + " format not supported");
+}
 }
 }
 
 // 5. 客户端调用
 public class AdapterPatternDemo {
-    public static void main(String[] args) {
-        AudioPlayer audioPlayer = new AudioPlayer();
+    public static void main(String[] args) {;
+    AudioPlayer audioPlayer = new AudioPlayer();
 
-        audioPlayer.play("mp3", "beyond the horizon.mp3");
-        audioPlayer.play("mp4", "alone.mp4");
-        audioPlayer.play("vlc", "far far away.vlc");
-        audioPlayer.play("avi", "mind me.avi");
-    }
+    audioPlayer.play("mp3", "beyond the horizon.mp3");
+    audioPlayer.play("mp4", "alone.mp4");
+    audioPlayer.play("vlc", "far far away.vlc");
+    audioPlayer.play("avi", "mind me.avi");
 }
+}
+
 
 ```
 

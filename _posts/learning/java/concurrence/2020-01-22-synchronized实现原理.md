@@ -38,13 +38,14 @@ Java 中每一个对象都可以作为锁，这是 synchronized 实现同步的�
 
 ```java
 public class SynchronizedTest {
-    public synchronized void test1() {
-    }
-public void test2() {
-    synchronized(this) {
-    }
+    public synchronized void test1() {;
+}
+public void test2() {;
+synchronized(this) {
 }
 }
+}
+
 
 ```
 
@@ -172,15 +173,16 @@ JDK 1.6 引入了更加聪明的自旋锁，即自适应自旋锁。
 锁消除的依据是**逃逸分析的数据支持**。变量是否逃逸，对于虚拟机来说需要使用数据流分析来确定，但是对于我们程序员来说这还不清楚么？我们会在明明知道不存在数据竞争的代码块前加上同步吗？但是有时候程序并不是我们所想的那样？我们虽然没有显示使用锁，但是我们在使用一些 JDK 的内置 API 时，如 StringBuffer、Vector、HashTable 等，这个时候会存在**隐性的加锁操作**。比如 StringBuffer 的 #append(..)方法，Vector 的 add(…) 方法：
 
 ```java
-public void vectorTest(){
-    Vector vector = new Vector();
-    for (int i = 0;
-    i < 10;
-    i++){
-        vector.add(i + ““);
-    }
+public void vectorTest(){;
+Vector vector = new Vector();
+for (int i = 0;
+i < 10;
+i++){
+    vector.add(i + ““);
+}
 System.out.println(vector);
 }
+
 
 ```
 

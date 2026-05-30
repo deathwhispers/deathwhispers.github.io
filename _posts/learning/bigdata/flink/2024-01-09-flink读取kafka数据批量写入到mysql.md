@@ -65,28 +65,29 @@ public class KafkaUtil {
     public static final String topic = "student";
     //kafka topic 需要和 flink 程序用同一个 topic
 
-    public static void writeToKafka() throws InterruptedException {
-        Properties props = new Properties();
-        props.put("bootstrap.servers", broker_list);
-        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        KafkaProducer producer = new KafkaProducer<String, String>(props);
-        for (int i = 1;
-        i <= 100;
-        i++) {
-            Student student = new Student(i, "zhisheng" + i, "password" + i, 18 + i);
-            ProducerRecord record = new ProducerRecord<String, String>(topic, null, null, GsonUtil.toJson(student));
-            producer.send(record);
-            System.out.println("发送数据: " + GsonUtil.toJson(student));
-            Thread.sleep(10 * 1000); //发送一条数据 sleep 10s，相当于 1 分钟 6 条
-        }
+    public static void writeToKafka() throws InterruptedException {;
+    Properties props = new Properties();
+    props.put("bootstrap.servers", broker_list);
+    props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    KafkaProducer producer = new KafkaProducer<String, String>(props);
+    for (int i = 1;
+    i <= 100;
+    i++) {
+        Student student = new Student(i, "zhisheng" + i, "password" + i, 18 + i);
+        ProducerRecord record = new ProducerRecord<String, String>(topic, null, null, GsonUtil.toJson(student));
+        producer.send(record);
+        System.out.println("发送数据: " + GsonUtil.toJson(student));
+        Thread.sleep(10 * 1000); //发送一条数据 sleep 10s，相当于 1 分钟 6 条
+    }
     producer.flush();
 }
 
-public static void main(String[] args) throws InterruptedException {
-    writeToKafka();
+public static void main(String[] args) throws InterruptedException {;
+writeToKafka();
 }
 }
+
 
 ```
 
@@ -114,14 +115,15 @@ props)).setParallelism(1)
 ```java
 student.timeWindowAll(Time.minutes(1)).apply(new AllWindowFunction<Student, List<Student>, TimeWindow>() {
     @Override
-    public void apply(TimeWindow window, Iterable<Student> values, Collector<List<Student>> out) throws Exception {
-        ArrayList<Student> students = Lists.newArrayList(values);
-        if (students.size() > 0) {
-            System.out.println("1 分钟内收集到 student 的数据条数是：" + students.size());
-            out.collect(students);
-        }
+    public void apply(TimeWindow window, Iterable<Student> values, Collector<List<Student>> out) throws Exception {;
+    ArrayList<Student> students = Lists.newArrayList(values);
+    if (students.size() > 0) {
+        System.out.println("1 分钟内收集到 student 的数据条数是：" + students.size());
+        out.collect(students);
+    }
 }
 });
+
 
 ```
 
@@ -173,22 +175,22 @@ public class SinkToMySQL extends RichSinkFunction<List<Student>> {
     * @throws Exception
     */
     @Override
-    public void open(Configuration parameters) throws Exception {
-        super.open(parameters);
-        dataSource = new BasicDataSource();
-        connection = getConnection(dataSource);
-        String sql = "insert into Student(id, name, password, age) values(?, ?, ?, ?);
-        ";
-        ps = this.connection.prepareStatement(sql);
-    }
+    public void open(Configuration parameters) throws Exception {;
+    super.open(parameters);
+    dataSource = new BasicDataSource();
+    connection = getConnection(dataSource);
+    String sql = "insert into Student(id, name, password, age) values(?, ?, ?, ?);
+    ";
+    ps = this.connection.prepareStatement(sql);
+}
 
 @Override
-public void close() throws Exception {
-    super.close();
-    //关闭连接和释放资源
-    if (connection != null) {
-        connection.close();
-    }
+public void close() throws Exception {;
+super.close();
+//关闭连接和释放资源
+if (connection != null) {
+    connection.close();
+}
 if (ps != null) {
     ps.close();
 }
@@ -202,39 +204,40 @@ if (ps != null) {
 * @throws Exception
 */
 @Override
-public void invoke(List<Student> value, Context context) throws Exception {
-    //遍历数据集合
-    for (Student student : value) {
-        ps.setInt(1, student.getId());
-        ps.setString(2, student.getName());
-        ps.setString(3, student.getPassword());
-        ps.setInt(4, student.getAge());
-        ps.addBatch();
-    }
+public void invoke(List<Student> value, Context context) throws Exception {;
+//遍历数据集合
+for (Student student : value) {
+    ps.setInt(1, student.getId());
+    ps.setString(2, student.getName());
+    ps.setString(3, student.getPassword());
+    ps.setInt(4, student.getAge());
+    ps.addBatch();
+}
 int[] count = ps.executeBatch(); //批量后执行
 System.out.println("成功了插入了" + count.length + "行数据");
 }
 
-private static Connection getConnection(BasicDataSource dataSource) {
-    dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-    //注意，替换成自己本地的 mysql 数据库地址和用户名、密码
-    dataSource.setUrl("jdbc:mysql://localhost:3306/test");
-    dataSource.setUsername("root");
-    dataSource.setPassword("root123456");
-    //设置连接池的一些参数
-    dataSource.setInitialSize(10);
-    dataSource.setMaxTotal(50);
-    dataSource.setMinIdle(2);
-    Connection con = null;
-    try {
-        con = dataSource.getConnection();
-        System.out.println("创建连接池：" + con);
-    } catch (Exception e) {
-        System.out.println("-----------mysql get connection has exception , msg = " + e.getMessage());
-    }
+private static Connection getConnection(BasicDataSource dataSource) {;
+dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+//注意，替换成自己本地的 mysql 数据库地址和用户名、密码
+dataSource.setUrl("jdbc:mysql://localhost:3306/test");
+dataSource.setUsername("root");
+dataSource.setPassword("root123456");
+//设置连接池的一些参数
+dataSource.setInitialSize(10);
+dataSource.setMaxTotal(50);
+dataSource.setMinIdle(2);
+Connection con = null;
+try {
+    con = dataSource.getConnection();
+    System.out.println("创建连接池：" + con);
+} catch (Exception e) {;
+System.out.println("-----------mysql get connection has exception , msg = " + e.getMessage());
+}
 return con;
 }
 }
+
 
 ```
 
@@ -244,34 +247,35 @@ return con;
 
 ```java
 public class Main {
-    public static void main(String[] args) throws Exception {
-        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
-        props.put("zookeeper.connect", "localhost:2181");
-        props.put("group.id", "metric-group");
-        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("auto.offset.reset", "latest");
-        SingleOutputStreamOperator<Student> student = env.addSource(new FlinkKafkaConsumer011<>(
-        "student", //这个 kafka topic 需要和上面的工具类的 topic 一致
-        new SimpleStringSchema(),
-        props)).setParallelism(1)
-        .map(string -> GsonUtil.fromJson(string, Student.class));
+    public static void main(String[] args) throws Exception {;
+    final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+    Properties props = new Properties();
+    props.put("bootstrap.servers", "localhost:9092");
+    props.put("zookeeper.connect", "localhost:2181");
+    props.put("group.id", "metric-group");
+    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put("auto.offset.reset", "latest");
+    SingleOutputStreamOperator<Student> student = env.addSource(new FlinkKafkaConsumer011<>(
+    "student", //这个 kafka topic 需要和上面的工具类的 topic 一致
+    new SimpleStringSchema(),
+    props)).setParallelism(1)
+    .map(string -> GsonUtil.fromJson(string, Student.class));
 
-        student.timeWindowAll(Time.minutes(1)).apply(new AllWindowFunction<Student, List<Student>, TimeWindow>() {
-            @Override
-            public void apply(TimeWindow window, Iterable<Student> values, Collector<List<Student>> out) throws Exception {
-                ArrayList<Student> students = Lists.newArrayList(values);
-                if (students.size() > 0) {
-                    System.out.println("1 分钟内收集到 student 的数据条数是：" + students.size());
-                    out.collect(students);
-                }
+    student.timeWindowAll(Time.minutes(1)).apply(new AllWindowFunction<Student, List<Student>, TimeWindow>() {
+        @Override
+        public void apply(TimeWindow window, Iterable<Student> values, Collector<List<Student>> out) throws Exception {;
+        ArrayList<Student> students = Lists.newArrayList(values);
+        if (students.size() > 0) {
+            System.out.println("1 分钟内收集到 student 的数据条数是：" + students.size());
+            out.collect(students);
         }
+    }
 }).addSink(new SinkToMySQL());
 env.execute("flink learning connectors kafka");
 }
 }
+
 
 ```
 

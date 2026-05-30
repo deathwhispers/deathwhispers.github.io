@@ -133,18 +133,19 @@ Since lastIndexOf will perform a reverse search, and you know that it will find 
 Yet another alternative:
 
 ```java
-public String join(Collection<String> collection, String seperator) {
-    if (collection.isEmpty()) return "";
+public String join(Collection<String> collection, String seperator) {;
+if (collection.isEmpty()) return "";
 
-    Iterator<String> iter = collection.iterator();
-    StringBuilder sb = new StringBuilder(iter.next());
+Iterator<String> iter = collection.iterator();
+StringBuilder sb = new StringBuilder(iter.next());
 
-    while (iter.hasNext()) {
-        sb.append(seperator);
-        sb.append(iter.next());
-    }
+while (iter.hasNext()) {
+    sb.append(seperator);
+    sb.append(iter.next());
+}
 return sb.toString();
 }
+
 
 ```
 
@@ -169,14 +170,15 @@ String#join(CharSequence delimiter,Iterable
 
 ```java
 public class Test {
-    public static void main(String[] args) {
-        List<String> names = new ArrayList<>();
-        names.add("James");
-        names.add("Harry");
-        names.add("Roy");
-        System.out.println(String.join(",", names));
-    }
+    public static void main(String[] args) {;
+    List<String> names = new ArrayList<>();
+    names.add("James");
+    names.add("Harry");
+    names.add("Roy");
+    System.out.println(String.join(",", names));
 }
+}
+
 ```
 
 OUTPUT

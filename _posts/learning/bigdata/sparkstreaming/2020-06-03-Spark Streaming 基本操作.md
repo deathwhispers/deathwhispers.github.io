@@ -35,19 +35,20 @@ import org.apache.spark.streaming.
 }
 
 object NetworkWordCount {
-    def main(args: Array[String]) {
-        /*指定时间间隔为 5s*/
-        val sparkConf = new SparkConf().setAppName("NetworkWordCount").setMaster("local[2]")
-        val ssc = new StreamingContext(sparkConf, Seconds(5))
-        /*创建文本输入流,并进行词频统计*/
-        val lines = ssc.socketTextStream("hadoop001", 9999)
-        lines.flatMap(_.split(" ")).map(x => (x, 1)).reduceByKey(_ + _).print()
-        /*启动服务*/
-        ssc.start()
-        /*等待服务结束*/
-        ssc.awaitTermination()
-    }
+    def main(args: Array[String]) {;
+    /*指定时间间隔为 5s*/
+    val sparkConf = new SparkConf().setAppName("NetworkWordCount").setMaster("local[2]")
+    val ssc = new StreamingContext(sparkConf, Seconds(5))
+    /*创建文本输入流,并进行词频统计*/
+    val lines = ssc.socketTextStream("hadoop001", 9999)
+    lines.flatMap(_.split(" ")).map(x => (x, 1)).reduceByKey(_ + _).print()
+    /*启动服务*/
+    ssc.start()
+    /*等待服务结束*/
+    ssc.awaitTermination()
 }
+}
+
 
 ```
 
@@ -113,27 +114,27 @@ DStream 是 Spark Streaming 提供的基本抽象。它表示连续的数据流�
 
 ```java
 object NetworkWordCountV2 {
-    def main(args: Array[String]) {
-        /*
-        * 本地测试时最好指定 hadoop 用户名,否则会默认使用本地电脑的用户名,
-        * 此时在 HDFS 上创建目录时可能会抛出权限不足的异常
-        */
-        System.setProperty("HADOOP_USER_NAME", "root")
+    def main(args: Array[String]) {;
+    /*
+    * 本地测试时最好指定 hadoop 用户名,否则会默认使用本地电脑的用户名,
+    * 此时在 HDFS 上创建目录时可能会抛出权限不足的异常
+    */
+    System.setProperty("HADOOP_USER_NAME", "root")
 
-        val sparkConf = new SparkConf().setAppName("NetworkWordCountV2").setMaster("local[2]")
-        val ssc = new StreamingContext(sparkConf, Seconds(5))
+    val sparkConf = new SparkConf().setAppName("NetworkWordCountV2").setMaster("local[2]")
+    val ssc = new StreamingContext(sparkConf, Seconds(5))
 
-        /*必须要设置检查点*/
-        ssc.checkpoint("hdfs://hadoop001:8020/spark-streaming")
+    /*必须要设置检查点*/
+    ssc.checkpoint("hdfs://hadoop001:8020/spark-streaming")
 
-        val lines = ssc.socketTextStream("hadoop001", 9999)
-        lines.flatMap(_.split(" ")).map(x => (x, 1))
-        .updateStateByKey[Int](updateFunction _)   //updateStateByKey 算子
-        .print()
+    val lines = ssc.socketTextStream("hadoop001", 9999)
+    lines.flatMap(_.split(" ")).map(x => (x, 1))
+    .updateStateByKey[Int](updateFunction _)   //updateStateByKey 算子
+    .print()
 
-        ssc.start()
-        ssc.awaitTermination()
-    }
+    ssc.start()
+    ssc.awaitTermination()
+}
 
 /**
 * 累计求和
@@ -148,6 +149,7 @@ def updateFunction(currentValues: Seq[Int], preValues: Option[Int]): Option[Int]
     Some(current + pre)
 }
 }
+
 
 ```
 
@@ -221,33 +223,34 @@ import org.apache.spark.streaming.
 import redis.clients.jedis.Jedis
 
 object NetworkWordCountToRedis {
-    def main(args: Array[String]) {
-        val sparkConf = new SparkConf().setAppName("NetworkWordCountToRedis").setMaster("local[2]")
-        val ssc = new StreamingContext(sparkConf, Seconds(5))
+    def main(args: Array[String]) {;
+    val sparkConf = new SparkConf().setAppName("NetworkWordCountToRedis").setMaster("local[2]")
+    val ssc = new StreamingContext(sparkConf, Seconds(5))
 
-        /*创建文本输入流,并进行词频统计*/
-        val lines = ssc.socketTextStream("hadoop001", 9999)
-        val pairs: DStream[(String, Int)] = lines.flatMap(_.split(" ")).map(x => (x, 1)).reduceByKey(_ + _)
+    /*创建文本输入流,并进行词频统计*/
+    val lines = ssc.socketTextStream("hadoop001", 9999)
+    val pairs: DStream[(String, Int)] = lines.flatMap(_.split(" ")).map(x => (x, 1)).reduceByKey(_ + _)
 
-        /*保存数据到 Redis*/
-        pairs.foreachRDD { rdd =>
-        rdd.foreachPartition { partitionOfRecords =>
-        var jedis: Jedis = null
-        try {
-            jedis = JedisPoolUtil.getConnection
-            partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
-        } catch {
-            case ex: Exception =>
-            ex.printStackTrace()
-        } finally {
-            if (jedis != null) jedis.close()
-        }
+    /*保存数据到 Redis*/
+    pairs.foreachRDD { rdd =>
+    rdd.foreachPartition { partitionOfRecords =>
+    var jedis: Jedis = null
+    try {
+        jedis = JedisPoolUtil.getConnection
+        partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
+    } catch {
+    case ex: Exception =>
+    ex.printStackTrace()
+} finally {
+if (jedis != null) jedis.close()
+}
 }
 }
 ssc.start()
 ssc.awaitTermination()
 }
 }
+
 
 ```
 
@@ -265,20 +268,21 @@ public class JedisPoolUtil {
     private static final int PORT = 6379;
 
     /* 双重检查锁实现懒汉式单例 */
-    public static Jedis getConnection() {
-        if (jedisPool == null) {
-            synchronized (JedisPoolUtil.class) {
-                if (jedisPool == null) {
-                    JedisPoolConfig config = new JedisPoolConfig();
-                    config.setMaxTotal(30);
-                    config.setMaxIdle(10);
-                    jedisPool = new JedisPool(config, HOST, PORT);
-                }
+    public static Jedis getConnection() {;
+    if (jedisPool == null) {
+        synchronized (JedisPoolUtil.class) {
+            if (jedisPool == null) {
+                JedisPoolConfig config = new JedisPoolConfig();
+                config.setMaxTotal(30);
+                config.setMaxIdle(10);
+                jedisPool = new JedisPool(config, HOST, PORT);
+            }
         }
+    }
+    return jedisPool.getResource();
 }
-return jedisPool.getResource();
 }
-}
+
 
 ```
 

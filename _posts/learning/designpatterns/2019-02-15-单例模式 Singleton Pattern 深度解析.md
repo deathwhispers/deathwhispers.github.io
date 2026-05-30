@@ -79,12 +79,14 @@ public class SingletonEager {
     private static SingletonEager instance = new SingletonEager();
 
     // 私有构造函数
-    private SingletonEager (){}
+    private SingletonEager () {
+    }
 
-public static SingletonEager getInstance() {
+    public static SingletonEager getInstance() {;
     return instance;
 }
 }
+
 
 ```
 
@@ -97,9 +99,10 @@ public class SingletonDCL {
     // 必须使用 volatile 关键字，防止指令重排序
     private volatile static SingletonDCL instance;
 
-    private SingletonDCL (){}
+    private SingletonDCL () {
+    }
 
-public static SingletonDCL getInstance() {
+    public static SingletonDCL getInstance() {;
     // 第一次检查：若已创建，则无需进入同步块
     if (instance == null) {
         // 同步块：保证同一时间只有一个线程实例化
@@ -108,12 +111,13 @@ public static SingletonDCL getInstance() {
             if (instance == null) {
                 instance = new SingletonDCL();
             }
+        }
     }
-}
-return instance;
+    return instance;
 }
 }
 // 注意：该方法在 JDK 1.5 之前的版本，即使加了 volatile 也无法完全保证线程安全。
+
 
 ```
 
@@ -123,18 +127,20 @@ return instance;
 
 ```java
 public class SingletonHolder {
-    private SingletonHolder(){}
+    private SingletonHolder() {
+    }
 
-// 静态内部类：只有显式调用 getInstance() 时，才会被虚拟机装载
-private static class SingletonHolderInner {
-    private static final SingletonHolder INSTANCE = new SingletonHolder();
-}
+    // 静态内部类：只有显式调用 getInstance() 时，才会被虚拟机装载
+    private static class SingletonHolderInner {
+        private static final SingletonHolder INSTANCE = new SingletonHolder();
+    }
 
-public static final SingletonHolder getInstance() {
+    public static final SingletonHolder getInstance() {;
     // 利用 ClassLoader 机制保证初始化 INSTANCE 时只有一个线程
     return SingletonHolderInner.INSTANCE;
 }
 }
+
 
 ```
 
@@ -146,11 +152,12 @@ public static final SingletonHolder getInstance() {
 public enum SingletonEnum {
     INSTANCE;
 
-    public void whateverMethod() {
-        // ... 业务方法
-    }
+    public void whateverMethod() {;
+    // ... 业务方法
+}
 }
 // 使用方式：SingletonEnum.INSTANCE.whateverMethod();
+
 ```
 
 ## 4\. C++ 与 Python 实现

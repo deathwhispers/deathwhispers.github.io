@@ -62,12 +62,13 @@ FROM 《深入理解 Java 虚拟机》
 
 ```java
 private int i = 0;
-public void write(int j ) {
-    i = j;
+public void write(int j ) {;
+i = j;
 }
-public int read() {
-    return i;
+public int read() {;
+return i;
 }
+
 
 ```
 

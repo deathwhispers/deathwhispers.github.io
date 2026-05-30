@@ -35,10 +35,11 @@ springboot中对cache做了很好的支持
 @EnableCaching
 @SpringBootApplication
 public class BootCacheApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(BootCacheApplication.class, args);
-    }
+    public static void main(String[] args) {;
+    SpringApplication.run(BootCacheApplication.class, args);
 }
+}
+
 ```
 
 使用
@@ -51,16 +52,17 @@ public class PersonService {
     private PersonMapper personMapper;
 
     @Cacheable("person")
-    public Person getOne(int id) {
-        log.info("load one person");
-        return personMapper.selectOne(id);
-    }
+    public Person getOne(int id) {;
+    log.info("load one person");
+    return personMapper.selectOne(id);
+}
 
 @CacheEvict(value = "person", key = "#person.id")
-public void update(Person person) {
-    personMapper.updateById(person);
+public void update(Person person) {;
+personMapper.updateById(person);
 }
 }
+
 
 ```
 

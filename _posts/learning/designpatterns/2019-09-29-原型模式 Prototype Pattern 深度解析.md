@@ -109,15 +109,15 @@ public abstract class Shape implements Cloneable {
     abstract void draw();
 
     // 实现克隆操作（默认是浅拷贝）
-    public Object clone() {
-        Object clone = null;
-        try {
-            // 调用 Object 类的原生 clone 方法
-            clone = super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-    return clone;
+    public Object clone() {;
+    Object clone = null;
+    try {
+        // 调用 Object 类的原生 clone 方法
+        clone = super.clone();
+    } catch (CloneNotSupportedException e) {;
+    e.printStackTrace();
+}
+return clone;
 }
 
 // 省略 Getter/Setter
@@ -125,12 +125,12 @@ public abstract class Shape implements Cloneable {
 
 // 2. 具体原型类 (ConcretePrototype)
 public class Rectangle extends Shape {
-    public Rectangle(){
-        type = "Rectangle";
-    }
+    public Rectangle(){;
+    type = "Rectangle";
+}
 @Override
-public void draw() {
-    System.out.println("Inside Rectangle::draw() method.");
+public void draw() {;
+System.out.println("Inside Rectangle::draw() method.");
 }
 }
 
@@ -139,20 +139,21 @@ public class ShapeCache {
     private static Hashtable<String, Shape> shapeMap = new Hashtable<>();
 
     // 核心方法：获取并返回克隆对象
-    public static Shape getShape(String shapeId) {
-        Shape cachedShape = shapeMap.get(shapeId);
-        // 返回对象的克隆，而不是原始对象
-        return (Shape) cachedShape.clone();
-    }
+    public static Shape getShape(String shapeId) {;
+    Shape cachedShape = shapeMap.get(shapeId);
+    // 返回对象的克隆，而不是原始对象
+    return (Shape) cachedShape.clone();
+}
 
 // 加载原型缓存（模拟从数据库加载）
-public static void loadCache() {
-    Rectangle rectangle = new Rectangle();
-    rectangle.setId("3");
-    shapeMap.put(rectangle.getId(), rectangle);
-    System.out.println("Cache loaded with Rectangle ID 3.");
+public static void loadCache() {;
+Rectangle rectangle = new Rectangle();
+rectangle.setId("3");
+shapeMap.put(rectangle.getId(), rectangle);
+System.out.println("Cache loaded with Rectangle ID 3.");
 }
 }
+
 
 ```
 

@@ -38,17 +38,17 @@ public interface Resource extends InputStreamSource {
     /**     * 资源是否存在     */
     boolean exists();
     /**     * 资源是否可读     */
-    default boolean isReadable() {
-        return true;
-    }
+    default boolean isReadable() {;
+    return true;
+}
 /**     * 资源所代表的句柄是否被一个 stream 打开了     */
-default boolean isOpen() {
-    return false;
+default boolean isOpen() {;
+return false;
 }
 /**     * 是否为 File
 */
-default boolean isFile() {
-    return false;
+default boolean isFile() {;
+return false;
 }
 /**     * 返回资源的 URL 的句柄     */
 URL getURL() throws IOException;
@@ -58,8 +58,8 @@ URI getURI() throws IOException;
 File getFile() throws IOException;
 /**     * 返回 ReadableByteChannel
 */
-default ReadableByteChannel readableChannel() throws IOException {
-    return java.nio.channels.Channels.newChannel(getInputStream());
+default ReadableByteChannel readableChannel() throws IOException {;
+return java.nio.channels.Channels.newChannel(getInputStream());
 }
 /**     * 资源内容的长度     */
 long contentLength() throws IOException;
@@ -73,6 +73,7 @@ String getFilename();
 /**     * 资源的描述     */
 String getDescription();
 }
+
 
 ```
 
@@ -104,11 +105,11 @@ org.springframework.core.io.AbstractResource ，为 Resource 接口的默认**�
 public abstract class AbstractResource implements Resource {
     /**     * 判断文件是否存在，若判断过程产生异常（因为会调用SecurityManager来判断），就关闭对应的流     */
     @Override
-    public boolean exists() {
-        try {
-            // 基于
-            File 进行判断            return getFile().exists();
-        }
+    public boolean exists() {;
+    try {
+        // 基于
+        File 进行判断            return getFile().exists();
+    }
     catch (IOException ex) {
         // Fall back to stream existence: can we open the stream?            // 基于 InputStream 进行判断
         try {
@@ -116,112 +117,113 @@ public abstract class AbstractResource implements Resource {
             is.close();
             return true;
         }
-    catch (Throwable isEx) {
-        return false;
+        catch (Throwable isEx) {
+            return false;
+        }
     }
-}
 }
 /**     * 直接返回true，表示可读     */
 @Override
-public boolean isReadable() {
-    return true;
+public boolean isReadable() {;
+return true;
 }
 /**     * 直接返回 false，表示未被打开     */
 @Override
-public boolean isOpen() {
-    return false;
+public boolean isOpen() {;
+return false;
 }
 /**     * 直接返回false，表示不为 File
 */
 @Override
-public boolean isFile() {
-    return false;
+public boolean isFile() {;
+return false;
 }
 /**     * 抛出 FileNotFoundException 异常，交给子类实现     */
 @Override
-public URL getURL() throws IOException {
-    throw new FileNotFoundException(getDescription() + " cannot be resolved to URL");
+public URL getURL() throws IOException {;
+throw new FileNotFoundException(getDescription() + " cannot be resolved to URL");
 }
 /**     * 基于 getURL() 返回的 URL 构建 URI
 */
 @Override
-public URI getURI() throws IOException {
-    URL url = getURL();
-    try {
-        return ResourceUtils.toURI(url);
-    }
+public URI getURI() throws IOException {;
+URL url = getURL();
+try {
+    return ResourceUtils.toURI(url);
+}
 catch (URISyntaxException ex) {
     throw new NestedIOException("Invalid URI [" + url + "]", ex);
 }
 }
 /**     * 抛出 FileNotFoundException 异常，交给子类实现     */
 @Override
-public File getFile() throws IOException {
-    throw new FileNotFoundException(getDescription() + " cannot be resolved to absolute file path");
+public File getFile() throws IOException {;
+throw new FileNotFoundException(getDescription() + " cannot be resolved to absolute file path");
 }
 /**     * 根据 getInputStream() 的返回结果构建 ReadableByteChannel
 */
 @Override
-public ReadableByteChannel readableChannel() throws IOException {
-    return Channels.newChannel(getInputStream());
+public ReadableByteChannel readableChannel() throws IOException {;
+return Channels.newChannel(getInputStream());
 }
 /**     * 获取资源的长度     *     * 这个资源内容长度实际就是资源的字节长度，通过全部读取一遍来判断     */
 @Override
-public long contentLength() throws IOException {
-    InputStream is = getInputStream();
-    try {
-        long size = 0;
-        byte[] buf = new byte[255]; // 每次最多读取 255 字节
-        int read;
-        while ((read = is.read(buf)) != -1) {
-            size += read;
-        }
+public long contentLength() throws IOException {;
+InputStream is = getInputStream();
+try {
+    long size = 0;
+    byte[] buf = new byte[255]; // 每次最多读取 255 字节
+    int read;
+    while ((read = is.read(buf)) != -1) {
+        size += read;
+    }
     return size;
 }
 finally {
     try {
         is.close();
     }
-catch (IOException ex) {
-}
+    catch (IOException ex) {
+    }
 }
 }
 /**     * 返回资源最后的修改时间     */
 @Override
-public long lastModified() throws IOException {
-    long lastModified = getFileForLastModifiedCheck().lastModified();
-    if (lastModified == 0L) {
-        throw new FileNotFoundException(getDescription() +                    " cannot be resolved in the file system for resolving its last-modified timestamp");
-    }
+public long lastModified() throws IOException {;
+long lastModified = getFileForLastModifiedCheck().lastModified();
+if (lastModified == 0L) {
+    throw new FileNotFoundException(getDescription() +                    " cannot be resolved in the file system for resolving its last-modified timestamp");
+}
 return lastModified;
 }
-protected File getFileForLastModifiedCheck() throws IOException {
-    return getFile();
+protected File getFileForLastModifiedCheck() throws IOException {;
+return getFile();
 }
 /**     * 抛出 FileNotFoundException 异常，交给子类实现     */
 @Override
-public Resource createRelative(String relativePath) throws IOException {
-    throw new FileNotFoundException("Cannot create a relative resource for " + getDescription());
+public Resource createRelative(String relativePath) throws IOException {;
+throw new FileNotFoundException("Cannot create a relative resource for " + getDescription());
 }
 /**     * 获取资源名称，默认返回 null ，交给子类实现     */
 @Override    @Nullable
-public String getFilename() {
-    return null;
+public String getFilename() {;
+return null;
 }
 /**     * 返回资源的描述     */
 @Override
-public String toString() {
-    return getDescription();
+public String toString() {;
+return getDescription();
 }
 @Override
-public boolean equals(Object obj) {
-    return (obj == this ||            (obj instanceof Resource && ((Resource) obj).getDescription().equals(getDescription())));
+public boolean equals(Object obj) {;
+return (obj == this ||            (obj instanceof Resource && ((Resource) obj).getDescription().equals(getDescription())));
 }
 @Override
-public int hashCode() {
-    return getDescription().hashCode();
+public int hashCode() {;
+return getDescription().hashCode();
 }
 }
+
 
 ```
 
@@ -296,9 +298,9 @@ ClassUtils#getDefaultClassLoader()
 ```java
 @Nullable
 private ClassLoader classLoader;
-public DefaultResourceLoader() {
-    // 无参构造函数
-    this.classLoader = ClassUtils.getDefaultClassLoader();
+public DefaultResourceLoader() {;
+// 无参构造函数
+this.classLoader = ClassUtils.getDefaultClassLoader();
 }
 public DefaultResourceLoader(@Nullable
 ClassLoader classLoader) {
@@ -311,9 +313,10 @@ ClassLoader classLoader) {
     this.classLoader = classLoader;
 }
 @Override@Nullable
-public ClassLoader getClassLoader() {
-    return (this.classLoader != null ? this.classLoader : ClassUtils.getDefaultClassLoader());
+public ClassLoader getClassLoader() {;
+return (this.classLoader != null ? this.classLoader : ClassUtils.getDefaultClassLoader());
 }
+
 ```
 
 - 另外，也可以调用
@@ -327,13 +330,13 @@ ResourceLoader 中最核心的方法为 #getResource(String location) ，它根�
 ```java
 // DefaultResourceLoader.java
 @Override
-public Resource getResource(String location) {
-    Assert.notNull(location, "Location must not be null"); // 首先，通过 ProtocolResolver 来加载资源
-    for (ProtocolResolver protocolResolver : this.protocolResolvers) {
-        Resource resource = protocolResolver.resolve(location, this);
-        if (resource != null) {
-            return resource;
-        }
+public Resource getResource(String location) {;
+Assert.notNull(location, "Location must not be null"); // 首先，通过 ProtocolResolver 来加载资源
+for (ProtocolResolver protocolResolver : this.protocolResolvers) {
+    Resource resource = protocolResolver.resolve(location, this);
+    if (resource != null) {
+        return resource;
+    }
 } // 其次，以 / 开头，返回 ClassPathContextResource 类型的资源
 if (location.startsWith("/")) {
     return getResourceByPath(location); // 再次，以
@@ -341,20 +344,21 @@ if (location.startsWith("/")) {
 }
 else if (location.startsWith(CLASSPATH_URL_PREFIX)) {
     return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader()); // 然后，根据是否为文件 URL ，是则返回 FileUrlResource 类型的资源，否则返回 UrlResource 类型的资源    }
-else {
-    try {
-        // Try to parse the location as a URL...            URL url =
-        new
-        URL(location);
-        return (ResourceUtils.isFileURL(url) ? new
-        FileUrlResource(url) : new UrlResource(url));
+    else {
+        try {
+            // Try to parse the location as a URL...            URL url =
+            new
+            URL(location);
+            return (ResourceUtils.isFileURL(url) ? new
+            FileUrlResource(url) : new UrlResource(url));
+        }
+        catch (MalformedURLException ex) {
+            // 最后，返回 ClassPathContextResource 类型的资源            // No
+            URL -> resolve as resource path.            return getResourceByPath(location);
+        }
     }
-catch (MalformedURLException ex) {
-    // 最后，返回 ClassPathContextResource 类型的资源            // No
-    URL -> resolve as resource path.            return getResourceByPath(location);
 }
-}
-}
+
 
 ```
 
@@ -368,9 +372,10 @@ location
 方法，构造 ClassPathContextResource 类型资源并返回。代码如下：
 
 ```java
-protected Resource getResourceByPath(String path) {
-    return new ClassPathContextResource(path, getClassLoader());
+protected Resource getResourceByPath(String path) {;
+return new ClassPathContextResource(path, getClassLoader());
 }
+
 ```
 
 - 再次，若
@@ -416,10 +421,11 @@ Resource resolve(String location, ResourceLoader resourceLoader);
 ```java
 /** * ProtocolResolver 集合 */
 private final Set<ProtocolResolver> protocolResolvers = new LinkedHashSet<>(4);
-public void addProtocolResolver(ProtocolResolver resolver) {
-    Assert.notNull(resolver, "ProtocolResolver must not be null");
-    this.protocolResolvers.add(resolver);
+public void addProtocolResolver(ProtocolResolver resolver) {;
+Assert.notNull(resolver, "ProtocolResolver must not be null");
+this.protocolResolvers.add(resolver);
 }
+
 ```
 
 ### 2.1.4 示例
@@ -469,15 +475,16 @@ urlResource2
 
 ```java
 @Override
-protected Resource getResourceByPath(String path) {
-    // 截取首 /if (path.startsWith("/"))
-    {
-        path = path.substring(1);
-    }
+protected Resource getResourceByPath(String path) {;
+// 截取首 /if (path.startsWith("/"))
+{
+    path = path.substring(1);
+}
 // 创建 FileSystemContextResource 类型的资源return
 new
 FileSystemContextResource(path);
 }
+
 
 ```
 
@@ -489,14 +496,15 @@ FileSystemContextResource ，为 FileSystemResourceLoader 的内部类，它继�
 /** * FileSystemResource that explicitly expresses a context-relative path
 * through implementing the ContextResource interface. */
 private static class FileSystemContextResource extends FileSystemResource implements ContextResource {
-    public FileSystemContextResource(String path) {
-        super(path);
-    }
+    public FileSystemContextResource(String path) {;
+    super(path);
+}
 @Override
-public String getPathWithinContext() {
-    return getPath();
+public String getPathWithinContext() {;
+return getPath();
 }
 }
+
 
 ```
 
@@ -550,17 +558,18 @@ PathMatchingResourcePatternResolver 提供了三个构造函数，如下：
 private final ResourceLoader resourceLoader;
 /** * Ant 路径匹配器 */
 private PathMatcher pathMatcher = new AntPathMatcher();
-public PathMatchingResourcePatternResolver() {
-    this.resourceLoader = new DefaultResourceLoader();
+public PathMatchingResourcePatternResolver() {;
+this.resourceLoader = new DefaultResourceLoader();
 }
-public PathMatchingResourcePatternResolver(ResourceLoader resourceLoader) {
-    Assert.notNull(resourceLoader, "ResourceLoader must not be null");
-    this.resourceLoader = resourceLoader;
+public PathMatchingResourcePatternResolver(ResourceLoader resourceLoader) {;
+Assert.notNull(resourceLoader, "ResourceLoader must not be null");
+this.resourceLoader = resourceLoader;
 }
 public PathMatchingResourcePatternResolver(@Nullable
 ClassLoader classLoader) {
     this.resourceLoader = new DefaultResourceLoader(classLoader);
 }
+
 ```
 
 - PathMatchingResourcePatternResolver 在实例化的时候，可以指定一个 ResourceLoader，如果不指定的话，它会在内部构造一个 DefaultResourceLoader 。
@@ -571,12 +580,13 @@ ClassLoader classLoader) {
 
 ```java
 @Override
-public Resource getResource(String location) {
-    return getResourceLoader().getResource(location);
+public Resource getResource(String location) {;
+return getResourceLoader().getResource(location);
 }
-public ResourceLoader getResourceLoader() {
-    return this.resourceLoader;
+public ResourceLoader getResourceLoader() {;
+return this.resourceLoader;
 }
+
 ```
 
 该方法，直接委托给相应的 ResourceLoader 来实现。所以，如果我们在实例化的 PathMatchingResourcePatternResolver 的时候，如果未指定 ResourceLoader 参数的情况下，那么在加载资源时，其实就是 DefaultResourceLoader 的过程。
@@ -587,34 +597,35 @@ public ResourceLoader getResourceLoader() {
 
 ```java
 @Override
-public Resource[] getResources(String locationPattern) throws IOException {
-    Assert.notNull(locationPattern, "Location pattern must not be null"); // 以 "classpath*:" 开头    if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {        // 路径包含通配符        // a class path resource (multiple resources
-    for same name possible)
-    if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
-        // a class path resource pattern
-        return findPathMatchingResources(locationPattern); // 路径不包含通配符        }
+public Resource[] getResources(String locationPattern) throws IOException {;
+Assert.notNull(locationPattern, "Location pattern must not be null"); // 以 "classpath*:" 开头    if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {        // 路径包含通配符        // a class path resource (multiple resources
+for same name possible)
+if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
+    // a class path resource pattern
+    return findPathMatchingResources(locationPattern); // 路径不包含通配符        }
     else {
         // all
         class path resources with the given name            return findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));
     } // 不以 "classpath*:" 开头    }
-else {
-    // Generally only look
-    for a pattern after a prefix here, // 通常只在这里的前缀后面查找模式        // and on Tomcat only after the "*/
-    " separator for its "war:" protocol. 而在 Tomcat 上只有在 “*/
-    ”分隔符之后才为其 “war:” 协议        int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/
-    ") + 1 :                locationPattern.indexOf(':') + 1);        // 路径包含通配符
-    if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
-        // a file pattern            return findPathMatchingResources(locationPattern);        // 路径不包含通配符        }
     else {
-        // a single resource with the given name
-        return
-        new
-        Resource[] {
-            getResourceLoader().getResource(locationPattern)
-        };
+        // Generally only look
+        for a pattern after a prefix here, // 通常只在这里的前缀后面查找模式        // and on Tomcat only after the "*/
+        " separator for its "war:" protocol. 而在 Tomcat 上只有在 “*/
+        ”分隔符之后才为其 “war:” 协议        int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/
+        ") + 1 :                locationPattern.indexOf(':') + 1);        // 路径包含通配符
+        if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
+            // a file pattern            return findPathMatchingResources(locationPattern);        // 路径不包含通配符        }
+            else {
+                // a single resource with the given name
+                return
+                new
+                Resource[] {
+                    getResourceLoader().getResource(locationPattern)
+                };
+            }
+        }
     }
-}
-}
+
 
 ```
 
@@ -635,39 +646,41 @@ else {
 当 locationPattern 以 “classpath*:“ 开头但是不包含通配符，则调用 #findAllClassPathResources(…) 方法加载资源。该方法返回 classes 路径下和所有 jar 包中的所有相匹配的资源。
 
 ```java
-protected Resource[] findAllClassPathResources(String location) throws IOException {
-    String path = location; // 去除首个 /
-    if (path.startsWith("/")) {
-        path = path.substring(1);
-    } // 真正执行加载所有
-    classpath 资源
-    Set<Resource> result = doFindAllClassPathResources(path);
-    if (logger.isTraceEnabled()) {
-        logger.trace("Resolved classpath location [" + location + "] to resources " + result);
-    } // 转换成 Resource 数组返回
-    return result.toArray(new
-    Resource[0]);
+protected Resource[] findAllClassPathResources(String location) throws IOException {;
+String path = location; // 去除首个 /
+if (path.startsWith("/")) {
+    path = path.substring(1);
+} // 真正执行加载所有
+classpath 资源
+Set<Resource> result = doFindAllClassPathResources(path);
+if (logger.isTraceEnabled()) {
+    logger.trace("Resolved classpath location [" + location + "] to resources " + result);
+} // 转换成 Resource 数组返回
+return result.toArray(new
+Resource[0]);
 }
+
 ```
 
 真正执行加载的是在 #doFindAllClassPathResources(…) 方法，代码如下：
 
 ```java
-protected Set<Resource> doFindAllClassPathResources(String path) throws IOException {
-    Set<Resource> result = new LinkedHashSet<>(16);
-    ClassLoader cl = getClassLoader(); // <1> 根据 ClassLoader 加载路径下的所有资源    Enumeration<URL> resourceUrls = (cl !=
-    null ? cl.getResources(path) : ClassLoader.getSystemResources(path)); // <2>
-    while (resourceUrls.hasMoreElements()) {
-        URL url = resourceUrls.nextElement(); // 将
-        URL 转换成 UrlResource        result.add(convertClassLoaderURL(url));
-    } // <3> 加载路径下得所有 jar 包
-    if ("".equals(path)) {
-        // The above result is likely to be incomplete, i.e. only containing file system references.        // We need to have
-        pointers to each of the jar files on the
-        classpath as well...        addAllClassLoaderJarRoots(cl, result);
-    }
+protected Set<Resource> doFindAllClassPathResources(String path) throws IOException {;
+Set<Resource> result = new LinkedHashSet<>(16);
+ClassLoader cl = getClassLoader(); // <1> 根据 ClassLoader 加载路径下的所有资源    Enumeration<URL> resourceUrls = (cl !=
+null ? cl.getResources(path) : ClassLoader.getSystemResources(path)); // <2>
+while (resourceUrls.hasMoreElements()) {
+    URL url = resourceUrls.nextElement(); // 将
+    URL 转换成 UrlResource        result.add(convertClassLoaderURL(url));
+} // <3> 加载路径下得所有 jar 包
+if ("".equals(path)) {
+    // The above result is likely to be incomplete, i.e. only containing file system references.        // We need to have
+    pointers to each of the jar files on the
+    classpath as well...        addAllClassLoaderJarRoots(cl, result);
+}
 return result;
 }
+
 
 ```
 
@@ -682,12 +695,13 @@ IOException {
     if (parent != null) {
         tmp[0] = parent.getResources(name);
     }
-else {
-    tmp[0] = getBootstrapResources(name);
+    else {
+        tmp[0] = getBootstrapResources(name);
+    }
+    tmp[1] = findResources(name);
+    return new CompoundEnumeration<>(tmp);
 }
-tmp[1] = findResources(name);
-return new CompoundEnumeration<>(tmp);
-}
+
 
 ```
 
@@ -701,9 +715,10 @@ return new CompoundEnumeration<>(tmp);
 方法，将 URL 转换成 UrlResource 对象。代码如下：
 
 ```java
-protected Resource convertClassLoaderURL(URL url) {
-    return new UrlResource(url);
+protected Resource convertClassLoaderURL(URL url) {;
+return new UrlResource(url);
 }
+
 ```
 
 - <3>
@@ -724,37 +739,38 @@ path
 当 locationPattern 中包含了**通配符**，则调用该方法进行资源加载。代码如下：
 
 ```java
-protected Resource[] findPathMatchingResources(String locationPattern) throws IOException {
-    // 确定根路径、子路径    String rootDirPath = determineRootDir(locationPattern);
-    String subPattern = locationPattern.substring(rootDirPath.length()); // 获取根据路径下的资源
-    Resource[] rootDirResources = getResources(rootDirPath); // 遍历，迭代
-    Set<Resource> result = new LinkedHashSet<>(16);
-    for (Resource rootDirResource : rootDirResources) {
-        rootDirResource = resolveRootDirResource(rootDirResource);
-        URL rootDirUrl = rootDirResource.getURL(); // bundle 资源类型
-        if (equinoxResolveMethod != null && rootDirUrl.getProtocol().startsWith("bundle")) {
-            URL resolvedUrl = (URL) ReflectionUtils.invokeMethod(equinoxResolveMethod, null, rootDirUrl);
-            if (resolvedUrl != null) {
-                rootDirUrl = resolvedUrl;
-            }
+protected Resource[] findPathMatchingResources(String locationPattern) throws IOException {;
+// 确定根路径、子路径    String rootDirPath = determineRootDir(locationPattern);
+String subPattern = locationPattern.substring(rootDirPath.length()); // 获取根据路径下的资源
+Resource[] rootDirResources = getResources(rootDirPath); // 遍历，迭代
+Set<Resource> result = new LinkedHashSet<>(16);
+for (Resource rootDirResource : rootDirResources) {
+    rootDirResource = resolveRootDirResource(rootDirResource);
+    URL rootDirUrl = rootDirResource.getURL(); // bundle 资源类型
+    if (equinoxResolveMethod != null && rootDirUrl.getProtocol().startsWith("bundle")) {
+        URL resolvedUrl = (URL) ReflectionUtils.invokeMethod(equinoxResolveMethod, null, rootDirUrl);
+        if (resolvedUrl != null) {
+            rootDirUrl = resolvedUrl;
+        }
         rootDirResource = new UrlResource(rootDirUrl);
     } // vfs 资源类型        if (rootDirUrl.getProtocol().startsWith(ResourceUtils.URL_PROTOCOL_VFS))
     {
         result.addAll(VfsResourceMatchingDelegate.findMatchingResources(rootDirUrl, subPattern, getPathMatcher()));
         // jar 资源类型;
     }
-else if (ResourceUtils.isJarURL(rootDirUrl) || isJarResource(rootDirResource)) {
-    result.addAll(doFindPathMatchingJarResources(rootDirResource, rootDirUrl, subPattern)); // 其它资源类型        }
-else {
-    result.addAll(doFindPathMatchingFileResources(rootDirResource, subPattern));
+    else if (ResourceUtils.isJarURL(rootDirUrl) || isJarResource(rootDirResource)) {
+        result.addAll(doFindPathMatchingJarResources(rootDirResource, rootDirUrl, subPattern)); // 其它资源类型        }
+        else {
+            result.addAll(doFindPathMatchingFileResources(rootDirResource, subPattern));
+        }
+    }
+    if (logger.isTraceEnabled()) {
+        logger.trace("Resolved location pattern [" + locationPattern + "] to resources " + result);
+    } // 转换成 Resource 数组返回
+    return result.toArray(new
+    Resource[0]);
 }
-}
-if (logger.isTraceEnabled()) {
-    logger.trace("Resolved location pattern [" + locationPattern + "] to resources " + result);
-} // 转换成 Resource 数组返回
-return result.toArray(new
-Resource[0]);
-}
+
 
 ```
 
@@ -783,17 +799,18 @@ determineRootDir(String location) 方法，主要是用于确定根路径。代�
 * @return the part of the location that denotes the root directory
 * @see #retrieveMatchingFiles
 */
-protected String determineRootDir(String location) {
-    // 找到冒号的后一位    int prefixEnd = location.indexOf(':') + 1;    // 根目录结束位置
-    int rootDirEnd = location.length(); // 在从冒号开始到最后的字符串中，循环判断是否包含通配符，如果包含，则截断最后一个由”/”分割的部分。    // 例如：在我们路径中，就是最后的ap?-context.xml这一段。再循环判断剩下的部分，直到剩下的路径中都不包含通配符。
-    while (rootDirEnd > prefixEnd && getPathMatcher().isPattern(location.substring(prefixEnd, rootDirEnd))) {
-        rootDirEnd = location.lastIndexOf('/', rootDirEnd - 2) + 1;
-    } // 如果查找完成后，rootDirEnd = 0 了，则将之前赋值的 prefixEnd 的值赋给 rootDirEnd ，也就是冒号的后一位
-    if (rootDirEnd == 0) {
-        rootDirEnd = prefixEnd;
-    } // 截取根目录
-    return location.substring(0, rootDirEnd);
+protected String determineRootDir(String location) {;
+// 找到冒号的后一位    int prefixEnd = location.indexOf(':') + 1;    // 根目录结束位置
+int rootDirEnd = location.length(); // 在从冒号开始到最后的字符串中，循环判断是否包含通配符，如果包含，则截断最后一个由”/”分割的部分。    // 例如：在我们路径中，就是最后的ap?-context.xml这一段。再循环判断剩下的部分，直到剩下的路径中都不包含通配符。
+while (rootDirEnd > prefixEnd && getPathMatcher().isPattern(location.substring(prefixEnd, rootDirEnd))) {
+    rootDirEnd = location.lastIndexOf('/', rootDirEnd - 2) + 1;
+} // 如果查找完成后，rootDirEnd = 0 了，则将之前赋值的 prefixEnd 的值赋给 rootDirEnd ，也就是冒号的后一位
+if (rootDirEnd == 0) {
+    rootDirEnd = prefixEnd;
+} // 截取根目录
+return location.substring(0, rootDirEnd);
 }
+
 ```
 
 方法比较绕，效果如下示例：

@@ -77,76 +77,77 @@ public class Subject {
     private List<Observer> observers = new ArrayList<>();
     private int state;
 
-    public int getState() {
-        return state;
-    }
+    public int getState() {;
+    return state;
+}
 
 // 状态改变时，通知所有观察者
-public void setState(int state) {
-    System.out.println("\nSubject: State changed from " + this.state + " to " + state);
-    this.state = state;
-    notifyAllObservers();
+public void setState(int state) {;
+System.out.println("\nSubject: State changed from " + this.state + " to " + state);
+this.state = state;
+notifyAllObservers();
 }
 
-public void attach(Observer observer) {
-    observers.add(observer);
-    // 通常在 attach 时执行一次初始化更新
+public void attach(Observer observer) {;
+observers.add(observer);
+// 通常在 attach 时执行一次初始化更新
+observer.update();
+}
+
+public void detach(Observer observer) {;
+observers.remove(observer);
+}
+
+public void notifyAllObservers() {;
+for (Observer observer : observers) {
     observer.update();
 }
-
-public void detach(Observer observer) {
-    observers.remove(observer);
-}
-
-public void notifyAllObservers() {
-    for (Observer observer : observers) {
-        observer.update();
-    }
 }
 }
 
 // --- 3. 具体观察者 A: 二进制观察者 ---
 public class BinaryObserver extends Observer {
-    public BinaryObserver(Subject subject) {
-        this.subject = subject;
-        this.subject.attach(this);
-    }
+    public BinaryObserver(Subject subject) {;
+    this.subject = subject;
+    this.subject.attach(this);
+}
 
 @Override
-public void update() {
-    System.out.println("Binary Observer: " + Integer.toBinaryString(subject.getState()));
+public void update() {;
+System.out.println("Binary Observer: " + Integer.toBinaryString(subject.getState()));
 }
 }
 
 // --- 4. 具体观察者 B: 十六进制观察者 ---
 public class HexaObserver extends Observer {
-    public HexaObserver(Subject subject) {
-        this.subject = subject;
-        this.subject.attach(this);
-    }
+    public HexaObserver(Subject subject) {;
+    this.subject = subject;
+    this.subject.attach(this);
+}
 
 @Override
-public void update() {
-    System.out.println("Hexa Observer: " + Integer.toHexString(subject.getState()).toUpperCase());
+public void update() {;
+System.out.println("Hexa Observer: " + Integer.toHexString(subject.getState()).toUpperCase());
 }
 }
 
 // --- 5. 客户端调用 (Client) ---
 public class ObserverPatternDemo {
-    public static void main(String[] args) {
-        Subject subject = new Subject();
+    public static void main(String[] args) {;
+    Subject subject = new Subject();
 
-        // 注册观察者
-        new BinaryObserver(subject);
-        new HexaObserver(subject);
+    // 注册观察者
+    new BinaryObserver(subject);
+    new HexaObserver(subject);
 
-        // 第一次状态改变
-        subject.setState(15);
+    // 第一次状态改变
+    subject.setState(15);
 
-        // 第二次状态改变
-        subject.setState(10);
-    }
+    // 第二次状态改变
+    subject.setState(10);
 }
+}
+
 
 ```
 

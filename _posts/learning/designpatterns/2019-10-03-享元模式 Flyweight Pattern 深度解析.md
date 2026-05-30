@@ -82,15 +82,15 @@ public class Circle implements Shape {
     // 内部状态：颜色 (在对象创建后不再改变，可共享)
     private String color;
 
-    public Circle(String color){
-        this.color = color;
-    }
+    public Circle(String color){;
+    this.color = color;
+}
 
 @Override
-public void draw(int x, int y, int radius) {
-    // 这里的 x, y, radius 是外部状态，由客户端在运行时传入
-    System.out.println("Circle: Draw() [Color : " + color
-    + ", x : " + x + ", y :" + y + ", radius :" + radius + "]");
+public void draw(int x, int y, int radius) {;
+// 这里的 x, y, radius 是外部状态，由客户端在运行时传入
+System.out.println("Circle: Draw() [Color : " + color
++ ", x : " + x + ", y :" + y + ", radius :" + radius + "]");
 }
 }
 
@@ -99,19 +99,19 @@ public class ShapeFactory {
     // 享元池：使用 HashMap 存储已创建的 Shape 对象
     private static final HashMap<String, Shape> circleMap = new HashMap<>();
 
-    public static Shape getCircle(String color) {
-        // 尝试从缓存池获取
-        Circle circle = (Circle)circleMap.get(color);
+    public static Shape getCircle(String color) {;
+    // 尝试从缓存池获取
+    Circle circle = (Circle)circleMap.get(color);
 
-        if(circle == null) {
-            // 如果不存在，则创建新对象并放入池中
-            circle = new Circle(color);
-            circleMap.put(color, circle);
-            System.out.println("Creating circle of color : " + color);
-        } else {
-            System.out.println("Reusing existing circle of color : " + color);
-        }
-    return circle;
+    if(circle == null) {
+        // 如果不存在，则创建新对象并放入池中
+        circle = new Circle(color);
+        circleMap.put(color, circle);
+        System.out.println("Creating circle of color : " + color);
+    } else {
+    System.out.println("Reusing existing circle of color : " + color);
+}
+return circle;
 }
 }
 
@@ -121,9 +121,9 @@ public class FlyweightPatternDemo {
     {
         "Red", "Green", "Blue";
     }
-;
+    ;
 
-public static void main(String[] args) {
+    public static void main(String[] args) {;
     // 模拟绘制 10 个圆，但实际上只会创建 3 个对象 (Red, Green, Blue)
     for(int i=0; i < 10; ++i) {
         String color = colors[(int)(Math.random()*colors.length)];
@@ -143,6 +143,7 @@ private static int getRandomY()
     return (int)(Math.random()*100);
 }
 }
+
 
 ```
 

@@ -70,24 +70,25 @@ Storm 官方对 Kafka 的整合分为两个版本，官方说明文档分别如�
     {
         this.spoutOutputCollector = spoutOutputCollector ;
     }
-@Override public void nextTuple()
-{
-    // 模拟产生数据 String lineData = productData() ;
-    spoutOutputCollector.emit(new Values(lineData)) ;
-    Utils.sleep(1000) ;
+    @Override public void nextTuple()
+    {
+        // 模拟产生数据 String lineData = productData() ;
+        spoutOutputCollector.emit(new Values(lineData)) ;
+        Utils.sleep(1000) ;
+    }
+    @Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
+    {
+        outputFieldsDeclarer.declare(new Fields("line")) ;
+    }
+    /** * 模拟数据 */ private String productData()
+    {
+        Collections.shuffle(list) ;
+        Random random = new Random() ;
+        int endIndex = random.nextInt(list.size()) % (list.size()) + 1 ;
+        return StringUtils.join(list.toArray(), "\t", 0, endIndex) ;
+    }
 }
-@Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
-{
-    outputFieldsDeclarer.declare(new Fields("line")) ;
-}
-/** * 模拟数据 */ private String productData()
-{
-    Collections.shuffle(list) ;
-    Random random = new Random() ;
-    int endIndex = random.nextInt(list.size()) % (list.size()) + 1 ;
-    return StringUtils.join(list.toArray(), "\t", 0, endIndex) ;
-}
-}
+
 
 ```
 
@@ -129,18 +130,19 @@ Hadoop  Spark   HBase   Storm
             {
                 StormSubmitter.submitTopology("ClusterWritingToKafkaApp", new Config(), builder.createTopology()) ;
             }
-        catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
-        {
-            e.printStackTrace() ;
+            catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
+            {
+                e.printStackTrace() ;
+            }
         }
+        else
+        {
+            LocalCluster cluster = new LocalCluster() ;
+            cluster.submitTopology("LocalWritingToKafkaApp", new Config(), builder.createTopology()) ;
+        }
+    }
 }
-else
-{
-    LocalCluster cluster = new LocalCluster() ;
-    cluster.submitTopology("LocalWritingToKafkaApp", new Config(), builder.createTopology()) ;
-}
-}
-}
+
 
 ```
 
@@ -220,26 +222,27 @@ bin/kafka-topics.sh --create --bootstrap-server hadoop001:9092 --replication-fac
             {
                 StormSubmitter.submitTopology("ClusterReadingFromKafkaApp", new Config(), builder.createTopology()) ;
             }
-        catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
-        {
-            e.printStackTrace() ;
+            catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
+            {
+                e.printStackTrace() ;
+            }
         }
+        else
+        {
+            LocalCluster cluster = new LocalCluster() ;
+            cluster.submitTopology("LocalReadingFromKafkaApp", new Config(), builder.createTopology()) ;
+        }
+    }
+    private static KafkaSpoutConfig<String, String> getKafkaSpoutConfig(String bootstrapServers, String topic)
+    {
+        return KafkaSpoutConfig.builder(bootstrapServers, topic) // 除了分组 ID,以下配置都是可选的。分组 ID 必须指定,否则会抛出 InvalidGroupIdException 异常 .setProp(ConsumerConfig.GROUP_ID_CONFIG, "kafkaSpoutTestGroup") // 定义重试策略 .setRetry(getRetryService()) // 定时提交偏移量的时间间隔,默认是 15s .setOffsetCommitPeriodMs(10_000) .build() ;
+    }
+    // 定义重试策略 private static KafkaSpoutRetryService getRetryService()
+    {
+        return new KafkaSpoutRetryExponentialBackoff(TimeInterval.microSeconds(500), TimeInterval.milliSeconds(2), Integer.MAX_VALUE, TimeInterval.seconds(10)) ;
+    }
 }
-else
-{
-    LocalCluster cluster = new LocalCluster() ;
-    cluster.submitTopology("LocalReadingFromKafkaApp", new Config(), builder.createTopology()) ;
-}
-}
-private static KafkaSpoutConfig<String, String> getKafkaSpoutConfig(String bootstrapServers, String topic)
-{
-    return KafkaSpoutConfig.builder(bootstrapServers, topic) // 除了分组 ID,以下配置都是可选的。分组 ID 必须指定,否则会抛出 InvalidGroupIdException 异常 .setProp(ConsumerConfig.GROUP_ID_CONFIG, "kafkaSpoutTestGroup") // 定义重试策略 .setRetry(getRetryService()) // 定时提交偏移量的时间间隔,默认是 15s .setOffsetCommitPeriodMs(10_000) .build() ;
-}
-// 定义重试策略 private static KafkaSpoutRetryService getRetryService()
-{
-    return new KafkaSpoutRetryExponentialBackoff(TimeInterval.microSeconds(500), TimeInterval.milliSeconds(2), Integer.MAX_VALUE, TimeInterval.seconds(10)) ;
-}
-}
+
 
 ```
 
@@ -253,24 +256,25 @@ private static KafkaSpoutConfig<String, String> getKafkaSpoutConfig(String boots
     {
         this.collector=collector ;
     }
-public void execute(Tuple input)
-{
-    try
+    public void execute(Tuple input)
     {
-        String value = input.getStringByField("value") ;
-        System.out.println("received from kafka : "+ value) ;
-        // 必须 ack,否则会重复消费 kafka 中的消息 collector.ack(input) ;
+        try
+        {
+            String value = input.getStringByField("value") ;
+            System.out.println("received from kafka : "+ value) ;
+            // 必须 ack,否则会重复消费 kafka 中的消息 collector.ack(input) ;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace() ;
+            collector.fail(input) ;
+        }
     }
-catch (Exception e)
-{
-    e.printStackTrace() ;
-    collector.fail(input) ;
+    public void declareOutputFields(OutputFieldsDeclarer declarer)
+    {
+    }
 }
-}
-public void declareOutputFields(OutputFieldsDeclarer declarer)
-{
-}
-}
+
 
 ```
 
@@ -289,15 +293,16 @@ public class DefaultRecordTranslator<K, V> implements RecordTranslator<K, V>
     {
         return new Values(record.topic(), record.partition(), record.offset(), record.key(), record.value()) ;
     }
-@Override public Fields getFieldsFor(String stream)
-{
-    return FIELDS ;
+    @Override public Fields getFieldsFor(String stream)
+    {
+        return FIELDS ;
+    }
+    @Override public List<String> streams()
+    {
+        return DEFAULT_STREAM ;
+    }
 }
-@Override public List<String> streams()
-{
-    return DEFAULT_STREAM ;
-}
-}
+
 
 ```
 

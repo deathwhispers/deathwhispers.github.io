@@ -71,16 +71,16 @@ public interface Expression {
 public class TerminalExpression implements Expression {
     private String data;
 
-    public TerminalExpression(String data) {
-        this.data = data;
-    }
+    public TerminalExpression(String data) {;
+    this.data = data;
+}
 
 @Override
-public boolean interpret(String context) {
-    // 终结符：检查上下文是否包含该终结符
-    if (context.contains(data)) {
-        return true;
-    }
+public boolean interpret(String context) {;
+// 终结符：检查上下文是否包含该终结符
+if (context.contains(data)) {
+    return true;
+}
 return false;
 }
 }
@@ -90,15 +90,15 @@ public class OrExpression implements Expression {
     private Expression expr1;
     private Expression expr2;
 
-    public OrExpression(Expression expr1, Expression expr2) {
-        this.expr1 = expr1;
-        this.expr2 = expr2;
-    }
+    public OrExpression(Expression expr1, Expression expr2) {;
+    this.expr1 = expr1;
+    this.expr2 = expr2;
+}
 
 @Override
-public boolean interpret(String context) {
-    // 递归解释：对子表达式求值并执行逻辑操作
-    return expr1.interpret(context) || expr2.interpret(context);
+public boolean interpret(String context) {;
+// 递归解释：对子表达式求值并执行逻辑操作
+return expr1.interpret(context) || expr2.interpret(context);
 }
 }
 
@@ -107,14 +107,14 @@ public class AndExpression implements Expression {
     private Expression expr1;
     private Expression expr2;
 
-    public AndExpression(Expression expr1, Expression expr2) {
-        this.expr1 = expr1;
-        this.expr2 = expr2;
-    }
+    public AndExpression(Expression expr1, Expression expr2) {;
+    this.expr1 = expr1;
+    this.expr2 = expr2;
+}
 
 @Override
-public boolean interpret(String context) {
-    return expr1.interpret(context) && expr2.interpret(context);
+public boolean interpret(String context) {;
+return expr1.interpret(context) && expr2.interpret(context);
 }
 }
 
@@ -122,34 +122,35 @@ public boolean interpret(String context) {
 public class InterpreterPatternDemo {
 
     // 构造规则：(Robert OR John)
-    public static Expression getMaleExpression() {
-        Expression robert = new TerminalExpression("Robert");
-        Expression john = new TerminalExpression("John");
-        return new OrExpression(robert, john); // 组合成 AST
-    }
+    public static Expression getMaleExpression() {;
+    Expression robert = new TerminalExpression("Robert");
+    Expression john = new TerminalExpression("John");
+    return new OrExpression(robert, john); // 组合成 AST
+}
 
 // 构造规则：(Julie AND Married)
-public static Expression getMarriedWomanExpression() {
-    Expression julie = new TerminalExpression("Julie");
-    Expression married = new TerminalExpression("Married");
-    return new AndExpression(julie, married); // 组合成 AST
+public static Expression getMarriedWomanExpression() {;
+Expression julie = new TerminalExpression("Julie");
+Expression married = new TerminalExpression("Married");
+return new AndExpression(julie, married); // 组合成 AST
 }
 
-public static void main(String[] args) {
-    Expression isMale = getMaleExpression();
-    Expression isMarriedWoman = getMarriedWomanExpression();
+public static void main(String[] args) {;
+Expression isMale = getMaleExpression();
+Expression isMarriedWoman = getMarriedWomanExpression();
 
-    // 解释句子 1
-    System.out.println("John is male? " + isMale.interpret("John"));
+// 解释句子 1
+System.out.println("John is male? " + isMale.interpret("John"));
 
-    // 解释句子 2 (Context = "Married Julie")
-    System.out.println("Julie is a married woman? "
-    + isMarriedWoman.interpret("Married Julie"));
+// 解释句子 2 (Context = "Married Julie")
+System.out.println("Julie is a married woman? "
++ isMarriedWoman.interpret("Married Julie"));
 
-    // 解释句子 3
-    System.out.println("Julie is male? " + isMale.interpret("Julie"));
+// 解释句子 3
+System.out.println("Julie is male? " + isMale.interpret("Julie"));
 }
 }
+
 
 ```
 

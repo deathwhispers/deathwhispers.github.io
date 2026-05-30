@@ -154,13 +154,13 @@ public class SqlSessionFactoryUtils
             {
                 SQLSESSIONFACTORY = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml")) ;
             }
-        catch (IOException e)
-        {
-            e.printStackTrace() ;
+            catch (IOException e)
+            {
+                e.printStackTrace() ;
+            }
         }
-}
-return SQLSESSIONFACTORY ;
-}
+        return SQLSESSIONFACTORY ;
+    }
 }
 public class Main
 {
@@ -173,9 +173,10 @@ public class Main
         {
             System.out.println("user = " + user) ;
         }
-    sqlSession.close() ;
+        sqlSession.close() ;
+    }
 }
-}
+
 
 ```
 
@@ -195,17 +196,18 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
         {
             afterPropertiesSet() ;
         }
-    return this.sqlSessionFactory ;
+        return this.sqlSessionFactory ;
+    }
+    @Override public Class<? extends SqlSessionFactory> getObjectType()
+    {
+        return this.sqlSessionFactory == null ? SqlSessionFactory.class : this.sqlSessionFactory.getClass() ;
+    }
+    @Override public boolean isSingleton()
+    {
+        return true ;
+    }
 }
-@Override public Class<? extends SqlSessionFactory> getObjectType()
-{
-    return this.sqlSessionFactory == null ? SqlSessionFactory.class : this.sqlSessionFactory.getClass() ;
-}
-@Override public boolean isSingleton()
-{
-    return true ;
-}
-}
+
 
 ```
 
@@ -231,15 +233,16 @@ public class Author
     private Author()
     {
     }
-public static Author init(String name, Integer age)
-{
-    Author author = new Author() ;
-    author.setAge(age) ;
-    author.setName(name) ;
-    return author ;
+    public static Author init(String name, Integer age)
+    {
+        Author author = new Author() ;
+        author.setAge(age) ;
+        author.setName(name) ;
+        return author ;
+    }
+    //省略 getter/setter/toString
 }
-//省略 getter/setter/toString
-}
+
 
 ```
 
@@ -252,15 +255,16 @@ public class AuthorFactoryBean implements FactoryBean<Author>
     {
         return Author.init("javaboy", 99) ;
     }
-@Override public Class<?> getObjectType()
-{
-    return Author.class ;
+    @Override public Class<?> getObjectType()
+    {
+        return Author.class ;
+    }
+    @Override public boolean isSingleton()
+    {
+        return true ;
+    }
 }
-@Override public boolean isSingleton()
-{
-    return true ;
-}
-}
+
 
 ```
 

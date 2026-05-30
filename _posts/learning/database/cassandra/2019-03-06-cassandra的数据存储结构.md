@@ -53,16 +53,17 @@ Object serializedRow){
         logWriter.write(buffer.getData(), 0, buffer.getLength());
         checkum.update(buffer.getData(), 0, buffer.getLength());
     }
-else{
-    assert serializedRow instanceof byte[];
-    byte[] bytes = (byte[]) serializedRow;
-    logWriter.writeLong(bytes.length);
-    logWriter.write(bytes);
-    checkum.update(bytes, 0, bytes.length);
+    else{
+        assert serializedRow instanceof byte[];
+        byte[] bytes = (byte[]) serializedRow;
+        logWriter.writeLong(bytes.length);
+        logWriter.write(bytes);
+        checkum.update(bytes, 0, bytes.length);
+    }
+    logWriter.writeLong(checkum.getValue());
+    ...
 }
-logWriter.writeLong(checkum.getValue());
-...
-}
+
 
 ```
 
@@ -79,18 +80,18 @@ CommitLog 的作用是为恢复没有被写到磁盘中的数据，那如何根�
 ### 清单 2. CommitLog.recover
 
 ```java
-public static void recover(File[] clogs) throws IOException{
-    ...
-    final CommitLogHeader clHeader = CommitLogHeader.readCommitLogHeader(reader);
-    int lowPos = CommitLogHeader.getLowestPosition(clHeader);
-    if (lowPos == 0) break;
-    reader.seek(lowPos);
-    while (!reader.isEOF()){
-        try{
-            bytes = new byte[(int) reader.readLong()];
-            reader.readFully(bytes);
-            claimedCRC32 = reader.readLong();
-        }
+public static void recover(File[] clogs) throws IOException{;
+...
+final CommitLogHeader clHeader = CommitLogHeader.readCommitLogHeader(reader);
+int lowPos = CommitLogHeader.getLowestPosition(clHeader);
+if (lowPos == 0) break;
+reader.seek(lowPos);
+while (!reader.isEOF()){
+    try{
+        bytes = new byte[(int) reader.readLong()];
+        reader.readFully(bytes);
+        claimedCRC32 = reader.readLong();
+    }
     ...
     ByteArrayInputStream bufIn = new ByteArrayInputStream(bytes);
     Checksum checksum = new CRC32();
@@ -99,11 +100,12 @@ public static void recover(File[] clogs) throws IOException{
     {
         continue;
     }
-final RowMutation rm =
-RowMutation.serializer().deserialize(new DataInputStream(bufIn));
+    final RowMutation rm =
+    RowMutation.serializer().deserialize(new DataInputStream(bufIn));
 }
 ...
 }
+
 
 ```
 

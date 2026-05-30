@@ -160,17 +160,18 @@ protectedvoidprocessProperties(ConfigurableListableBeanFactory beanFactory, Prop
         try{
             processKey(beanFactory, key, props.getProperty(key));
         }
-    catch(BeansException ex) {
-        String msg ="Could not process key '"+ key +"' in PropertyOverrideConfigurer";
-        if(!this.ignoreInvalidKeys) {
-            thrownewBeanInitializationException(msg, ex);
+        catch(BeansException ex) {
+            String msg ="Could not process key '"+ key +"' in PropertyOverrideConfigurer";
+            if(!this.ignoreInvalidKeys) {
+                thrownewBeanInitializationException(msg, ex);
+            }
+            if(logger.isDebugEnabled()) {
+                logger.debug(msg, ex);
+            }
         }
-    if(logger.isDebugEnabled()) {
-        logger.debug(msg, ex);
     }
 }
-}
-}
+
 
 ```
 

@@ -260,17 +260,18 @@ Class<T> targetType) {
     if (targetType == null) {
         return (T) value;
     }
-ConversionService conversionServiceToUse = this.conversionService;
-if (conversionServiceToUse == null) {
-    //
-    Avoid initialization of shared DefaultConversionService if        // no standard type conversion is needed in the first place...
-    if (ClassUtils.isAssignableValue(targetType, value)) {
-        return (T) value;
-    }
-conversionServiceToUse = DefaultConversionService.getSharedInstance();
-} // 执行转换
-return conversionServiceToUse.convert(value, targetType);
+    ConversionService conversionServiceToUse = this.conversionService;
+    if (conversionServiceToUse == null) {
+        //
+        Avoid initialization of shared DefaultConversionService if        // no standard type conversion is needed in the first place...
+        if (ClassUtils.isAssignableValue(targetType, value)) {
+            return (T) value;
+        }
+        conversionServiceToUse = DefaultConversionService.getSharedInstance();
+    } // 执行转换
+    return conversionServiceToUse.convert(value, targetType);
 }
+
 
 ```
 

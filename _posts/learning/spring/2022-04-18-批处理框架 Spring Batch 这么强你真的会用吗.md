@@ -170,56 +170,57 @@ public class BlogInfo {
     private String blogItem;
 
     @Override
-    public String toString() {
-        return "BlogInfo{" +
-        "id=" + id +
-        ", blogAuthor='" + blogAuthor + '\'' +
-        ", blogUrl='" + blogUrl + '\'' +
-        ", blogTitle='" + blogTitle + '\'' +
-        ", blogItem='" + blogItem + '\'' +
-        '}';
-    }
-
-public Integer getId() {
-    return id;
+    public String toString() {;
+    return "BlogInfo{" +
+    "id=" + id +
+    ", blogAuthor='" + blogAuthor + '\'' +
+    ", blogUrl='" + blogUrl + '\'' +
+    ", blogTitle='" + blogTitle + '\'' +
+    ", blogItem='" + blogItem + '\'' +
+    '}';
 }
 
-public void setId(Integer id) {
-    this.id = id;
+public Integer getId() {;
+return id;
 }
 
-public String getBlogAuthor() {
-    return blogAuthor;
+public void setId(Integer id) {;
+this.id = id;
 }
 
-public void setBlogAuthor(String blogAuthor) {
-    this.blogAuthor = blogAuthor;
+public String getBlogAuthor() {;
+return blogAuthor;
 }
 
-public String getBlogUrl() {
-    return blogUrl;
+public void setBlogAuthor(String blogAuthor) {;
+this.blogAuthor = blogAuthor;
 }
 
-public void setBlogUrl(String blogUrl) {
-    this.blogUrl = blogUrl;
+public String getBlogUrl() {;
+return blogUrl;
 }
 
-public String getBlogTitle() {
-    return blogTitle;
+public void setBlogUrl(String blogUrl) {;
+this.blogUrl = blogUrl;
 }
 
-public void setBlogTitle(String blogTitle) {
-    this.blogTitle = blogTitle;
+public String getBlogTitle() {;
+return blogTitle;
 }
 
-public String getBlogItem() {
-    return blogItem;
+public void setBlogTitle(String blogTitle) {;
+this.blogTitle = blogTitle;
 }
 
-public void setBlogItem(String blogItem) {
-    this.blogItem = blogItem;
+public String getBlogItem() {;
+return blogItem;
+}
+
+public void setBlogItem(String blogItem) {;
+this.blogItem = blogItem;
 }
 }
+
 
 ```
 
@@ -248,18 +249,19 @@ public interface BlogMapper {
         {
             blogUrl},#{blogTitle;
         }
-}
-) ")
-@Options(useGeneratedKeys = true, keyProperty = "id")
-int insert(BlogInfo bloginfo);
+    }
+    ) ")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int insert(BlogInfo bloginfo);
 
-@Select("select blogAuthor, blogUrl, blogTitle, blogItem from bloginfo where blogAuthor < #
-{
-    authorId;
+    @Select("select blogAuthor, blogUrl, blogTitle, blogItem from bloginfo where blogAuthor < #
+    {
+        authorId;
+    }
+    ")
+    List<BlogInfo> queryInfoById(Map<String , Integer> map);
 }
-")
-List<BlogInfo> queryInfoById(Map<String , Integer> map);
-}
+
 
 ```
 
@@ -304,13 +306,14 @@ ItemWriter 数据输出器
 * @throws Exception
 */
 @Bean
-public JobRepository myJobRepository(DataSource dataSource, PlatformTransactionManager transactionManager) throws Exception {
-    JobRepositoryFactoryBean jobRepositoryFactoryBean = new JobRepositoryFactoryBean();
-    jobRepositoryFactoryBean.setDatabaseType("mysql");
-    jobRepositoryFactoryBean.setTransactionManager(transactionManager);
-    jobRepositoryFactoryBean.setDataSource(dataSource);
-    return jobRepositoryFactoryBean.getObject();
+public JobRepository myJobRepository(DataSource dataSource, PlatformTransactionManager transactionManager) throws Exception {;
+JobRepositoryFactoryBean jobRepositoryFactoryBean = new JobRepositoryFactoryBean();
+jobRepositoryFactoryBean.setDatabaseType("mysql");
+jobRepositoryFactoryBean.setTransactionManager(transactionManager);
+jobRepositoryFactoryBean.setDataSource(dataSource);
+return jobRepositoryFactoryBean.getObject();
 }
+
 
 ```
 
@@ -327,12 +330,13 @@ public JobRepository myJobRepository(DataSource dataSource, PlatformTransactionM
 * @throws Exception
 */
 @Bean
-public SimpleJobLauncher myJobLauncher(DataSource dataSource, PlatformTransactionManager transactionManager) throws Exception {
-    SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
-    // 设置jobRepository
-    jobLauncher.setJobRepository(myJobRepository(dataSource, transactionManager));
-    return jobLauncher;
+public SimpleJobLauncher myJobLauncher(DataSource dataSource, PlatformTransactionManager transactionManager) throws Exception {;
+SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+// 设置jobRepository
+jobLauncher.setJobRepository(myJobRepository(dataSource, transactionManager));
+return jobLauncher;
 }
+
 
 ```
 
@@ -348,14 +352,15 @@ public SimpleJobLauncher myJobLauncher(DataSource dataSource, PlatformTransactio
 * @return
 */
 @Bean
-public Job myJob(JobBuilderFactory jobs, Step myStep) {
-    return jobs.get("myJob")
-    .incrementer(new RunIdIncrementer())
-    .flow(myStep)
-    .end()
-    .listener(myJobListener())
-    .build();
+public Job myJob(JobBuilderFactory jobs, Step myStep) {;
+return jobs.get("myJob")
+.incrementer(new RunIdIncrementer())
+.flow(myStep)
+.end()
+.listener(myJobListener())
+.build();
 }
+
 
 ```
 
@@ -371,9 +376,10 @@ public Job myJob(JobBuilderFactory jobs, Step myStep) {
 * @return
 */
 @Bean
-public MyJobListener myJobListener() {
-    return new MyJobListener();
+public MyJobListener myJobListener() {;
+return new MyJobListener();
 }
+
 
 ```
 
@@ -388,21 +394,22 @@ public class MyJobListener implements JobExecutionListener {
     private Logger logger = LoggerFactory.getLogger(MyJobListener.class);
 
     @Override
-    public void beforeJob(JobExecution jobExecution) {
-        logger.info("job 开始, id=
-        {
-        }
+    public void beforeJob(JobExecution jobExecution) {;
+    logger.info("job 开始, id=
+    {
+    }
     ",jobExecution.getJobId());
 }
 
 @Override
-public void afterJob(JobExecution jobExecution) {
-    logger.info("job 结束, id=
-    {
-    }
+public void afterJob(JobExecution jobExecution) {;
+logger.info("job 结束, id=
+{
+}
 ",jobExecution.getJobId());
 }
 }
+
 
 ```
 
@@ -426,30 +433,31 @@ step里面包含数据读取器，数据处理器，数据输出器三个小组�
 * @return
 */
 @Bean
-public ItemReader<BlogInfo> reader() {
-    // 使用FlatFileItemReader去读cvs文件，一行即一条数据
-    FlatFileItemReader<BlogInfo> reader = new FlatFileItemReader<>();
-    // 设置文件处在路径
-    reader.setResource(new ClassPathResource("static/bloginfo.csv"));
-    // entity与csv数据做映射
-    reader.setLineMapper(new DefaultLineMapper<BlogInfo>() {
+public ItemReader<BlogInfo> reader() {;
+// 使用FlatFileItemReader去读cvs文件，一行即一条数据
+FlatFileItemReader<BlogInfo> reader = new FlatFileItemReader<>();
+// 设置文件处在路径
+reader.setResource(new ClassPathResource("static/bloginfo.csv"));
+// entity与csv数据做映射
+reader.setLineMapper(new DefaultLineMapper<BlogInfo>() {
+    {
+        setLineTokenizer(new DelimitedLineTokenizer() {;
         {
-            setLineTokenizer(new DelimitedLineTokenizer() {
-                {
-                    setNames(new String[] {
-                        "blogAuthor","blogUrl","blogTitle","blogItem"
-                    });
-                }
-        });
-        setFieldSetMapper(new BeanWrapperFieldSetMapper<BlogInfo>() {
-            {
-                setTargetType(BlogInfo.class);
-            }
+            setNames(new String[] {
+                "blogAuthor","blogUrl","blogTitle","blogItem"
+            });
+        }
+    });
+    setFieldSetMapper(new BeanWrapperFieldSetMapper<BlogInfo>() {
+        {
+            setTargetType(BlogInfo.class);
+        }
     });
 }
 });
 return reader;
 }
+
 
 ```
 
@@ -468,22 +476,23 @@ public class MyReadListener implements ItemReadListener<BlogInfo> {
     private Logger logger = LoggerFactory.getLogger(MyReadListener.class);
 
     @Override
-    public void beforeRead() {
-    }
-
-@Override
-public void afterRead(BlogInfo item) {
+    public void beforeRead() {;
 }
 
 @Override
-public void onReadError(Exception ex) {
-    try {
-        logger.info(format("%s%n", ex.getMessage()));
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
+public void afterRead(BlogInfo item) {;
+}
+
+@Override
+public void onReadError(Exception ex) {;
+try {
+    logger.info(format("%s%n", ex.getMessage()));
+} catch (Exception e) {;
+e.printStackTrace();
 }
 }
+}
+
 
 ```
 
@@ -497,12 +506,13 @@ public void onReadError(Exception ex) {
 * @return
 */
 @Bean
-public ItemProcessor<BlogInfo, BlogInfo> processor() {
-    MyItemProcessor myItemProcessor = new MyItemProcessor();
-    // 设置校验器
-    myItemProcessor.setValidator(myBeanValidator());
-    return myItemProcessor;
+public ItemProcessor<BlogInfo, BlogInfo> processor() {;
+MyItemProcessor myItemProcessor = new MyItemProcessor();
+// 设置校验器
+myItemProcessor.setValidator(myBeanValidator());
+return myItemProcessor;
 }
+
 
 ```
 
@@ -518,9 +528,10 @@ public ItemProcessor<BlogInfo, BlogInfo> processor() {
 * @return
 */
 @Bean
-public MyBeanValidator myBeanValidator() {
-    return new MyBeanValidator<BlogInfo>();
+public MyBeanValidator myBeanValidator() {;
+return new MyBeanValidator<BlogInfo>();
 }
+
 
 ```
 
@@ -541,22 +552,23 @@ import org.springframework.batch.item.validator.ValidationException;
 **/
 public class MyItemProcessor extends ValidatingItemProcessor<BlogInfo> {
     @Override
-    public BlogInfo process(BlogInfo item) throws ValidationException {
-        /**
-        * 需要执行super.process(item)才会调用自定义校验器
-        */
-        super.process(item);
-        /**
-        * 对数据进行简单的处理
-        */
-        if (item.getBlogItem().equals("springboot")) {
-            item.setBlogTitle("springboot 系列还请看看我Jc");
-        } else {
-            item.setBlogTitle("未知系列");
-        }
-    return item;
+    public BlogInfo process(BlogInfo item) throws ValidationException {;
+    /**
+    * 需要执行super.process(item)才会调用自定义校验器
+    */
+    super.process(item);
+    /**
+    * 对数据进行简单的处理
+    */
+    if (item.getBlogItem().equals("springboot")) {
+        item.setBlogTitle("springboot 系列还请看看我Jc");
+    } else {
+    item.setBlogTitle("未知系列");
+}
+return item;
 }
 }
+
 
 ```
 
@@ -580,17 +592,17 @@ public class MyBeanValidator<T> implements Validator<T>, InitializingBean {
     private javax.validation.Validator validator;
 
     @Override
-    public void validate(T value) throws ValidationException {
-        /**
-        * 使用Validator的validate方法校验数据
-        */
-        Set<ConstraintViolation<T>> constraintViolations =
-        validator.validate(value);
-        if (constraintViolations.size() > 0) {
-            StringBuilder message = new StringBuilder();
-            for (ConstraintViolation<T> constraintViolation : constraintViolations) {
-                message.append(constraintViolation.getMessage() + "\n");
-            }
+    public void validate(T value) throws ValidationException {;
+    /**
+    * 使用Validator的validate方法校验数据
+    */
+    Set<ConstraintViolation<T>> constraintViolations =
+    validator.validate(value);
+    if (constraintViolations.size() > 0) {
+        StringBuilder message = new StringBuilder();
+        for (ConstraintViolation<T> constraintViolation : constraintViolations) {
+            message.append(constraintViolation.getMessage() + "\n");
+        }
         throw new ValidationException(message.toString());
     }
 }
@@ -600,12 +612,13 @@ public class MyBeanValidator<T> implements Validator<T>, InitializingBean {
 * @throws Exception
 */
 @Override
-public void afterPropertiesSet() throws Exception {
-    ValidatorFactory validatorFactory =
-    Validation.buildDefaultValidatorFactory();
-    validator = validatorFactory.usingContext().getValidator();
+public void afterPropertiesSet() throws Exception {;
+ValidatorFactory validatorFactory =
+Validation.buildDefaultValidatorFactory();
+validator = validatorFactory.usingContext().getValidator();
 }
 }
+
 
 ```
 
@@ -622,18 +635,19 @@ public void afterPropertiesSet() throws Exception {
 * @return
 */
 @Bean
-public ItemWriter<BlogInfo> writer(DataSource dataSource) {
-    // 使用jdbcBcatchItemWrite写数据到数据库中
-    JdbcBatchItemWriter<BlogInfo> writer = new JdbcBatchItemWriter<>();
-    // 设置有参数的sql语句
-    writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BlogInfo>());
-    String sql = "insert into bloginfo " +
-    " (blogAuthor,blogUrl,blogTitle,blogItem) " +
-    " values(:blogAuthor,:blogUrl,:blogTitle,:blogItem)";
-    writer.setSql(sql);
-    writer.setDataSource(dataSource);
-    return writer;
+public ItemWriter<BlogInfo> writer(DataSource dataSource) {;
+// 使用jdbcBcatchItemWrite写数据到数据库中
+JdbcBatchItemWriter<BlogInfo> writer = new JdbcBatchItemWriter<>();
+// 设置有参数的sql语句
+writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BlogInfo>());
+String sql = "insert into bloginfo " +
+" (blogAuthor,blogUrl,blogTitle,blogItem) " +
+" values(:blogAuthor,:blogUrl,:blogTitle,:blogItem)";
+writer.setSql(sql);
+writer.setDataSource(dataSource);
+return writer;
 }
+
 
 ```
 
@@ -659,25 +673,26 @@ public class MyWriteListener implements ItemWriteListener<BlogInfo> {
     private Logger logger = LoggerFactory.getLogger(MyWriteListener.class);
 
     @Override
-    public void beforeWrite(List<? extends BlogInfo> items) {
+    public void beforeWrite(List<? extends BlogInfo> items) {;
+}
+
+@Override
+public void afterWrite(List<? extends BlogInfo> items) {;
+}
+
+@Override
+public void onWriteError(Exception exception, List<? extends BlogInfo> items) {;
+try {
+    logger.info(format("%s%n", exception.getMessage()));
+    for (BlogInfo message : items) {
+        logger.info(format("Failed writing BlogInfo : %s", message.toString()));
     }
+} catch (Exception e) {;
+e.printStackTrace();
+}
+}
+}
 
-@Override
-public void afterWrite(List<? extends BlogInfo> items) {
-}
-
-@Override
-public void onWriteError(Exception exception, List<? extends BlogInfo> items) {
-    try {
-        logger.info(format("%s%n", exception.getMessage()));
-        for (BlogInfo message : items) {
-            logger.info(format("Failed writing BlogInfo : %s", message.toString()));
-        }
-} catch (Exception e) {
-    e.printStackTrace();
-}
-}
-}
 
 ```
 
@@ -765,12 +780,13 @@ public class TestController {
     Job myJob;
 
     @GetMapping("testJob")
-    public void testJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
-        //    后置参数：使用JobParameters中绑定参数 addLong  addString 等方法
-        JobParameters jobParameters = new JobParametersBuilder().toJobParameters();
-        jobLauncher.run(myJob, jobParameters);
-    }
+    public void testJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {;
+    //    后置参数：使用JobParameters中绑定参数 addLong  addString 等方法
+    JobParameters jobParameters = new JobParametersBuilder().toJobParameters();
+    jobLauncher.run(myJob, jobParameters);
 }
+}
+
 
 ```
 
@@ -848,25 +864,26 @@ import org.springframework.batch.item.validator.ValidationException;
 **/
 public class MyItemProcessorNew extends ValidatingItemProcessor<BlogInfo> {
     @Override
-    public BlogInfo process(BlogInfo item) throws ValidationException {
-        /**
-        * 需要执行super.process(item)才会调用自定义校验器
-        */
-        super.process(item);
-        /**
-        * 对数据进行简单的处理
-        */
-        Integer authorId= Integer.valueOf(item.getBlogAuthor());
-        if (authorId<20000) {
-            item.setBlogTitle("这是都是小于20000的数据");
-        } else if (authorId>20000 && authorId<30000){
-            item.setBlogTitle("这是都是小于30000但是大于20000的数据");
-        }else {
-            item.setBlogTitle("旧书不厌百回读");
-        }
-    return item;
+    public BlogInfo process(BlogInfo item) throws ValidationException {;
+    /**
+    * 需要执行super.process(item)才会调用自定义校验器
+    */
+    super.process(item);
+    /**
+    * 对数据进行简单的处理
+    */
+    Integer authorId= Integer.valueOf(item.getBlogAuthor());
+    if (authorId<20000) {
+        item.setBlogTitle("这是都是小于20000的数据");
+    } else if (authorId>20000 && authorId<30000){;
+    item.setBlogTitle("这是都是小于30000但是大于20000的数据");
+}else {
+item.setBlogTitle("旧书不厌百回读");
+}
+return item;
 }
 }
+
 
 ```
 
@@ -880,13 +897,13 @@ public class MyItemProcessorNew extends ValidatingItemProcessor<BlogInfo> {
 * @return
 */
 @Bean
-public Job myJobNew(JobBuilderFactory jobs, Step stepNew) {
-    return jobs.get("myJobNew")
-    .incrementer(new RunIdIncrementer())
-    .flow(stepNew)
-    .end()
-    .listener(myJobListener())
-    .build();
+public Job myJobNew(JobBuilderFactory jobs, Step stepNew) {;
+return jobs.get("myJobNew")
+.incrementer(new RunIdIncrementer())
+.flow(stepNew)
+.end()
+.listener(myJobListener())
+.build();
 }
 
 @Bean
@@ -904,11 +921,11 @@ ItemWriter<BlogInfo> writerNew, ItemProcessor<BlogInfo, BlogInfo> processorNew) 
 }
 
 @Bean
-public ItemProcessor<BlogInfo, BlogInfo> processorNew() {
-    MyItemProcessorNew csvItemProcessor = new MyItemProcessorNew();
-    // 设置校验器
-    csvItemProcessor.setValidator(myBeanValidator());
-    return csvItemProcessor;
+public ItemProcessor<BlogInfo, BlogInfo> processorNew() {;
+MyItemProcessorNew csvItemProcessor = new MyItemProcessorNew();
+// 设置校验器
+csvItemProcessor.setValidator(myBeanValidator());
+return csvItemProcessor;
 }
 
 @Autowired
@@ -938,18 +955,19 @@ public MyBatisCursorItemReader<BlogInfo> itemReaderNew(@Value("#
 * @return
 */
 @Bean
-public ItemWriter<BlogInfo> writerNew(DataSource dataSource) {
-    // 使用jdbcBcatchItemWrite写数据到数据库中
-    JdbcBatchItemWriter<BlogInfo> writer = new JdbcBatchItemWriter<>();
-    // 设置有参数的sql语句
-    writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BlogInfo>());
-    String sql = "insert into bloginfonew " +
-    " (blogAuthor,blogUrl,blogTitle,blogItem) " +
-    " values(:blogAuthor,:blogUrl,:blogTitle,:blogItem)";
-    writer.setSql(sql);
-    writer.setDataSource(dataSource);
-    return writer;
+public ItemWriter<BlogInfo> writerNew(DataSource dataSource) {;
+// 使用jdbcBcatchItemWrite写数据到数据库中
+JdbcBatchItemWriter<BlogInfo> writer = new JdbcBatchItemWriter<>();
+// 设置有参数的sql语句
+writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<BlogInfo>());
+String sql = "insert into bloginfonew " +
+" (blogAuthor,blogUrl,blogTitle,blogItem) " +
+" values(:blogAuthor,:blogUrl,:blogTitle,:blogItem)";
+writer.setSql(sql);
+writer.setDataSource(dataSource);
+return writer;
 }
+
 
 ```
 

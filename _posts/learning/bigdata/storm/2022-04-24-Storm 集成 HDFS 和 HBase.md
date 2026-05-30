@@ -110,24 +110,25 @@ storm-core
     {
         this.spoutOutputCollector = spoutOutputCollector ;
     }
-@Override public void nextTuple()
-{
-    // 模拟产生数据 String lineData = productData() ;
-    spoutOutputCollector.emit(new Values(lineData)) ;
-    Utils.sleep(1000) ;
+    @Override public void nextTuple()
+    {
+        // 模拟产生数据 String lineData = productData() ;
+        spoutOutputCollector.emit(new Values(lineData)) ;
+        Utils.sleep(1000) ;
+    }
+    @Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
+    {
+        outputFieldsDeclarer.declare(new Fields("line")) ;
+    }
+    /** * 模拟数据 */ private String productData()
+    {
+        Collections.shuffle(list) ;
+        Random random = new Random() ;
+        int endIndex = random.nextInt(list.size()) % (list.size()) + 1 ;
+        return StringUtils.join(list.toArray(), "\t", 0, endIndex) ;
+    }
 }
-@Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
-{
-    outputFieldsDeclarer.declare(new Fields("line")) ;
-}
-/** * 模拟数据 */ private String productData()
-{
-    Collections.shuffle(list) ;
-    Random random = new Random() ;
-    int endIndex = random.nextInt(list.size()) % (list.size()) + 1 ;
-    return StringUtils.join(list.toArray(), "\t", 0, endIndex) ;
-}
-}
+
 
 ```
 
@@ -171,18 +172,19 @@ public class DataToHdfsApp
             {
                 StormSubmitter.submitTopology("ClusterDataToHdfsApp", new Config(), builder.createTopology()) ;
             }
-        catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
-        {
-            e.printStackTrace() ;
+            catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
+            {
+                e.printStackTrace() ;
+            }
         }
+        else
+        {
+            LocalCluster cluster = new LocalCluster() ;
+            cluster.submitTopology("LocalDataToHdfsApp", new Config(), builder.createTopology()) ;
+        }
+    }
 }
-else
-{
-    LocalCluster cluster = new LocalCluster() ;
-    cluster.submitTopology("LocalDataToHdfsApp", new Config(), builder.createTopology()) ;
-}
-}
-}
+
 
 ```
 
@@ -246,24 +248,25 @@ hadoop fs -tail -f /strom-hdfs/文件名
     {
         this.spoutOutputCollector = spoutOutputCollector ;
     }
-@Override public void nextTuple()
-{
-    // 模拟产生数据 String lineData = productData() ;
-    spoutOutputCollector.emit(new Values(lineData)) ;
-    Utils.sleep(1000) ;
+    @Override public void nextTuple()
+    {
+        // 模拟产生数据 String lineData = productData() ;
+        spoutOutputCollector.emit(new Values(lineData)) ;
+        Utils.sleep(1000) ;
+    }
+    @Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
+    {
+        outputFieldsDeclarer.declare(new Fields("line")) ;
+    }
+    /** * 模拟数据 */ private String productData()
+    {
+        Collections.shuffle(list) ;
+        Random random = new Random() ;
+        int endIndex = random.nextInt(list.size()) % (list.size()) + 1 ;
+        return StringUtils.join(list.toArray(), "\t", 0, endIndex) ;
+    }
 }
-@Override public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer)
-{
-    outputFieldsDeclarer.declare(new Fields("line")) ;
-}
-/** * 模拟数据 */ private String productData()
-{
-    Collections.shuffle(list) ;
-    Random random = new Random() ;
-    int endIndex = random.nextInt(list.size()) % (list.size()) + 1 ;
-    return StringUtils.join(list.toArray(), "\t", 0, endIndex) ;
-}
-}
+
 
 ```
 
@@ -291,20 +294,21 @@ Hadoop  Spark   HBase   Storm
     {
         this.collector = collector ;
     }
-@Override public void execute(Tuple input)
-{
-    String line = input.getStringByField("line") ;
-    String[] words = line.split("\t") ;
-    for (String word : words)
+    @Override public void execute(Tuple input)
     {
-        collector.emit(tuple(word, 1)) ;
+        String line = input.getStringByField("line") ;
+        String[] words = line.split("\t") ;
+        for (String word : words)
+        {
+            collector.emit(tuple(word, 1)) ;
+        }
+    }
+    @Override public void declareOutputFields(OutputFieldsDeclarer declarer)
+    {
+        declarer.declare(new Fields("word", "count")) ;
     }
 }
-@Override public void declareOutputFields(OutputFieldsDeclarer declarer)
-{
-    declarer.declare(new Fields("word", "count")) ;
-}
-}
+
 
 ```
 
@@ -319,23 +323,24 @@ Hadoop  Spark   HBase   Storm
     {
         this.collector=collector ;
     }
-@Override public void execute(Tuple input)
-{
-    String word = input.getStringByField("word") ;
-    Integer count = counts.get(word) ;
-    if (count == null)
+    @Override public void execute(Tuple input)
     {
-        count = 0 ;
+        String word = input.getStringByField("word") ;
+        Integer count = counts.get(word) ;
+        if (count == null)
+        {
+            count = 0 ;
+        }
+        count++ ;
+        counts.put(word, count) ;
+        // 输出 collector.emit(new Values(word, String.valueOf(count))) ;
     }
-count++ ;
-counts.put(word, count) ;
-// 输出 collector.emit(new Values(word, String.valueOf(count))) ;
+    @Override public void declareOutputFields(OutputFieldsDeclarer declarer)
+    {
+        declarer.declare(new Fields("word", "count")) ;
+    }
 }
-@Override public void declareOutputFields(OutputFieldsDeclarer declarer)
-{
-    declarer.declare(new Fields("word", "count")) ;
-}
-}
+
 
 ```
 
@@ -368,18 +373,19 @@ counts.put(word, count) ;
             {
                 StormSubmitter.submitTopology("ClusterWordCountToRedisApp", config, builder.createTopology()) ;
             }
-        catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
-        {
-            e.printStackTrace() ;
+            catch (AlreadyAliveException | InvalidTopologyException | AuthorizationException e)
+            {
+                e.printStackTrace() ;
+            }
         }
+        else
+        {
+            LocalCluster cluster = new LocalCluster() ;
+            cluster.submitTopology("LocalWordCountToRedisApp", config, builder.createTopology()) ;
+        }
+    }
 }
-else
-{
-    LocalCluster cluster = new LocalCluster() ;
-    cluster.submitTopology("LocalWordCountToRedisApp", config, builder.createTopology()) ;
-}
-}
-}
+
 
 ```
 

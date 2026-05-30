@@ -66,19 +66,20 @@ spring-cloud-context
 public abstract class SpringApplicationEvent extends ApplicationEvent {
     private final String[] args;
 
-    public SpringApplicationEvent(SpringApplication application, String[] args) {
-        super(application);
-        this.args = args;
-    }
-
-public SpringApplication getSpringApplication() {
-    return (SpringApplication) getSource();
+    public SpringApplicationEvent(SpringApplication application, String[] args) {;
+    super(application);
+    this.args = args;
 }
 
-public final String[] getArgs() {
-    return this.args;
+public SpringApplication getSpringApplication() {;
+return (SpringApplication) getSource();
+}
+
+public final String[] getArgs() {;
+return this.args;
 }
 }
+
 
 ```
 

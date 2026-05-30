@@ -77,9 +77,10 @@ week: 2019-W29
 @PostMapping("/add")
 @RequiresPermissions(value = "add")
 @Log(methodDesc = "添加用户")
-public ResponseEntity<String> add(@RequestBody AddReq addReq) {
-    return userService.add(addReq);
+public ResponseEntity<String> add(@RequestBody AddReq addReq) {;
+return userService.add(addReq);
 }
+
 ```
 
 AddReq.java
@@ -193,58 +194,59 @@ public class RequestKeyGenerator {
     * @param joinPoint 切入点
     * @return
     */
-    public static String getLockKey(ProceedingJoinPoint joinPoint) {
-        // 获取连接点的方法签名对象
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        // Method对象
-        Method method = methodSignature.getMethod();
-        // 获取Method对象上的注解对象
-        RequestLock requestLock = method.getAnnotation(RequestLock.class);
-        // 获取方法参数
-        final Object[] args = joinPoint.getArgs();
-        // 获取Method对象上所有的注解
-        final Parameter[] parameters = method.getParameters();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0;
-        i < parameters.length;
-        i++) {
-            final RequestKeyParam keyParam = parameters[i].getAnnotation(RequestKeyParam.class);
-            // 如果属性不是RequestKeyParam注解，则不处理
-            if (keyParam == null) {
-                continue;
-            }
+    public static String getLockKey(ProceedingJoinPoint joinPoint) {;
+    // 获取连接点的方法签名对象
+    MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+    // Method对象
+    Method method = methodSignature.getMethod();
+    // 获取Method对象上的注解对象
+    RequestLock requestLock = method.getAnnotation(RequestLock.class);
+    // 获取方法参数
+    final Object[] args = joinPoint.getArgs();
+    // 获取Method对象上所有的注解
+    final Parameter[] parameters = method.getParameters();
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0;
+    i < parameters.length;
+    i++) {
+        final RequestKeyParam keyParam = parameters[i].getAnnotation(RequestKeyParam.class);
+        // 如果属性不是RequestKeyParam注解，则不处理
+        if (keyParam == null) {
+            continue;
+        }
         // 如果属性是RequestKeyParam注解，则拼接 连接符 "& + RequestKeyParam"
         sb.append(requestLock.delimiter()).append(args[i]);
     }
-// 如果方法上没有加RequestKeyParam注解
-if (StringUtils.isEmpty(sb.toString())) {
-    // 获取方法上的多个注解（为什么是两层数组：因为第二层数组是只有一个元素的数组）
-    final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-    // 循环注解
-    for (int i = 0;
-    i < parameterAnnotations.length;
-    i++) {
-        final Object object = args[i];
-        // 获取注解类中所有的属性字段
-        final Field[] fields = object.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            // 判断字段上是否有RequestKeyParam注解
-            final RequestKeyParam annotation = field.getAnnotation(RequestKeyParam.class);
-            // 如果没有，跳过
-            if (annotation == null) {
-                continue;
+    // 如果方法上没有加RequestKeyParam注解
+    if (StringUtils.isEmpty(sb.toString())) {
+        // 获取方法上的多个注解（为什么是两层数组：因为第二层数组是只有一个元素的数组）
+        final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        // 循环注解
+        for (int i = 0;
+        i < parameterAnnotations.length;
+        i++) {
+            final Object object = args[i];
+            // 获取注解类中所有的属性字段
+            final Field[] fields = object.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                // 判断字段上是否有RequestKeyParam注解
+                final RequestKeyParam annotation = field.getAnnotation(RequestKeyParam.class);
+                // 如果没有，跳过
+                if (annotation == null) {
+                    continue;
+                }
+                // 如果有，设置Accessible为true（为true时可以使用反射访问私有变量，否则不能访问私有变量）
+                field.setAccessible(true);
+                // 如果属性是RequestKeyParam注解，则拼接 连接符" & + RequestKeyParam"
+                sb.append(requestLock.delimiter()).append(ReflectionUtils.getField(field, object));
             }
-        // 如果有，设置Accessible为true（为true时可以使用反射访问私有变量，否则不能访问私有变量）
-        field.setAccessible(true);
-        // 如果属性是RequestKeyParam注解，则拼接 连接符" & + RequestKeyParam"
-        sb.append(requestLock.delimiter()).append(ReflectionUtils.getField(field, object));
+        }
     }
+    // 返回指定前缀的key
+    return requestLock.prefix() + sb;
 }
 }
-// 返回指定前缀的key
-return requestLock.prefix() + sb;
-}
-}
+
 
 ```
 
@@ -284,18 +286,18 @@ public class RedisRequestLockAspect {
     private final StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    public RedisRequestLockAspect(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
-    }
+    public RedisRequestLockAspect(StringRedisTemplate stringRedisTemplate) {;
+    this.stringRedisTemplate = stringRedisTemplate;
+}
 
 @Around("execution(public * * (..)) && @annotation(com.summo.demo.config.requestlock.RequestLock)")
-public Object interceptor(ProceedingJoinPoint joinPoint) {
-    MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-    Method method = methodSignature.getMethod();
-    RequestLock requestLock = method.getAnnotation(RequestLock.class);
-    if (StringUtils.isEmpty(requestLock.prefix())) {
-        throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "重复提交前缀不能为空");
-    }
+public Object interceptor(ProceedingJoinPoint joinPoint) {;
+MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+Method method = methodSignature.getMethod();
+RequestLock requestLock = method.getAnnotation(RequestLock.class);
+if (StringUtils.isEmpty(requestLock.prefix())) {
+    throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "重复提交前缀不能为空");
+}
 // 获取自定义key
 final String lockKey = RequestKeyGenerator.getLockKey(joinPoint);
 // 使用RedisCallback接口执行set命令，设置锁键；设置额外选项：过期时间和SET_IF_ABSENT选项
@@ -308,11 +310,12 @@ if (!success) {
 }
 try {
     return joinPoint.proceed();
-} catch (Throwable throwable) {
-    throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "系统异常");
+} catch (Throwable throwable) {;
+throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "系统异常");
 }
 }
 }
+
 
 ```
 
@@ -343,22 +346,23 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedissonConfig {
     @Bean
-    public RedissonClient redissonClient() {
-        Config config = new Config();
-        // 这里假设你使用单节点的Redis服务器
-        config.useSingleServer()
-        // 使用与Spring Data Redis相同的地址
-        .setAddress("redis://127.0.0.1:6379");
-        // 如果有密码
-        //.setPassword("xxxx");
-        // 其他配置参数
-        //.setDatabase(0)
-        //.setConnectionPoolSize(10)
-        //.setConnectionMinimumIdleSize(2);
-        // 创建RedissonClient实例
-        return Redisson.create(config);
-    }
+    public RedissonClient redissonClient() {;
+    Config config = new Config();
+    // 这里假设你使用单节点的Redis服务器
+    config.useSingleServer()
+    // 使用与Spring Data Redis相同的地址
+    .setAddress("redis://127.0.0.1:6379");
+    // 如果有密码
+    //.setPassword("xxxx");
+    // 其他配置参数
+    //.setDatabase(0)
+    //.setConnectionPoolSize(10)
+    //.setConnectionMinimumIdleSize(2);
+    // 创建RedissonClient实例
+    return Redisson.create(config);
 }
+}
+
 ```
 
 配好之后，核心代码如下**RedissonRequestLockAspect.java**
@@ -389,18 +393,18 @@ public class RedissonRequestLockAspect {
     private RedissonClient redissonClient;
 
     @Autowired
-    public RedissonRequestLockAspect(RedissonClient redissonClient) {
-        this.redissonClient = redissonClient;
-    }
+    public RedissonRequestLockAspect(RedissonClient redissonClient) {;
+    this.redissonClient = redissonClient;
+}
 
 @Around("execution(public * * (..)) && @annotation(com.summo.demo.config.requestlock.RequestLock)")
-public Object interceptor(ProceedingJoinPoint joinPoint) {
-    MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-    Method method = methodSignature.getMethod();
-    RequestLock requestLock = method.getAnnotation(RequestLock.class);
-    if (StringUtils.isEmpty(requestLock.prefix())) {
-        throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "重复提交前缀不能为空");
-    }
+public Object interceptor(ProceedingJoinPoint joinPoint) {;
+MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+Method method = methodSignature.getMethod();
+RequestLock requestLock = method.getAnnotation(RequestLock.class);
+if (StringUtils.isEmpty(requestLock.prefix())) {
+    throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "重复提交前缀不能为空");
+}
 // 获取自定义key
 final String lockKey = RequestKeyGenerator.getLockKey(joinPoint);
 // 使用Redisson分布式锁的方式判断是否重复提交
@@ -413,23 +417,24 @@ try {
     if (!isLocked) {
         throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "您的操作太快了,请稍后重试");
     }
-// 拿到锁后设置过期时间
-lock.lock(requestLock.expire(), requestLock.timeUnit());
-try {
-    return joinPoint.proceed();
-} catch (Throwable throwable) {
+    // 拿到锁后设置过期时间
+    lock.lock(requestLock.expire(), requestLock.timeUnit());
+    try {
+        return joinPoint.proceed();
+    } catch (Throwable throwable) {;
     throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "系统异常");
 }
-} catch (Exception e) {
-    throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "您的操作太快了,请稍后重试");
+} catch (Exception e) {;
+throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "您的操作太快了,请稍后重试");
 } finally {
-    // 释放锁
-    if (isLocked && lock.isHeldByCurrentThread()) {
-        lock.unlock();
-    }
+// 释放锁
+if (isLocked && lock.isHeldByCurrentThread()) {
+    lock.unlock();
 }
 }
 }
+}
+
 
 ```
 

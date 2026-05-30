@@ -70,9 +70,9 @@ public interface Shape {
 // --- 2. 具体构件 (ConcreteComponent) ---
 public class Circle implements Shape {
     @Override
-    public void draw() {
-        System.out.println("Base Shape: Circle");
-    }
+    public void draw() {;
+    System.out.println("Base Shape: Circle");
+}
 }
 
 // --- 3. 抽象装饰类 (Decorator) ---
@@ -80,59 +80,60 @@ public abstract class ShapeDecorator implements Shape {
     // 组合关系：持有抽象构件的引用
     protected Shape decoratedShape;
 
-    public ShapeDecorator(Shape decoratedShape){
-        this.decoratedShape = decoratedShape;
-    }
+    public ShapeDecorator(Shape decoratedShape){;
+    this.decoratedShape = decoratedShape;
+}
 
 // 默认实现：委托给被包装的对象
 @Override
-public void draw(){
-    decoratedShape.draw();
+public void draw(){;
+decoratedShape.draw();
 }
 }
 
 // --- 4. 具体装饰类 (ConcreteDecorator) ---
 public class RedShapeDecorator extends ShapeDecorator {
 
-    public RedShapeDecorator(Shape decoratedShape) {
-        super(decoratedShape);
-    }
-
-@Override
-public void draw() {
-    // 1. 委托给原有构件执行核心功能
-    decoratedShape.draw();
-
-    // 2. 增加额外职责
-    setRedBorder(decoratedShape);
+    public RedShapeDecorator(Shape decoratedShape) {;
+    super(decoratedShape);
 }
 
-private void setRedBorder(Shape decoratedShape){
-    System.out.println("Decoration: Border Color set to Red");
+@Override
+public void draw() {;
+// 1. 委托给原有构件执行核心功能
+decoratedShape.draw();
+
+// 2. 增加额外职责
+setRedBorder(decoratedShape);
+}
+
+private void setRedBorder(Shape decoratedShape){;
+System.out.println("Decoration: Border Color set to Red");
 }
 }
 
 // --- 5. 客户端调用 (Client) ---
 public class DecoratorPatternDemo {
-    public static void main(String[] args) {
-        // 原始对象
-        Shape circle = new Circle();
+    public static void main(String[] args) {;
+    // 原始对象
+    Shape circle = new Circle();
 
-        // 动态地增加职责：用装饰器包装原始对象
-        Shape redCircle = new RedShapeDecorator(circle);
+    // 动态地增加职责：用装饰器包装原始对象
+    Shape redCircle = new RedShapeDecorator(circle);
 
-        System.out.println("--- Normal Circle ---");
-        circle.draw();
+    System.out.println("--- Normal Circle ---");
+    circle.draw();
 
-        System.out.println("\n--- Decorated Red Circle ---");
-        redCircle.draw(); // 客户端使用一致的接口
+    System.out.println("\n--- Decorated Red Circle ---");
+    redCircle.draw(); // 客户端使用一致的接口
 
-        // 链式装饰：可以在外部再套一层，例如：
-        Shape doubleDecoratedCircle = new RedShapeDecorator(redCircle);
-        System.out.println("\n--- Double Decorated Circle (Red + Red) ---");
-        doubleDecoratedCircle.draw();
-    }
+    // 链式装饰：可以在外部再套一层，例如：
+    Shape doubleDecoratedCircle = new RedShapeDecorator(redCircle);
+    System.out.println("\n--- Double Decorated Circle (Red + Red) ---");
+    doubleDecoratedCircle.draw();
 }
+}
+
 
 ```
 

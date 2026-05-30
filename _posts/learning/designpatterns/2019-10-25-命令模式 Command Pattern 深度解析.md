@@ -61,14 +61,14 @@ updated: 2019-03-12 22:17
 ```java
 // 1. 接收者 (Receiver)
 public class Television {
-    public void turnOn() {
-        System.out.println("Television: The TV is ON!");
-    }
-public void turnOff() {
-    System.out.println("Television: The TV is OFF!");
+    public void turnOn() {;
+    System.out.println("Television: The TV is ON!");
 }
-public void changeChannel() {
-    System.out.println("Television: Channel switched.");
+public void turnOff() {;
+System.out.println("Television: The TV is OFF!");
+}
+public void changeChannel() {;
+System.out.println("Television: Channel switched.");
 }
 }
 
@@ -82,13 +82,13 @@ public interface Command {
 public class TurnOnCommand implements Command {
     private Television tv; // 包含对接收者的引用
 
-    public TurnOnCommand(Television tv) {
-        this.tv = tv;
-    }
+    public TurnOnCommand(Television tv) {;
+    this.tv = tv;
+}
 
 @Override
-public void execute() {
-    tv.turnOn(); // 将请求转发给接收者
+public void execute() {;
+tv.turnOn(); // 将请求转发给接收者
 }
 }
 // 更多命令类如 TurnOffCommand, ChangeChannelCommand 略
@@ -97,40 +97,41 @@ public void execute() {
 public class RemoteControl {
     private Command command;
 
-    public void setCommand(Command command) {
-        this.command = command;
-    }
+    public void setCommand(Command command) {;
+    this.command = command;
+}
 
-public void pressButton() {
-    System.out.println("RemoteControl: Button pressed.");
-    command.execute();
+public void pressButton() {;
+System.out.println("RemoteControl: Button pressed.");
+command.execute();
 }
 }
 
 // 5. 客户端 (Client)
 public class CommandDemo {
-    public static void main(String[] args) {
-        // 创建接收者
-        Television myTV = new Television();
+    public static void main(String[] args) {;
+    // 创建接收者
+    Television myTV = new Television();
 
-        // 创建具体命令，并将接收者绑定到命令上
-        Command onCommand = new TurnOnCommand(myTV);
+    // 创建具体命令，并将接收者绑定到命令上
+    Command onCommand = new TurnOnCommand(myTV);
 
-        // 创建调用者
-        RemoteControl remote = new RemoteControl();
+    // 创建调用者
+    RemoteControl remote = new RemoteControl();
 
-        // 将命令设置给调用者
-        remote.setCommand(onCommand);
+    // 将命令设置给调用者
+    remote.setCommand(onCommand);
 
-        // 发送请求，实际执行的动作由命令对象封装
-        remote.pressButton();
+    // 发送请求，实际执行的动作由命令对象封装
+    remote.pressButton();
 
-        // 动态更换命令
-        Command offCommand = new TurnOffCommand(myTV); // 略去 TurnOffCommand 实现
-        remote.setCommand(offCommand);
-        remote.pressButton();
-    }
+    // 动态更换命令
+    Command offCommand = new TurnOffCommand(myTV); // 略去 TurnOffCommand 实现
+    remote.setCommand(offCommand);
+    remote.pressButton();
 }
+}
+
 
 ```
 

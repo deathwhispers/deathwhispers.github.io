@@ -59,8 +59,9 @@ public class TaskManagerImpl implements TaskManager
     {
         this.taskScheduler = taskScheduler;
     }
-// ... 其他方法
+    // ... 其他方法
 }
+
 
 ```
 
@@ -80,12 +81,13 @@ public class HadokenSchedulerConfigurer implements SchedulingConfigurer
         this.taskManager = taskManager;
     }
 
-@Override
-public void configureTasks(ScheduledTaskRegistrar taskRegistrar)
-{
-    // 拿到Spring扫好的任务，交给taskManager处理...
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar)
+    {
+        // 拿到Spring扫好的任务，交给taskManager处理...
+    }
 }
-}
+
 
 ```
 

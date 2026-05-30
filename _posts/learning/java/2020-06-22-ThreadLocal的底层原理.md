@@ -47,14 +47,15 @@ week: 2025-W48
 ```java
 private static final ThreadLocal<String> TRACE_ID = new ThreadLocal<>();
 
-public void handle() {
-    try {
-        TRACE_ID.set(generateTraceId());
-        // 业务逻辑
-    } finally {
-        TRACE_ID.remove();
-    }
+public void handle() {;
+try {
+    TRACE_ID.set(generateTraceId());
+    // 业务逻辑
+} finally {
+TRACE_ID.remove();
 }
+}
+
 ```
 
 关键点：`set` 和 `remove` 成对出现，尤其在 web 容器线程池、MQ 消费线程池中。

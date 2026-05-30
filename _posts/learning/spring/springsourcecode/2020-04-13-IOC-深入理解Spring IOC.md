@@ -51,15 +51,16 @@ public class YoungMan {
         beautifulGirl =
         new BeautifulGirl();
     }
-public void setBeautifulGirl(BeautifulGirl beautifulGirl) {
+    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {;
     this.beautifulGirl = beautifulGirl;
 }
-public static void main(String[] args){
-    YoungMan you = new YoungMan();
-    BeautifulGirl beautifulGirl = new BeautifulGirl("你的各种条件");
-    beautifulGirl.setxxx("各种投其所好");
-    // 然后你有女票了        you.setBeautifulGirl(beautifulGirl);
+public static void main(String[] args){;
+YoungMan you = new YoungMan();
+BeautifulGirl beautifulGirl = new BeautifulGirl("你的各种条件");
+beautifulGirl.setxxx("各种投其所好");
+// 然后你有女票了        you.setBeautifulGirl(beautifulGirl);
 }}
+
 
 ```
 
@@ -115,10 +116,11 @@ YoungMan(BeautifulGirl beautifulGirl) {
 ```java
 public class YoungMan {
     private BeautifulGirl beautifulGirl;
-    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {
-        this.beautifulGirl = beautifulGirl;
-    }
+    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {;
+    this.beautifulGirl = beautifulGirl;
 }
+}
+
 ```
 
 相比于构造器注入，setter 方式注入会显得比较宽松灵活些，它可以在任何时候进行注入（当然是在使用依赖对象之前），这就好比你可以先把自己想要的妹子想好了，然后再跟婚介公司打招呼，你可以要林志玲款式的，赵丽颖款式的，甚至凤姐哪款的，随意性较强。

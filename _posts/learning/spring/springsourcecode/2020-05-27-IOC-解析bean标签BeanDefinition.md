@@ -64,12 +64,12 @@ String factoryMethodName);
 @Nullable
 String getFactoryMethodName();
 ConstructorArgumentValues getConstructorArgumentValues();
-default boolean hasConstructorArgumentValues() {
-    return !getConstructorArgumentValues().isEmpty();
+default boolean hasConstructorArgumentValues() {;
+return !getConstructorArgumentValues().isEmpty();
 }
 MutablePropertyValues getPropertyValues();
-default boolean hasPropertyValues() {
-    return !getPropertyValues().isEmpty();
+default boolean hasPropertyValues() {;
+return !getPropertyValues().isEmpty();
 }
 void setInitMethodName(@Nullable
 String initMethodName);
@@ -92,6 +92,7 @@ boolean isAbstract();
 String getResourceDescription();
 @Nullable
 BeanDefinition getOriginatingBeanDefinition();
+
 ```
 
 虽然接口方法比较多，但是是不是一下子和我们平时使用  标签的属性，能够对应上落。
@@ -185,12 +186,13 @@ ClassLoader classLoader) throws ClassNotFoundException {
         if (classLoader != null) {
             bd.setBeanClass(ClassUtils.forName(className,
             classLoader)); // 设置 beanClassName        }
-        else {
-            bd.setBeanClassName(className);
+            else {
+                bd.setBeanClassName(className);
+            }
         }
-}
-return bd;
-}
+        return bd;
+    }
+
 
 ```
 
@@ -211,31 +213,34 @@ BeanDefinition containingBean, AbstractBeanDefinition bd) {
     {
         error("Old 1.x 'singleton' attribute in use - upgrade to 'scope' declaration", ele);
     }
-else if (ele.hasAttribute(SCOPE_ATTRIBUTE)) {
-    bd.setScope(ele.getAttribute(SCOPE_ATTRIBUTE));
-}
-else
-if (containingBean != null) {
-    // Take
-    default from containing bean in case of an inner bean definition.        bd.setScope(containingBean.getScope());
-} // 解析
-abstract 属性    if (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) {
-    bd.setAbstract(TRUE_VALUE.equals(ele.getAttribute(ABSTRACT_ATTRIBUTE)));
-} // 解析 lazy-init 属性    String lazyInit = ele.getAttribute(LAZY_INIT_ATTRIBUTE);    if (DEFAULT_VALUE.equals(lazyInit))
-{
-    lazyInit = this.defaults.getLazyInit();
-}
-bd.setLazyInit(TRUE_VALUE.equals(lazyInit)); // 解析 autowire 属性    String autowire = ele.getAttribute(AUTOWIRE_ATTRIBUTE);    bd.setAutowireMode(getAutowireMode(autowire));    // 解析 depends-on 属性    if (ele.hasAttribute(DEPENDS_ON_ATTRIBUTE))
-{
-    String dependsOn = ele.getAttribute(DEPENDS_ON_ATTRIBUTE);
-    bd.setDependsOn(StringUtils.tokenizeToStringArray(dependsOn, MULTI_VALUE_ATTRIBUTE_DELIMITERS));
-}
-// 解析 autowire-candidate 属性    String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);    if ("".equals(autowireCandidate) || DEFAULT_VALUE.equals(autowireCandidate)) {        String candidatePattern =
-this.defaults.getAutowireCandidates();
-if (candidatePattern != null) {
-    String[] patterns = StringUtils.commaDelimitedListToStringArray(candidatePattern);
-    bd.setAutowireCandidate(PatternMatchUtils.simpleMatch(patterns, beanName));
-}
+    else if (ele.hasAttribute(SCOPE_ATTRIBUTE)) {
+        bd.setScope(ele.getAttribute(SCOPE_ATTRIBUTE));
+    }
+    else
+    if (containingBean != null) {
+        // Take
+        default from containing bean in case of an inner bean definition.        bd.setScope(containingBean.getScope());
+    } // 解析
+    abstract 属性    if (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) {
+        bd.setAbstract(TRUE_VALUE.equals(ele.getAttribute(ABSTRACT_ATTRIBUTE)));
+    } // 解析 lazy-init 属性    String lazyInit = ele.getAttribute(LAZY_INIT_ATTRIBUTE);    if (DEFAULT_VALUE.equals(lazyInit))
+    {
+        lazyInit = this.defaults.getLazyInit();
+    }
+    bd.setLazyInit(TRUE_VALUE.equals(lazyInit));
+    // 解析 autowire 属性    String autowire = ele.getAttribute(AUTOWIRE_ATTRIBUTE);
+    bd.setAutowireMode(getAutowireMode(autowire));
+    // 解析 depends-on 属性    if (ele.hasAttribute(DEPENDS_ON_ATTRIBUTE));
+    {
+        String dependsOn = ele.getAttribute(DEPENDS_ON_ATTRIBUTE);
+        bd.setDependsOn(StringUtils.tokenizeToStringArray(dependsOn, MULTI_VALUE_ATTRIBUTE_DELIMITERS));
+    }
+    // 解析 autowire-candidate 属性    String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);    if ("".equals(autowireCandidate) || DEFAULT_VALUE.equals(autowireCandidate)) {        String candidatePattern =
+    this.defaults.getAutowireCandidates();
+    if (candidatePattern != null) {
+        String[] patterns = StringUtils.commaDelimitedListToStringArray(candidatePattern);
+        bd.setAutowireCandidate(PatternMatchUtils.simpleMatch(patterns, beanName));
+    }
 }
 else {
     bd.setAutowireCandidate(TRUE_VALUE.equals(autowireCandidate));
@@ -268,6 +273,7 @@ if (ele.hasAttribute(FACTORY_BEAN_ATTRIBUTE)) {
 }
 return bd;
 }
+
 
 ```
 

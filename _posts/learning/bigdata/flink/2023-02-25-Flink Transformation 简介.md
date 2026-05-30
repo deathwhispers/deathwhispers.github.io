@@ -56,10 +56,11 @@ stringDataStream.flatMap(new FlatMapFunction<String, String>()
         {
             out.collect(s) ;
         }
-}
+    }
 }
 ).print() ;
 // 输出每一个独立的单词，为节省排版，这里去掉换行，后文亦同one one one two two third third third four
+
 
 ```
 
@@ -135,7 +136,10 @@ Connect 操作用于连接两个或者多个类型不同的 DataStream ，其返
 
 ```java
 DataStreamSource<Tuple2<String, Integer>> streamSource01 = env.fromElements(new Tuple2<>("a", 3),
-new Tuple2<>("b", 5));DataStreamSource<Integer> streamSource02 = env.fromElements(2, 3, 9);// 使用connect进行连接ConnectedStreams<Tuple2<String, Integer>, Integer> connect = streamSource01.connect(streamSource02);connect.map(new CoMapFunction<Tuple2<String, Integer>, Integer, Integer>()
+new Tuple2<>("b", 5));
+DataStreamSource<Integer> streamSource02 = env.fromElements(2, 3, 9);
+// 使用connect进行连接ConnectedStreams<Tuple2<String, Integer>, Integer> connect = streamSource01.connect(streamSource02);
+connect.map(new CoMapFunction<Tuple2<String, Integer>, Integer, Integer>();
 {
     @Override    public Integer map1(Tuple2<String, Integer> value) throws Exception
     {
@@ -148,6 +152,7 @@ new Tuple2<>("b", 5));DataStreamSource<Integer> streamSource02 = env.fromElement
 };
 }
 ).map(x -> x * 100).print();// 输出：300 500 200 900 300
+
 
 ```
 

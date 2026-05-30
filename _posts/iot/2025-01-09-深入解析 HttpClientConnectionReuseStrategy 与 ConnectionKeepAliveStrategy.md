@@ -71,12 +71,13 @@ if (reuse) {
         if (duration > 0) {
             s = "for " + duration + " " + TimeUnit.MILLISECONDS;
         } else {
-            s = "indefinitely";
-        }
+        s = "indefinitely";
+    }
     this.log.debug("Connection can be kept alive " + s);
 }
 managedConn.setIdleDuration(duration, TimeUnit.MILLISECONDS);
 }
+
 
 ```
 
@@ -86,16 +87,16 @@ managedConn.setIdleDuration(duration, TimeUnit.MILLISECONDS);
 
 ```java
 @Override
-public boolean keepAlive(final HttpResponse response, final HttpContext context) {
-    // ... 参数校验 ...
+public boolean keepAlive(final HttpResponse response, final HttpContext context) {;
+// ... 参数校验 ...
 
-    // 1. 对于 HTTP 204 No Content 响应，如果包含 Content-Length > 0 或 Transfer-Encoding，则不重用连接。
-    // 这是为了防止行为异常的服务器在 204 响应中返回内容体，导致连接状态不同步。
-    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT) {
-        Header clh = response.getFirstHeader(HTTP.CONTENT_LEN);
-        if (clh != null) {
-            // ... 检查 Content-Length 是否大于 0 ...
-        }
+// 1. 对于 HTTP 204 No Content 响应，如果包含 Content-Length > 0 或 Transfer-Encoding，则不重用连接。
+// 这是为了防止行为异常的服务器在 204 响应中返回内容体，导致连接状态不同步。
+if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT) {
+    Header clh = response.getFirstHeader(HTTP.CONTENT_LEN);
+    if (clh != null) {
+        // ... 检查 Content-Length 是否大于 0 ...
+    }
     Header teh = response.getFirstHeader(HTTP.TRANSFER_ENCODING);
     if (teh != null) {
         return false;
@@ -121,9 +122,9 @@ if (teh != null) {
         return false;
     }
 } else {
-    if (canResponseHaveBody(request, response)) {
-        // ... 校验 Content-Length ...
-    }
+if (canResponseHaveBody(request, response)) {
+    // ... 校验 Content-Length ...
+}
 }
 
 // 4. 检查响应头中的 "Connection" 或 "Proxy-Connection"。
@@ -140,6 +141,7 @@ if (headerIterator.hasNext()) {
 // 5. 默认策略：HTTP/1.1 及以上版本默认为持久连接，HTTP/1.0 及以下版本默认为非持久连接。
 return !ver.lessEquals(HttpVersion.HTTP_1_0);
 }
+
 
 ```
 
@@ -171,23 +173,24 @@ return !ver.lessEquals(HttpVersion.HTTP_1_0);
 
 ```java
 @Override
-public long getKeepAliveDuration(final HttpResponse response, final HttpContext context) {
-    Args.notNull(response, "HTTP response");
-    final HeaderElementIterator it = new BasicHeaderElementIterator(
-    response.headerIterator(HTTP.CONN_KEEP_ALIVE));
-    while (it.hasNext()) {
-        final HeaderElement he = it.nextElement();
-        final String param = he.getName();
-        final String value = he.getValue();
-        if (value != null && param.equalsIgnoreCase("timeout")) {
-            try {
-                return Long.parseLong(value) * 1000;
-            } catch(final NumberFormatException ignore) {
-            }
+public long getKeepAliveDuration(final HttpResponse response, final HttpContext context) {;
+Args.notNull(response, "HTTP response");
+final HeaderElementIterator it = new BasicHeaderElementIterator(
+response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+while (it.hasNext()) {
+    final HeaderElement he = it.nextElement();
+    final String param = he.getName();
+    final String value = he.getValue();
+    if (value != null && param.equalsIgnoreCase("timeout")) {
+        try {
+            return Long.parseLong(value) * 1000;
+        } catch(final NumberFormatException ignore) {;
     }
+}
 }
 return -1;
 }
+
 
 ```
 

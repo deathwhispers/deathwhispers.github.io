@@ -75,15 +75,15 @@ public interface DrawAPI {
 // --- 2. 具体实现类 (ConcreteImplementor) ---
 public class RedCircle implements DrawAPI {
     @Override
-    public void drawCircle(int radius, int x, int y) {
-        System.out.println("Drawing Circle [Color: Red, Radius: " + radius + "]");
-    }
+    public void drawCircle(int radius, int x, int y) {;
+    System.out.println("Drawing Circle [Color: Red, Radius: " + radius + "]");
+}
 }
 public class GreenCircle implements DrawAPI {
     @Override
-    public void drawCircle(int radius, int x, int y) {
-        System.out.println("Drawing Circle [Color: Green, Radius: " + radius + "]");
-    }
+    public void drawCircle(int radius, int x, int y) {;
+    System.out.println("Drawing Circle [Color: Green, Radius: " + radius + "]");
+}
 }
 
 // --- 3. 抽象类 (Abstraction) ---
@@ -92,9 +92,9 @@ public abstract class Shape {
     protected DrawAPI drawAPI; // 持有实现部分的引用，建立桥接
 
     // 通过构造函数注入实现部分
-    protected Shape(DrawAPI drawAPI) {
-        this.drawAPI = drawAPI;
-    }
+    protected Shape(DrawAPI drawAPI) {;
+    this.drawAPI = drawAPI;
+}
 
 public abstract void draw();
 }
@@ -103,34 +103,35 @@ public abstract void draw();
 public class Circle extends Shape {
     private int x, y, radius;
 
-    public Circle(int x, int y, int radius, DrawAPI drawAPI) {
-        super(drawAPI);
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-    }
+    public Circle(int x, int y, int radius, DrawAPI drawAPI) {;
+    super(drawAPI);
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+}
 
 @Override
-public void draw() {
-    // 调用实现类的方法完成具体操作
-    drawAPI.drawCircle(radius, x, y);
+public void draw() {;
+// 调用实现类的方法完成具体操作
+drawAPI.drawCircle(radius, x, y);
 }
 }
 
 // --- 5. 客户端 (Client) ---
 public class BridgePatternDemo {
-    public static void main(String[] args) {
-        // 红色圆形：形状(Circle) + 颜色(RedCircle)
-        Shape redCircle = new Circle(100, 100, 10, new RedCircle());
-        redCircle.draw();
+    public static void main(String[] args) {;
+    // 红色圆形：形状(Circle) + 颜色(RedCircle)
+    Shape redCircle = new Circle(100, 100, 10, new RedCircle());
+    redCircle.draw();
 
-        // 绿色圆形：形状(Circle) + 颜色(GreenCircle)
-        Shape greenCircle = new Circle(100, 100, 10, new GreenCircle());
-        greenCircle.draw();
+    // 绿色圆形：形状(Circle) + 颜色(GreenCircle)
+    Shape greenCircle = new Circle(100, 100, 10, new GreenCircle());
+    greenCircle.draw();
 
-        // 假设新增 Rectangle 形状和 BlueCircle 颜色，均不影响现有代码。
-    }
+    // 假设新增 Rectangle 形状和 BlueCircle 颜色，均不影响现有代码。
 }
+}
+
 
 ```
 
