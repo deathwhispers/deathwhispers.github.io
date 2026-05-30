@@ -139,25 +139,26 @@ class MacFactory implements AbstractFactory {
 
 // --- 5. 客户端 (Client) ---
 public class AbstractFactoryDemo {
-    public static void main(String[] args) {;
-    // 客户端只需要切换具体的工厂实例，即可切换整个产品族（界面主题）
-    AbstractFactory factory = new WinFactory();
-    AbstractButton btn = factory.createButton();
-    AbstractTextField txt = factory.createTextField();
+    public static void main(String[] args) {
+        // 客户端只需要切换具体的工厂实例，即可切换整个产品族（界面主题）
+        AbstractFactory factory = new WinFactory();
+        AbstractButton btn = factory.createButton();
+        AbstractTextField txt = factory.createTextField();
 
-    System.out.println("--- Using Windows Theme ---");
-    btn.paint();   // Win Button painted.
-    txt.display(); // Win TextField displayed.
+        System.out.println("--- Using Windows Theme ---");
+        btn.paint();   // Win Button painted.
+        txt.display(); // Win TextField displayed.
 
-    factory = new MacFactory(); // 切换产品族
-    btn = factory.createButton();
-    txt = factory.createTextField();
+        factory = new MacFactory(); // 切换产品族
+        btn = factory.createButton();
+        txt = factory.createTextField();
 
-    System.out.println("\n--- Using macOS Theme ---");
-    btn.paint();   // Mac Button painted.
-    txt.display(); // Mac TextField displayed.
+        System.out.println("\n--- Using macOS Theme ---");
+        btn.paint();   // Mac Button painted.
+        txt.display(); // Mac TextField displayed.
+    }
 }
-}
+
 
 
 ```

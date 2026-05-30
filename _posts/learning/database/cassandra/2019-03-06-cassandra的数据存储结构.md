@@ -80,31 +80,32 @@ CommitLog 的作用是为恢复没有被写到磁盘中的数据，那如何根�
 ### 清单 2. CommitLog.recover
 
 ```java
-public static void recover(File[] clogs) throws IOException{;
-...
-final CommitLogHeader clHeader = CommitLogHeader.readCommitLogHeader(reader);
-int lowPos = CommitLogHeader.getLowestPosition(clHeader);
-if (lowPos == 0) break;
-reader.seek(lowPos);
-while (!reader.isEOF()){
-    try{
-        bytes = new byte[(int) reader.readLong()];
-        reader.readFully(bytes);
-        claimedCRC32 = reader.readLong();
+public static void recover(File[] clogs) throws IOException{
+    ...
+    final CommitLogHeader clHeader = CommitLogHeader.readCommitLogHeader(reader);
+    int lowPos = CommitLogHeader.getLowestPosition(clHeader);
+    if (lowPos == 0) break;
+    reader.seek(lowPos);
+    while (!reader.isEOF()){
+        try{
+            bytes = new byte[(int) reader.readLong()];
+            reader.readFully(bytes);
+            claimedCRC32 = reader.readLong();
+        }
+        ...
+        ByteArrayInputStream bufIn = new ByteArrayInputStream(bytes);
+        Checksum checksum = new CRC32();
+        checksum.update(bytes, 0, bytes.length);
+        if (claimedCRC32 != checksum.getValue())
+        {
+            continue;
+        }
+        final RowMutation rm =
+        RowMutation.serializer().deserialize(new DataInputStream(bufIn));
     }
     ...
-    ByteArrayInputStream bufIn = new ByteArrayInputStream(bytes);
-    Checksum checksum = new CRC32();
-    checksum.update(bytes, 0, bytes.length);
-    if (claimedCRC32 != checksum.getValue())
-    {
-        continue;
-    }
-    final RowMutation rm =
-    RowMutation.serializer().deserialize(new DataInputStream(bufIn));
 }
-...
-}
+
 
 
 ```

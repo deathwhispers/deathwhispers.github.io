@@ -60,9 +60,10 @@ public void myTask()
             // ...真正的业务逻辑...
         }
     } finally {
-    lock.unlock();
+        lock.unlock();
+    }
 }
-}
+
 
 
 ```
@@ -157,9 +158,9 @@ public void run()
         // 如果需要，就走带锁的逻辑
         executeWithLock(lockConfig);
     } else {
-    // 否则，走原来的逻辑
-    executeTaskLogic();
-}
+        // 否则，走原来的逻辑
+        executeTaskLogic();
+    }
 }
 
 private void executeWithLock(String lockConfig)
@@ -178,10 +179,11 @@ private void executeWithLock(String lockConfig)
             executeTaskLogic();
         }
     } else {
-    // 没拿到锁，打印日志，直接跳过
-    log.debug("无法获取任务 '{}' 的锁。跳过执行。", taskId);
+        // 没拿到锁，打印日志，直接跳过
+        log.debug("无法获取任务 '{}' 的锁。跳过执行。", taskId);
+    }
 }
-}
+
 
 
 ```

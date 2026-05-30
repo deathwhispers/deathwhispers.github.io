@@ -66,51 +66,52 @@ public interface Shape {
 // --- 2. 具体产品 (ConcreteProduct) ---
 public class Circle implements Shape {
     @Override
-    public void draw() {;
-    System.out.println("Drawing a Circle.");
-}
+    public void draw() {
+        System.out.println("Drawing a Circle.");
+    }
 }
 
 public class Rectangle implements Shape {
     @Override
-    public void draw() {;
-    System.out.println("Drawing a Rectangle.");
-}
+    public void draw() {
+        System.out.println("Drawing a Rectangle.");
+    }
 }
 
 // --- 3. 工厂角色 (Factory) ---
 public class ShapeFactory {
     // 静态工厂方法是简单工厂模式的典型特征
-    public static Shape createShape(String shapeType) {;
-    if (shapeType == null) {
-        return null;
-    }
+    public static Shape createShape(String shapeType) {
+        if (shapeType == null) {
+            return null;
+        }
 
-    // 核心：集中了所有产品创建的判断逻辑
-    if (shapeType.equalsIgnoreCase("CIRCLE")) {
-        return new Circle();
-    } else if (shapeType.equalsIgnoreCase("RECTANGLE"))
-    {
+        // 核心：集中了所有产品创建的判断逻辑
+        if (shapeType.equalsIgnoreCase("CIRCLE")) {
+            return new Circle();
+        } else if (shapeType.equalsIgnoreCase("RECTANGLE"))
+        {
+        }
+        return new Rectangle();
     }
-    return new Rectangle();
-}
-// 增加新产品必须修改这里的逻辑！
+    // 增加新产品必须修改这里的逻辑！
 
-throw new IllegalArgumentException("Unknown shape type: " + shapeType);
+    throw new IllegalArgumentException("Unknown shape type: " + shapeType);
 }
 }
 
 // --- 4. 客户端调用 (Client) ---
 public class SimpleFactoryDemo {
-    public static void main(String[] args) {;
-    // 客户端无需关心具体类名，只需传入参数
-    Shape shape1 = ShapeFactory.createShape("CIRCLE");
-    shape1.draw();
+    public static void main(String[] args) {
+        // 客户端无需关心具体类名，只需传入参数
+        Shape shape1 = ShapeFactory.createShape("CIRCLE");
+        shape1.draw();
 
-    Shape shape2 = ShapeFactory.createShape("rectangle");
-    shape2.draw();
+        Shape shape2 = ShapeFactory.createShape("rectangle");
+        shape2.draw();
+    }
 }
-}
+
 
 
 ```

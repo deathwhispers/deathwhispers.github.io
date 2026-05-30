@@ -68,15 +68,15 @@ import java.util.List;
 class Meal {
     private List<String> parts = new ArrayList<>();
 
-    public void addPart(String part) {;
-    parts.add(part);
-}
-public void show() {;
-System.out.println("--- Meal Constructed ---");
-for (String part : parts) {
-    System.out.println(part);
-}
-}
+    public void addPart(String part) {
+        parts.add(part);
+    }
+    public void show() {
+        System.out.println("--- Meal Constructed ---");
+        for (String part : parts) {
+            System.out.println(part);
+        }
+    }
 }
 
 // --- 2. 抽象建造者 (Builder) ---
@@ -87,9 +87,9 @@ abstract class MealBuilder {
     public abstract void buildDrink();
 
     // 返回结果的方法
-    public Meal getMeal() {;
-    return meal;
-}
+    public Meal getMeal() {
+        return meal;
+    }
 }
 
 // --- 3. 具体建造者 (ConcreteBuilder) ---
@@ -122,37 +122,38 @@ class NonVegMealBuilder extends MealBuilder {
 class Director {
     private MealBuilder builder;
 
-    public void setBuilder(MealBuilder builder) {;
-    this.builder = builder;
-}
+    public void setBuilder(MealBuilder builder) {
+        this.builder = builder;
+    }
 
-// 负责控制产品的生成次序 (不变的构建过程)
-public Meal construct() {;
-// 装配顺序：先装汉堡，再装饮料
-builder.buildBurger();
-builder.buildDrink();
-return builder.getMeal();
-}
+    // 负责控制产品的生成次序 (不变的构建过程)
+    public Meal construct() {
+        // 装配顺序：先装汉堡，再装饮料
+        builder.buildBurger();
+        builder.buildDrink();
+        return builder.getMeal();
+    }
 }
 
 // --- 5. 客户端调用 (Client) ---
 public class BuilderPatternDemo {
-    public static void main(String[] args) {;
-    Director director = new Director();
+    public static void main(String[] args) {
+        Director director = new Director();
 
-    // 建造者 1: 素食套餐
-    MealBuilder vegBuilder = new VegMealBuilder();
-    director.setBuilder(vegBuilder);
-    Meal vegMeal = director.construct();
-    vegMeal.show();
+        // 建造者 1: 素食套餐
+        MealBuilder vegBuilder = new VegMealBuilder();
+        director.setBuilder(vegBuilder);
+        Meal vegMeal = director.construct();
+        vegMeal.show();
 
-    // 建造者 2: 非素食套餐
-    MealBuilder nonVegBuilder = new NonVegMealBuilder();
-    director.setBuilder(nonVegBuilder);
-    Meal nonVegMeal = director.construct();
-    nonVegMeal.show();
+        // 建造者 2: 非素食套餐
+        MealBuilder nonVegBuilder = new NonVegMealBuilder();
+        director.setBuilder(nonVegBuilder);
+        Meal nonVegMeal = director.construct();
+        nonVegMeal.show();
+    }
 }
-}
+
 
 
 ```

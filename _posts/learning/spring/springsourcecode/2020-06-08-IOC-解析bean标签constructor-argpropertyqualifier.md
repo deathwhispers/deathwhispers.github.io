@@ -179,19 +179,20 @@ String propertyName) {
         if (node instanceof
         Element && !nodeNameEquals(node, DESCRIPTION_ELEMENT) &&            !nodeNameEquals(node, META_ELEMENT)) {
             // Child element is what we're looking
-            for.            if (subElement != null) {;
-            error(elementName + " must not contain more than one sub-element", ele);
+            for.            if (subElement != null) {
+                error(elementName + " must not contain more than one sub-element", ele);
+            }
+            else {
+                subElement = (Element) node;
+            }
         }
-        else {
-            subElement = (Element) node;
-        }
-    }
-} // <1> 是否有 ref 属性    boolean hasRefAttribute = ele.hasAttribute(REF_ATTRIBUTE);    // <1> 是否有 value 属性
-boolean hasValueAttribute = ele.hasAttribute(VALUE_ATTRIBUTE); // <1> 多个元素存在，报错，存在冲突。    if ((hasRefAttribute && hasValueAttribute) || // 1. ref 和 value 都存在        ((hasRefAttribute || hasValueAttribute) && subElement !=
-null)) {
-    // 2. ref he value 存在一，并且 subElement 存在        error(elementName +              " is only allowed to contain either 'ref' attribute OR 'value' attribute OR sub-element", ele);    }    // <2> 将 ref 属性值，构造为 RuntimeBeanReference 实例对象
-    if (hasRefAttribute) {
-        String refName = ele.getAttribute(REF_ATTRIBUTE);
+    } // <1> 是否有 ref 属性    boolean hasRefAttribute = ele.hasAttribute(REF_ATTRIBUTE);    // <1> 是否有 value 属性
+    boolean hasValueAttribute = ele.hasAttribute(VALUE_ATTRIBUTE); // <1> 多个元素存在，报错，存在冲突。    if ((hasRefAttribute && hasValueAttribute) || // 1. ref 和 value 都存在        ((hasRefAttribute || hasValueAttribute) && subElement !=
+    null)) {
+        // 2. ref he value 存在一，并且 subElement 存在        error(elementName +              " is only allowed to contain either 'ref' attribute OR 'value' attribute OR sub-element", ele);    }    // <2> 将 ref 属性值，构造为 RuntimeBeanReference 实例对象
+        if (hasRefAttribute) {
+            String refName = ele.getAttribute(REF_ATTRIBUTE);
+
 
 
 ```
@@ -302,14 +303,15 @@ String defaultValueType) {
 
 ```java
 /** * Parse property sub-elements of the given bean element. */
-public void parsePropertyElements(Element beanEle, BeanDefinition bd) {;
-NodeList nl = beanEle.getChildNodes();
-for (int i = 0;
-i < nl.getLength();
-i++) {
-    Node node = nl.item(i);
-    if (isCandidateElement(node) && nodeNameEquals(node, PROPERTY_ELEMENT)) {
-        // property 标签            parsePropertyElement((Element) node, bd);        }    }}
+public void parsePropertyElements(Element beanEle, BeanDefinition bd) {
+    NodeList nl = beanEle.getChildNodes();
+    for (int i = 0;
+    i < nl.getLength();
+    i++) {
+        Node node = nl.item(i);
+        if (isCandidateElement(node) && nodeNameEquals(node, PROPERTY_ELEMENT)) {
+            // property 标签            parsePropertyElement((Element) node, bd);        }    }}
+
 
 ```
 
@@ -319,30 +321,31 @@ i++) {
 
 ```java
 /** * Parse a property element. */
-public void parsePropertyElement(Element ele, BeanDefinition bd) {;
-// 获取 name 属性
-String propertyName = ele.getAttribute(NAME_ATTRIBUTE);
-if (!StringUtils.hasLength(propertyName)) {
-    error("Tag 'property' must have a 'name' attribute", ele);
-    return;
-}
-this.parseState.push(new PropertyEntry(propertyName));
-try {
-    // 如果存在相同的 name ，报错
-    if (bd.getPropertyValues().contains(propertyName)) {
-        error("Multiple 'property' definitions for property '" + propertyName + "'", ele);
+public void parsePropertyElement(Element ele, BeanDefinition bd) {
+    // 获取 name 属性
+    String propertyName = ele.getAttribute(NAME_ATTRIBUTE);
+    if (!StringUtils.hasLength(propertyName)) {
+        error("Tag 'property' must have a 'name' attribute", ele);
         return;
-    } // 解析属性值
-    Object val = parsePropertyValue(ele, bd, propertyName); // 创建 PropertyValue 对象        PropertyValue pv =
-    new PropertyValue(propertyName, val);
-    parseMetaElements(ele, pv);
-    pv.setSource(extractSource(ele));
-    // 添加到 PropertyValue 集合中        bd.getPropertyValues().addPropertyValue(pv);
+    }
+    this.parseState.push(new PropertyEntry(propertyName));
+    try {
+        // 如果存在相同的 name ，报错
+        if (bd.getPropertyValues().contains(propertyName)) {
+            error("Multiple 'property' definitions for property '" + propertyName + "'", ele);
+            return;
+        } // 解析属性值
+        Object val = parsePropertyValue(ele, bd, propertyName); // 创建 PropertyValue 对象        PropertyValue pv =
+        new PropertyValue(propertyName, val);
+        parseMetaElements(ele, pv);
+        pv.setSource(extractSource(ele));
+        // 添加到 PropertyValue 集合中        bd.getPropertyValues().addPropertyValue(pv);
+    }
+    finally {
+        this.parseState.pop();
+    }
 }
-finally {
-    this.parseState.pop();
-}
-}
+
 
 
 ```
@@ -369,52 +372,53 @@ finally {
 
 ```java
 /** * Parse a qualifier element. */
-public void parseQualifierElement(Element ele, AbstractBeanDefinition bd) {;
-// 解析 type 属性    String typeName = ele.getAttribute(TYPE_ATTRIBUTE);
-if (!StringUtils.hasLength(typeName)) {
-    // 必须有 type        error("Tag 'qualifier' must have a 'type' attribute", ele);
-    return;
-}
-this.parseState.push(new QualifierEntry(typeName));
-try {
-    // 创建 AutowireCandidateQualifier 对象        AutowireCandidateQualifier
-    qualifier =
-    new AutowireCandidateQualifier(typeName);
-    qualifier.setSource(extractSource(ele));
-    // 解析 value 属性，并设置到 AutowireCandidateQualifier 中        String value = ele.getAttribute(VALUE_ATTRIBUTE);
-    if (StringUtils.hasLength(value)) {
-        qualifier.setAttribute(AutowireCandidateQualifier.VALUE_KEY, value);
-    } // 遍历子节点
-    NodeList nl = ele.getChildNodes();
-    for (int i = 0;
-    i < nl.getLength();
-    i++) {
-        Node node = nl.item(i);
-        if (isCandidateElement(node) && nodeNameEquals(node, QUALIFIER_ATTRIBUTE_ELEMENT)) {
-            // attribute 标签
-            Element attributeEle = (Element) node;
-            String attributeName = attributeEle.getAttribute(KEY_ATTRIBUTE);
-            // attribute 标签的 key 属性                String attributeValue = attributeEle.getAttribute(VALUE_ATTRIBUTE);
-            // attribute 标签的 value 属性
-            if (StringUtils.hasLength(attributeName) &&
-            StringUtils.hasLength(attributeValue)) {
-                // 创建 BeanMetadataAttribute 对象                    BeanMetadataAttribute attribute =
-                new BeanMetadataAttribute(attributeName, attributeValue);
-                attribute.setSource(extractSource(attributeEle)); // 添加到 attributes 中
-                qualifier.addMetadataAttribute(attribute);
+public void parseQualifierElement(Element ele, AbstractBeanDefinition bd) {
+    // 解析 type 属性    String typeName = ele.getAttribute(TYPE_ATTRIBUTE);
+    if (!StringUtils.hasLength(typeName)) {
+        // 必须有 type        error("Tag 'qualifier' must have a 'type' attribute", ele);
+        return;
+    }
+    this.parseState.push(new QualifierEntry(typeName));
+    try {
+        // 创建 AutowireCandidateQualifier 对象        AutowireCandidateQualifier
+        qualifier =
+        new AutowireCandidateQualifier(typeName);
+        qualifier.setSource(extractSource(ele));
+        // 解析 value 属性，并设置到 AutowireCandidateQualifier 中        String value = ele.getAttribute(VALUE_ATTRIBUTE);
+        if (StringUtils.hasLength(value)) {
+            qualifier.setAttribute(AutowireCandidateQualifier.VALUE_KEY, value);
+        } // 遍历子节点
+        NodeList nl = ele.getChildNodes();
+        for (int i = 0;
+        i < nl.getLength();
+        i++) {
+            Node node = nl.item(i);
+            if (isCandidateElement(node) && nodeNameEquals(node, QUALIFIER_ATTRIBUTE_ELEMENT)) {
+                // attribute 标签
+                Element attributeEle = (Element) node;
+                String attributeName = attributeEle.getAttribute(KEY_ATTRIBUTE);
+                // attribute 标签的 key 属性                String attributeValue = attributeEle.getAttribute(VALUE_ATTRIBUTE);
+                // attribute 标签的 value 属性
+                if (StringUtils.hasLength(attributeName) &&
+                StringUtils.hasLength(attributeValue)) {
+                    // 创建 BeanMetadataAttribute 对象                    BeanMetadataAttribute attribute =
+                    new BeanMetadataAttribute(attributeName, attributeValue);
+                    attribute.setSource(extractSource(attributeEle)); // 添加到 attributes 中
+                    qualifier.addMetadataAttribute(attribute);
+                }
+                else {
+                    error("Qualifier 'attribute' tag must have a 'name' and 'value'", attributeEle);
+                    return;
+                }
             }
-            else {
-                error("Qualifier 'attribute' tag must have a 'name' and 'value'", attributeEle);
-                return;
-            }
-        }
-    } // 添加到
-    qualifiers 中        bd.addQualifier(qualifier);
+        } // 添加到
+        qualifiers 中        bd.addQualifier(qualifier);
+    }
+    finally {
+        this.parseState.pop();
+    }
 }
-finally {
-    this.parseState.pop();
-}
-}
+
 
 
 ```

@@ -38,20 +38,21 @@ week: 2025-W48
 public class Demo {
     private final Object lock = new Object();
 
-    public void methodA() {;
-    synchronized (lock) {
-        // 临界区
+    public void methodA() {
+        synchronized (lock) {
+            // 临界区
+        }
+    }
+
+    public synchronized void methodB() {
+        // 锁 this
+    }
+
+    public static synchronized void methodC() {
+        // 锁 Demo.class
     }
 }
 
-public synchronized void methodB() {;
-// 锁 this
-}
-
-public static synchronized void methodC() {;
-// 锁 Demo.class
-}
-}
 
 
 ```

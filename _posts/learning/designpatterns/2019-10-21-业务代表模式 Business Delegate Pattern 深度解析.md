@@ -64,18 +64,19 @@ public interface BusinessService {
 // EJB 业务服务实现
 public class EJBService implements BusinessService {
     @Override
-    public void doProcessing() {;
-    System.out.println("Processing task by invoking EJB Service");
-}
+    public void doProcessing() {
+        System.out.println("Processing task by invoking EJB Service");
+    }
 }
 
 // JMS 业务服务实现
 public class JMSService implements BusinessService {
     @Override
-    public void doProcessing() {;
-    System.out.println("Processing task by invoking JMS Service");
+    public void doProcessing() {
+        System.out.println("Processing task by invoking JMS Service");
+    }
 }
-}
+
 
 
 ```
@@ -90,17 +91,18 @@ public class BusinessLookUp {
     /**
     * 根据服务类型获取具体的业务服务实例
     */
-    public BusinessService getBusinessService(String serviceType){;
-    if(serviceType.equalsIgnoreCase("EJB")){
-        return new EJBService();
-    }else if (serviceType.equalsIgnoreCase("JMS")) {
-    return new JMSService();
-} else {
-System.out.println("Unknown Service Type.");
-return null;
+    public BusinessService getBusinessService(String serviceType){
+        if(serviceType.equalsIgnoreCase("EJB")){
+            return new EJBService();
+        }else if (serviceType.equalsIgnoreCase("JMS")) {
+            return new JMSService();
+        } else {
+            System.out.println("Unknown Service Type.");
+            return null;
+        }
+    }
 }
-}
-}
+
 
 
 ```
@@ -118,23 +120,24 @@ public class BusinessDelegate {
     /**
     * 设置客户端想要使用的服务类型
     */
-    public void setServiceType(String serviceType){;
-    this.serviceType = serviceType;
+    public void setServiceType(String serviceType){
+        this.serviceType = serviceType;
+    }
+
+    /**
+    * 客户端调用的统一入口方法
+    */
+    public void doTask(){
+        // 1. 使用 LookUp Service 查找具体的业务服务
+        businessService = lookupService.getBusinessService(serviceType);
+
+        // 2. 委托给具体的业务服务进行处理
+        if (businessService != null) {
+            businessService.doProcessing();
+        }
+    }
 }
 
-/**
-* 客户端调用的统一入口方法
-*/
-public void doTask(){;
-// 1. 使用 LookUp Service 查找具体的业务服务
-businessService = lookupService.getBusinessService(serviceType);
-
-// 2. 委托给具体的业务服务进行处理
-if (businessService != null) {
-    businessService.doProcessing();
-}
-}
-}
 
 
 ```
@@ -147,17 +150,18 @@ if (businessService != null) {
 public class Client {
     BusinessDelegate businessService;
 
-    public Client(BusinessDelegate businessService){;
-    this.businessService  = businessService;
+    public Client(BusinessDelegate businessService){
+        this.businessService  = businessService;
+    }
+
+    /**
+    * 客户端执行任务，通过业务代表进行委托
+    */
+    public void doTask(){
+        businessService.doTask();
+    }
 }
 
-/**
-* 客户端执行任务，通过业务代表进行委托
-*/
-public void doTask(){;
-businessService.doTask();
-}
-}
 
 
 ```
@@ -166,19 +170,20 @@ businessService.doTask();
 
 ```java
 public class BusinessDelegatePatternDemo {
-    public static void main(String[] args) {;
-    BusinessDelegate businessDelegate = new BusinessDelegate();
-    Client client = new Client(businessDelegate);
+    public static void main(String[] args) {
+        BusinessDelegate businessDelegate = new BusinessDelegate();
+        Client client = new Client(businessDelegate);
 
-    // 客户端要求使用 EJB 服务
-    businessDelegate.setServiceType("EJB");
-    client.doTask();
+        // 客户端要求使用 EJB 服务
+        businessDelegate.setServiceType("EJB");
+        client.doTask();
 
-    // 客户端要求使用 JMS 服务
-    businessDelegate.setServiceType("JMS");
-    client.doTask();
+        // 客户端要求使用 JMS 服务
+        businessDelegate.setServiceType("JMS");
+        client.doTask();
+    }
 }
-}
+
 
 
 ```

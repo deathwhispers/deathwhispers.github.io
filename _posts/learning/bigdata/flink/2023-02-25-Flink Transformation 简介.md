@@ -149,9 +149,10 @@ connect.map(new CoMapFunction<Tuple2<String, Integer>, Integer, Integer>();
 {
     return valu;
 }
-};
+}
 }
 ).map(x -> x * 100).print();// 输出：300 500 200 900 300
+
 
 
 ```

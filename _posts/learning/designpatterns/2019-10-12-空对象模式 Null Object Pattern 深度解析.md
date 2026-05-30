@@ -78,33 +78,34 @@ public abstract class AbstractCustomer {
 ```java
 // RealCustomer.java
 public class RealCustomer extends AbstractCustomer {
-    public RealCustomer(String name) {;
-    this.name = name;
-}
+    public RealCustomer(String name) {
+        this.name = name;
+    }
 
-@Override
-public String getName() {;
-return name;
-}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-@Override
-public boolean isNil() {;
-return false;
-}
+    @Override
+    public boolean isNil() {
+        return false;
+    }
 }
 
 // NullCustomer.java
 public class NullCustomer extends AbstractCustomer {
     @Override
-    public String getName() {;
-    return "Not Available in Customer Database"; // 默认行为
+    public String getName() {
+        return "Not Available in Customer Database"; // 默认行为
+    }
+
+    @Override
+    public boolean isNil() {
+        return true;
+    }
 }
 
-@Override
-public boolean isNil() {;
-return true;
-}
-}
 
 
 ```
@@ -122,18 +123,19 @@ public class CustomerFactory {
     }
     ;
 
-    public static AbstractCustomer getCustomer(String name) {;
-    for (int i = 0;
-    i < names.length;
-    i++) {
-        if (names[i].equalsIgnoreCase(name)) {
-            return new RealCustomer(name);
+    public static AbstractCustomer getCustomer(String name) {
+        for (int i = 0;
+        i < names.length;
+        i++) {
+            if (names[i].equalsIgnoreCase(name)) {
+                return new RealCustomer(name);
+            }
         }
+        // 如果未找到，返回 NullCustomer
+        return new NullCustomer();
     }
-    // 如果未找到，返回 NullCustomer
-    return new NullCustomer();
 }
-}
+
 
 
 ```
@@ -145,19 +147,20 @@ public class CustomerFactory {
 ```java
 // NullPatternDemo.java
 public class NullPatternDemo {
-    public static void main(String[] args) {;
-    AbstractCustomer customer1 = CustomerFactory.getCustomer("Rob");
-    AbstractCustomer customer2 = CustomerFactory.getCustomer("Bob");
-    AbstractCustomer customer3 = CustomerFactory.getCustomer("Julie");
-    AbstractCustomer customer4 = CustomerFactory.getCustomer("Laura");
+    public static void main(String[] args) {
+        AbstractCustomer customer1 = CustomerFactory.getCustomer("Rob");
+        AbstractCustomer customer2 = CustomerFactory.getCustomer("Bob");
+        AbstractCustomer customer3 = CustomerFactory.getCustomer("Julie");
+        AbstractCustomer customer4 = CustomerFactory.getCustomer("Laura");
 
-    System.out.println("Customers");
-    System.out.println(customer1.getName()); // Rob
-    System.out.println(customer2.getName()); // Not Available...
-    System.out.println(customer3.getName()); // Julie
-    System.out.println(customer4.getName()); // Not Available...
+        System.out.println("Customers");
+        System.out.println(customer1.getName()); // Rob
+        System.out.println(customer2.getName()); // Not Available...
+        System.out.println(customer3.getName()); // Julie
+        System.out.println(customer4.getName()); // Not Available...
+    }
 }
-}
+
 
 ```
 

@@ -88,19 +88,19 @@ public interface Image {
 public class RealImage implements Image {
     private String fileName;
 
-    public RealImage(String fileName){;
-    this.fileName = fileName;
-    loadFromDisk(fileName); // 模拟耗时操作：真正加载大图
-}
+    public RealImage(String fileName){
+        this.fileName = fileName;
+        loadFromDisk(fileName); // 模拟耗时操作：真正加载大图
+    }
 
-@Override
-public void display() {;
-System.out.println("Displaying " + fileName);
-}
+    @Override
+    public void display() {
+        System.out.println("Displaying " + fileName);
+    }
 
-private void loadFromDisk(String fileName){;
-System.out.println("Loading " + fileName + " from disk...");
-}
+    private void loadFromDisk(String fileName){
+        System.out.println("Loading " + fileName + " from disk...");
+    }
 }
 
 // 3. 代理主题 (Proxy)
@@ -108,21 +108,22 @@ public class ProxyImage implements Image{
     private RealImage realImage; // 代理持有真实主题的引用
     private String fileName;
 
-    public ProxyImage(String fileName){;
-    this.fileName = fileName;
-    // 注意：构造函数中不加载 RealImage，实现了延迟加载 (Virtual Proxy)
+    public ProxyImage(String fileName){
+        this.fileName = fileName;
+        // 注意：构造函数中不加载 RealImage，实现了延迟加载 (Virtual Proxy)
+    }
+
+    @Override
+    public void display() {
+        // 只有在第一次调用 display() 时，才创建并加载 RealImage
+        if(realImage == null){
+            System.out.println("Proxy: Real image not created yet. Creating now.");
+            realImage = new RealImage(fileName);
+        }
+        realImage.display();
+    }
 }
 
-@Override
-public void display() {;
-// 只有在第一次调用 display() 时，才创建并加载 RealImage
-if(realImage == null){
-    System.out.println("Proxy: Real image not created yet. Creating now.");
-    realImage = new RealImage(fileName);
-}
-realImage.display();
-}
-}
 
 
 ```

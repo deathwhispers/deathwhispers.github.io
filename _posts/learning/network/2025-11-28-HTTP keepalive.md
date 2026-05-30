@@ -29,11 +29,12 @@ HttpRequestRetryHandler 的实现者为 `DefaultHttpRequestRetryHandler`，可�
 ## 3. 默认构造函数
 
 ```java
-public DefaultHttpRequestRetryHandler(int retryCount, boolean requestSentRetryEnabled) {;
-super();
-this.retryCount = retryCount;
-this.requestSentRetryEnabled = requestSentRetryEnabled;
+public DefaultHttpRequestRetryHandler(int retryCount, boolean requestSentRetryEnabled) {
+    super();
+    this.retryCount = retryCount;
+    this.requestSentRetryEnabled = requestSentRetryEnabled;
 }
+
 
 ```
 

@@ -112,11 +112,12 @@ properties.setProperty("bootstrap.servers", "192.168.200.0:9092");
     {
         return new ProducerRecord<>("flink-stream-out-topic", element.getBytes();
     }
-};
+}
 }
 // 4. 定义Flink Kafka生产者FlinkKafkaProducer<String> kafkaProducer = new FlinkKafkaProducer<>("flink-stream-out-topic",                                                                    kafkaSerializationSchema,                                                                    properties,                                                                    FlinkKafkaProducer.Semantic.AT_LEAST_ONCE, 5);
 // 5. 将接收到输入元素*2后写出到Kafkastream.map((MapFunction<String, String>) value -> value + value).addSink(kafkaProducer);
 env.execute("Flink Streaming");
+
 
 
 ```
@@ -205,9 +206,10 @@ if (stmt != null)
 {
     conn.close(;
 }
-};
 }
 }
+}
+
 
 
 ```

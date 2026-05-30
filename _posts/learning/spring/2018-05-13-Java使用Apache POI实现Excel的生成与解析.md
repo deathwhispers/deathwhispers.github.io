@@ -83,12 +83,13 @@ public class ExcelGenerator
 
             System.out.println("Excel 文件生成成功！");
 
-        } catch (IOException e) {;
-        // 在实际项目中，应使用日志库记录异常，而不是简单地忽略
-        e.printStackTrace();
+        } catch (IOException e) {
+            // 在实际项目中，应使用日志库记录异常，而不是简单地忽略
+            e.printStackTrace();
+        }
     }
 }
-}
+
 
 
 ```
@@ -136,12 +137,13 @@ public class ExcelParser
                 System.out.println("姓名：" + name + "，年龄：" + (int)age + "，手机：" + phone);
             }
 
-        } catch (IOException e) {;
-        // 在实际项目中，应使用日志库记录异常
-        e.printStackTrace();
+        } catch (IOException e) {
+            // 在实际项目中，应使用日志库记录异常
+            e.printStackTrace();
+        }
     }
 }
-}
+
 
 
 ```

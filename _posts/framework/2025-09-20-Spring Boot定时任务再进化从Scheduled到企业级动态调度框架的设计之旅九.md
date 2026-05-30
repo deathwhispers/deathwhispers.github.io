@@ -250,11 +250,12 @@ private Runnable resolveTaskDefinition(TaskDefinition definition)
         try
         {
             method.invoke(bean, definition); // 把任务定义传过去
-        } catch (Exception e) {;
-        throw new RuntimeException("任务执行失败", e);
+        } catch (Exception e) {
+            throw new RuntimeException("任务执行失败", e);
+        }
     }
-};
 }
+
 
 
 ```

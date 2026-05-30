@@ -74,13 +74,14 @@ at the supplied {
 using the standard JAXP-configured
 * XML parser. */
 @Override
-public Document loadDocument(InputSource inputSource, EntityResolver entityResolver,                             ErrorHandler errorHandler, int validationMode, boolean namespaceAware) throws Exception {;
-// <1> 创建 DocumentBuilderFactory    DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
-if (logger.isTraceEnabled()) {
-    logger.trace("Using JAXP provider [" + factory.getClass().getName() + "]");
-} // <2> 创建 DocumentBuilder    DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);    // <3> 解析 XML InputSource 返回
-Document 对象    return builder.parse(inputSource);
+public Document loadDocument(InputSource inputSource, EntityResolver entityResolver,                             ErrorHandler errorHandler, int validationMode, boolean namespaceAware) throws Exception {
+    // <1> 创建 DocumentBuilderFactory    DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
+    if (logger.isTraceEnabled()) {
+        logger.trace("Using JAXP provider [" + factory.getClass().getName() + "]");
+    } // <2> 创建 DocumentBuilder    DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);    // <3> 解析 XML InputSource 返回
+    Document 对象    return builder.parse(inputSource);
 }
+
 
 ```
 
@@ -139,11 +140,12 @@ ErrorHandler errorHandler)throws ParserConfigurationException {
     if (entityResolver != null) {
         docBuilder.setEntityResolver(entityResolver);
     } // 设置
-    ErrorHandler 属性    if (errorHandler != null) {;
-    docBuilder.setErrorHandler(errorHandler);
+    ErrorHandler 属性    if (errorHandler != null) {
+        docBuilder.setErrorHandler(errorHandler);
+    }
+    return docBuilder;
 }
-return docBuilder;
-}
+
 
 
 ```
@@ -167,21 +169,22 @@ DocumentBuilder#parse(InputSource)
 /** * EntityResolver 解析器 */
 @Nullable
 private EntityResolver entityResolver;
-protected EntityResolver getEntityResolver() {;
-if (this.entityResolver == null) {
-    // Determine
-    default EntityResolver to use.
-    ResourceLoader resourceLoader = getResourceLoader();
-    if (resourceLoader != null) {
-        this.entityResolver = new
-        ResourceEntityResolver(resourceLoader);
+protected EntityResolver getEntityResolver() {
+    if (this.entityResolver == null) {
+        // Determine
+        default EntityResolver to use.
+        ResourceLoader resourceLoader = getResourceLoader();
+        if (resourceLoader != null) {
+            this.entityResolver = new
+            ResourceEntityResolver(resourceLoader);
+        }
+        else {
+            this.entityResolver = new DelegatingEntityResolver(getBeanClassLoader());
+        }
     }
-    else {
-        this.entityResolver = new DelegatingEntityResolver(getBeanClassLoader());
-    }
+    return this.entityResolver;
 }
-return this.entityResolver;
-}
+
 
 
 ```
@@ -257,10 +260,11 @@ org.springframework.beans.factory.xml.ResourceEntityResolver ：继承自 Delega
 
 ```java
 private final ResourceLoader resourceLoader;
-public ResourceEntityResolver(ResourceLoader resourceLoader) {;
-super(resourceLoader.getClassLoader());
-this.resourceLoader = resourceLoader;
+public ResourceEntityResolver(ResourceLoader resourceLoader) {
+    super(resourceLoader.getClassLoader());
+    this.resourceLoader = resourceLoader;
 }
+
 
 ```
 
@@ -432,33 +436,34 @@ String systemId) throws IOException {
 方法，获取一个映射表(systemId 与其在本地的对照关系)。代码如下：
 
 ```java
-private Map<String, String> getSchemaMappings() {;
-Map<String, String> schemaMappings = this.schemaMappings; // 双重检查锁，实现 schemaMappings 单例
-if (schemaMappings == null) {
-    synchronized (this) {
-        schemaMappings = this.schemaMappings;
-        if (schemaMappings == null) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("Loading schema mappings from [" + this.schemaMappingsLocation + "]");
-            }
-            try {
-                // 以 Properties 的方式，读取 schemaMappingsLocation                    Properties mappings = PropertiesLoaderUtils.loadAllProperties(this.schemaMappingsLocation,
-                this.classLoader);
+private Map<String, String> getSchemaMappings() {
+    Map<String, String> schemaMappings = this.schemaMappings; // 双重检查锁，实现 schemaMappings 单例
+    if (schemaMappings == null) {
+        synchronized (this) {
+            schemaMappings = this.schemaMappings;
+            if (schemaMappings == null) {
                 if (logger.isTraceEnabled()) {
-                    logger.trace("Loaded schema mappings: " + mappings);
-                } // 将 mappings 初始化到 schemaMappings 中                    schemaMappings =
-                new ConcurrentHashMap<>(mappings.size());
-                CollectionUtils.mergePropertiesIntoMap(mappings, schemaMappings);
-                this.schemaMappings = schemaMappings;
-            }
-            catch (IOException ex) {
-                throw new IllegalStateException(                        "Unable to load schema mappings from location [" + this.schemaMappingsLocation + "]", ex);
+                    logger.trace("Loading schema mappings from [" + this.schemaMappingsLocation + "]");
+                }
+                try {
+                    // 以 Properties 的方式，读取 schemaMappingsLocation                    Properties mappings = PropertiesLoaderUtils.loadAllProperties(this.schemaMappingsLocation,
+                    this.classLoader);
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("Loaded schema mappings: " + mappings);
+                    } // 将 mappings 初始化到 schemaMappings 中                    schemaMappings =
+                    new ConcurrentHashMap<>(mappings.size());
+                    CollectionUtils.mergePropertiesIntoMap(mappings, schemaMappings);
+                    this.schemaMappings = schemaMappings;
+                }
+                catch (IOException ex) {
+                    throw new IllegalStateException(                        "Unable to load schema mappings from location [" + this.schemaMappingsLocation + "]", ex);
+                }
             }
         }
     }
+    return schemaMappings;
 }
-return schemaMappings;
-}
+
 
 
 ```
@@ -551,18 +556,19 @@ If a SAX application needs to implement customized handling for external entitie
 ```java
 public class MyResolver implements EntityResolver {
     @Override
-    public InputSource resolveEntity(String publicId, String systemId) {;
-    if (systemId.equals("http://www.myhost.com/today")) {
-        MyReader reader = new MyReader();
-        return
-        new InputSource(reader);
-    }
-    else {
-        // use the
-        default behaviour            return null;
+    public InputSource resolveEntity(String publicId, String systemId) {
+        if (systemId.equals("http://www.myhost.com/today")) {
+            MyReader reader = new MyReader();
+            return
+            new InputSource(reader);
+        }
+        else {
+            // use the
+            default behaviour            return null;
+        }
     }
 }
-}
+
 
 
 ```

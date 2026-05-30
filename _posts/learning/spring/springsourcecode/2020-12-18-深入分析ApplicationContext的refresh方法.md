@@ -47,37 +47,38 @@ void refresh() throws BeansException, IllegalStateException;
 ```java
 // AbstractApplicationContext.java
 @Override
-public void refresh() throws BeansException, IllegalStateException {;
-synchronized (this.startupShutdownMonitor) {
-    // 准备刷新上下文环境        prepareRefresh();        // 创建并初始化
-    BeanFactory        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
-    // 填充BeanFactory功能        prepareBeanFactory(beanFactory);
-    try {
-        // 提供子类覆盖的额外处理，即子类处理自定义的BeanFactoryPostProcess            postProcessBeanFactory(beanFactory);
-        // 激活各种BeanFactory处理器            invokeBeanFactoryPostProcessors(beanFactory);
-        // 注册拦截Bean创建的Bean处理器，即注册 BeanPostProcessor            registerBeanPostProcessors(beanFactory);
-        // 初始化上下文中的资源文件，如国际化文件的处理等            initMessageSource();
-        // 初始化上下文事件广播器            initApplicationEventMulticaster();
-        // 给子类扩展初始化其他Bean            onRefresh();
-        // 在所有bean中查找listener bean，然后注册到广播器中            registerListeners();
-        // 初始化剩下的单例Bean(非延迟加载的)            finishBeanFactoryInitialization(beanFactory);
-        // 完成刷新过程,通知生命周期处理器lifecycleProcessor刷新过程,同时发出ContextRefreshEvent通知别人            finishRefresh();
-    }
-    catch (BeansException ex) {
-        if (logger.isWarnEnabled()) {
-            logger.warn("Exception encountered during context initialization - " +                        "cancelling refresh attempt: " + ex);
-        } //  销毁已经创建的Bean            destroyBeans();
-        // 重置容器激活标签            cancelRefresh(ex);
-        // 抛出异常
-        throw ex;
-    }
-    finally {
-        // Reset common
-        introspection caches in Spring's core, since we            // might not ever need metadata
-        for singleton beans anymore...            resetCommonCaches();
+public void refresh() throws BeansException, IllegalStateException {
+    synchronized (this.startupShutdownMonitor) {
+        // 准备刷新上下文环境        prepareRefresh();        // 创建并初始化
+        BeanFactory        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+        // 填充BeanFactory功能        prepareBeanFactory(beanFactory);
+        try {
+            // 提供子类覆盖的额外处理，即子类处理自定义的BeanFactoryPostProcess            postProcessBeanFactory(beanFactory);
+            // 激活各种BeanFactory处理器            invokeBeanFactoryPostProcessors(beanFactory);
+            // 注册拦截Bean创建的Bean处理器，即注册 BeanPostProcessor            registerBeanPostProcessors(beanFactory);
+            // 初始化上下文中的资源文件，如国际化文件的处理等            initMessageSource();
+            // 初始化上下文事件广播器            initApplicationEventMulticaster();
+            // 给子类扩展初始化其他Bean            onRefresh();
+            // 在所有bean中查找listener bean，然后注册到广播器中            registerListeners();
+            // 初始化剩下的单例Bean(非延迟加载的)            finishBeanFactoryInitialization(beanFactory);
+            // 完成刷新过程,通知生命周期处理器lifecycleProcessor刷新过程,同时发出ContextRefreshEvent通知别人            finishRefresh();
+        }
+        catch (BeansException ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Exception encountered during context initialization - " +                        "cancelling refresh attempt: " + ex);
+            } //  销毁已经创建的Bean            destroyBeans();
+            // 重置容器激活标签            cancelRefresh(ex);
+            // 抛出异常
+            throw ex;
+        }
+        finally {
+            // Reset common
+            introspection caches in Spring's core, since we            // might not ever need metadata
+            for singleton beans anymore...            resetCommonCaches();
+        }
     }
 }
-}
+
 
 
 ```
@@ -91,20 +92,21 @@ synchronized (this.startupShutdownMonitor) {
 ```java
 // AbstractApplicationContext.java
 protected
-void prepareRefresh() {;
-// 设置启动日期
-this.startupDate =
-System.currentTimeMillis();
-// 设置 context 当前状态    this.closed.set(false);
-this.active.set(true);
-if (logger.isInfoEnabled()) {
-    logger.info("Refreshing " + this);
-} // 初始化context environment（上下文环境）中的占位符属性来源    initPropertySources();
-// 对属性进行必要的验证    getEnvironment().validateRequiredProperties();
-this.earlyApplicationEvents =
-new
-LinkedHashSet<>();
+void prepareRefresh() {
+    // 设置启动日期
+    this.startupDate =
+    System.currentTimeMillis();
+    // 设置 context 当前状态    this.closed.set(false);
+    this.active.set(true);
+    if (logger.isInfoEnabled()) {
+        logger.info("Refreshing " + this);
+    } // 初始化context environment（上下文环境）中的占位符属性来源    initPropertySources();
+    // 对属性进行必要的验证    getEnvironment().validateRequiredProperties();
+    this.earlyApplicationEvents =
+    new
+    LinkedHashSet<>();
 }
+
 
 
 ```
@@ -125,14 +127,15 @@ LinkedHashSet<>();
 
 ```java
 // AbstractApplicationContext.java
-protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {;
-// 刷新 BeanFactory    refreshBeanFactory();    // 获取
-BeanFactory    ConfigurableListableBeanFactory beanFactory = getBeanFactory();
-if (logger.isDebugEnabled()) {
-    logger.debug("Bean factory for " + getDisplayName() + ": " + beanFactory);
+protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+    // 刷新 BeanFactory    refreshBeanFactory();    // 获取
+    BeanFactory    ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+    if (logger.isDebugEnabled()) {
+        logger.debug("Bean factory for " + getDisplayName() + ": " + beanFactory);
+    }
+    return beanFactory;
 }
-return beanFactory;
-}
+
 
 
 ```
@@ -142,26 +145,27 @@ return beanFactory;
 ```java
 // AbstractRefreshableApplicationContext.java
 @Override
-protected final void refreshBeanFactory() throws BeansException {;
-// 若已有 BeanFactory ，销毁它的 Bean 们，并销毁 BeanFactory
-if (hasBeanFactory()) {
-    destroyBeans();
-    closeBeanFactory();
+protected final void refreshBeanFactory() throws BeansException {
+    // 若已有 BeanFactory ，销毁它的 Bean 们，并销毁 BeanFactory
+    if (hasBeanFactory()) {
+        destroyBeans();
+        closeBeanFactory();
+    }
+    try {
+        // 创建 BeanFactory 对象        DefaultListableBeanFactory beanFactory = createBeanFactory();
+        // 指定序列化编号        beanFactory.setSerializationId(getId());
+        // 定制 BeanFactory 设置相关属性        customizeBeanFactory(beanFactory);
+        // 加载
+        BeanDefinition 们        loadBeanDefinitions(beanFactory); // 设置 Context 的
+        BeanFactory        synchronized (this.beanFactoryMonitor) {
+            this.beanFactory = beanFactory;
+        }
+    }
+    catch (IOException ex) {
+        throw new ApplicationContextException("I/O error parsing bean definition source for " + getDisplayName(), ex);
+    }
 }
-try {
-    // 创建 BeanFactory 对象        DefaultListableBeanFactory beanFactory = createBeanFactory();
-    // 指定序列化编号        beanFactory.setSerializationId(getId());
-    // 定制 BeanFactory 设置相关属性        customizeBeanFactory(beanFactory);
-    // 加载
-    BeanDefinition 们        loadBeanDefinitions(beanFactory); // 设置 Context 的
-    BeanFactory        synchronized (this.beanFactoryMonitor) {;
-    this.beanFactory = beanFactory;
-}
-}
-catch (IOException ex) {
-    throw new ApplicationContextException("I/O error parsing bean definition source for " + getDisplayName(), ex);
-}
-}
+
 
 
 ```
@@ -204,18 +208,19 @@ IOException
 ```java
 // AbstractXmlApplicationContext.java
 @Override
-protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {;
-// Create a
-new XmlBeanDefinitionReader for the given
-BeanFactory.    // 创建 XmlBeanDefinitionReader 对象    XmlBeanDefinitionReader beanDefinitionReader =
-new XmlBeanDefinitionReader(beanFactory); // Configure the bean definition reader with
-this context's    // resource loading environment.    // 对 XmlBeanDefinitionReader 进行环境变量的设置    beanDefinitionReader.setEnvironment(this.getEnvironment());
-beanDefinitionReader.setResourceLoader(this);
-beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
-// Allow a
-subclass to provide custom initialization of the reader,    // then proceed with actually loading the bean definitions.    // 对 XmlBeanDefinitionReader 进行设置，可以进行覆盖    initBeanDefinitionReader(beanDefinitionReader);    // 从
-Resource 们中，加载 BeanDefinition 们    loadBeanDefinitions(beanDefinitionReader);
+protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
+    // Create a
+    new XmlBeanDefinitionReader for the given
+    BeanFactory.    // 创建 XmlBeanDefinitionReader 对象    XmlBeanDefinitionReader beanDefinitionReader =
+    new XmlBeanDefinitionReader(beanFactory); // Configure the bean definition reader with
+    this context's    // resource loading environment.    // 对 XmlBeanDefinitionReader 进行环境变量的设置    beanDefinitionReader.setEnvironment(this.getEnvironment());
+    beanDefinitionReader.setResourceLoader(this);
+    beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
+    // Allow a
+    subclass to provide custom initialization of the reader,    // then proceed with actually loading the bean definitions.    // 对 XmlBeanDefinitionReader 进行设置，可以进行覆盖    initBeanDefinitionReader(beanDefinitionReader);    // 从
+    Resource 们中，加载 BeanDefinition 们    loadBeanDefinitions(beanDefinitionReader);
 }
+
 
 
 ```
@@ -259,41 +264,42 @@ IOException {
 ```java
 // AbstractApplicationContext.java
 protected
-void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {;
-// 设置beanFactory的classLoader    beanFactory.setBeanClassLoader(getClassLoader());    // 设置beanFactory的表达式语言处理器,Spring3开始增加了对语言表达式的支持,默认可以使用#
-{
-    bean.xxx;
+void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+    // 设置beanFactory的classLoader    beanFactory.setBeanClassLoader(getClassLoader());    // 设置beanFactory的表达式语言处理器,Spring3开始增加了对语言表达式的支持,默认可以使用#
+    {
+        bean.xxx;
+    }
+    的形式来调用相关属性值    beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));    // 为beanFactory增加一个默认的propertyEditor    beanFactory.addPropertyEditorRegistrar(new
+    ResourceEditorRegistrar(this, getEnvironment())); // 添加ApplicationContextAwareProcessor    beanFactory.addBeanPostProcessor(new
+    ApplicationContextAwareProcessor(this));
+    // 设置忽略自动装配的接口    beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
+    beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
+    beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);
+    beanFactory.ignoreDependencyInterface(ApplicationEventPublisherAware.class);
+    beanFactory.ignoreDependencyInterface(MessageSourceAware.class);
+    beanFactory.ignoreDependencyInterface(ApplicationContextAware.class);
+    // 设置几个自动装配的特殊规则    beanFactory.registerResolvableDependency(BeanFactory.class, beanFactory);
+    beanFactory.registerResolvableDependency(ResourceLoader.class, this);
+    beanFactory.registerResolvableDependency(ApplicationEventPublisher.class, this);
+    beanFactory.registerResolvableDependency(ApplicationContext.class,
+    this); // Register early post-processor
+    for detecting inner beans as ApplicationListeners.    beanFactory.addBeanPostProcessor(new
+    ApplicationListenerDetector(this)); // 增加对AspectJ的支持
+    if (beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
+        beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory)); //
+        Set a temporary ClassLoader for type matching.        beanFactory.setTempClassLoader(new ContextTypeMatchClassLoader(beanFactory.getBeanClassLoader()));
+    } // 注册默认的系统环境bean    if (!beanFactory.containsLocalBean(ENVIRONMENT_BEAN_NAME))
+    {
+        beanFactory.registerSingleton(ENVIRONMENT_BEAN_NAME, getEnvironment());
+    }
+    if (!beanFactory.containsLocalBean(SYSTEM_PROPERTIES_BEAN_NAME)) {
+        beanFactory.registerSingleton(SYSTEM_PROPERTIES_BEAN_NAME, getEnvironment().getSystemProperties());
+    }
+    if (!beanFactory.containsLocalBean(SYSTEM_ENVIRONMENT_BEAN_NAME)) {
+        beanFactory.registerSingleton(SYSTEM_ENVIRONMENT_BEAN_NAME, getEnvironment().getSystemEnvironment());
+    }
 }
-的形式来调用相关属性值    beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));    // 为beanFactory增加一个默认的propertyEditor    beanFactory.addPropertyEditorRegistrar(new
-ResourceEditorRegistrar(this, getEnvironment())); // 添加ApplicationContextAwareProcessor    beanFactory.addBeanPostProcessor(new
-ApplicationContextAwareProcessor(this));
-// 设置忽略自动装配的接口    beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
-beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
-beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);
-beanFactory.ignoreDependencyInterface(ApplicationEventPublisherAware.class);
-beanFactory.ignoreDependencyInterface(MessageSourceAware.class);
-beanFactory.ignoreDependencyInterface(ApplicationContextAware.class);
-// 设置几个自动装配的特殊规则    beanFactory.registerResolvableDependency(BeanFactory.class, beanFactory);
-beanFactory.registerResolvableDependency(ResourceLoader.class, this);
-beanFactory.registerResolvableDependency(ApplicationEventPublisher.class, this);
-beanFactory.registerResolvableDependency(ApplicationContext.class,
-this); // Register early post-processor
-for detecting inner beans as ApplicationListeners.    beanFactory.addBeanPostProcessor(new
-ApplicationListenerDetector(this)); // 增加对AspectJ的支持
-if (beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
-    beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory)); //
-    Set a temporary ClassLoader for type matching.        beanFactory.setTempClassLoader(new ContextTypeMatchClassLoader(beanFactory.getBeanClassLoader()));
-} // 注册默认的系统环境bean    if (!beanFactory.containsLocalBean(ENVIRONMENT_BEAN_NAME))
-{
-    beanFactory.registerSingleton(ENVIRONMENT_BEAN_NAME, getEnvironment());
-}
-if (!beanFactory.containsLocalBean(SYSTEM_PROPERTIES_BEAN_NAME)) {
-    beanFactory.registerSingleton(SYSTEM_PROPERTIES_BEAN_NAME, getEnvironment().getSystemProperties());
-}
-if (!beanFactory.containsLocalBean(SYSTEM_ENVIRONMENT_BEAN_NAME)) {
-    beanFactory.registerSingleton(SYSTEM_ENVIRONMENT_BEAN_NAME, getEnvironment().getSystemEnvironment());
-}
-}
+
 
 
 ```
@@ -307,14 +313,15 @@ if (!beanFactory.containsLocalBean(SYSTEM_ENVIRONMENT_BEAN_NAME)) {
 ```java
 // AbstractApplicationContext.java
 protected
-void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {;
-beanFactory.addBeanPostProcessor(new ServletContextAwareProcessor(this.servletContext, this.servletConfig));
-beanFactory.ignoreDependencyInterface(ServletContextAware.class);
-beanFactory.ignoreDependencyInterface(ServletConfigAware.class);
-WebApplicationContextUtils.registerWebApplicationScopes(beanFactory, this.servletContext);
-WebApplicationContextUtils.registerEnvironmentBeans(beanFactory, this.servletContext,
-this.servletConfig);
+void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+    beanFactory.addBeanPostProcessor(new ServletContextAwareProcessor(this.servletContext, this.servletConfig));
+    beanFactory.ignoreDependencyInterface(ServletContextAware.class);
+    beanFactory.ignoreDependencyInterface(ServletConfigAware.class);
+    WebApplicationContextUtils.registerWebApplicationScopes(beanFactory, this.servletContext);
+    WebApplicationContextUtils.registerEnvironmentBeans(beanFactory, this.servletContext,
+    this.servletConfig);
 }
+
 
 ```
 
@@ -341,113 +348,114 @@ this.servletConfig);
 ```java
 // AbstractApplicationContext.java
 public
-static void invokeBeanFactoryPostProcessors(        ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {;
-// 定义一个 set 保存所有的
-BeanFactoryPostProcessors
-Set<String> processedBeans = new HashSet<>(); // 如果当前 BeanFactory 为 BeanDefinitionRegistry
-if (beanFactory instanceof BeanDefinitionRegistry) {
-    BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory; //
-    BeanFactoryPostProcessor 集合        List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>(); //
-    BeanDefinitionRegistryPostProcessor 集合        List<BeanDefinitionRegistryPostProcessor> registryProcessors = new
-    ArrayList<>(); // 迭代注册的 beanFactoryPostProcessors
-    for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
-        // 如果是 BeanDefinitionRegistryPostProcessor，则调用 postProcessBeanDefinitionRegistry 进行注册，            // 同时加入到 registryProcessors 集合中
-        if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
-            BeanDefinitionRegistryPostProcessor registryProcessor =                        (BeanDefinitionRegistryPostProcessor) postProcessor;
-            registryProcessor.postProcessBeanDefinitionRegistry(registry);
-            registryProcessors.add(registryProcessor);
-        }
-        else {
-            // 否则当做普通的
-            BeanFactoryPostProcessor 处理                // 添加到 regularPostProcessors 集合中即可，便于后面做后续处理                regularPostProcessors.add(postProcessor);            }        }        // 用于保存当前处理的
-            BeanDefinitionRegistryPostProcessor
-            List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>(); // 首先处理实现了 PriorityOrdered (有限排序接口)的 BeanDefinitionRegistryPostProcessor        String[] postProcessorNames =                beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true,
-            false);
-            for (String ppName : postProcessorNames) {
-                if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
-                    currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
-                    processedBeans.add(ppName);
-                }
-            } // 排序        sortPostProcessors(currentRegistryProcessors, beanFactory);
-            // 加入registryProcessors集合        registryProcessors.addAll(currentRegistryProcessors);
-            // 调用所有实现了 PriorityOrdered 的 BeanDefinitionRegistryPostProcessors 的 postProcessBeanDefinitionRegistry()        invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
-            // 清空，以备下次使用        currentRegistryProcessors.clear();
-            // 其次，调用是实现了 Ordered（普通排序接口）的 BeanDefinitionRegistryPostProcessors        // 逻辑和 上面一样        postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class,
-            true, false);
-            for (String ppName : postProcessorNames) {
-                if (!processedBeans.contains(ppName) && beanFactory.isTypeMatch(ppName, Ordered.class)) {
-                    currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
-                    processedBeans.add(ppName);
-                }
+static void invokeBeanFactoryPostProcessors(        ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
+    // 定义一个 set 保存所有的
+    BeanFactoryPostProcessors
+    Set<String> processedBeans = new HashSet<>(); // 如果当前 BeanFactory 为 BeanDefinitionRegistry
+    if (beanFactory instanceof BeanDefinitionRegistry) {
+        BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory; //
+        BeanFactoryPostProcessor 集合        List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>(); //
+        BeanDefinitionRegistryPostProcessor 集合        List<BeanDefinitionRegistryPostProcessor> registryProcessors = new
+        ArrayList<>(); // 迭代注册的 beanFactoryPostProcessors
+        for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
+            // 如果是 BeanDefinitionRegistryPostProcessor，则调用 postProcessBeanDefinitionRegistry 进行注册，            // 同时加入到 registryProcessors 集合中
+            if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
+                BeanDefinitionRegistryPostProcessor registryProcessor =                        (BeanDefinitionRegistryPostProcessor) postProcessor;
+                registryProcessor.postProcessBeanDefinitionRegistry(registry);
+                registryProcessors.add(registryProcessor);
             }
-            sortPostProcessors(currentRegistryProcessors, beanFactory);
-            registryProcessors.addAll(currentRegistryProcessors);
-            invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
-            currentRegistryProcessors.clear(); // 最后调用其他的 BeanDefinitionRegistryPostProcessors
-            boolean reiterate = true;
-            while (reiterate) {
-                reiterate = false; // 获取 BeanDefinitionRegistryPostProcessor            postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class,
-                true, false);
+            else {
+                // 否则当做普通的
+                BeanFactoryPostProcessor 处理                // 添加到 regularPostProcessors 集合中即可，便于后面做后续处理                regularPostProcessors.add(postProcessor);            }        }        // 用于保存当前处理的
+                BeanDefinitionRegistryPostProcessor
+                List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>(); // 首先处理实现了 PriorityOrdered (有限排序接口)的 BeanDefinitionRegistryPostProcessor        String[] postProcessorNames =                beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true,
+                false);
                 for (String ppName : postProcessorNames) {
-                    // 没有包含在 processedBeans 中的（因为包含了的都已经处理了）
-                    if (!processedBeans.contains(ppName)) {
+                    if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
                         currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
                         processedBeans.add(ppName);
-                        reiterate = true;
                     }
-                } // 与上面处理逻辑一致            sortPostProcessors(currentRegistryProcessors, beanFactory);
+                } // 排序        sortPostProcessors(currentRegistryProcessors, beanFactory);
+                // 加入registryProcessors集合        registryProcessors.addAll(currentRegistryProcessors);
+                // 调用所有实现了 PriorityOrdered 的 BeanDefinitionRegistryPostProcessors 的 postProcessBeanDefinitionRegistry()        invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
+                // 清空，以备下次使用        currentRegistryProcessors.clear();
+                // 其次，调用是实现了 Ordered（普通排序接口）的 BeanDefinitionRegistryPostProcessors        // 逻辑和 上面一样        postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class,
+                true, false);
+                for (String ppName : postProcessorNames) {
+                    if (!processedBeans.contains(ppName) && beanFactory.isTypeMatch(ppName, Ordered.class)) {
+                        currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
+                        processedBeans.add(ppName);
+                    }
+                }
+                sortPostProcessors(currentRegistryProcessors, beanFactory);
                 registryProcessors.addAll(currentRegistryProcessors);
                 invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
-                currentRegistryProcessors.clear();
-            }        // 调用所有
-            BeanDefinitionRegistryPostProcessor (包括手动注册和通过配置文件注册)        // 和
-            BeanFactoryPostProcessor(只有手动注册)的回调函数(postProcessBeanFactory())        invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
-            invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
-        }
-        else {
-            // 如果不是
-            BeanDefinitionRegistry 只需要调用其回调函数（postProcessBeanFactory()）即可        invokeBeanFactoryPostProcessors(beanFactoryPostProcessors, beanFactory);
-        } //
-        String[] postProcessorNames =            beanFactory.getBeanNamesForType(BeanFactoryPostProcessor.class, true, false);
-        // 这里同样需要区分 PriorityOrdered 、Ordered 和 no Ordered    List<BeanFactoryPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
-        List<String> orderedPostProcessorNames = new ArrayList<>();
-        List<String> nonOrderedPostProcessorNames =
-        new ArrayList<>();
-        for (String ppName : postProcessorNames) {
-            // 已经处理过了的，跳过        if (processedBeans.contains(ppName))
-            {
-                // skip - already processed in first phase above;
+                currentRegistryProcessors.clear(); // 最后调用其他的 BeanDefinitionRegistryPostProcessors
+                boolean reiterate = true;
+                while (reiterate) {
+                    reiterate = false; // 获取 BeanDefinitionRegistryPostProcessor            postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class,
+                    true, false);
+                    for (String ppName : postProcessorNames) {
+                        // 没有包含在 processedBeans 中的（因为包含了的都已经处理了）
+                        if (!processedBeans.contains(ppName)) {
+                            currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
+                            processedBeans.add(ppName);
+                            reiterate = true;
+                        }
+                    } // 与上面处理逻辑一致            sortPostProcessors(currentRegistryProcessors, beanFactory);
+                    registryProcessors.addAll(currentRegistryProcessors);
+                    invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
+                    currentRegistryProcessors.clear();
+                }        // 调用所有
+                BeanDefinitionRegistryPostProcessor (包括手动注册和通过配置文件注册)        // 和
+                BeanFactoryPostProcessor(只有手动注册)的回调函数(postProcessBeanFactory())        invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
+                invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
             }
-            // PriorityOrdered
-            else
-            if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
-                priorityOrderedPostProcessors.add(beanFactory.getBean(ppName,
-                BeanFactoryPostProcessor.class));
-            } // Ordered
-            else
-            if (beanFactory.isTypeMatch(ppName, Ordered.class)) {
-                orderedPostProcessorNames.add(ppName);
-            } // no Ordered
             else {
-                nonOrderedPostProcessorNames.add(ppName);
+                // 如果不是
+                BeanDefinitionRegistry 只需要调用其回调函数（postProcessBeanFactory()）即可        invokeBeanFactoryPostProcessors(beanFactoryPostProcessors, beanFactory);
+            } //
+            String[] postProcessorNames =            beanFactory.getBeanNamesForType(BeanFactoryPostProcessor.class, true, false);
+            // 这里同样需要区分 PriorityOrdered 、Ordered 和 no Ordered    List<BeanFactoryPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
+            List<String> orderedPostProcessorNames = new ArrayList<>();
+            List<String> nonOrderedPostProcessorNames =
+            new ArrayList<>();
+            for (String ppName : postProcessorNames) {
+                // 已经处理过了的，跳过        if (processedBeans.contains(ppName))
+                {
+                    // skip - already processed in first phase above;
+                }
+                // PriorityOrdered
+                else
+                if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
+                    priorityOrderedPostProcessors.add(beanFactory.getBean(ppName,
+                    BeanFactoryPostProcessor.class));
+                } // Ordered
+                else
+                if (beanFactory.isTypeMatch(ppName, Ordered.class)) {
+                    orderedPostProcessorNames.add(ppName);
+                } // no Ordered
+                else {
+                    nonOrderedPostProcessorNames.add(ppName);
+                }
+            } // First, PriorityOrdered 接口    sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
+            invokeBeanFactoryPostProcessors(priorityOrderedPostProcessors, beanFactory);
+            // Next, Ordered 接口    List<BeanFactoryPostProcessor> orderedPostProcessors =
+            new
+            ArrayList<>();
+            for (String postProcessorName : orderedPostProcessorNames) {
+                orderedPostProcessors.add(beanFactory.getBean(postProcessorName, BeanFactoryPostProcessor.class));
             }
-        } // First, PriorityOrdered 接口    sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
-        invokeBeanFactoryPostProcessors(priorityOrderedPostProcessors, beanFactory);
-        // Next, Ordered 接口    List<BeanFactoryPostProcessor> orderedPostProcessors =
-        new
-        ArrayList<>();
-        for (String postProcessorName : orderedPostProcessorNames) {
-            orderedPostProcessors.add(beanFactory.getBean(postProcessorName, BeanFactoryPostProcessor.class));
+            sortPostProcessors(orderedPostProcessors, beanFactory);
+            invokeBeanFactoryPostProcessors(orderedPostProcessors, beanFactory); // Finally, no ordered
+            List<BeanFactoryPostProcessor> nonOrderedPostProcessors = new ArrayList<>();
+            for (String postProcessorName : nonOrderedPostProcessorNames) {
+                nonOrderedPostProcessors.add(beanFactory.getBean(postProcessorName, BeanFactoryPostProcessor.class));
+            }
+            invokeBeanFactoryPostProcessors(nonOrderedPostProcessors, beanFactory); // Clear cached merged bean definitions since the post-processors might have    //
+            modified the original metadata, e.g. replacing placeholders in values...    beanFactory.clearMetadataCache();
         }
-        sortPostProcessors(orderedPostProcessors, beanFactory);
-        invokeBeanFactoryPostProcessors(orderedPostProcessors, beanFactory); // Finally, no ordered
-        List<BeanFactoryPostProcessor> nonOrderedPostProcessors = new ArrayList<>();
-        for (String postProcessorName : nonOrderedPostProcessorNames) {
-            nonOrderedPostProcessors.add(beanFactory.getBean(postProcessorName, BeanFactoryPostProcessor.class));
-        }
-        invokeBeanFactoryPostProcessors(nonOrderedPostProcessors, beanFactory); // Clear cached merged bean definitions since the post-processors might have    //
-        modified the original metadata, e.g. replacing placeholders in values...    beanFactory.clearMetadataCache();
-    }
+
 
 
 ```
@@ -463,59 +471,60 @@ if (beanFactory instanceof BeanDefinitionRegistry) {
 ```java
 // AbstractApplicationContext.java
 public
-static void registerBeanPostProcessors(        ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {;
-// 所有的 BeanPostProcessors
-String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false);
-// 注册 BeanPostProcessorChecker    // 主要用于记录一些 bean 的信息，这些 bean 不符合所有 BeanPostProcessors 处理的资格时    int beanProcessorTargetCount = beanFactory.getBeanPostProcessorCount() + 1 + postProcessorNames.length;
-beanFactory.addBeanPostProcessor(new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount));
-// 区分 PriorityOrdered、Ordered 、 no ordered    List<BeanPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
-List<String> orderedPostProcessorNames = new ArrayList<>();
-List<String> nonOrderedPostProcessorNames = new ArrayList<>();
-// MergedBeanDefinition    List<BeanPostProcessor>
-internalPostProcessors = new ArrayList<>();
-for (String ppName : postProcessorNames) {
-    if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
+static void registerBeanPostProcessors(        ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
+    // 所有的 BeanPostProcessors
+    String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false);
+    // 注册 BeanPostProcessorChecker    // 主要用于记录一些 bean 的信息，这些 bean 不符合所有 BeanPostProcessors 处理的资格时    int beanProcessorTargetCount = beanFactory.getBeanPostProcessorCount() + 1 + postProcessorNames.length;
+    beanFactory.addBeanPostProcessor(new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount));
+    // 区分 PriorityOrdered、Ordered 、 no ordered    List<BeanPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
+    List<String> orderedPostProcessorNames = new ArrayList<>();
+    List<String> nonOrderedPostProcessorNames = new ArrayList<>();
+    // MergedBeanDefinition    List<BeanPostProcessor>
+    internalPostProcessors = new ArrayList<>();
+    for (String ppName : postProcessorNames) {
+        if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
+            BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
+            priorityOrderedPostProcessors.add(pp);
+            if (pp instanceof MergedBeanDefinitionPostProcessor) {
+                internalPostProcessors.add(pp);
+            }
+        }
+        else
+        if (beanFactory.isTypeMatch(ppName, Ordered.class)) {
+            orderedPostProcessorNames.add(ppName);
+        }
+        else {
+            nonOrderedPostProcessorNames.add(ppName);
+        }
+    } // First, PriorityOrdered    sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
+    registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
+    // Next, Ordered    List<BeanPostProcessor> orderedPostProcessors =
+    new
+    ArrayList<>();
+    for (String ppName : orderedPostProcessorNames) {
         BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
-        priorityOrderedPostProcessors.add(pp);
+        orderedPostProcessors.add(pp);
         if (pp instanceof MergedBeanDefinitionPostProcessor) {
             internalPostProcessors.add(pp);
         }
     }
-    else
-    if (beanFactory.isTypeMatch(ppName, Ordered.class)) {
-        orderedPostProcessorNames.add(ppName);
+    sortPostProcessors(orderedPostProcessors, beanFactory);
+    registerBeanPostProcessors(beanFactory, orderedPostProcessors); // onOrdered
+    List<BeanPostProcessor> nonOrderedPostProcessors = new ArrayList<>();
+    for (String ppName : nonOrderedPostProcessorNames) {
+        BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
+        nonOrderedPostProcessors.add(pp);
+        if (pp instanceof MergedBeanDefinitionPostProcessor) {
+            internalPostProcessors.add(pp);
+        }
     }
-    else {
-        nonOrderedPostProcessorNames.add(ppName);
-    }
-} // First, PriorityOrdered    sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
-registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
-// Next, Ordered    List<BeanPostProcessor> orderedPostProcessors =
-new
-ArrayList<>();
-for (String ppName : orderedPostProcessorNames) {
-    BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
-    orderedPostProcessors.add(pp);
-    if (pp instanceof MergedBeanDefinitionPostProcessor) {
-        internalPostProcessors.add(pp);
-    }
+    registerBeanPostProcessors(beanFactory, nonOrderedPostProcessors);
+    // Finally, all internal BeanPostProcessors.    sortPostProcessors(internalPostProcessors, beanFactory);
+    registerBeanPostProcessors(beanFactory,
+    internalPostProcessors); // 重新注册用来自动探测内部ApplicationListener的post-processor，这样可以将他们移到处理器链条的末尾    beanFactory.addBeanPostProcessor(new
+    ApplicationListenerDetector(applicationContext));
 }
-sortPostProcessors(orderedPostProcessors, beanFactory);
-registerBeanPostProcessors(beanFactory, orderedPostProcessors); // onOrdered
-List<BeanPostProcessor> nonOrderedPostProcessors = new ArrayList<>();
-for (String ppName : nonOrderedPostProcessorNames) {
-    BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
-    nonOrderedPostProcessors.add(pp);
-    if (pp instanceof MergedBeanDefinitionPostProcessor) {
-        internalPostProcessors.add(pp);
-    }
-}
-registerBeanPostProcessors(beanFactory, nonOrderedPostProcessors);
-// Finally, all internal BeanPostProcessors.    sortPostProcessors(internalPostProcessors, beanFactory);
-registerBeanPostProcessors(beanFactory,
-internalPostProcessors); // 重新注册用来自动探测内部ApplicationListener的post-processor，这样可以将他们移到处理器链条的末尾    beanFactory.addBeanPostProcessor(new
-ApplicationListenerDetector(applicationContext));
-}
+
 
 
 ```
@@ -529,29 +538,30 @@ ApplicationListenerDetector(applicationContext));
 ```java
 // AbstractApplicationContext.java
 protected
-void initMessageSource() {;
-ConfigurableListableBeanFactory beanFactory = getBeanFactory();
-// 包含 “messageSource” bean    if (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) {        this.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource.class);
-// 如果有父类        // HierarchicalMessageSource 分级处理的 MessageSource        if (this.parent !=
-null &&
-this.messageSource
-instanceof HierarchicalMessageSource) {
-    HierarchicalMessageSource hms = (HierarchicalMessageSource) this.messageSource;
-    if (hms.getParentMessageSource() == null) {
-        // 如果没有注册父 MessageSource，则设置为父类上下文的的 MessageSource                hms.setParentMessageSource(getInternalParentMessageSource());            }        }
-        if (logger.isDebugEnabled()) {
-            logger.debug("Using MessageSource [" + this.messageSource + "]");
+void initMessageSource() {
+    ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+    // 包含 “messageSource” bean    if (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) {        this.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource.class);
+    // 如果有父类        // HierarchicalMessageSource 分级处理的 MessageSource        if (this.parent !=
+    null &&
+    this.messageSource
+    instanceof HierarchicalMessageSource) {
+        HierarchicalMessageSource hms = (HierarchicalMessageSource) this.messageSource;
+        if (hms.getParentMessageSource() == null) {
+            // 如果没有注册父 MessageSource，则设置为父类上下文的的 MessageSource                hms.setParentMessageSource(getInternalParentMessageSource());            }        }
+            if (logger.isDebugEnabled()) {
+                logger.debug("Using MessageSource [" + this.messageSource + "]");
+            }
         }
-    }
-    else {
-        // 使用 空 MessageSource        DelegatingMessageSource dms =
-        new DelegatingMessageSource();
-        dms.setParentMessageSource(getInternalParentMessageSource());
-        this.messageSource = dms;
-        beanFactory.registerSingleton(MESSAGE_SOURCE_BEAN_NAME, this.messageSource);
-        if (logger.isDebugEnabled()) {
-            logger.debug("Unable to locate
-            MessageSource with name '" + MESSAGE_SOURCE_BEAN_NAME +                    "': using default [" + this.messageSource + "]");        }    }}
+        else {
+            // 使用 空 MessageSource        DelegatingMessageSource dms =
+            new DelegatingMessageSource();
+            dms.setParentMessageSource(getInternalParentMessageSource());
+            this.messageSource = dms;
+            beanFactory.registerSingleton(MESSAGE_SOURCE_BEAN_NAME, this.messageSource);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Unable to locate
+                MessageSource with name '" + MESSAGE_SOURCE_BEAN_NAME +                    "': using default [" + this.messageSource + "]");        }    }}
+
 
 
 ```
@@ -563,21 +573,22 @@ instanceof HierarchicalMessageSource) {
 ```java
 // AbstractApplicationContext.java
 protected
-void initApplicationEventMulticaster() {;
-ConfigurableListableBeanFactory beanFactory = getBeanFactory(); // 如果存在 applicationEventMulticaster bean，则获取赋值    if (beanFactory.containsLocalBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME)) {
-    this.applicationEventMulticaster =        beanFactory.getBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class);
-    if (logger.isDebugEnabled()) {
-        logger.debug("Using ApplicationEventMulticaster [" + this.applicationEventMulticaster + "]");
+void initApplicationEventMulticaster() {
+    ConfigurableListableBeanFactory beanFactory = getBeanFactory(); // 如果存在 applicationEventMulticaster bean，则获取赋值    if (beanFactory.containsLocalBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME)) {
+        this.applicationEventMulticaster =        beanFactory.getBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Using ApplicationEventMulticaster [" + this.applicationEventMulticaster + "]");
+        }
     }
-}
-else {
-    // 没有则新建 SimpleApplicationEventMulticaster，并完成 bean 的注册
-    this.applicationEventMulticaster =
-    new SimpleApplicationEventMulticaster(beanFactory);
-    beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, this.applicationEventMulticaster);
-    if (logger.isDebugEnabled()) {
-        logger.debug("Unable to locate
-        ApplicationEventMulticaster with name '" +                         APPLICATION_EVENT_MULTICASTER_BEAN_NAME +                         "': using default [" + this.applicationEventMulticaster + "]");        }    }}
+    else {
+        // 没有则新建 SimpleApplicationEventMulticaster，并完成 bean 的注册
+        this.applicationEventMulticaster =
+        new SimpleApplicationEventMulticaster(beanFactory);
+        beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, this.applicationEventMulticaster);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Unable to locate
+            ApplicationEventMulticaster with name '" +                         APPLICATION_EVENT_MULTICASTER_BEAN_NAME +                         "': using default [" + this.applicationEventMulticaster + "]");        }    }}
+
 
 
 ```
@@ -597,23 +608,24 @@ else {
 ```java
 // AbstractApplicationContext.java
 protected
-void registerListeners() {;
-// 注册静态 监听器
-for (ApplicationListener<?> listener : getApplicationListeners()) {
-    getApplicationEventMulticaster().addApplicationListener(listener);
-}
-String[] listenerBeanNames = getBeanNamesForType(ApplicationListener.class, true, false);
-for (String listenerBeanName : listenerBeanNames) {
-    getApplicationEventMulticaster().addApplicationListenerBean(listenerBeanName);
-} // 至此，已经完成将监听器注册到ApplicationEventMulticaster中，下面将发布前期的事件给监听器。
-Set<ApplicationEvent> earlyEventsToProcess = this.earlyApplicationEvents;
-this.earlyApplicationEvents = null;
-if (earlyEventsToProcess != null) {
-    for (ApplicationEvent earlyEvent : earlyEventsToProcess) {
-        getApplicationEventMulticaster().multicastEvent(earlyEvent);
+void registerListeners() {
+    // 注册静态 监听器
+    for (ApplicationListener<?> listener : getApplicationListeners()) {
+        getApplicationEventMulticaster().addApplicationListener(listener);
+    }
+    String[] listenerBeanNames = getBeanNamesForType(ApplicationListener.class, true, false);
+    for (String listenerBeanName : listenerBeanNames) {
+        getApplicationEventMulticaster().addApplicationListenerBean(listenerBeanName);
+    } // 至此，已经完成将监听器注册到ApplicationEventMulticaster中，下面将发布前期的事件给监听器。
+    Set<ApplicationEvent> earlyEventsToProcess = this.earlyApplicationEvents;
+    this.earlyApplicationEvents = null;
+    if (earlyEventsToProcess != null) {
+        for (ApplicationEvent earlyEvent : earlyEventsToProcess) {
+            getApplicationEventMulticaster().multicastEvent(earlyEvent);
+        }
     }
 }
-}
+
 
 
 ```
@@ -625,23 +637,24 @@ if (earlyEventsToProcess != null) {
 ```java
 // AbstractApplicationContext.java
 protected
-void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {;
-// 初始化转换器    if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&        beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class))
-{
-    beanFactory.setConversionService(            beanFactory.getBean(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));
+void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
+    // 初始化转换器    if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&        beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class))
+    {
+        beanFactory.setConversionService(            beanFactory.getBean(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));
+    }
+    // 如果之前没有注册 bean 后置处理器（例如PropertyPlaceholderConfigurer），则注册默认的解析器
+    if (!beanFactory.hasEmbeddedValueResolver()) {
+        beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().resolvePlaceholders(strVal));
+    } // 初始化 Initialize LoadTimeWeaverAware beans early to allow for registering their
+    transformers early.
+    String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
+    for (String weaverAwareName : weaverAwareNames) {
+        getBean(weaverAwareName);
+    } // 停止使用临时的 ClassLoader    beanFactory.setTempClassLoader(null);
+    //    beanFactory.freezeConfiguration();
+    // 初始化所有剩余的单例（非延迟初始化）    beanFactory.preInstantiateSingletons();
 }
-// 如果之前没有注册 bean 后置处理器（例如PropertyPlaceholderConfigurer），则注册默认的解析器
-if (!beanFactory.hasEmbeddedValueResolver()) {
-    beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().resolvePlaceholders(strVal));
-} // 初始化 Initialize LoadTimeWeaverAware beans early to allow for registering their
-transformers early.
-String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
-for (String weaverAwareName : weaverAwareNames) {
-    getBean(weaverAwareName);
-} // 停止使用临时的 ClassLoader    beanFactory.setTempClassLoader(null);
-//    beanFactory.freezeConfiguration();
-// 初始化所有剩余的单例（非延迟初始化）    beanFactory.preInstantiateSingletons();
-}
+
 
 
 ```
@@ -655,12 +668,13 @@ for (String weaverAwareName : weaverAwareNames) {
 ```java
 // AbstractApplicationContext.java
 protected
-void finishRefresh() {;
-// Clear context-level resource caches (such as ASM metadata from scanning).    clearResourceCaches();    // Initialize lifecycle processor
-for this context.    initLifecycleProcessor(); // Propagate refresh to lifecycle processor first.
-getLifecycleProcessor().onRefresh(); // Publish the
-final event.    publishEvent(new ContextRefreshedEvent(this)); // Participate in LiveBeansView MBean,
-if active.    LiveBeansView.registerApplicationContext(this);
+void finishRefresh() {
+    // Clear context-level resource caches (such as ASM metadata from scanning).    clearResourceCaches();    // Initialize lifecycle processor
+    for this context.    initLifecycleProcessor(); // Propagate refresh to lifecycle processor first.
+    getLifecycleProcessor().onRefresh(); // Publish the
+    final event.    publishEvent(new ContextRefreshedEvent(this)); // Participate in LiveBeansView MBean,
+    if active.    LiveBeansView.registerApplicationContext(this);
 }
+
 
 ```

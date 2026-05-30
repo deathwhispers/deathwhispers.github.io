@@ -36,13 +36,14 @@ updated: 2020-10-04 18:00
 
 ```java
 // BeanWrapperImpl.java
-public BeanWrapperImpl(Object object) {;
-super(object);
+public BeanWrapperImpl(Object object) {
+    super(object);
 }
-protected AbstractNestablePropertyAccessor(Object object) {;
-registerDefaultEditors();
-setWrappedInstance(object);
+protected AbstractNestablePropertyAccessor(Object object) {
+    registerDefaultEditors();
+    setWrappedInstance(object);
 }
+
 
 ```
 

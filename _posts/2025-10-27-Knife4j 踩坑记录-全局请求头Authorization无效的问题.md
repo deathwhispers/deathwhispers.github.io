@@ -36,22 +36,23 @@ status: published
 
 ```java
 @Bean
-public OpenAPI customOpenAPI() {;
-return new OpenAPI()
-.info(new Info()
-// ... 文档基础信息
-.title("Api 文档")
-.version("v1.0.0"))
-// 【关键点一】：定义安全方案（SecurityScheme）
-.components(new Components()
-.addSecuritySchemes("Bearer Authentication",
-new SecurityScheme()
-.type(SecurityScheme.Type.HTTP)
-.scheme("bearer")
-.bearerFormat("JWT")))
-// 【关键点二】：将安全方案应用到全局（SecurityRequirement）
-.addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"));
+public OpenAPI customOpenAPI() {
+    return new OpenAPI()
+    .info(new Info()
+    // ... 文档基础信息
+    .title("Api 文档")
+    .version("v1.0.0"))
+    // 【关键点一】：定义安全方案（SecurityScheme）
+    .components(new Components()
+    .addSecuritySchemes("Bearer Authentication",
+    new SecurityScheme()
+    .type(SecurityScheme.Type.HTTP)
+    .scheme("bearer")
+    .bearerFormat("JWT")))
+    // 【关键点二】：将安全方案应用到全局（SecurityRequirement）
+    .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"));
 }
+
 
 
 ```
@@ -100,29 +101,30 @@ OpenAPI 规范允许在两个级别定义安全要求：
 ```java
 @Bean
 @ConditionalOnMissingBean(name = "globalAuthCustomizer")
-public GlobalOpenApiCustomizer globalAuthCustomizer() {;
-return openApi -> {
-    // 核心目标：遍历所有 Path，并将 SecurityRequirement 添加到每个 Operation 中
-    if (openApi.getPaths() != null) {
-        openApi.getPaths().forEach((path, pathItem) -> {
+public GlobalOpenApiCustomizer globalAuthCustomizer() {
+    return openApi -> {
+        // 核心目标：遍历所有 Path，并将 SecurityRequirement 添加到每个 Operation 中
+        if (openApi.getPaths() != null) {
+            openApi.getPaths().forEach((path, pathItem) -> {
 
-            // 排除不需要认证的路径（可选，可自定义配置实现）
-            // if (isPathExcluded(path)) { return; }
+                // 排除不需要认证的路径（可选，可自定义配置实现）
+                // if (isPathExcluded(path)) { return; }
 
-            // 遍历该路径下的所有 HTTP 操作（GET, POST, PUT, DELETE...）
-            pathItem.readOperations().forEach(operation -> {
+                // 遍历该路径下的所有 HTTP 操作（GET, POST, PUT, DELETE...）
+                pathItem.readOperations().forEach(operation -> {
 
-                // 1. 创建操作级别的安全要求
-                SecurityRequirement securityRequirement = new SecurityRequirement()
-                .addList("Bearer Authentication");
+                    // 1. 创建操作级别的安全要求
+                    SecurityRequirement securityRequirement = new SecurityRequirement()
+                    .addList("Bearer Authentication");
 
-                // 2. 将安全要求添加到 Operation 对象中
-                operation.addSecurityItem(securityRequirement);
+                    // 2. 将安全要求添加到 Operation 对象中
+                    operation.addSecurityItem(securityRequirement);
+                });
             });
-        });
+        }
     }
-};
 }
+
 
 
 ```

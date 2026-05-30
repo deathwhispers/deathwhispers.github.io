@@ -80,9 +80,10 @@ Setting - Editor - Font
 - 自定义快捷键模板：该功能主要用于自定义快捷键输出自定义的代码，如 psvm
 
 ```java
-public static void main(String[] args){;
-$END$
+public static void main(String[] args){
+    $END$
 }
+
 
 
 ```

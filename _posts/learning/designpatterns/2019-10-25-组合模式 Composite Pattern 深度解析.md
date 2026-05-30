@@ -74,37 +74,37 @@ public abstract class EmployeeComponent {
     protected String name;
     protected String role;
 
-    public EmployeeComponent(String name, String role) {;
-    this.name = name;
-    this.role = role;
-}
+    public EmployeeComponent(String name, String role) {
+        this.name = name;
+        this.role = role;
+    }
 
-public abstract void displayDetails();
+    public abstract void displayDetails();
 
-// 管理子构件的方法（透明式，Leaf 也需要实现）
-public void add(EmployeeComponent c) {;
-throw new UnsupportedOperationException();
-}
-public void remove(EmployeeComponent c) {;
-throw new UnsupportedOperationException();
-}
-public List<EmployeeComponent> getSubordinates() {;
-return null;
-}
+    // 管理子构件的方法（透明式，Leaf 也需要实现）
+    public void add(EmployeeComponent c) {
+        throw new UnsupportedOperationException();
+    }
+    public void remove(EmployeeComponent c) {
+        throw new UnsupportedOperationException();
+    }
+    public List<EmployeeComponent> getSubordinates() {
+        return null;
+    }
 }
 
 // --- 2. 叶子构件 (Leaf) ---
 // 普通员工，不能再包含下属
 public class BasicEmployee extends EmployeeComponent {
-    public BasicEmployee(String name) {;
-    super(name, "Staff");
-}
+    public BasicEmployee(String name) {
+        super(name, "Staff");
+    }
 
-@Override
-public void displayDetails() {;
-System.out.println(String.format("  -> Staff: %s", name));
-}
-// 不支持管理方法，保留空实现或抛出异常
+    @Override
+    public void displayDetails() {
+        System.out.println(String.format("  -> Staff: %s", name));
+    }
+    // 不支持管理方法，保留空实现或抛出异常
 }
 
 // --- 3. 树枝构件 (Composite) ---
@@ -112,53 +112,54 @@ System.out.println(String.format("  -> Staff: %s", name));
 public class Manager extends EmployeeComponent {
     private List<EmployeeComponent> subordinates = new ArrayList<>();
 
-    public Manager(String name, String role) {;
-    super(name, role);
-}
+    public Manager(String name, String role) {
+        super(name, role);
+    }
 
-@Override
-public void add(EmployeeComponent c) {;
-subordinates.add(c);
-}
-@Override
-public void remove(EmployeeComponent c) {;
-subordinates.remove(c);
-}
-@Override
-public List<EmployeeComponent> getSubordinates() {;
-return subordinates;
-}
+    @Override
+    public void add(EmployeeComponent c) {
+        subordinates.add(c);
+    }
+    @Override
+    public void remove(EmployeeComponent c) {
+        subordinates.remove(c);
+    }
+    @Override
+    public List<EmployeeComponent> getSubordinates() {
+        return subordinates;
+    }
 
-@Override
-public void displayDetails() {;
-System.out.println(String.format("== Manager: %s (%s) ==", name, role));
-for (EmployeeComponent sub : subordinates) {
-    sub.displayDetails(); // 递归调用
-}
-}
+    @Override
+    public void displayDetails() {
+        System.out.println(String.format("== Manager: %s (%s) ==", name, role));
+        for (EmployeeComponent sub : subordinates) {
+            sub.displayDetails(); // 递归调用
+        }
+    }
 }
 
 // --- 4. 客户端调用 (Client) ---
 public class CompositePatternDemo {
-    public static void main(String[] args) {;
-    // 创建组合结构
-    Manager ceo = new Manager("John", "CEO");
+    public static void main(String[] args) {
+        // 创建组合结构
+        Manager ceo = new Manager("John", "CEO");
 
-    Manager salesHead = new Manager("Robert", "Head Sales");
-    BasicEmployee salesStaff1 = new BasicEmployee("Richard");
-    salesHead.add(salesStaff1);
+        Manager salesHead = new Manager("Robert", "Head Sales");
+        BasicEmployee salesStaff1 = new BasicEmployee("Richard");
+        salesHead.add(salesStaff1);
 
-    Manager marketingHead = new Manager("Michel", "Head Marketing");
-    BasicEmployee marketingStaff1 = new BasicEmployee("Laura");
-    marketingHead.add(marketingStaff1);
+        Manager marketingHead = new Manager("Michel", "Head Marketing");
+        BasicEmployee marketingStaff1 = new BasicEmployee("Laura");
+        marketingHead.add(marketingStaff1);
 
-    ceo.add(salesHead);
-    ceo.add(marketingHead);
+        ceo.add(salesHead);
+        ceo.add(marketingHead);
 
-    // 使用一致的接口处理整个结构
-    ceo.displayDetails();
+        // 使用一致的接口处理整个结构
+        ceo.displayDetails();
+    }
 }
-}
+
 
 
 ```

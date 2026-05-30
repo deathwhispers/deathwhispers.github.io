@@ -54,14 +54,15 @@ public class ScioCloudConfig {
     private List<String> list;
     private Map<String,String> maps;
 
-    public void setList(List<String> list) {;
-    this.list = list;
+    public void setList(List<String> list) {
+        this.list = list;
+    }
+
+    public void setMaps(Map<String,String> maps) {
+        this.maps = maps;
+    }
 }
 
-public void setMaps(Map<String,String> maps) {;
-this.maps = maps;
-}
-}
 
 
 ```

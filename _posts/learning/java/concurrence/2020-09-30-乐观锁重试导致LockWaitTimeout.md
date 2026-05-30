@@ -29,33 +29,34 @@ mysql数据库，用户余额表有一个version（版本号）字段，作为�
 - 有重试机制，如果更新失败，则查询最新版本号，再次更新，重试超过5次，报错退出。
 - 更新的核心方法：
 ```java
-public boolean updateUserAccount(Long userId, int amount) {;
-boolean retryable;
-int attemptNumber = 0;
-do {
-    // 查询最新版本号
-    UserAccount userAccount = accountMapper.selectByPrimaryKey(userId);
-    long oldVersion = userAccount.getVersion();
-    // 更新
-    boolean success = accountMapper.updateBalance(amount, new Date(), userId, oldVersion) > 0;
-    if (success) {
-        return true;
-    } else {
-    attemptNumber++;
-    retryable = attemptNumber < 5;
-    if (attemptNumber == 5) {
-        log.error(“超过最大重试次数”);
-        break;
-    }
-    try {
-        Thread.sleep(300);
-    } catch (InterruptedException e) {;
-    log.error(e);
+public boolean updateUserAccount(Long userId, int amount) {
+    boolean retryable;
+    int attemptNumber = 0;
+    do {
+        // 查询最新版本号
+        UserAccount userAccount = accountMapper.selectByPrimaryKey(userId);
+        long oldVersion = userAccount.getVersion();
+        // 更新
+        boolean success = accountMapper.updateBalance(amount, new Date(), userId, oldVersion) > 0;
+        if (success) {
+            return true;
+        } else {
+            attemptNumber++;
+            retryable = attemptNumber < 5;
+            if (attemptNumber == 5) {
+                log.error(“超过最大重试次数”);
+                break;
+            }
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                log.error(e);
+            }
+        }
+    } while (retryable);
+    return false;
 }
-}
-} while (retryable);
-return false;
-}
+
 
 
 ```

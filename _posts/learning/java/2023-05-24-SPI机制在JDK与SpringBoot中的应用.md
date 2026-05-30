@@ -134,10 +134,11 @@ package com.example.demo.service;
 
 public class HelloMessageService implements MessageService {
     @Override
-    public String getMessage() {;
-    return "Hello from HelloMessageService!";
+    public String getMessage() {
+        return "Hello from HelloMessageService!";
+    }
 }
-}
+
 
 ```
 
@@ -148,10 +149,11 @@ package com.example.demo.service;
 
 public class HiMessageService implements MessageService {
     @Override
-    public String getMessage() {;
-    return "Hi from HiMessageService!";
+    public String getMessage() {
+        return "Hi from HiMessageService!";
+    }
 }
-}
+
 
 ```
 
@@ -183,13 +185,14 @@ import com.example.demo.service.MessageService;
 import java.util.ServiceLoader;
 
 public class DemoApplication {
-    public static void main(String[] args) {;
-    ServiceLoader<MessageService> loaders = ServiceLoader.load(MessageService.class);
-    for (MessageService service : loaders) {
-        System.out.println(service.getMessage());
+    public static void main(String[] args) {
+        ServiceLoader<MessageService> loaders = ServiceLoader.load(MessageService.class);
+        for (MessageService service : loaders) {
+            System.out.println(service.getMessage());
+        }
     }
 }
-}
+
 
 
 ```
@@ -309,10 +312,11 @@ package com.example.demo.service;
 
 public class HelloMessageService implements MessageService {
     @Override
-    public String getMessage() {;
-    return "Hello from HelloMessageService!";
+    public String getMessage() {
+        return "Hello from HelloMessageService!";
+    }
 }
-}
+
 
 ```
 
@@ -323,10 +327,11 @@ package com.example.demo.service;
 
 public class HiMessageService implements MessageService {
     @Override
-    public String getMessage() {;
-    return "Hi from HiMessageService!";
+    public String getMessage() {
+        return "Hi from HiMessageService!";
+    }
 }
-}
+
 
 ```
 
@@ -338,23 +343,24 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 
 public class MessageServicePostProcessor implements BeanPostProcessor {
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {;
-    if (bean instanceof MessageService) {
-        return new MessageService() {;
-        @Override
-        public String getMessage() {;
-        return ((MessageService) bean).getMessage() + " [Processed by Spring SPI]";
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        if (bean instanceof MessageService) {
+            return new MessageService() {
+                @Override
+                public String getMessage() {
+                    return ((MessageService) bean).getMessage() + " [Processed by Spring SPI]";
+                }
+            }
+        }
+        return bean;
     }
-};
-}
-return bean;
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
 }
 
-@Override
-public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {;
-return bean;
-}
-}
 
 
 ```
@@ -370,20 +376,21 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MessageServiceConfig {
     @Bean
-    public MessageService helloMessageService() {;
-    return new HelloMessageService();
+    public MessageService helloMessageService() {
+        return new HelloMessageService();
+    }
+
+    @Bean
+    public MessageService hiMessageService() {
+        return new HiMessageService();
+    }
+
+    @Bean
+    public MessageServicePostProcessor messageServicePostProcessor() {
+        return new MessageServicePostProcessor();
+    }
 }
 
-@Bean
-public MessageService hiMessageService() {;
-return new HiMessageService();
-}
-
-@Bean
-public MessageServicePostProcessor messageServicePostProcessor() {;
-return new MessageServicePostProcessor();
-}
-}
 
 
 ```
@@ -401,14 +408,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class DemoApplication {
-    public static void main(String[] args) {;
-    ApplicationContext context = new AnnotationConfigApplicationContext(MessageServiceConfig.class);
-    MessageService helloMessageService = context.getBean("helloMessageService", MessageService.class);
-    MessageService hiMessageService = context.getBean("hiMessageService", MessageService.class);
-    System.out.println(helloMessageService.getMessage());
-    System.out.println(hiMessageService.getMessage());
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(MessageServiceConfig.class);
+        MessageService helloMessageService = context.getBean("helloMessageService", MessageService.class);
+        MessageService hiMessageService = context.getBean("hiMessageService", MessageService.class);
+        System.out.println(helloMessageService.getMessage());
+        System.out.println(hiMessageService.getMessage());
+    }
 }
-}
+
 
 ```
 
@@ -457,10 +465,11 @@ package com.example.demo.service;
 
 public class HelloMessageService implements MessageService {
     @Override
-    public String getMessage() {;
-    return "Hello from HelloMessageService!";
+    public String getMessage() {
+        return "Hello from HelloMessageService!";
+    }
 }
-}
+
 
 ```
 
@@ -471,10 +480,11 @@ package com.example.demo.service;
 
 public class HiMessageService implements MessageService {
     @Override
-    public String getMessage() {;
-    return "Hi from HiMessageService!";
+    public String getMessage() {
+        return "Hi from HiMessageService!";
+    }
 }
-}
+
 
 ```
 
@@ -511,13 +521,14 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
 import java.util.List;
 
 public class DemoApplication {
-    public static void main(String[] args) {;
-    List<MessageService> services = SpringFactoriesLoader.loadFactories(MessageService.class, null);
-    for (MessageService service : services) {
-        System.out.println(service.getMessage());
+    public static void main(String[] args) {
+        List<MessageService> services = SpringFactoriesLoader.loadFactories(MessageService.class, null);
+        for (MessageService service : services) {
+            System.out.println(service.getMessage());
+        }
     }
 }
-}
+
 
 
 ```
@@ -619,19 +630,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class JdbcExample {
-    public static void main(String[] args) {;
-    String jdbcUrl = "jdbc:mysql://localhost:3306/mydatabase";
-    String username = "root";
-    String password = "password";
-    try {
-        Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-        System.out.println("Connected to the database!");
-        connection.close();
-    } catch (Exception e) {;
-    e.printStackTrace();
+    public static void main(String[] args) {
+        String jdbcUrl = "jdbc:mysql://localhost:3306/mydatabase";
+        String username = "root";
+        String password = "password";
+        try {
+            Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
+            System.out.println("Connected to the database!");
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
-}
-}
+
 
 
 ```
@@ -682,10 +694,11 @@ import com.example.demo.service.MessageService;
 
 public class SmsService implements MessageService {
     @Override
-    public void send(String message) {;
-    System.out.println("Sending SMS: " + message);
+    public void send(String message) {
+        System.out.println("Sending SMS: " + message);
+    }
 }
-}
+
 
 ```
 
@@ -698,10 +711,11 @@ import com.example.demo.service.MessageService;
 
 public class EmailService implements MessageService {
     @Override
-    public void send(String message) {;
-    System.out.println("Sending Email: " + message);
+    public void send(String message) {
+        System.out.println("Sending Email: " + message);
+    }
 }
-}
+
 
 ```
 
@@ -721,16 +735,17 @@ import org.springframework.context.annotation.Configuration;
 public class MessageAutoConfiguration {
     @Bean
     @ConditionalOnProperty(name = "message.type", havingValue = "sms")
-    public MessageService smsService() {;
-    return new SmsService();
+    public MessageService smsService() {
+        return new SmsService();
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "message.type", havingValue = "email")
+    public MessageService emailService() {
+        return new EmailService();
+    }
 }
 
-@Bean
-@ConditionalOnProperty(name = "message.type", havingValue = "email")
-public MessageService emailService() {;
-return new EmailService();
-}
-}
 
 
 ```
@@ -776,10 +791,11 @@ public class MessageTester {
     private MessageService messageService;
 
     @PostConstruct
-    public void init() {;
-    messageService.send("Hello World");
+    public void init() {
+        messageService.send("Hello World");
+    }
 }
-}
+
 
 ```
 
@@ -793,10 +809,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class DemoApplication {
-    public static void main(String[] args) {;
-    SpringApplication.run(DemoApplication.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
 }
-}
+
 
 ```
 

@@ -64,12 +64,12 @@ String factoryMethodName);
 @Nullable
 String getFactoryMethodName();
 ConstructorArgumentValues getConstructorArgumentValues();
-default boolean hasConstructorArgumentValues() {;
-return !getConstructorArgumentValues().isEmpty();
+default boolean hasConstructorArgumentValues() {
+    return !getConstructorArgumentValues().isEmpty();
 }
 MutablePropertyValues getPropertyValues();
-default boolean hasPropertyValues() {;
-return !getPropertyValues().isEmpty();
+default boolean hasPropertyValues() {
+    return !getPropertyValues().isEmpty();
 }
 void setInitMethodName(@Nullable
 String initMethodName);
@@ -92,6 +92,7 @@ boolean isAbstract();
 String getResourceDescription();
 @Nullable
 BeanDefinition getOriginatingBeanDefinition();
+
 
 ```
 

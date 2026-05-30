@@ -50,37 +50,37 @@ updated: 2019-03-12 22:17
 public class Memento {
     private String state; // 内部状态
 
-    public Memento(String state){;
-    this.state = state;
-}
+    public Memento(String state){
+        this.state = state;
+    }
 
-// 供发起人恢复状态时使用
-public String getState(){;
-return state;
-}
-// 注意：备忘录通常只有发起人可以完全访问其状态
+    // 供发起人恢复状态时使用
+    public String getState(){
+        return state;
+    }
+    // 注意：备忘录通常只有发起人可以完全访问其状态
 }
 
 // 2. 发起人 (Originator)：创建和使用备忘录
 public class Originator {
     private String state; // 需要保存的内部状态
 
-    public void setState(String state){;
-    this.state = state;
-}
-public String getState(){;
-return state;
-}
+    public void setState(String state){
+        this.state = state;
+    }
+    public String getState(){
+        return state;
+    }
 
-// 创建备忘录：保存当前状态
-public Memento saveStateToMemento(){;
-return new Memento(state);
-}
+    // 创建备忘录：保存当前状态
+    public Memento saveStateToMemento(){
+        return new Memento(state);
+    }
 
-// 恢复状态：从备忘录中获取状态
-public void getStateFromMemento(Memento Memento){;
-state = Memento.getState();
-}
+    // 恢复状态：从备忘录中获取状态
+    public void getStateFromMemento(Memento Memento){
+        state = Memento.getState();
+    }
 }
 
 // 3. 管理者 (CareTaker)：管理备忘录列表
@@ -91,43 +91,44 @@ public class CareTaker {
     private List<Memento> mementoList = new ArrayList<Memento>();
 
     // 保存备忘录
-    public void add(Memento state){;
-    mementoList.add(state);
-}
+    public void add(Memento state){
+        mementoList.add(state);
+    }
 
-// 获取备忘录
-public Memento get(int index){;
-return mementoList.get(index);
-}
+    // 获取备忘录
+    public Memento get(int index){
+        return mementoList.get(index);
+    }
 }
 
 // 4. 客户端演示
 public class MementoPatternDemo {
-    public static void main(String[] args) {;
-    Originator originator = new Originator();
-    CareTaker careTaker = new CareTaker();
+    public static void main(String[] args) {
+        Originator originator = new Originator();
+        CareTaker careTaker = new CareTaker();
 
-    originator.setState("State #1");
-    originator.setState("State #2");
-    // 第一次存档：保存 State #2
-    careTaker.add(originator.saveStateToMemento());
+        originator.setState("State #1");
+        originator.setState("State #2");
+        // 第一次存档：保存 State #2
+        careTaker.add(originator.saveStateToMemento());
 
-    originator.setState("State #3");
-    // 第二次存档：保存 State #3
-    careTaker.add(originator.saveStateToMemento());
+        originator.setState("State #3");
+        // 第二次存档：保存 State #3
+        careTaker.add(originator.saveStateToMemento());
 
-    originator.setState("State #4");
-    System.out.println("Current State: " + originator.getState()); // State #4
+        originator.setState("State #4");
+        System.out.println("Current State: " + originator.getState()); // State #4
 
-    // 恢复到第一次存档 (State #2)
-    originator.getStateFromMemento(careTaker.get(0));
-    System.out.println("First saved State: " + originator.getState()); // State #2
+        // 恢复到第一次存档 (State #2)
+        originator.getStateFromMemento(careTaker.get(0));
+        System.out.println("First saved State: " + originator.getState()); // State #2
 
-    // 恢复到第二次存档 (State #3)
-    originator.getStateFromMemento(careTaker.get(1));
-    System.out.println("Second saved State: " + originator.getState()); // State #3
+        // 恢复到第二次存档 (State #3)
+        originator.getStateFromMemento(careTaker.get(1));
+        System.out.println("Second saved State: " + originator.getState()); // State #3
+    }
 }
-}
+
 
 
 ```

@@ -49,10 +49,11 @@ java.util.concurrent.CountDownLatch 结构如下图：
 CountDownLatch 仅提供了一个构造方法，代码如下：
 
 ```java
-public CountDownLatch(int count) {;
-if (count < 0) throw new IllegalArgumentException(“count < 0”);
-this.sync = new Sync(count);
+public CountDownLatch(int count) {
+    if (count < 0) throw new IllegalArgumentException(“count < 0”);
+    this.sync = new Sync(count);
 }
+
 
 
 ```
@@ -72,29 +73,30 @@ private static final class Sync extends AbstractQueuedSynchronizer {
     }
 
     // 获取同步状态
-    int getCount() {;
-    return getState();
+    int getCount() {
+        return getState();
+    }
+
+    @Override
+    protected int tryAcquireShared(int acquires) {
+        return (getState() == 0) ? 1 : -1;
+    }
+
+    @Override
+    protected boolean tryReleaseShared(int releases) {
+        for (;;) {
+            int c = getState();
+            if (c == 0) {
+                return false;
+            }
+            int nextc = c - 1;
+            if (compareAndSetState(c, nextc)) {
+                return nextc == 0;
+            }
+        }
+    }
 }
 
-@Override
-protected int tryAcquireShared(int acquires) {;
-return (getState() == 0) ? 1 : -1;
-}
-
-@Override
-protected boolean tryReleaseShared(int releases) {;
-for (;;) {
-    int c = getState();
-    if (c == 0) {
-        return false;
-    }
-    int nextc = c - 1;
-    if (compareAndSetState(c, nextc)) {
-        return nextc == 0;
-    }
-}
-}
-}
 
 
 ```
@@ -107,9 +109,10 @@ for (;;) {
 CountDownLatch 提供 #await() 方法，来使当前线程在锁存器倒计数至零之前一直等待，除非线程被中断，定义如下：
 
 ```java
-public void await() throws InterruptedException {;
-sync.acquireSharedInterruptibly(1);
+public void await() throws InterruptedException {
+    sync.acquireSharedInterruptibly(1);
 }
+
 
 
 ```
@@ -118,10 +121,11 @@ sync.acquireSharedInterruptibly(1);
 
 ```java
 // AQS.java
-public final void acquireSharedInterruptibly(int arg) throws InterruptedException {;
-if (Thread.interrupted()) throw new InterruptedException();
-if (tryAcquireShared(arg) < 0) doAcquireSharedInterruptibly(arg);
+public final void acquireSharedInterruptibly(int arg) throws InterruptedException {
+    if (Thread.interrupted()) throw new InterruptedException();
+    if (tryAcquireShared(arg) < 0) doAcquireSharedInterruptibly(arg);
 }
+
 
 
 ```
@@ -132,9 +136,10 @@ if (tryAcquireShared(arg) < 0) doAcquireSharedInterruptibly(arg);
 
 ```java
 // Sync.java
-@Override protected int tryAcquireShared(int acquires) {;
-return (getState() == 0) ? 1 : -1;
+@Override protected int tryAcquireShared(int acquires) {
+    return (getState() == 0) ? 1 : -1;
 }
+
 
 
 ```
@@ -145,32 +150,33 @@ return (getState() == 0) ? 1 : -1;
 
 ```java
 // AQS.java
-private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {;
-final Node node = addWaiter(Node.SHARED);
-boolean failed = true;
-try {
-    for (;;) {
-        final Node p = node.predecessor();
-        if (p == head) {
-            int r = tryAcquireShared(arg);
-            if (r >= 0) {
-                setHeadAndPropagate(node, r);
-                p.next = null;
-                // help GC
-                failed = false;
-                return;
+private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {
+    final Node node = addWaiter(Node.SHARED);
+    boolean failed = true;
+    try {
+        for (;;) {
+            final Node p = node.predecessor();
+            if (p == head) {
+                int r = tryAcquireShared(arg);
+                if (r >= 0) {
+                    setHeadAndPropagate(node, r);
+                    p.next = null;
+                    // help GC
+                    failed = false;
+                    return;
+                }
+            }
+            if (shouldParkAfterFailedAcquire(p, node) && parkAndCheckInterrupt()) {
+                throw new InterruptedException();
             }
         }
-        if (shouldParkAfterFailedAcquire(p, node) && parkAndCheckInterrupt()) {
-            throw new InterruptedException();
+    } finally {
+        if (failed) {
+            cancelAcquire(node);
         }
     }
-} finally {
-if (failed) {
-    cancelAcquire(node);
 }
-}
-}
+
 
 
 ```
@@ -184,9 +190,10 @@ if (failed) {
 CountDownLatch 提供 #await(long timeout, TimeUnit unit) 方法，来使当前线程在锁存器倒计数至零之前一直等待，除非线程被中断，**或者等待超时**，定义如下：
 
 ```java
-public boolean await(long timeout, TimeUnit unit) throws InterruptedException {;
-return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
+public boolean await(long timeout, TimeUnit unit) throws InterruptedException {
+    return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
 }
+
 
 
 ```
@@ -198,9 +205,10 @@ return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
 CountDownLatch 提供 #countDown() 方法，递减锁存器的计数。如果计数到达零，则唤醒所有等待的线程。
 
 ```java
-public void countDown() {;
-sync.releaseShared(1);
+public void countDown() {
+    sync.releaseShared(1);
 }
+
 
 
 ```
@@ -209,13 +217,14 @@ sync.releaseShared(1);
 
 ```java
 // AQS.java
-public final boolean releaseShared(int arg) {;
-if (tryReleaseShared(arg)) {
-    doReleaseShared();
-    return true;
+public final boolean releaseShared(int arg) {
+    if (tryReleaseShared(arg)) {
+        doReleaseShared();
+        return true;
+    }
+    return false;
 }
-return false;
-}
+
 
 
 ```
@@ -224,18 +233,19 @@ return false;
 
 ```java
 // Sync.java
-@Override protected boolean tryReleaseShared(int releases) {;
-for (;;) {
-    //获取锁状态
-    int c = getState();
-    //c == 0 直接返回，释放锁成功
-    if (c == 0) return false;
-    //计算新“锁计数器”
-    int nextc = c - 1;
-    //更新锁状态（计数器）
-    if (compareAndSetState(c, nextc)) return nextc == 0;
+@Override protected boolean tryReleaseShared(int releases) {
+    for (;;) {
+        //获取锁状态
+        int c = getState();
+        //c == 0 直接返回，释放锁成功
+        if (c == 0) return false;
+        //计算新“锁计数器”
+        int nextc = c - 1;
+        //更新锁状态（计数器）
+        if (compareAndSetState(c, nextc)) return nextc == 0;
+    }
 }
-}
+
 
 
 ```
@@ -243,9 +253,10 @@ for (;;) {
 ## 2.5 getCount
 
 ```java
-public long getCount() {;
-return sync.getCount();
+public long getCount() {
+    return sync.getCount();
 }
+
 
 
 ```
@@ -271,37 +282,38 @@ public class CountDownLatchTest {
     // Boss线程，等待员工到达开会
     static class BossThread extends Thread {
         @Override
-        public void run() {;
-        System.out.println(“Boss在会议室等待，总共有” + countDownLatch.getCount() + “个人开会…”);
-        try {
-            // Boss等待
-            countDownLatch.await();
-        } catch (InterruptedException e) {;
-        e.printStackTrace();
+        public void run() {
+            System.out.println(“Boss在会议室等待，总共有” + countDownLatch.getCount() + “个人开会…”);
+            try {
+                // Boss等待
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(“所有人都已经到齐了，开会吧…”);
+        }
     }
-    System.out.println(“所有人都已经到齐了，开会吧…”);
-}
+
+    // 员工到达会议室线程
+    static class EmployeeThread extends Thread {
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName() + “，到达会议室….”);
+            countDownLatch.countDown();
+        }
+    }
+
+    public static void main(String[] args) {
+        // Boss线程启动
+        new BossThread().start();
+        for (int i = 0;
+        i < countDownLatch.getCount();
+        i++) {
+            new EmployeeThread().start();
+        }
+    }
 }
 
-// 员工到达会议室线程
-static class EmployeeThread extends Thread {
-    @Override
-    public void run() {;
-    System.out.println(Thread.currentThread().getName() + “，到达会议室….”);
-    countDownLatch.countDown();
-}
-}
-
-public static void main(String[] args) {;
-// Boss线程启动
-new BossThread().start();
-for (int i = 0;
-i < countDownLatch.getCount();
-i++) {
-    new EmployeeThread().start();
-}
-}
-}
 
 
 ```

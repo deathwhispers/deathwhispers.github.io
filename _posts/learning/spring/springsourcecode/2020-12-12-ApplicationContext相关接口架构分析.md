@@ -188,18 +188,19 @@ MessageSource 定义了获取 message 的策略方法#getMessage(…)。
 private MessageSource messageSource;
 
 // 实现 getMessage()
-public String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale) {;
-// 委托给 messageSource 实现
-return getMessageSource().getMessage(code, args, defaultMessage, locale);
+public String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale) {
+    // 委托给 messageSource 实现
+    return getMessageSource().getMessage(code, args, defaultMessage, locale);
 }
 
-private MessageSource getMessageSource() throws IllegalStateException {;
-if (this.messageSource == null) {
-    throw new IllegalStateException("MessageSource not initialized - " +
-    "call 'refresh' before accessing messages via the context: " + this);
+private MessageSource getMessageSource() throws IllegalStateException {
+    if (this.messageSource == null) {
+        throw new IllegalStateException("MessageSource not initialized - " +
+        "call 'refresh' before accessing messages via the context: " + this);
+    }
+    return this.messageSource;
 }
-return this.messageSource;
-}
+
 
 
 ```
@@ -208,16 +209,17 @@ return this.messageSource;
 
 ```java
 // AbstractMessageSource.java
-public final String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale) {;
-String msg = getMessageInternal(code, args, locale);
-if (msg != null) {
-    return msg;
+public final String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale) {
+    String msg = getMessageInternal(code, args, locale);
+    if (msg != null) {
+        return msg;
+    }
+    if (defaultMessage == null) {
+        return getDefaultMessage(code);
+    }
+    return renderDefaultMessage(defaultMessage, args, locale);
 }
-if (defaultMessage == null) {
-    return getDefaultMessage(code);
-}
-return renderDefaultMessage(defaultMessage, args, locale);
-}
+
 
 
 ```
@@ -235,45 +237,46 @@ ApplicationEventPublisher ，用于封装事件发布功能的接口，向事件
 ```java
 // AbstractApplicationContext.java
 @Override
-public void publishEvent(ApplicationEvent event) {;
-publishEvent(event, null);
+public void publishEvent(ApplicationEvent event) {
+    publishEvent(event, null);
 }
 
 @Override
-public void publishEvent(Object event) {;
-publishEvent(event, null);
+public void publishEvent(Object event) {
+    publishEvent(event, null);
 }
 
-protected void publishEvent(Object event, @Nullable ResolvableType eventType) {;
-Assert.notNull(event, "Event must not be null");
+protected void publishEvent(Object event, @Nullable ResolvableType eventType) {
+    Assert.notNull(event, "Event must not be null");
 
-// Decorate event as an ApplicationEvent if necessary
-ApplicationEvent applicationEvent;
-if (event instanceof ApplicationEvent) {
-    applicationEvent = (ApplicationEvent) event;
-} else {
-applicationEvent = new PayloadApplicationEvent<>(this, event);
-if (eventType == null) {
-    eventType = ((PayloadApplicationEvent) applicationEvent).getResolvableType();
-}
-}
-
-// Multicast right now if possible - or lazily once the multicaster is initialized
-if (this.earlyApplicationEvents != null) {
-    this.earlyApplicationEvents.add(applicationEvent);
-} else {
-getApplicationEventMulticaster().multicastEvent(applicationEvent, eventType);
-}
-
-// Publish event via parent context as well...
-if (this.parent != null) {
-    if (this.parent instanceof AbstractApplicationContext) {
-        ((AbstractApplicationContext) this.parent).publishEvent(event, eventType);
+    // Decorate event as an ApplicationEvent if necessary
+    ApplicationEvent applicationEvent;
+    if (event instanceof ApplicationEvent) {
+        applicationEvent = (ApplicationEvent) event;
     } else {
-    this.parent.publishEvent(event);
+        applicationEvent = new PayloadApplicationEvent<>(this, event);
+        if (eventType == null) {
+            eventType = ((PayloadApplicationEvent) applicationEvent).getResolvableType();
+        }
+    }
+
+    // Multicast right now if possible - or lazily once the multicaster is initialized
+    if (this.earlyApplicationEvents != null) {
+        this.earlyApplicationEvents.add(applicationEvent);
+    } else {
+        getApplicationEventMulticaster().multicastEvent(applicationEvent, eventType);
+    }
+
+    // Publish event via parent context as well...
+    if (this.parent != null) {
+        if (this.parent instanceof AbstractApplicationContext) {
+            ((AbstractApplicationContext) this.parent).publishEvent(event, eventType);
+        } else {
+            this.parent.publishEvent(event);
+        }
+    }
 }
-}
-}
+
 
 
 ```
@@ -292,9 +295,10 @@ ResourcePatternResolver 接口继承 ResourceLoader 接口，为将 location 解
 */
 private ResourcePatternResolver resourcePatternResolver;
 
-public Resource[] getResources(String locationPattern) throws IOException {;
-return this.resourcePatternResolver.getResources(locationPattern);
+public Resource[] getResources(String locationPattern) throws IOException {
+    return this.resourcePatternResolver.getResources(locationPattern);
 }
+
 
 
 ```
@@ -307,12 +311,13 @@ return this.resourcePatternResolver.getResources(locationPattern);
 
 ```java
 // AbstractApplicationContext.java
-public ConfigurableEnvironment getEnvironment() {;
-if (this.environment == null) {
-    this.environment = createEnvironment();
+public ConfigurableEnvironment getEnvironment() {
+    if (this.environment == null) {
+        this.environment = createEnvironment();
+    }
+    return this.environment;
 }
-return this.environment;
-}
+
 
 
 ```
@@ -325,9 +330,10 @@ environment
 
 ```java
 // AbstractApplicationContext.java
-protected ConfigurableEnvironment createEnvironment() {;
-return new StandardEnvironment();
+protected ConfigurableEnvironment createEnvironment() {
+    return new StandardEnvironment();
 }
+
 
 ```
 
@@ -350,21 +356,22 @@ Lifecycle ，一个用于管理声明周期的接口。
 private LifecycleProcessor lifecycleProcessor;
 
 @Override
-public void start() {;
-getLifecycleProcessor().start();
-publishEvent(new ContextStartedEvent(this));
+public void start() {
+    getLifecycleProcessor().start();
+    publishEvent(new ContextStartedEvent(this));
 }
 
 @Override
-public void stop() {;
-getLifecycleProcessor().stop();
-publishEvent(new ContextStoppedEvent(this));
+public void stop() {
+    getLifecycleProcessor().stop();
+    publishEvent(new ContextStoppedEvent(this));
 }
 
 @Override
-public boolean isRunning() {;
-return (this.lifecycleProcessor != null && this.lifecycleProcessor.isRunning());
+public boolean isRunning() {
+    return (this.lifecycleProcessor != null && this.lifecycleProcessor.isRunning());
 }
+
 
 
 ```
@@ -377,21 +384,22 @@ Closable 接口用于关闭和释放资源，提供了#close()方法，以释放
 
 ```java
 // AbstractApplicationContext.java
-public void close() {;
-synchronized (this.startupShutdownMonitor) {
-    doClose();
+public void close() {
+    synchronized (this.startupShutdownMonitor) {
+        doClose();
 
-    // If we registered a JVM shutdown hook, we don't need it anymore now:
-    // We've already explicitly closed the context.
-    if (this.shutdownHook != null) {
-        try {
-            Runtime.getRuntime().removeShutdownHook(this.shutdownHook);
-        } catch (IllegalStateException ex) {;
-        // ignore - VM is already shutting down
+        // If we registered a JVM shutdown hook, we don't need it anymore now:
+        // We've already explicitly closed the context.
+        if (this.shutdownHook != null) {
+            try {
+                Runtime.getRuntime().removeShutdownHook(this.shutdownHook);
+            } catch (IllegalStateException ex) {
+                // ignore - VM is already shutting down
+            }
+        }
     }
 }
-}
-}
+
 
 
 ```
@@ -402,20 +410,21 @@ synchronized (this.startupShutdownMonitor) {
 
 ```java
 // AbstractApplicationContext.java
-protected void doClose() {;
-// ... 省略部分代码
-try {
-    // Publish shutdown event
-    publishEvent(new ContextClosedEvent(this));
-} catch (Throwable ex) {;
-logger.warn("Exception thrown from ApplicationListener handling ContextClosedEvent", ex);
+protected void doClose() {
+    // ... 省略部分代码
+    try {
+        // Publish shutdown event
+        publishEvent(new ContextClosedEvent(this));
+    } catch (Throwable ex) {
+        logger.warn("Exception thrown from ApplicationListener handling ContextClosedEvent", ex);
+    }
+    // ... 省略部分代码
+    destroyBeans();
+    closeBeanFactory();
+    onClose();
+    this.active.set(false);
 }
-// ... 省略部分代码
-destroyBeans();
-closeBeanFactory();
-onClose();
-this.active.set(false);
-}
+
 
 
 ```
@@ -426,11 +435,12 @@ InitializingBean 为 Bean 提供了初始化方法的方式，它提供的#after
 
 ```java
 // AbstractRefreshableConfigApplicationContext.java
-public void afterPropertiesSet() {;
-if (!isActive()) {
-    refresh();
+public void afterPropertiesSet() {
+    if (!isActive()) {
+        refresh();
+    }
 }
-}
+
 
 ```
 
@@ -445,12 +455,13 @@ BeanNameAware ，设置 Bean Name 的接口。接口在 AbstractRefreshableConfi
 
 ```java
 // AbstractRefreshableConfigApplicationContext.java
-public void setBeanName(String name) {;
-if (!this.setIdCalled) {
-    super.setId(name);
-    setDisplayName("ApplicationContext '" + name + "'");
+public void setBeanName(String name) {
+    if (!this.setIdCalled) {
+        super.setId(name);
+        setDisplayName("ApplicationContext '" + name + "'");
+    }
 }
-}
+
 
 ```
 

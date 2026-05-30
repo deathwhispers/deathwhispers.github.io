@@ -57,10 +57,11 @@ public class Person
     public Integer age;
     public Person()
     {
-    }    public Person(String name, Integer age) {;
-    . . .    }
-}
-Person person = new Person("Fred Flintstone", 35);
+    }    public Person(String name, Integer age) {
+        . . .    }
+    }
+    Person person = new Person("Fred Flintstone", 35);
+
 
 
 ```

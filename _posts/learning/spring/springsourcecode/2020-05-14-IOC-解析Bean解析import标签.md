@@ -41,15 +41,15 @@ public static final String ALIAS_ATTRIBUTE = "alias";
 public static final String BEAN_ELEMENT = BeanDefinitionParserDelegate.BEAN_ELEMENT;
 public static final String NESTED_BEANS_ELEMENT = "beans";
 
-private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {;
-if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
-    // import
-    importBeanDefinitionResource(ele);
-} else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT))
-{
-}
-// alias
-processAliasRegistration(ele);
+private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
+    if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
+        // import
+        importBeanDefinitionResource(ele);
+    } else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT))
+    {
+    }
+    // alias
+    processAliasRegistration(ele);
 } else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT))
 {
 }
@@ -63,6 +63,7 @@ processBeanDefinition(ele, delegate);
 doRegisterBeanDefinitions(ele);
 }
 }
+
 
 
 ```
@@ -106,84 +107,85 @@ Spring 使用 #importBeanDefinitionResource(Element ele) 方法，完成对 impo
 * Parse an "import" element and load the bean definitions
 * from the given resource into the bean factory.
 */
-protected void importBeanDefinitionResource(Element ele) {;
-// <1> 获取 resource 的属性值
-String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
-// 为空，直接退出
-if (!StringUtils.hasText(location)) {
-    getReaderContext().error("Resource location must not be empty", ele);
-    return;
-}
+protected void importBeanDefinitionResource(Element ele) {
+    // <1> 获取 resource 的属性值
+    String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
+    // 为空，直接退出
+    if (!StringUtils.hasText(location)) {
+        getReaderContext().error("Resource location must not be empty", ele);
+        return;
+    }
 
-// <2> 解析系统属性，格式如 ："${user.dir}"
-// Resolve system properties: e.g. "${user.dir}"
-location = getReaderContext().getEnvironment().resolveRequiredPlaceholders(location);
+    // <2> 解析系统属性，格式如 ："${user.dir}"
+    // Resolve system properties: e.g. "${user.dir}"
+    location = getReaderContext().getEnvironment().resolveRequiredPlaceholders(location);
 
-// 实际 Resource 集合，即 import 的地址，有哪些 Resource 资源
-Set<Resource> actualResources = new LinkedHashSet<>(4);
+    // 实际 Resource 集合，即 import 的地址，有哪些 Resource 资源
+    Set<Resource> actualResources = new LinkedHashSet<>(4);
 
-// <3> 判断 location 是相对路径还是绝对路径
-// Discover whether the location is an absolute or relative URI
-boolean absoluteLocation = false;
-try {
-    absoluteLocation = ResourcePatternUtils.isUrl(location) ||
-    ResourceUtils.toURI(location).isAbsolute();
-} catch (URISyntaxException ex) {;
-// cannot convert to an URI, considering the location relative
-// unless it is the well-known Spring prefix "classpath*:"
-}
-
-// Absolute or relative?
-// <4> 绝对路径
-if (absoluteLocation) {
+    // <3> 判断 location 是相对路径还是绝对路径
+    // Discover whether the location is an absolute or relative URI
+    boolean absoluteLocation = false;
     try {
-        // 添加配置文件地址的 Resource 到 actualResources 中，并加载相应的 BeanDefinition 们
-        int importCount = getReaderContext().getReader().loadBeanDefinitions(location, actualResources);
-        if (logger.isTraceEnabled()) {
-            logger.trace("Imported " + importCount + " bean definitions from URL location [" + location + "]");
-        }
-    } catch (BeanDefinitionStoreException ex) {;
-    getReaderContext().error(
-    "Failed to import bean definitions from URL location [" + location + "]", ele, ex);
-}
-}
-// <5> 相对路径
-else {
-    // No URL -> considering resource location as relative to the current file.
-    try {
-        int importCount;
-        // 创建相对地址的 Resource
-        Resource relativeResource = getReaderContext().getResource().createRelative(location);
-        // 存在
-        if (relativeResource.exists()) {
-            // 加载 relativeResource 中的 BeanDefinition 们
-            importCount = getReaderContext().getReader().loadBeanDefinitions(relativeResource);
-            // 添加到 actualResources 中
-            actualResources.add(relativeResource);
-        }
-        // 不存在
-        else {
-            // 获得根路径地址
-            String baseLocation = getReaderContext().getResource().getURL().toString();
+        absoluteLocation = ResourcePatternUtils.isUrl(location) ||
+        ResourceUtils.toURI(location).isAbsolute();
+    } catch (URISyntaxException ex) {
+        // cannot convert to an URI, considering the location relative
+        // unless it is the well-known Spring prefix "classpath*:"
+    }
+
+    // Absolute or relative?
+    // <4> 绝对路径
+    if (absoluteLocation) {
+        try {
             // 添加配置文件地址的 Resource 到 actualResources 中，并加载相应的 BeanDefinition 们
-            importCount = getReaderContext().getReader().loadBeanDefinitions(
-            StringUtils.applyRelativePath(baseLocation, location) /* 计算绝对路径 */, actualResources);
+            int importCount = getReaderContext().getReader().loadBeanDefinitions(location, actualResources);
+            if (logger.isTraceEnabled()) {
+                logger.trace("Imported " + importCount + " bean definitions from URL location [" + location + "]");
+            }
+        } catch (BeanDefinitionStoreException ex) {
+            getReaderContext().error(
+            "Failed to import bean definitions from URL location [" + location + "]", ele, ex);
         }
-        if (logger.isTraceEnabled()) {
-            logger.trace("Imported " + importCount + " bean definitions from relative location [" + location + "]");
+    }
+    // <5> 相对路径
+    else {
+        // No URL -> considering resource location as relative to the current file.
+        try {
+            int importCount;
+            // 创建相对地址的 Resource
+            Resource relativeResource = getReaderContext().getResource().createRelative(location);
+            // 存在
+            if (relativeResource.exists()) {
+                // 加载 relativeResource 中的 BeanDefinition 们
+                importCount = getReaderContext().getReader().loadBeanDefinitions(relativeResource);
+                // 添加到 actualResources 中
+                actualResources.add(relativeResource);
+            }
+            // 不存在
+            else {
+                // 获得根路径地址
+                String baseLocation = getReaderContext().getResource().getURL().toString();
+                // 添加配置文件地址的 Resource 到 actualResources 中，并加载相应的 BeanDefinition 们
+                importCount = getReaderContext().getReader().loadBeanDefinitions(
+                StringUtils.applyRelativePath(baseLocation, location) /* 计算绝对路径 */, actualResources);
+            }
+            if (logger.isTraceEnabled()) {
+                logger.trace("Imported " + importCount + " bean definitions from relative location [" + location + "]");
+            }
+        } catch (IOException ex) {
+            getReaderContext().error("Failed to resolve current resource location", ele, ex);
+        } catch (BeanDefinitionStoreException ex) {
+            getReaderContext().error(
+            "Failed to import bean definitions from relative location [" + location + "]", ele, ex);
         }
-    } catch (IOException ex) {;
-    getReaderContext().error("Failed to resolve current resource location", ele, ex);
-} catch (BeanDefinitionStoreException ex) {;
-getReaderContext().error(
-"Failed to import bean definitions from relative location [" + location + "]", ele, ex);
-}
+    }
+
+    // <6> 解析成功后，进行监听器激活处理
+    Resource[] actResArray = actualResources.toArray(new Resource[0]);
+    getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
 }
 
-// <6> 解析成功后，进行监听器激活处理
-Resource[] actResArray = actualResources.toArray(new Resource[0]);
-getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
-}
 
 
 ```
@@ -268,49 +270,50 @@ java.net.URI
 * @see #loadBeanDefinitions(org.springframework.core.io.Resource)
 * @see #loadBeanDefinitions(org.springframework.core.io.Resource[])
 */
-public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualResources) throws BeanDefinitionStoreException {;
-// 获得 ResourceLoader 对象
-ResourceLoader resourceLoader = getResourceLoader();
-if (resourceLoader == null) {
-    throw new BeanDefinitionStoreException(
-    "Cannot load bean definitions from location [" + location + "]: no ResourceLoader available");
-}
+public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualResources) throws BeanDefinitionStoreException {
+    // 获得 ResourceLoader 对象
+    ResourceLoader resourceLoader = getResourceLoader();
+    if (resourceLoader == null) {
+        throw new BeanDefinitionStoreException(
+        "Cannot load bean definitions from location [" + location + "]: no ResourceLoader available");
+    }
 
-if (resourceLoader instanceof ResourcePatternResolver) {
-    // Resource pattern matching available.
-    try {
-        // 获得 Resource 数组，因为 Pattern 模式匹配下，可能有多个 Resource 。例如说，Ant 风格的 location
-        Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
+    if (resourceLoader instanceof ResourcePatternResolver) {
+        // Resource pattern matching available.
+        try {
+            // 获得 Resource 数组，因为 Pattern 模式匹配下，可能有多个 Resource 。例如说，Ant 风格的 location
+            Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
+            // 加载 BeanDefinition 们
+            int count = loadBeanDefinitions(resources);
+            // 添加到 actualResources 中
+            if (actualResources != null) {
+                Collections.addAll(actualResources, resources);
+            }
+            if (logger.isTraceEnabled()) {
+                logger.trace("Loaded " + count + " bean definitions from location pattern [" + location + "]");
+            }
+            return count;
+        } catch (IOException ex) {
+            throw new BeanDefinitionStoreException(
+            "Could not resolve bean definition resource pattern [" + location + "]", ex);
+        }
+    } else {
+        // Can only load single resources by absolute URL.
+        // 获得 Resource 对象，
+        Resource resource = resourceLoader.getResource(location);
         // 加载 BeanDefinition 们
-        int count = loadBeanDefinitions(resources);
+        int count = loadBeanDefinitions(resource);
         // 添加到 actualResources 中
         if (actualResources != null) {
-            Collections.addAll(actualResources, resources);
+            actualResources.add(resource);
         }
         if (logger.isTraceEnabled()) {
-            logger.trace("Loaded " + count + " bean definitions from location pattern [" + location + "]");
+            logger.trace("Loaded " + count + " bean definitions from location [" + location + "]");
         }
         return count;
-    } catch (IOException ex) {;
-    throw new BeanDefinitionStoreException(
-    "Could not resolve bean definition resource pattern [" + location + "]", ex);
+    }
 }
-} else {
-// Can only load single resources by absolute URL.
-// 获得 Resource 对象，
-Resource resource = resourceLoader.getResource(location);
-// 加载 BeanDefinition 们
-int count = loadBeanDefinitions(resource);
-// 添加到 actualResources 中
-if (actualResources != null) {
-    actualResources.add(resource);
-}
-if (logger.isTraceEnabled()) {
-    logger.trace("Loaded " + count + " bean definitions from location [" + location + "]");
-}
-return count;
-}
-}
+
 
 
 ```

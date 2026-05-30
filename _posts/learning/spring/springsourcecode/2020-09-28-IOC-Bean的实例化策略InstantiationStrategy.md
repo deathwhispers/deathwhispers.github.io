@@ -340,22 +340,23 @@ MethodOverrideCallbackFilter 实现 CallbackFilter 的 #accept(Method method) �
 ```java
 //
 CglibSubclassingInstantiationStrategy.java#MethodOverrideCallbackFilter@Override
-public int accept(Method method) {;
-MethodOverride methodOverride = getBeanDefinition().getMethodOverrides().getOverride(method);
-if (logger.isTraceEnabled()) {
-    logger.trace("Override for '" + method.getName() + "' is [" + methodOverride + "]");
+public int accept(Method method) {
+    MethodOverride methodOverride = getBeanDefinition().getMethodOverrides().getOverride(method);
+    if (logger.isTraceEnabled()) {
+        logger.trace("Override for '" + method.getName() + "' is [" + methodOverride + "]");
+    }
+    if (methodOverride == null) {
+        return PASSTHROUGH;
+    }
+    else if (methodOverride instanceof LookupOverride) {
+        return LOOKUP_OVERRIDE;
+    }
+    else if (methodOverride instanceof ReplaceOverride) {
+        return METHOD_REPLACER;
+    }
+    throw new UnsupportedOperationException("Unexpected MethodOverride subclass: " +                                            methodOverride.getClass().getName());
 }
-if (methodOverride == null) {
-    return PASSTHROUGH;
-}
-else if (methodOverride instanceof LookupOverride) {;
-return LOOKUP_OVERRIDE;
-}
-else if (methodOverride instanceof ReplaceOverride) {;
-return METHOD_REPLACER;
-}
-throw new UnsupportedOperationException("Unexpected MethodOverride subclass: " +                                            methodOverride.getClass().getName());
-}
+
 
 
 ```
@@ -376,7 +377,8 @@ CALLBACK_TYPES
 CglibSubclassingInstantiationStrategy.java#CglibSubclassCreatorprivate
 static final Class<?>[] CALLBACK_TYPES = new Class<?>[] {
     NoOp.class,    LookupOverrideMethodInterceptor.class,    ReplaceOverrideMethodInterceptor.class
-};
+}
+
 ```
 
 ```plain text
@@ -396,22 +398,23 @@ static class LookupOverrideMethodInterceptor extends CglibIdentitySupport implem
         this.owner = owner;
     }
     @Override
-    public Object intercept(Object obj, Method method, Object[] args, MethodProxy mp) throws Throwable {;
-    // Cast is safe, as CallbackFilter filters are used selectively.        // 获得 method 对应的 LookupOverride 对象        LookupOverride lo = (LookupOverride) getBeanDefinition().getMethodOverrides().getOverride(method);        Assert.state(lo !=
-    null, "LookupOverride not found"); // 获得参数
-    Object[] argsToUse = (args.length > 0 ? args : null); // if no-arg,
-    don't insist on args at all        // 获得 Bean
-    if (StringUtils.hasText(lo.getBeanName())) {
-        // Bean 的名字            return (argsToUse !=
-        null ? this.owner.getBean(lo.getBeanName(), argsToUse) :
-        this.owner.getBean(lo.getBeanName()));
-    }
-    else {
-        // Bean 的类型
-        return (argsToUse != null ? this.owner.getBean(method.getReturnType(), argsToUse) :                    this.owner.getBean(method.getReturnType()));
+    public Object intercept(Object obj, Method method, Object[] args, MethodProxy mp) throws Throwable {
+        // Cast is safe, as CallbackFilter filters are used selectively.        // 获得 method 对应的 LookupOverride 对象        LookupOverride lo = (LookupOverride) getBeanDefinition().getMethodOverrides().getOverride(method);        Assert.state(lo !=
+        null, "LookupOverride not found"); // 获得参数
+        Object[] argsToUse = (args.length > 0 ? args : null); // if no-arg,
+        don't insist on args at all        // 获得 Bean
+        if (StringUtils.hasText(lo.getBeanName())) {
+            // Bean 的名字            return (argsToUse !=
+            null ? this.owner.getBean(lo.getBeanName(), argsToUse) :
+            this.owner.getBean(lo.getBeanName()));
+        }
+        else {
+            // Bean 的类型
+            return (argsToUse != null ? this.owner.getBean(method.getReturnType(), argsToUse) :                    this.owner.getBean(method.getReturnType()));
+        }
     }
 }
-}
+
 
 
 ```
@@ -429,14 +432,15 @@ static class ReplaceOverrideMethodInterceptor extends CglibIdentitySupport imple
         this.owner = owner;
     }
     @Override
-    public Object intercept(Object obj, Method method, Object[] args, MethodProxy mp) throws Throwable {;
-    // 获得 method 对应的 LookupOverride 对象        ReplaceOverride ro = (ReplaceOverride) getBeanDefinition().getMethodOverrides().getOverride(method);        Assert.state(ro !=
-    null, "ReplaceOverride not found"); // TODO could cache
-    if a singleton for minor performance optimization        // 获得 MethodReplacer 对象        MethodReplacer mr =
-    this.owner.getBean(ro.getMethodReplacerBeanName(), MethodReplacer.class); // 执行替换
-    return mr.reimplement(obj, method, args);
+    public Object intercept(Object obj, Method method, Object[] args, MethodProxy mp) throws Throwable {
+        // 获得 method 对应的 LookupOverride 对象        ReplaceOverride ro = (ReplaceOverride) getBeanDefinition().getMethodOverrides().getOverride(method);        Assert.state(ro !=
+        null, "ReplaceOverride not found"); // TODO could cache
+        if a singleton for minor performance optimization        // 获得 MethodReplacer 对象        MethodReplacer mr =
+        this.owner.getBean(ro.getMethodReplacerBeanName(), MethodReplacer.class); // 执行替换
+        return mr.reimplement(obj, method, args);
+    }
 }
-}
+
 
 
 ```

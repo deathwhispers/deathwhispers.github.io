@@ -51,15 +51,16 @@ public class YoungMan {
         beautifulGirl =
         new BeautifulGirl();
     }
-    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {;
-    this.beautifulGirl = beautifulGirl;
-}
-public static void main(String[] args){;
-YoungMan you = new YoungMan();
-BeautifulGirl beautifulGirl = new BeautifulGirl("你的各种条件");
-beautifulGirl.setxxx("各种投其所好");
-// 然后你有女票了        you.setBeautifulGirl(beautifulGirl);
-}}
+    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {
+        this.beautifulGirl = beautifulGirl;
+    }
+    public static void main(String[] args){
+        YoungMan you = new YoungMan();
+        BeautifulGirl beautifulGirl = new BeautifulGirl("你的各种条件");
+        beautifulGirl.setxxx("各种投其所好");
+        // 然后你有女票了        you.setBeautifulGirl(beautifulGirl);
+    }}
+
 
 
 ```
@@ -116,10 +117,11 @@ YoungMan(BeautifulGirl beautifulGirl) {
 ```java
 public class YoungMan {
     private BeautifulGirl beautifulGirl;
-    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {;
-    this.beautifulGirl = beautifulGirl;
+    public void setBeautifulGirl(BeautifulGirl beautifulGirl) {
+        this.beautifulGirl = beautifulGirl;
+    }
 }
-}
+
 
 ```
 

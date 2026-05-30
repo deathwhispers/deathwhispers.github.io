@@ -69,76 +69,77 @@ public abstract class Game {
     protected abstract void endPlay();
 
     // 模板方法：定义算法骨架，使用 final 关键字防止结构被修改
-    public final void play(){;
-    // 1. 初始化游戏
-    this.initialize();
+    public final void play(){
+        // 1. 初始化游戏
+        this.initialize();
 
-    // 2. 开始游戏 (钩子方法示例：可以在这里加入条件判断)
-    if (this.shouldStart()) {
-        this.startPlay();
+        // 2. 开始游戏 (钩子方法示例：可以在这里加入条件判断)
+        if (this.shouldStart()) {
+            this.startPlay();
+        }
+
+        // 3. 结束游戏
+        this.endPlay();
     }
 
-    // 3. 结束游戏
-    this.endPlay();
-}
-
-// 钩子方法 (Hook Method)：提供默认实现，子类可选重写
-protected boolean shouldStart() {;
-// 默认总是开始
-return true;
-}
+    // 钩子方法 (Hook Method)：提供默认实现，子类可选重写
+    protected boolean shouldStart() {
+        // 默认总是开始
+        return true;
+    }
 }
 
 // --- 2. 具体子类 (ConcreteClass) ---
 public class Cricket extends Game {
     @Override
-    protected void initialize() {;
-    System.out.println("Cricket Game Initialized!");
-}
-@Override
-protected void startPlay() {;
-System.out.println("Cricket Game Started. (Toss coin, Bat first)");
-}
-@Override
-protected void endPlay() {;
-System.out.println("Cricket Game Finished!");
-}
+    protected void initialize() {
+        System.out.println("Cricket Game Initialized!");
+    }
+    @Override
+    protected void startPlay() {
+        System.out.println("Cricket Game Started. (Toss coin, Bat first)");
+    }
+    @Override
+    protected void endPlay() {
+        System.out.println("Cricket Game Finished!");
+    }
 }
 
 public class Football extends Game {
     @Override
-    protected void initialize() {;
-    System.out.println("Football Game Initialized!");
-}
-@Override
-protected void startPlay() {;
-System.out.println("Football Game Started. (Kick off)");
-}
-@Override
-protected void endPlay() {;
-System.out.println("Football Game Finished!");
-}
+    protected void initialize() {
+        System.out.println("Football Game Initialized!");
+    }
+    @Override
+    protected void startPlay() {
+        System.out.println("Football Game Started. (Kick off)");
+    }
+    @Override
+    protected void endPlay() {
+        System.out.println("Football Game Finished!");
+    }
 
-// 重写钩子方法，改变了默认行为
-@Override
-protected boolean shouldStart() {;
-System.out.println("Checking weather conditions...");
-return true;
-}
+    // 重写钩子方法，改变了默认行为
+    @Override
+    protected boolean shouldStart() {
+        System.out.println("Checking weather conditions...");
+        return true;
+    }
 }
 
 // --- 3. 客户端调用 (Client) ---
 public class TemplatePatternDemo {
-    public static void main(String[] args) {;
-    Game cricket = new Cricket();
-    System.out.println("--- Playing Cricket ---");
-    cricket.play();
+    public static void main(String[] args) {
+        Game cricket = new Cricket();
+        System.out.println("--- Playing Cricket ---");
+        cricket.play();
 
-    System.out.println("\n--- Playing Football ---");
-    Game football = new Football();
-    football.play();
+        System.out.println("\n--- Playing Football ---");
+        Game football = new Football();
+        football.play();
+    }
 }
-}
+
 
 
 ```
