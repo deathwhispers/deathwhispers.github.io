@@ -28,7 +28,23 @@ updated: 2025-03-12 18:26
 ```
 
 ```java
-import org.apache.spark.SparkConfimport org.apache.spark.streaming.{Seconds, StreamingContext}object NetworkWordCount {    def main(args: Array[String]) {        /*指定时间间隔为 5s*/        val sparkConf = new SparkConf().setAppName("NetworkWordCount").setMaster("local[2]")        val ssc = new StreamingContext(sparkConf, Seconds(5))        /*创建文本输入流,并进行词频统计*/        val lines = ssc.socketTextStream("hadoop001", 9999)        lines.flatMap(_.split(" ")).map(x => (x, 1)).reduceByKey(_ + _).print()        /*启动服务*/        ssc.start()        /*等待服务结束*/        ssc.awaitTermination()    }}
+import org.apache.spark.SparkConf
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+
+object NetworkWordCount {
+    def main(args: Array[String]) {
+        /*指定时间间隔为 5s*/
+        val sparkConf = new SparkConf().setAppName("NetworkWordCount").setMaster("local[2]")
+        val ssc = new StreamingContext(sparkConf, Seconds(5))
+        /*创建文本输入流,并进行词频统计*/
+        val lines = ssc.socketTextStream("hadoop001", 9999)
+        lines.flatMap(_.split(" ")).map(x => (x, 1)).reduceByKey(_ + _).print()
+        /*启动服务*/
+        ssc.start()
+        /*等待服务结束*/
+        ssc.awaitTermination()
+    }
+}
 ```
 
 使用本地模式启动 Spark 程序，然后使用 nc -lk 9999 打开端口并输入测试数据：
@@ -65,7 +81,10 @@ Spark Streaming 编程的入口类是 StreamingContext，在创建时候需要�
 在基本数据源中，Spark 支持监听 HDFS 上指定目录，当有新文件加入时，会获取其文件内容作为输入流。创建方式如下：
 
 ```java
-// 对于文本文件，指明监听目录即可streamingContext.textFileStream(dataDirectory)// 对于其他文件，需要指明目录，以及键的类型、值的类型、和输入格式streamingContext.fileStream[KeyClass, ValueClass, InputFormatClass](dataDirectory)
+// 对于文本文件，指明监听目录即可
+streamingContext.textFileStream(dataDirectory)
+// 对于其他文件，需要指明目录，以及键的类型、值的类型、和输入格式
+streamingContext.fileStream[KeyClass, ValueClass, InputFormatClass](dataDirectory)
 ```
 
 被监听的目录可以是具体目录，如 hdfs://host:8040/logs/；也可以使用通配符，如 hdfs://host:8040/logs/2017/*。
@@ -89,7 +108,42 @@ DStream 是 Spark Streaming 提供的基本抽象。它表示连续的数据流�
 除了能够支持 RDD 的算子外，DStream 还有部分独有的*transformation*算子，这当中比较常用的是 updateStateByKey。文章开头的词频统计程序，只能统计每一次输入文本中单词出现的数量，想要统计所有历史输入中单词出现的数量，可以使用 updateStateByKey 算子。代码如下：
 
 ```java
-object NetworkWordCountV2 {    def main(args: Array[String]) {        /*     * 本地测试时最好指定 hadoop 用户名,否则会默认使用本地电脑的用户名,     * 此时在 HDFS 上创建目录时可能会抛出权限不足的异常     */        System.setProperty("HADOOP_USER_NAME", "root")        val sparkConf = new SparkConf().setAppName("NetworkWordCountV2").setMaster("local[2]")        val ssc = new StreamingContext(sparkConf, Seconds(5))        /*必须要设置检查点*/        ssc.checkpoint("hdfs://hadoop001:8020/spark-streaming")        val lines = ssc.socketTextStream("hadoop001", 9999)        lines.flatMap(_.split(" ")).map(x => (x, 1))        .updateStateByKey[Int](updateFunction _)   //updateStateByKey 算子        .print()        ssc.start()        ssc.awaitTermination()    }    /**    * 累计求和    *    * @param currentValues 当前的数据    * @param preValues     之前的数据    * @return 相加后的数据    */    def updateFunction(currentValues: Seq[Int], preValues: Option[Int]): Option[Int] = {        val current = currentValues.sum        val pre = preValues.getOrElse(0)        Some(current + pre)    }}
+object NetworkWordCountV2 {
+    def main(args: Array[String]) {
+        /*
+         * 本地测试时最好指定 hadoop 用户名,否则会默认使用本地电脑的用户名,
+         * 此时在 HDFS 上创建目录时可能会抛出权限不足的异常
+         */
+        System.setProperty("HADOOP_USER_NAME", "root")
+
+        val sparkConf = new SparkConf().setAppName("NetworkWordCountV2").setMaster("local[2]")
+        val ssc = new StreamingContext(sparkConf, Seconds(5))
+
+        /*必须要设置检查点*/
+        ssc.checkpoint("hdfs://hadoop001:8020/spark-streaming")
+
+        val lines = ssc.socketTextStream("hadoop001", 9999)
+        lines.flatMap(_.split(" ")).map(x => (x, 1))
+        .updateStateByKey[Int](updateFunction _)   //updateStateByKey 算子
+        .print()
+
+        ssc.start()
+        ssc.awaitTermination()
+    }
+
+    /**
+    * 累计求和
+    *
+    * @param currentValues 当前的数据
+    * @param preValues     之前的数据
+    * @return 相加后的数据
+    */
+    def updateFunction(currentValues: Seq[Int], preValues: Option[Int]): Option[Int] = {
+        val current = currentValues.sum
+        val pre = preValues.getOrElse(0)
+        Some(current + pre)
+    }
+}
 ```
 
 使用 updateStateByKey 算子，你必须使用 ssc.checkpoint() 设置检查点，这样当使用 updateStateByKey 算子时，它会去检查点中取出上一次保存的信息，并使用自定义的 updateFunction 函数将上一次的数据和本次数据进行相加，然后返回。
@@ -153,13 +207,69 @@ Spark Streaming 支持以下输出操作：
 具体实现代码如下:
 
 ```java
-import org.apache.spark.SparkConfimport org.apache.spark.streaming.dstream.DStreamimport org.apache.spark.streaming.{Seconds, StreamingContext}import redis.clients.jedis.Jedisobject NetworkWordCountToRedis {    def main(args: Array[String]) {    val sparkConf = new SparkConf().setAppName("NetworkWordCountToRedis").setMaster("local[2]")    val ssc = new StreamingContext(sparkConf, Seconds(5))    /*创建文本输入流,并进行词频统计*/    val lines = ssc.socketTextStream("hadoop001", 9999)    val pairs: DStream[(String, Int)] = lines.flatMap(_.split(" ")).map(x => (x, 1)).reduceByKey(_ + _)    /*保存数据到 Redis*/    pairs.foreachRDD { rdd =>                      rdd.foreachPartition { partitionOfRecords =>                                            var jedis: Jedis = null    try {        jedis = JedisPoolUtil.getConnection        partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))    } catch {        case ex: Exception =>        ex.printStackTrace()        } finally {        if (jedis != null) jedis.close()            }                                           }                     }    ssc.start()    ssc.awaitTermination()}}
+import org.apache.spark.SparkConf
+import org.apache.spark.streaming.dstream.DStream
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+import redis.clients.jedis.Jedis
+
+object NetworkWordCountToRedis {
+    def main(args: Array[String]) {
+        val sparkConf = new SparkConf().setAppName("NetworkWordCountToRedis").setMaster("local[2]")
+        val ssc = new StreamingContext(sparkConf, Seconds(5))
+
+        /*创建文本输入流,并进行词频统计*/
+        val lines = ssc.socketTextStream("hadoop001", 9999)
+        val pairs: DStream[(String, Int)] = lines.flatMap(_.split(" ")).map(x => (x, 1)).reduceByKey(_ + _)
+
+        /*保存数据到 Redis*/
+        pairs.foreachRDD { rdd =>
+            rdd.foreachPartition { partitionOfRecords =>
+                var jedis: Jedis = null
+                try {
+                    jedis = JedisPoolUtil.getConnection
+                    partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
+                } catch {
+                    case ex: Exception =>
+                    ex.printStackTrace()
+                } finally {
+                    if (jedis != null) jedis.close()
+                }
+            }
+        }
+        ssc.start()
+        ssc.awaitTermination()
+    }
+}
 ```
 
 其中 JedisPoolUtil 的代码如下：
 
 ```java
-import redis.clients.jedis.Jedis;import redis.clients.jedis.JedisPool;import redis.clients.jedis.JedisPoolConfig;public class JedisPoolUtil {    /* 声明为 volatile 防止指令重排序 */    private static volatile JedisPool jedisPool = null;    private static final String HOST = "localhost";    private static final int PORT = 6379;    /* 双重检查锁实现懒汉式单例 */    public static Jedis getConnection() {        if (jedisPool == null) {            synchronized (JedisPoolUtil.class) {                if (jedisPool == null) {                    JedisPoolConfig config = new JedisPoolConfig();                    config.setMaxTotal(30);                    config.setMaxIdle(10);                    jedisPool = new JedisPool(config, HOST, PORT);                }            }        }        return jedisPool.getResource();    }}
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+
+public class JedisPoolUtil {
+    /* 声明为 volatile 防止指令重排序 */
+    private static volatile JedisPool jedisPool = null;
+    private static final String HOST = "localhost";
+    private static final int PORT = 6379;
+
+    /* 双重检查锁实现懒汉式单例 */
+    public static Jedis getConnection() {
+        if (jedisPool == null) {
+            synchronized (JedisPoolUtil.class) {
+                if (jedisPool == null) {
+                    JedisPoolConfig config = new JedisPoolConfig();
+                    config.setMaxTotal(30);
+                    config.setMaxIdle(10);
+                    jedisPool = new JedisPool(config, HOST, PORT);
+                }
+            }
+        }
+        return jedisPool.getResource();
+    }
+}
 ```
 
 ### 3.3 代码说明
