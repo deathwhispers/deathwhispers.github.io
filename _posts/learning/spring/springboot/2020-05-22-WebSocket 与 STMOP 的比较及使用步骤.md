@@ -25,7 +25,7 @@ Spring提供了对Websocket的支持，WebSocket API是比较低级的API,但恰
 
 [文章源码](https://gitee.com/chenyuan122912/gs-messaging-stomp-websocket-master.git)
 
-源码是”webSocket+sockJs+STOMP 包括spring-websocket官方源码(STOMP方式)和自己实现的源码(webSocket)”。
+源码是"webSocket+sockJs+STOMP 包括spring-websocket官方源码(STOMP方式)和自己实现的源码(webSocket)"。
 
 WebSocket 是底层协议，SockJS 是WebSocket 的备选方案，也是底层协议，而 STOMP 是基于 WebSocket（SockJS） 的上层协议。
 
@@ -40,13 +40,26 @@ WebSocket 是底层协议，SockJS 是WebSocket 的备选方案，也是底层�
 gradle
 
 ```groovy
-dependencies {    compile("org.springframework.boot:spring-boot-starter-websocket")    compile("org.webjars:stomp-websocket:2.3.3")}
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+    compile("org.webjars:stomp-websocket:2.3.3")
+}
 ```
 
 maven
 
-```groovy
-<dependencies>  <dependency>    <groupId>org.springframework.boot</groupId>    <artifactId>spring-boot-starter-websocket</artifactId>  </dependency>  <dependency>    <groupId>org.webjars</groupId>    <artifactId>stomp-websocket</artifactId>    <version>2.3.3</version>  </dependency></dependencies>
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>stomp-websocket</artifactId>
+        <version>2.3.3</version>
+    </dependency>
+</dependencies>
 ```
 
 ## **java-config配置**
@@ -66,11 +79,134 @@ WebSockt使用起来比较简单，只要配置handler处理数据逻辑，Confi
 处理器ChatWebSocketHandler.java，继承TextWebSocketHandler类,使TextMessage，BinaryMessage，PongMessage
 
 ```java
-package webSocketSockJs;import org.springframework.stereotype.Service;import org.springframework.web.socket.CloseStatus;import org.springframework.web.socket.TextMessage;import org.springframework.web.socket.WebSocketMessage;import org.springframework.web.socket.WebSocketSession;import org.springframework.web.socket.handler.TextWebSocketHandler;import java.io.IOException;import java.util.HashMap;import java.util.Map;import java.util.Set;public class MyHandlerextendsTextWebSocketHandler{    //在线用户列表    private static final Map<Integer, WebSocketSession> users;    //用户标识    private static final String CLIENT_ID ="clientId";    static{        users =newHashMap<>();    }    @Override    public void afterConnectionEstablished(WebSocketSession session)throwsException {        System.out.println("成功建立连接");        Integer userId = getClientId(session);        System.out.println(userId);        if(userId !=null) {            users.put(userId, session);            session.sendMessage(newTextMessage("成功建立socket连接"));            System.out.println(userId);            System.out.println(session);        }    }    @Override    public void handleTextMessage(WebSocketSession session, TextMessage message) {        System.out.println(message.getPayload());        WebSocketMessage message1 =newTextMessage("hi "+message.getPayload());        try{            session.sendMessage(message1);        }catch(IOException e) {            e.printStackTrace();        }    }    /**    * 发送信息给指定用户    *@paramclientId
-    *@parammessage
-    * @return    */    public boolean sendMessageToUser(Integer clientId, TextMessage message) {        if(users.get(clientId) ==null)returnfalse;        WebSocketSession session = users.get(clientId);        System.out.println("sendMessage:"+ session);        if(!session.isOpen())returnfalse;        try{            session.sendMessage(message);        }catch(IOException e) {            e.printStackTrace();            returnfalse;        }        returntrue;    }    /**    * 广播信息    *@parammessage
-    * @return    */    public boolean sendMessageToAllUsers(TextMessage message) {        boolean allSendSuccess =true;        Set<Integer> clientIds = users.keySet();        WebSocketSession session =null;        for(Integer clientId : clientIds) {            try{                session = users.get(clientId);                if(session.isOpen()) {                    session.sendMessage(message);                }            }catch(IOException e) {                e.printStackTrace();                allSendSuccess =false;            }        }        return allSendSuccess;    }    @Override    public void handleTransportError(WebSocketSession session, Throwable exception)throwsException {        if(session.isOpen()) {            session.close();        }        System.out.println("连接出错");        users.remove(getClientId(session));    }    @Override    public void afterConnectionClosed(WebSocketSession session, CloseStatus status)throwsException {        System.out.println("连接已关闭："+ status);        users.remove(getClientId(session));    }    @Override    public boolean supportsPartialMessages() {        return false;    }    /**    * 获取用户标识    *@paramsession
-    * @return    */    private Integer getClientId(WebSocketSession session) {        try{            Integer clientId = Integer.valueOf(String.valueOf(session.getAttributes().get(CLIENT_ID)));            return clientId;        }catch(Exception e) {            return null;        }    }}
+package webSocketSockJs;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+public class MyHandler extends TextWebSocketHandler {
+    // 在线用户列表
+    private static final Map<Integer, WebSocketSession> users;
+    // 用户标识
+    private static final String CLIENT_ID = "clientId";
+
+    static {
+        users = new HashMap<>();
+    }
+
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        System.out.println("成功建立连接");
+        Integer userId = getClientId(session);
+        System.out.println(userId);
+        if (userId != null) {
+            users.put(userId, session);
+            session.sendMessage(new TextMessage("成功建立socket连接"));
+            System.out.println(userId);
+            System.out.println(session);
+        }
+    }
+
+    @Override
+    public void handleTextMessage(WebSocketSession session, TextMessage message) {
+        System.out.println(message.getPayload());
+        WebSocketMessage message1 = new TextMessage("hi " + message.getPayload());
+        try {
+            session.sendMessage(message1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 发送信息给指定用户
+     *
+     * @param clientId
+     * @param message
+     * @return
+     */
+    public boolean sendMessageToUser(Integer clientId, TextMessage message) {
+        if (users.get(clientId) == null) return false;
+        WebSocketSession session = users.get(clientId);
+        System.out.println("sendMessage:" + session);
+        if (!session.isOpen()) return false;
+        try {
+            session.sendMessage(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 广播信息
+     *
+     * @param message
+     * @return
+     */
+    public boolean sendMessageToAllUsers(TextMessage message) {
+        boolean allSendSuccess = true;
+        Set<Integer> clientIds = users.keySet();
+        WebSocketSession session = null;
+        for (Integer clientId : clientIds) {
+            try {
+                session = users.get(clientId);
+                if (session.isOpen()) {
+                    session.sendMessage(message);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                allSendSuccess = false;
+            }
+        }
+        return allSendSuccess;
+    }
+
+    @Override
+    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+        if (session.isOpen()) {
+            session.close();
+        }
+        System.out.println("连接出错");
+        users.remove(getClientId(session));
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        System.out.println("连接已关闭：" + status);
+        users.remove(getClientId(session));
+    }
+
+    @Override
+    public boolean supportsPartialMessages() {
+        return false;
+    }
+
+    /**
+     * 获取用户标识
+     *
+     * @param session
+     * @return
+     */
+    private Integer getClientId(WebSocketSession session) {
+        try {
+            Integer clientId = Integer.valueOf(String.valueOf(session.getAttributes().get(CLIENT_ID)));
+            return clientId;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+}
 ```
 
 对每个函数功能不作解释，有二点要注意
@@ -139,7 +275,7 @@ attributes属性最终在WebSocketSession里,可能通过webSocketSession.getAtt
 
 一些浏览器中缺少对WebSocket的支持，SocketJS是一种备选解决方案。SockJS优先使用原生WebSocket，如果在不支持websocket的浏览器中，会自动降级为轮询的方式。 它在浏览器和web服务器之间创建了一个低延迟、全双工、跨域通信通道。
 
-SockJS所处理的URL是“http://”或“https://”模式，而不是“ws://”和“wss://”
+SockJS所处理的URL是"http://"或"https://"模式，而不是"ws://"和"wss://"
 
 服务器通过withSockJS()方法来使用SockJS作为备用方法
 
@@ -148,22 +284,38 @@ SockJS所处理的URL是“http://”或“https://”模式，而不是“ws://
 前端引入SockJS模块。
 
 ```javascript
-//建立连接function connect(){
-  varhost = window.location.host;  if('WebSocket' in window) {
-    websocket =new WebSocket("ws://"+ host +"/webSocketIMServer?clientId=6");  }else if('MozWebSocket' in window) {
-    websocket =new MozWebSocket("ws://"+ host +"/webSocketIMServer?clientId=6");  }else{
-    websocket =new SockJS("http://"+ host +"/sockjs/webSocketIMServer?clientId=6");  }
-  websocket.onopen =function(evnt) {
-    console.log("websocket连接上");    setConnected(true);  };  websocket.onmessage =function(evnt) {
-    console.log("接收到的消息："+ evnt.data);    showGreeting(evnt.data);  };  websocket.onerror =function(evnt) {
-    console.log("websocket错误");  };  websocket.onclose =function(evnt) {
-    console.log("websocket关闭");  }
+// 建立连接
+function connect() {
+    var host = window.location.host;
+    if ('WebSocket' in window) {
+        websocket = new WebSocket("ws://" + host + "/webSocketIMServer?clientId=6");
+    } else if ('MozWebSocket' in window) {
+        websocket = new MozWebSocket("ws://" + host + "/webSocketIMServer?clientId=6");
+    } else {
+        websocket = new SockJS("http://" + host + "/sockjs/webSocketIMServer?clientId=6");
+    }
+    websocket.onopen = function(evnt) {
+        console.log("websocket连接上");
+        setConnected(true);
+    };
+    websocket.onmessage = function(evnt) {
+        console.log("接收到的消息：" + evnt.data);
+        showGreeting(evnt.data);
+    };
+    websocket.onerror = function(evnt) {
+        console.log("websocket错误");
+    };
+    websocket.onclose = function(evnt) {
+        console.log("websocket关闭");
+    }
 }
-//向服务器发送消息function sendName(){
-  websocket.send(JSON.stringify({'name': $("#name").val()}));
+// 向服务器发送消息
+function sendName() {
+    websocket.send(JSON.stringify({'name': $("#name").val()}));
+}
 ```
 
-上面判断浏览器支持WebSocket则使用原生WebSocket，否则使用SockJS，SockJS所处理的URL是“http://”或“https://”模式，而不是“ws://”和“wss://”。上面客户端代码拿来即用。
+上面判断浏览器支持WebSocket则使用原生WebSocket，否则使用SockJS，SockJS所处理的URL是"http://"或"https://"模式，而不是"ws://"和"wss://"。上面客户端代码拿来即用。
 
 上面源码在git上。前言里有地址。
 
@@ -171,11 +323,7 @@ SockJS所处理的URL是“http://”或“https://”模式，而不是“ws://
 
 建议连接后
 
-- 客户端向服务端发送消息：
-websocket.send(JSON.stringify({‘name’: $(“#name”).val()}));
-，数据最终进入handler里的
-handleTextMessage(WebSocketSession session, TextMessage message)
-方法里。
+- 客户端向服务端发送消息：websocket.send(JSON.stringify({'name': $("#name").val()}));，数据最终进入handler里的handleTextMessage(WebSocketSession session, TextMessage message)方法里。
 - 服务端向客户端发送消息。
 
 任意类里使用
@@ -231,7 +379,7 @@ enableSimpleBroker这个方法用于配置主题，内容可以任意写，支�
 
 setApplicationDestinationPrefixes方法定义了请求的前缀是/app，可被controller拦截，能进入controller层，否则不能进入controller层。
 
-addEndpoint定义了端点，可以理解为客户端连接地址，连接成功即可使用webSocket的API,setAllowedOrigins(“*”)定义了可以跨域，可以限制域名，比如 .setAllowedOrigins({“http://www.localhost.com”})，withSockJS()方法定义了支持SockJS连接，优先使用原生的WebSockt，如果浏览器不支持，则降级使用SockJs。
+addEndpoint定义了端点，可以理解为客户端连接地址，连接成功即可使用webSocket的API,setAllowedOrigins("*")定义了可以跨域，可以限制域名，比如 .setAllowedOrigins({"http://www.localhost.com"})，withSockJS()方法定义了支持SockJS连接，优先使用原生的WebSockt，如果浏览器不支持，则降级使用SockJs。
 
 Greeting.java和HelloMessage.java是2个纯java类，没啥介绍的。
 
@@ -272,7 +420,7 @@ public class GreetingController {
 
 @MessageMapping是接收客户端发送的消息映射，看名字也知道。由于上面定义了controll层拦截请求的前缀，所以请求/app/hello才能进入controller层。
 
-@SendTo(“/topic6/greetings”)定义了向哪个主题发送消息。如果不定义，/app/hello不会向任意主题发送消息，同时该接口也不会返回任意数据。/app/hello接口的目的是接收消息，同时广播或定向发送给其它用户。
+@SendTo("/topic6/greetings")定义了向哪个主题发送消息。如果不定义，/app/hello不会向任意主题发送消息，同时该接口也不会返回任意数据。/app/hello接口的目的是接收消息，同时广播或定向发送给其它用户。
 
 我添加了@SubscribeMapping注解的方法，它是拦截订阅请求的，其实它的作用并不大，它也是必需接收/app/topic6/greetings形势接口(注意有/app前缀)，如果该注解下面没有@SendTo，则会向订阅了/app/topic6/greetings主题的用户发送消息。如果指定了@SendTo，则使用它。
 
@@ -283,13 +431,22 @@ public class GreetingController {
 下面的重点是客户端。
 
 ```javascript
-//建议连接function connect(){
-  var socket =new SockJS('/gs-guide-websocket');  stompClient = Stomp.over(socket);  stompClient.connect({},function(frame){
-    setConnected(true);    console.log('Connected: '+ frame);    stompClient.subscribe('/topic6/greetings',function(greeting){
-      showGreeting(JSON.parse(greeting.body).content);    });  });}
-发送消息
-function sendName(){
-  stompClient.send("/app/hello", {},JSON.stringify({'name': $("#name").val()}));}
+// 建议连接
+function connect() {
+    var socket = new SockJS('/gs-guide-websocket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function(frame) {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic6/greetings', function(greeting) {
+            showGreeting(JSON.parse(greeting.body).content);
+        });
+    });
+}
+// 发送消息
+function sendName() {
+    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
+}
 ```
 
 当客户端与服务端连接成功后，可以调用send()来发送STOMP消息。这个方法必须有一个参数，用来描述对应的STOMP的目的地。另外可以有两个可选的参数：headers，object类型包含额外的信息头部；body，一个String类型的参数。
@@ -298,7 +455,7 @@ function sendName(){
 
 建立连接后
 
-客户端向服务端发送消息：stompClient.send(“/app/hello”, {}, JSON.stringify({‘name’: $(“#name”).val()}));，进入controller层，接收消息。
+客户端向服务端发送消息：stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));，进入controller层，接收消息。
 
 服务端向客户端发送消息
 
@@ -309,7 +466,15 @@ function sendName(){
 任意类中都可以
 
 ```java
-public class 任意类{    @Autowired    private SimpMessagingTemplate messagingTemplate;    //客户端只要订阅了/topic/subscribeTest主题，调用这个方法即可    public void templateTest() {        messagingTemplate.convertAndSend("/topic/subscribeTest",newServerMessage("服务器主动推的数据"));    }}
+public class 任意类 {
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    // 客户端只要订阅了/topic/subscribeTest主题，调用这个方法即可
+    public void templateTest() {
+        messagingTemplate.convertAndSend("/topic/subscribeTest", new ServerMessage("服务器主动推的数据"));
+    }
+}
 ```
 
 # **STMOP参考**

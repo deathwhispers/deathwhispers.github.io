@@ -277,13 +277,25 @@ public class JedisPoolUtil {
 这里将上面保存到 Redis 的代码单独抽取出来，并去除异常判断的部分。精简后的代码如下：
 
 ```java
-pairs.foreachRDD { rdd =>                  rdd.foreachPartition { partitionOfRecords =>                                        val jedis = JedisPoolUtil.getConnection                                        partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))                                        jedis.close()                                       }                 }
+pairs.foreachRDD { rdd =>
+    rdd.foreachPartition { partitionOfRecords =>
+        val jedis = JedisPoolUtil.getConnection
+        partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
+        jedis.close()
+    }
+}
 ```
 
 这里可以看到一共使用了三次循环，分别是循环 RDD，循环分区，循环每条记录，上面我们的代码是在循环分区的时候获取连接，也就是为每一个分区获取一个连接。但是这里大家可能会有疑问：为什么不在循环 RDD 的时候，为每一个 RDD 获取一个连接，这样所需要的连接数会更少。实际上这是不可行的，如果按照这种情况进行改写，如下：
 
 ```java
-pairs.foreachRDD { rdd =>                  val jedis = JedisPoolUtil.getConnection                  rdd.foreachPartition { partitionOfRecords =>                                        partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))                                       }                  jedis.close()                 }
+pairs.foreachRDD { rdd =>
+    val jedis = JedisPoolUtil.getConnection
+    rdd.foreachPartition { partitionOfRecords =>
+        partitionOfRecords.foreach(record => jedis.hincrBy("wordCount", record._1, record._2))
+    }
+    jedis.close()
+}
 ```
 
 此时在执行时候就会抛出 Caused by: java.io.NotSerializableException: redis.clients.jedis.Jedis，这是因为在实际计算时，Spark 会将对 RDD 操作分解为多个 Task，Task 运行在具体的 Worker Node 上。在执行之前，Spark 会对任务进行闭包，之后闭包被序列化并发送给每个 Executor，而 Jedis 显然是不能被序列化的，所以会抛出异常。

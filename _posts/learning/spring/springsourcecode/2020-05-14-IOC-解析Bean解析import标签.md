@@ -37,28 +37,26 @@ BeanDefinitionParserDelegate#parseCustomElement(…)
 ```java
 // DefaultBeanDefinitionDocumentReader.java
 public static final String IMPORT_ELEMENT = "import";
-public static
-final String ALIAS_ATTRIBUTE = "alias";
-public
-static final String BEAN_ELEMENT =
-BeanDefinitionParserDelegate.BEAN_ELEMENT;
-public static final
-String NESTED_BEANS_ELEMENT = "beans";
+public static final String ALIAS_ATTRIBUTE = "alias";
+public static final String BEAN_ELEMENT = BeanDefinitionParserDelegate.BEAN_ELEMENT;
+public static final String NESTED_BEANS_ELEMENT = "beans";
+
 private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
     if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
         // import
         importBeanDefinitionResource(ele);
+    } else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
+        // alias
+        processAliasRegistration(ele);
+    } else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
+        // bean
+        processBeanDefinition(ele, delegate);
+    } else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
+        // beans
+        // recurse
+        doRegisterBeanDefinitions(ele);
     }
-    else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
-        // alias        processAliasRegistration(ele);    }
-        else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
-            // bean        processBeanDefinition(ele, delegate);    }
-            else
-            if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
-                // beans        // recurse
-                doRegisterBeanDefinitions(ele);
-            }
-        }
+}
 ```
 
 该方法的功能一目了然，分别是对四种不同的标签进行解析，分别是 import、alias、bean、beans 。咱门从第一个标签 import 开始。
@@ -69,8 +67,16 @@ private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate deleg
 
 所有针对这种情况 Spring 提供了一个分模块的思路，利用 import 标签，例如我们可以构造一个这样的 spring.xml 。
 
-```java
-<?xml version="1.0" encoding="UTF-8"?><beans xmlns="http://www.springframework.org/schema/beans"xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"xsi:schemaLocation="http://www.springframework.org/schema/beanshttp://www.springframework.org/schema/beans/spring-beans.xsd">    <import resource="spring-student.xml"/>    <import resource="spring-student-dtd.xml"/></beans>
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="spring-student.xml"/>
+    <import resource="spring-student-dtd.xml"/>
+</beans>
 ```
 
 spring.xml 配置文件中，使用 import 标签的方式导入其他模块的配置文件。
@@ -88,58 +94,86 @@ Spring 使用 #importBeanDefinitionResource(Element ele) 方法，完成对 impo
 
 ```java
 // DefaultBeanDefinitionDocumentReader.java
-/** * Parse an "import" element and load the bean definitions
-* from the given resource into the bean factory. */
+/**
+ * Parse an "import" element and load the bean definitions
+ * from the given resource into the bean factory.
+ */
 protected void importBeanDefinitionResource(Element ele) {
-    // <1> 获取 resource 的属性值String location = ele.getAttribute(RESOURCE_ATTRIBUTE);// 为空，直接退出if (!StringUtils.hasText(location)) {    getReaderContext().error("Resource location must not be empty", ele); // 使用 problemReporter 报错
-    return;
-} // <2> 解析系统属性，格式如 ："${user.dir}"// Resolve system properties: e.g. "${user.dir}"location = getReaderContext().getEnvironment().resolveRequiredPlaceholders(location);// 实际 Resource 集合，即
-import 的地址，有哪些
-Resource 资源Set<Resource> actualResources = new
-LinkedHashSet<>(4); // <3> 判断 location 是相对路径还是绝对路径// Discover whether the location is an absolute or relative
-URIboolean absoluteLocation = false;
-try {
-absoluteLocation = ResourcePatternUtils.isUrl(location) ||
-ResourceUtils.toURI(location).isAbsolute();
-}
-catch (URISyntaxException ex) {
-    // cannot convert to an
-    URI, considering the location relative    // unless it is the well-known Spring prefix "classpath*:"}// Absolute or relative?// <4> 绝对路径if (absoluteLocation) {
+    // <1> 获取 resource 的属性值
+    String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
+    // 为空，直接退出
+    if (!StringUtils.hasText(location)) {
+        getReaderContext().error("Resource location must not be empty", ele);
+        return;
+    }
+
+    // <2> 解析系统属性，格式如 ："${user.dir}"
+    // Resolve system properties: e.g. "${user.dir}"
+    location = getReaderContext().getEnvironment().resolveRequiredPlaceholders(location);
+
+    // 实际 Resource 集合，即 import 的地址，有哪些 Resource 资源
+    Set<Resource> actualResources = new LinkedHashSet<>(4);
+
+    // <3> 判断 location 是相对路径还是绝对路径
+    // Discover whether the location is an absolute or relative URI
+    boolean absoluteLocation = false;
     try {
-        // 添加配置文件地址的
-        Resource 到 actualResources 中，并加载相应的 BeanDefinition 们        int importCount = getReaderContext().getReader().loadBeanDefinitions(location, actualResources);
-        if (logger.isTraceEnabled()) {
-            logger.trace("Imported " + importCount + " bean definitions from URL location [" + location + "]");
+        absoluteLocation = ResourcePatternUtils.isUrl(location) ||
+            ResourceUtils.toURI(location).isAbsolute();
+    } catch (URISyntaxException ex) {
+        // cannot convert to an URI, considering the location relative
+        // unless it is the well-known Spring prefix "classpath*:"
+    }
+
+    // Absolute or relative?
+    // <4> 绝对路径
+    if (absoluteLocation) {
+        try {
+            // 添加配置文件地址的 Resource 到 actualResources 中，并加载相应的 BeanDefinition 们
+            int importCount = getReaderContext().getReader().loadBeanDefinitions(location, actualResources);
+            if (logger.isTraceEnabled()) {
+                logger.trace("Imported " + importCount + " bean definitions from URL location [" + location + "]");
+            }
+        } catch (BeanDefinitionStoreException ex) {
+            getReaderContext().error(
+                "Failed to import bean definitions from URL location [" + location + "]", ele, ex);
         }
     }
-    catch (BeanDefinitionStoreException ex) {
-        getReaderContext().error(            "Failed to import bean definitions from URL location [" + location + "]", ele, ex);
-} // <5> 相对路径}
-else {
-    // No
-    URL -> considering resource location as relative to the current file.    try {
-        int importCount; // 创建相对地址的 Resource        Resource relativeResource = getReaderContext().getResource().createRelative(location);        // 存在
-        if (relativeResource.exists()) {
-            // 加载 relativeResource 中的
-            BeanDefinition 们            importCount = getReaderContext().getReader().loadBeanDefinitions(relativeResource); // 添加到 actualResources 中            actualResources.add(relativeResource);            // 不存在        }
+    // <5> 相对路径
+    else {
+        // No URL -> considering resource location as relative to the current file.
+        try {
+            int importCount;
+            // 创建相对地址的 Resource
+            Resource relativeResource = getReaderContext().getResource().createRelative(location);
+            // 存在
+            if (relativeResource.exists()) {
+                // 加载 relativeResource 中的 BeanDefinition 们
+                importCount = getReaderContext().getReader().loadBeanDefinitions(relativeResource);
+                // 添加到 actualResources 中
+                actualResources.add(relativeResource);
+            }
+            // 不存在
             else {
-                // 获得根路径地址            String baseLocation = getReaderContext().getResource().getURL().toString();            // 添加配置文件地址的
-                Resource 到 actualResources 中，并加载相应的 BeanDefinition 们            importCount = getReaderContext().getReader().loadBeanDefinitions(
-                StringUtils.applyRelativePath(baseLocation, location) /* 计算绝对路径 */
-                , actualResources);
+                // 获得根路径地址
+                String baseLocation = getReaderContext().getResource().getURL().toString();
+                // 添加配置文件地址的 Resource 到 actualResources 中，并加载相应的 BeanDefinition 们
+                importCount = getReaderContext().getReader().loadBeanDefinitions(
+                    StringUtils.applyRelativePath(baseLocation, location) /* 计算绝对路径 */, actualResources);
             }
             if (logger.isTraceEnabled()) {
                 logger.trace("Imported " + importCount + " bean definitions from relative location [" + location + "]");
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             getReaderContext().error("Failed to resolve current resource location", ele, ex);
+        } catch (BeanDefinitionStoreException ex) {
+            getReaderContext().error(
+                "Failed to import bean definitions from relative location [" + location + "]", ele, ex);
         }
-        catch (BeanDefinitionStoreException ex) {
-            getReaderContext().error(                    "Failed to import bean definitions from relative location [" + location + "]", ele, ex);
-        }
-    } // <6> 解析成功后，进行监听器激活处理    Resource[] actResArray = actualResources.toArray(new
-    Resource[0]);
+    }
+
+    // <6> 解析成功后，进行监听器激活处理
+    Resource[] actResArray = actualResources.toArray(new Resource[0]);
     getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
 }
 ```
@@ -152,7 +186,7 @@ source
 属性的值，该值表示资源的路径。
     - <2>
 处，解析路径中的系统属性，如
-“${user.dir}”
+"${user.dir}"
 。
 - <3>[「2.1 判断路径」](http://svip.iocoder.cn/Spring/IoC-parse-BeanDefinitions-for-import/#)
 处，判断资源路径
@@ -173,8 +207,8 @@ location
 通过以下代码，来判断 location 是为相对路径还是绝对路径：
 
 ```java
-absoluteLocation = ResourcePatternUtils.isUrl(location) // <1>||
-ResourceUtils.toURI(location).isAbsolute(); // <2>
+absoluteLocation = ResourcePatternUtils.isUrl(location) // <1>
+    || ResourceUtils.toURI(location).isAbsolute(); // <2>
 ```
 
 判断绝对路径的规则如下：
@@ -205,31 +239,37 @@ java.net.URI
 如果 location 为绝对路径，则调用 #loadBeanDefinitions(String location, Set actualResources)， 方法。该方法在 org.springframework.beans.factory.support.AbstractBeanDefinitionReader 中定义，代码如下：
 
 ```java
-/** * Load bean definitions from the specified resource location. * <p>The location can also be a location pattern, provided that the
-* ResourceLoader of this bean definition reader is a ResourcePatternResolver. * @param location the resource location, to be loaded with the ResourceLoader
-* (or ResourcePatternResolver) of this bean definition reader
-* @param actualResources a Set to be filled with the actual Resource objects
-* that have been resolved during the loading process. May be {
-    @code null
-}
-* to indicate that the caller is not interested in those Resource objects. * @return the number of bean definitions found
-* @throws BeanDefinitionStoreException in case of loading or parsing errors
-* @see #getResourceLoader() * @see #loadBeanDefinitions(org.springframework.core.io.Resource) * @see #loadBeanDefinitions(org.springframework.core.io.Resource[]) */
-public int loadBeanDefinitions(String location, @Nullable
-Set<Resource> actualResources) throws BeanDefinitionStoreException {
+/**
+ * Load bean definitions from the specified resource location.
+ * <p>The location can also be a location pattern, provided that the
+ * ResourceLoader of this bean definition reader is a ResourcePatternResolver.
+ * @param location the resource location, to be loaded with the ResourceLoader
+ * (or ResourcePatternResolver) of this bean definition reader
+ * @param actualResources a Set to be filled with the actual Resource objects
+ * that have been resolved during the loading process. May be {@code null}
+ * to indicate that the caller is not interested in those Resource objects.
+ * @return the number of bean definitions found
+ * @throws BeanDefinitionStoreException in case of loading or parsing errors
+ * @see #getResourceLoader()
+ * @see #loadBeanDefinitions(org.springframework.core.io.Resource)
+ * @see #loadBeanDefinitions(org.springframework.core.io.Resource[])
+ */
+public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualResources) throws BeanDefinitionStoreException {
     // 获得 ResourceLoader 对象
     ResourceLoader resourceLoader = getResourceLoader();
     if (resourceLoader == null) {
-        throw new
-        BeanDefinitionStoreException(            "Cannot load bean definitions from location [" + location + "]: no ResourceLoader available");
+        throw new BeanDefinitionStoreException(
+            "Cannot load bean definitions from location [" + location + "]: no ResourceLoader available");
     }
+
     if (resourceLoader instanceof ResourcePatternResolver) {
         // Resource pattern matching available.
         try {
-            // 获得
-            Resource 数组，因为
-            Pattern 模式匹配下，可能有多个 Resource 。例如说，Ant 风格的 location            Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location); // 加载
-            BeanDefinition 们            int count = loadBeanDefinitions(resources); // 添加到 actualResources 中
+            // 获得 Resource 数组，因为 Pattern 模式匹配下，可能有多个 Resource 。例如说，Ant 风格的 location
+            Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
+            // 加载 BeanDefinition 们
+            int count = loadBeanDefinitions(resources);
+            // 添加到 actualResources 中
             if (actualResources != null) {
                 Collections.addAll(actualResources, resources);
             }
@@ -237,17 +277,18 @@ Set<Resource> actualResources) throws BeanDefinitionStoreException {
                 logger.trace("Loaded " + count + " bean definitions from location pattern [" + location + "]");
             }
             return count;
+        } catch (IOException ex) {
+            throw new BeanDefinitionStoreException(
+                "Could not resolve bean definition resource pattern [" + location + "]", ex);
         }
-        catch (IOException ex) {
-            throw new BeanDefinitionStoreException(                "Could not resolve bean definition resource pattern [" + location + "]", ex);
-        }
-    }
-    else {
-        // Can only load single resources by absolute
-        URL.        // 获得 Resource 对象，
-        Resource resource = resourceLoader.getResource(location); // 加载
-        BeanDefinition 们        int count = loadBeanDefinitions(resource); // 添加到 actualResources 中        if (actualResources !=
-        null) {
+    } else {
+        // Can only load single resources by absolute URL.
+        // 获得 Resource 对象，
+        Resource resource = resourceLoader.getResource(location);
+        // 加载 BeanDefinition 们
+        int count = loadBeanDefinitions(resource);
+        // 添加到 actualResources 中
+        if (actualResources != null) {
             actualResources.add(resource);
         }
         if (logger.isTraceEnabled()) {

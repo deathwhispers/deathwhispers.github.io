@@ -61,7 +61,7 @@ parentBeanFactory
 
 ```java
 // WebApplicationContext.java
-publicinterfaceWebApplicationContextextendsApplicationContext{
+public interface WebApplicationContext extends ApplicationContext {
     ServletContext getServletContext();
 }
 ```
@@ -72,20 +72,35 @@ publicinterfaceWebApplicationContextextendsApplicationContext{
 
 ```java
 // ConfigurableApplicationContext.java
-publicinterfaceConfigurableApplicationContextextendsApplicationContext,Lifecycle,Closeable{
-    // 为 ApplicationContext 设置唯一 ID    voidsetId(String id);    // 为 ApplicationContext 设置 parent    // 父类不应该被修改：如果创建的对象不可用时，则应该在构造函数外部设置它
-    voidsetParent(@Nullable
-    ApplicationContext parent); // 设置 Environment
-    voidsetEnvironment(ConfigurableEnvironment environment); // 获取
-    Environment    @Override
-    ConfigurableEnvironment getEnvironment(); // 添加
-    BeanFactoryPostProcessor    voidaddBeanFactoryPostProcessor(BeanFactoryPostProcessor postProcessor); // 添加
-    ApplicationListener    voidaddApplicationListener(ApplicationListener<?> listener); // 添加 ProtocolResolver    voidaddProtocolResolver(ProtocolResolver resolver);    // 加载或者刷新配置    // 这是一个非常重要的方法    voidrefresh()throwsBeansException, IllegalStateException;    // 注册 shutdown hook
-    voidregisterShutdownHook(); // 关闭
-    ApplicationContext    @Override
-    voidclose(); //
-    ApplicationContext 是否处于激活状态    booleanisActive(); // 获取当前上下文的
-    BeanFactory    ConfigurableListableBeanFactorygetBeanFactory()throwsIllegalStateException;
+public interface ConfigurableApplicationContext extends ApplicationContext, Lifecycle, Closeable {
+    // 为 ApplicationContext 设置唯一 ID
+    void setId(String id);
+    // 为 ApplicationContext 设置 parent
+    // 父类不应该被修改：如果创建的对象不可用时，则应该在构造函数外部设置它
+    void setParent(@Nullable ApplicationContext parent);
+    // 设置 Environment
+    void setEnvironment(ConfigurableEnvironment environment);
+    // 获取 Environment
+    @Override
+    ConfigurableEnvironment getEnvironment();
+    // 添加 BeanFactoryPostProcessor
+    void addBeanFactoryPostProcessor(BeanFactoryPostProcessor postProcessor);
+    // 添加 ApplicationListener
+    void addApplicationListener(ApplicationListener<?> listener);
+    // 添加 ProtocolResolver
+    void addProtocolResolver(ProtocolResolver resolver);
+    // 加载或者刷新配置
+    // 这是一个非常重要的方法
+    void refresh() throws BeansException, IllegalStateException;
+    // 注册 shutdown hook
+    void registerShutdownHook();
+    // 关闭 ApplicationContext
+    @Override
+    void close();
+    // ApplicationContext 是否处于激活状态
+    boolean isActive();
+    // 获取当前上下文的 BeanFactory
+    ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;
 }
 ```
 
@@ -104,17 +119,14 @@ publicinterfaceConfigurableApplicationContextextendsApplicationContext,Lifecycle
 
 ```java
 // ConfigurableWebApplicationContext.java
-publicinterfaceConfigurableWebApplicationContextextendsWebApplicationContext,ConfigurableApplicationContext{
-    voidsetServletContext(@Nullable
-    ServletContext servletContext);
-    voidsetServletConfig(@Nullable
-    ServletConfig servletConfig);
+public interface ConfigurableWebApplicationContext extends WebApplicationContext, ConfigurableApplicationContext {
+    void setServletContext(@Nullable ServletContext servletContext);
+    void setServletConfig(@Nullable ServletConfig servletConfig);
     ServletConfig getServletConfig();
-    voidsetNamespace(@Nullable
-    String namespace);
+    void setNamespace(@Nullable String namespace);
     String getNamespace();
-    voidsetConfigLocation(String configLocation);
-    voidsetConfigLocations(String... configLocations);
+    void setConfigLocation(String configLocation);
+    void setConfigLocations(String... configLocations);
     String[] getConfigLocations();
 }
 ```
@@ -126,7 +138,9 @@ publicinterfaceConfigurableWebApplicationContextextendsWebApplicationContext,Con
 ClassPathXmlApplicationContext 是我们在学习 Spring 过程中用的非常多的一个类，很多人第一个接触的 Spring 容器就是它，包括小编自己，下面代码我想很多人依然还记得吧。
 
 ```java
-// 示例ApplicationContext ac =newClassPathXmlApplicationContext("applicationContext.xml");StudentService studentService = (StudentService)ac.getBean("studentService");
+// 示例
+ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+StudentService studentService = (StudentService) ac.getBean("studentService");
 ```
 
 下图是 ClassPathXmlApplicationContext 的结构类图：
@@ -138,7 +152,11 @@ ClassPathXmlApplicationContext 的类图
 主要的的类层级关系如下：
 
 ```java
-org.springframework.context.support.AbstractApplicationContextorg.springframework.context.support.AbstractRefreshableApplicationContextorg.springframework.context.support.AbstractRefreshableConfigApplicationContextorg.springframework.context.support.AbstractXmlApplicationContextorg.springframework.context.support.ClassPathXmlApplicationContext
+org.springframework.context.support.AbstractApplicationContext
+org.springframework.context.support.AbstractRefreshableApplicationContext
+org.springframework.context.support.AbstractRefreshableConfigApplicationContext
+org.springframework.context.support.AbstractXmlApplicationContext
+org.springframework.context.support.ClassPathXmlApplicationContext
 ```
 
 这种设计是模板方法模式典型的应用，AbstractApplicationContext 实现了 ConfigurableApplicationContext 这个全家桶接口，其子类 AbstractRefreshableConfigApplicationContext 又实现了 BeanNameAware 和 InitializingBean 接口。所以 ClassPathXmlApplicationContext 设计的顶级接口有：
@@ -167,19 +185,18 @@ MessageSource 定义了获取 message 的策略方法#getMessage(…)。
 
 ```java
 // AbstractApplicationContext.java
-private
-MessageSource messageSource; // 实现 getMessage()public
-String getMessage(String code, @Nullable
-Object[] args, @Nullable
-String defaultMessage, Locale locale) {
+private MessageSource messageSource;
+
+// 实现 getMessage()
+public String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale) {
     // 委托给 messageSource 实现
-    return getMessageSource().getMessage(code, args,
-    defaultMessage, locale);
+    return getMessageSource().getMessage(code, args, defaultMessage, locale);
 }
-private
-MessageSource getMessageSource()throwsIllegalStateException {
-    if(this.messageSource ==null) {
-        throw new IllegalStateException("MessageSource not initialized - "+"call 'refresh' before accessing messages via the context: "+this);
+
+private MessageSource getMessageSource() throws IllegalStateException {
+    if (this.messageSource == null) {
+        throw new IllegalStateException("MessageSource not initialized - " +
+            "call 'refresh' before accessing messages via the context: " + this);
     }
     return this.messageSource;
 }
@@ -189,16 +206,12 @@ MessageSource getMessageSource()throwsIllegalStateException {
 
 ```java
 // AbstractMessageSource.java
-public
-final
-String getMessage(String code, @Nullable
-Object[] args, @Nullable
-String defaultMessage, Locale locale) {
+public final String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale) {
     String msg = getMessageInternal(code, args, locale);
-    if(msg !=null) {
+    if (msg != null) {
         return msg;
     }
-    if(defaultMessage ==null) {
+    if (defaultMessage == null) {
         return getDefaultMessage(code);
     }
     return renderDefaultMessage(defaultMessage, args, locale);
@@ -218,39 +231,44 @@ ApplicationEventPublisher ，用于封装事件发布功能的接口，向事件
 ```java
 // AbstractApplicationContext.java
 @Override
-publicvoidpublishEvent(ApplicationEvent event) {
-    publishEvent(event,null);
+public void publishEvent(ApplicationEvent event) {
+    publishEvent(event, null);
 }
+
 @Override
-publicvoidpublishEvent(Object event) {
-    publishEvent(event,null);
+public void publishEvent(Object event) {
+    publishEvent(event, null);
 }
-protected void publishEvent(Object event, @Nullable
-ResolvableType eventType) {
-    Assert.notNull(event,"Event must not be null"); // Decorate event as an ApplicationEvent
-    if necessary
+
+protected void publishEvent(Object event, @Nullable ResolvableType eventType) {
+    Assert.notNull(event, "Event must not be null");
+
+    // Decorate event as an ApplicationEvent if necessary
     ApplicationEvent applicationEvent;
-    if(eventinstanceofApplicationEvent) {
+    if (event instanceof ApplicationEvent) {
         applicationEvent = (ApplicationEvent) event;
-    }
-    else{
-        applicationEvent =newPayloadApplicationEvent<>(this, event);
-        if(eventType ==null) {
+    } else {
+        applicationEvent = new PayloadApplicationEvent<>(this, event);
+        if (eventType == null) {
             eventType = ((PayloadApplicationEvent) applicationEvent).getResolvableType();
         }
-    } // Multicast right now if possible - or lazily once the multicaster is initialized    if(this.earlyApplicationEvents !=null) {
-    this.earlyApplicationEvents.add(applicationEvent);
-}
-else{
-    getApplicationEventMulticaster().multicastEvent(applicationEvent, eventType);
-} // Publish event via parent context as well...    if(this.parent !=null) {
-if(this.parentinstanceofAbstractApplicationContext) {
-    ((AbstractApplicationContext)this.parent).publishEvent(event, eventType);
-}
-else{
-    this.parent.publishEvent(event);
-}
-}
+    }
+
+    // Multicast right now if possible - or lazily once the multicaster is initialized
+    if (this.earlyApplicationEvents != null) {
+        this.earlyApplicationEvents.add(applicationEvent);
+    } else {
+        getApplicationEventMulticaster().multicastEvent(applicationEvent, eventType);
+    }
+
+    // Publish event via parent context as well...
+    if (this.parent != null) {
+        if (this.parent instanceof AbstractApplicationContext) {
+            ((AbstractApplicationContext) this.parent).publishEvent(event, eventType);
+        } else {
+            this.parent.publishEvent(event);
+        }
+    }
 }
 ```
 
@@ -264,9 +282,11 @@ ResourcePatternResolver 接口继承 ResourceLoader 接口，为将 location 解
 ```java
 // AbstractApplicationContext.java
 /**
-ResourcePatternResolver used by this context. */
+ * ResourcePatternResolver used by this context.
+ */
 private ResourcePatternResolver resourcePatternResolver;
-public Resource[] getResources(String locationPattern)throws IOException {
+
+public Resource[] getResources(String locationPattern) throws IOException {
     return this.resourcePatternResolver.getResources(locationPattern);
 }
 ```
@@ -280,7 +300,7 @@ public Resource[] getResources(String locationPattern)throws IOException {
 ```java
 // AbstractApplicationContext.java
 public ConfigurableEnvironment getEnvironment() {
-    if(this.environment ==null) {
+    if (this.environment == null) {
         this.environment = createEnvironment();
     }
     return this.environment;
@@ -296,8 +316,7 @@ environment
 ```java
 // AbstractApplicationContext.java
 protected ConfigurableEnvironment createEnvironment() {
-    return
-    new StandardEnvironment();
+    return new StandardEnvironment();
 }
 ```
 
@@ -313,24 +332,27 @@ Lifecycle ，一个用于管理声明周期的接口。
 
 ```java
 // AbstractApplicationContext.java
-/** LifecycleProcessor
-for managing the
-lifecycle of beans within this context. */
+/**
+ * LifecycleProcessor for managing the lifecycle of beans within this context.
+ */
 @Nullable
 private LifecycleProcessor lifecycleProcessor;
+
 @Override
-publicvoidstart() {
+public void start() {
     getLifecycleProcessor().start();
     publishEvent(new ContextStartedEvent(this));
 }
+
 @Override
-publicvoidstop() {
+public void stop() {
     getLifecycleProcessor().stop();
-    publish Event(new ContextStoppedEvent(this));
+    publishEvent(new ContextStoppedEvent(this));
 }
+
 @Override
-publicbooleanisRunning() {
-    return (this.lifecycleProcessor !=null && this.lifecycleProcessor.isRunning());
+public boolean isRunning() {
+    return (this.lifecycleProcessor != null && this.lifecycleProcessor.isRunning());
 }
 ```
 
@@ -342,21 +364,21 @@ Closable 接口用于关闭和释放资源，提供了#close()方法，以释放
 
 ```java
 // AbstractApplicationContext.java
-public
-void close() {
-    synchronized(this.startupShutdownMonitor) {
-        doClose(); // If we registered a JVM shutdown hook, we
-        don't need it anymore now:    // We've already explicitly closed the context.
-        if(this.shutdownHook !=null) {
-            try{
+public void close() {
+    synchronized (this.startupShutdownMonitor) {
+        doClose();
+
+        // If we registered a JVM shutdown hook, we don't need it anymore now:
+        // We've already explicitly closed the context.
+        if (this.shutdownHook != null) {
+            try {
                 Runtime.getRuntime().removeShutdownHook(this.shutdownHook);
-            }
-            catch(IllegalStateException ex) {
-                // ignore - VM is already shutting
-                down
+            } catch (IllegalStateException ex) {
+                // ignore - VM is already shutting down
             }
         }
     }
+}
 ```
 
 - 调用
@@ -365,20 +387,20 @@ void close() {
 
 ```java
 // AbstractApplicationContext.java
-protected
-void
-doClose() {
+protected void doClose() {
     // ... 省略部分代码
-    try{
-        // Publish
-        shutdown        event.publishEvent(newContextClosedEvent(this));
+    try {
+        // Publish shutdown event
+        publishEvent(new ContextClosedEvent(this));
+    } catch (Throwable ex) {
+        logger.warn("Exception thrown from ApplicationListener handling ContextClosedEvent", ex);
     }
-    catch(Throwable ex) {
-        logger.warn("Exception
-        thrown from
-        ApplicationListener handling ContextClosedEvent", ex);    }    // ... 省略部分代码    destroyBeans();    closeBeanFactory();    onClose();
-        this.active.set(false);
-    }
+    // ... 省略部分代码
+    destroyBeans();
+    closeBeanFactory();
+    onClose();
+    this.active.set(false);
+}
 ```
 
 ## **3.7 InitializingBean**
@@ -387,9 +409,8 @@ InitializingBean 为 Bean 提供了初始化方法的方式，它提供的#after
 
 ```java
 // AbstractRefreshableConfigApplicationContext.java
-public
-void afterPropertiesSet() {
-    if(!isActive()) {
+public void afterPropertiesSet() {
+    if (!isActive()) {
         refresh();
     }
 }
@@ -406,11 +427,10 @@ BeanNameAware ，设置 Bean Name 的接口。接口在 AbstractRefreshableConfi
 
 ```java
 // AbstractRefreshableConfigApplicationContext.java
-public
-void setBeanName(String name) {
-    if(!this.setIdCalled) {
+public void setBeanName(String name) {
+    if (!this.setIdCalled) {
         super.setId(name);
-        setDisplayName("ApplicationContext '"+ name +"'");
+        setDisplayName("ApplicationContext '" + name + "'");
     }
 }
 ```
@@ -419,11 +439,11 @@ void setBeanName(String name) {
 
 由于篇幅问题，再加上大部分接口小编都已经在前面文章进行了详细的阐述，所以本文主要是以 Spring Framework 的 ApplicationContext 为中心，对其结构和功能的实现进行了简要的说明。
 
-这里不得不说 Spring 真的是一个非常优秀的框架，具有良好的结构设计和接口抽象，它的每一个接口职能单一，且都是具体功能到各个模块的高度抽象，且几乎每套接口都提供了一个默认的实现（defaultXXX）。
+这里不得不说 Spring 真的是一个非常有优秀的框架，具有良好的结构设计和接口抽象，它的每一个接口职能单一，且都是具体功能到各个模块的高度抽象，且几乎每套接口都提供了一个默认的实现（defaultXXX）。
 
 对于 ApplicationContext 体系而言，他继承 Spring 中众多的核心接口，能够为客户端提供一个相对完整的 Spring 容器，接口 ConfigurableApplicationContext 对 ApplicationContext 接口再次进行扩展，提供了生命周期的管理功能。
 
-抽象类 ApplicationContext 对整套接口提供了大部分的默认实现，将其中“不易变动”的部分进行了封装，通过“组合”的方式将“容易变动”的功能委托给其他类来实现，同时利用模板方法模式将一些方法的实现开放出去由子类实现，从而实现“**对扩展开放，对修改封闭**”的设计原则。
+抽象类 ApplicationContext 对整套接口提供了大部分的默认实现，将其中"不易变动"的部分进行了封装，通过"组合"的方式将"容易变动"的功能委托给其他类来实现，同时利用模板方法模式将一些方法的实现开放出去由子类实现，从而实现"**对扩展开放，对修改封闭**"的设计原则。
 
 最后我们再来领略下图的风采：
 

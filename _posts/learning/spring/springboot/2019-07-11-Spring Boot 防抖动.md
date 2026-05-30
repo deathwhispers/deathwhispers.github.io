@@ -32,7 +32,7 @@ week: 2019-W29
 1. 逻辑正确，也就是不能误判；
 2. 响应迅速，不能太慢；
 3. 易于集成，逻辑与业务解耦；
-4. 良好的用户反馈机制，比如提示“您点击的太快了”
+4. 良好的用户反馈机制，比如提示"您点击的太快了"
 
 ## [思路解析](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
 
@@ -140,7 +140,7 @@ public class AddReq {
 ```
 
 > ❝
-> `<font style="color:rgb(30, 107, 184);">@RequestLock</font>`注解定义了几个基础的属性，redis锁前缀、redis锁时间、redis锁时间单位、key分隔符。其中前面三个参数比较好理解，都是一个锁的基本信息。key分隔符是用来将多个参数合并在一起的，比如userName是张三，userPhone是123456，那么完整的key就是”张三&123456”，最后再加上redis锁前缀，就组成了一个唯一key。
+> `<font style="color:rgb(30, 107, 184);">@RequestLock</font>`注解定义了几个基础的属性，redis锁前缀、redis锁时间、redis锁时间单位、key分隔符。其中前面三个参数比较好理解，都是一个锁的基本信息。key分隔符是用来将多个参数合并在一起的，比如userName是张三，userPhone是123456，那么完整的key就是"张三&123456"，最后再加上redis锁前缀，就组成了一个唯一key。
 
 ## [唯一key生成](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
 
@@ -169,9 +169,74 @@ public @interface RequestKeyParam {}
 接下来就是lockKey的生成了，代码如下**RequestKeyGenerator.java**
 
 ```java
-import java.lang.annotation.Annotation;import java.lang.reflect.Field;import java.lang.reflect.Method;import java.lang.reflect.Parameter;import org.aspectj.lang.ProceedingJoinPoint;import org.aspectj.lang.reflect.MethodSignature;import org.springframework.util.ReflectionUtils;import org.springframework.util.StringUtils;public class RequestKeyGenerator {    /**     * 获取LockKey
-     *     * @param joinPoint 切入点     * @return     */    public static String getLockKey(ProceedingJoinPoint joinPoint) {        //获取连接点的方法签名对象        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();        //Method对象        Method method = methodSignature.getMethod();        //获取Method对象上的注解对象        RequestLock requestLock = method.getAnnotation(RequestLock.class);        //获取方法参数        final Object[] args = joinPoint.getArgs();        //获取Method对象上所有的注解        final Parameter[] parameters = method.getParameters();        StringBuilder sb = new StringBuilder();        for (int i = 0; i < parameters.length; i++) {            final RequestKeyParam keyParam = parameters[i].getAnnotation(RequestKeyParam.class);            //如果属性不是RequestKeyParam注解，则不处理            if (keyParam == null) {                continue;            }            //如果属性是RequestKeyParam注解，则拼接 连接符 "& + RequestKeyParam"            sb.append(requestLock.delimiter()).append(args[i]);        }        //如果方法上没有加RequestKeyParam注解        if (StringUtils.isEmpty(sb.toString())) {            //获取方法上的多个注解（为什么是两层数组：因为第二层数组是只有一个元素的数组）            final Annotation[][] parameterAnnotations = method.getParameterAnnotations();            //循环注解            for (int i = 0; i < parameterAnnotations.length; i++) {                final Object object = args[i];                //获取注解类中所有的属性字段                final Field[] fields = object.getClass().getDeclaredFields();                for (Field field : fields) {                    //判断字段上是否有RequestKeyParam注解                    final RequestKeyParam annotation = field.getAnnotation(RequestKeyParam.class);                    //如果没有，跳过                    if (annotation == null) {                        continue;                    }                    //如果有，设置Accessible为true（为true时可以使用反射访问私有变量，否则不能访问私有变量）                    field.setAccessible(true);                    //如果属性是RequestKeyParam注解，则拼接 连接符" & + RequestKeyParam"                    sb.append(requestLock.delimiter()).append(ReflectionUtils.getField(field, object));                }            }        }        //返回指定前缀的key        return requestLock.prefix() + sb;    }}> 由于``@RequestKeyParam``可以放在方法的参数上，也可以放在对象的属性上，所以这里需要进行两次判断，一次是获取方法上的注解，一次是获取对象里面属性上的注解。
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
+
+public class RequestKeyGenerator {
+    /**
+     * 获取LockKey
+     *
+     * @param joinPoint 切入点
+     * @return
+     */
+    public static String getLockKey(ProceedingJoinPoint joinPoint) {
+        // 获取连接点的方法签名对象
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        // Method对象
+        Method method = methodSignature.getMethod();
+        // 获取Method对象上的注解对象
+        RequestLock requestLock = method.getAnnotation(RequestLock.class);
+        // 获取方法参数
+        final Object[] args = joinPoint.getArgs();
+        // 获取Method对象上所有的注解
+        final Parameter[] parameters = method.getParameters();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < parameters.length; i++) {
+            final RequestKeyParam keyParam = parameters[i].getAnnotation(RequestKeyParam.class);
+            // 如果属性不是RequestKeyParam注解，则不处理
+            if (keyParam == null) {
+                continue;
+            }
+            // 如果属性是RequestKeyParam注解，则拼接 连接符 "& + RequestKeyParam"
+            sb.append(requestLock.delimiter()).append(args[i]);
+        }
+        // 如果方法上没有加RequestKeyParam注解
+        if (StringUtils.isEmpty(sb.toString())) {
+            // 获取方法上的多个注解（为什么是两层数组：因为第二层数组是只有一个元素的数组）
+            final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+            // 循环注解
+            for (int i = 0; i < parameterAnnotations.length; i++) {
+                final Object object = args[i];
+                // 获取注解类中所有的属性字段
+                final Field[] fields = object.getClass().getDeclaredFields();
+                for (Field field : fields) {
+                    // 判断字段上是否有RequestKeyParam注解
+                    final RequestKeyParam annotation = field.getAnnotation(RequestKeyParam.class);
+                    // 如果没有，跳过
+                    if (annotation == null) {
+                        continue;
+                    }
+                    // 如果有，设置Accessible为true（为true时可以使用反射访问私有变量，否则不能访问私有变量）
+                    field.setAccessible(true);
+                    // 如果属性是RequestKeyParam注解，则拼接 连接符" & + RequestKeyParam"
+                    sb.append(requestLock.delimiter()).append(ReflectionUtils.getField(field, object));
+                }
+            }
+        }
+        // 返回指定前缀的key
+        return requestLock.prefix() + sb;
+    }
+}
 ```
+
+> 由于`@RequestKeyParam`可以放在方法的参数上，也可以放在对象的属性上，所以这里需要进行两次判断，一次是获取方法上的注解，一次是获取对象里面属性上的注解。
 
 ## [重复提交判断](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
 
@@ -239,7 +304,7 @@ public class RedisRequestLockAspect {
 ```
 
 > ❝
-> 这里的核心代码是stringRedisTemplate.execute里面的内容，正如注释里面说的“使用RedisCallback接口执行set命令，设置锁键；设置额外选项：过期时间和SET_IF_ABSENT选项”，有些同学可能不太清楚`<font style="color:rgb(30, 107, 184);">SET_IF_ABSENT</font>`是个啥,这里我解释一下：`<font style="color:rgb(30, 107, 184);">SET_IF_ABSENT</font>`是 RedisStringCommands.SetOption 枚举类中的一个选项，用于在执行 SET 命令时设置键值对的时候，如果键不存在则进行设置，如果键已经存在，则不进行设置。
+> 这里的核心代码是stringRedisTemplate.execute里面的内容，正如注释里面说的"使用RedisCallback接口执行set命令，设置锁键；设置额外选项：过期时间和SET_IF_ABSENT选项"，有些同学可能不太清楚`<font style="color:rgb(30, 107, 184);">SET_IF_ABSENT</font>`是个啥,这里我解释一下：`<font style="color:rgb(30, 107, 184);">SET_IF_ABSENT</font>`是 RedisStringCommands.SetOption 枚举类中的一个选项，用于在执行 SET 命令时设置键值对的时候，如果键不存在则进行设置，如果键已经存在，则不进行设置。
 
 ### [Redisson分布式方式](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
 
@@ -256,13 +321,102 @@ Redisson分布式需要一个额外依赖，引入方式
 由于我之前的代码有一个RedisConfig，引入Redisson之后也需要单独配置一下，不然会和RedisConfig冲突**RedissonConfig.java**
 
 ```java
-import org.redisson.Redisson;import org.redisson.api.RedissonClient;import org.redisson.config.Config;import org.springframework.context.annotation.Bean;import org.springframework.context.annotation.Configuration;@Configurationpublic class RedissonConfig {    @Bean    public RedissonClient redissonClient() {        Config config = new Config();        // 这里假设你使用单节点的Redis服务器        config.useSingleServer()        // 使用与Spring Data Redis相同的地址        .setAddress("redis://127.0.0.1:6379");        // 如果有密码        //.setPassword("xxxx");        // 其他配置参数        //.setDatabase(0)        //.setConnectionPoolSize(10)        //.setConnectionMinimumIdleSize(2);        // 创建RedissonClient实例        return Redisson.create(config);    }}
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RedissonConfig {
+    @Bean
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        // 这里假设你使用单节点的Redis服务器
+        config.useSingleServer()
+        // 使用与Spring Data Redis相同的地址
+        .setAddress("redis://127.0.0.1:6379");
+        // 如果有密码
+        //.setPassword("xxxx");
+        // 其他配置参数
+        //.setDatabase(0)
+        //.setConnectionPoolSize(10)
+        //.setConnectionMinimumIdleSize(2);
+        // 创建RedissonClient实例
+        return Redisson.create(config);
+    }
+}
 ```
 
 配好之后，核心代码如下**RedissonRequestLockAspect.java**
 
 ```java
-mport java.lang.reflect.Method;import com.summo.demo.exception.biz.BizException;import com.summo.demo.model.response.ResponseCodeEnum;import org.aspectj.lang.ProceedingJoinPoint;import org.aspectj.lang.annotation.Around;import org.aspectj.lang.annotation.Aspect;import org.aspectj.lang.reflect.MethodSignature;import org.redisson.api.RLock;import org.redisson.api.RedissonClient;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.context.annotation.Configuration;import org.springframework.core.annotation.Order;import org.springframework.util.StringUtils;/** * @description 分布式锁实现 */@Aspect@Configuration@Order(2)public class RedissonRequestLockAspect {    private RedissonClient redissonClient;    @Autowired    public RedissonRequestLockAspect(RedissonClient redissonClient) {        this.redissonClient = redissonClient;    }    @Around("execution(public * * (..)) && @annotation(com.summo.demo.config.requestlock.RequestLock)")    public Object interceptor(ProceedingJoinPoint joinPoint) {        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();        Method method = methodSignature.getMethod();        RequestLock requestLock = method.getAnnotation(RequestLock.class);        if (StringUtils.isEmpty(requestLock.prefix())) {            throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "重复提交前缀不能为空");        }        //获取自定义key        final String lockKey = RequestKeyGenerator.getLockKey(joinPoint);        // 使用Redisson分布式锁的方式判断是否重复提交        RLock lock = redissonClient.getLock(lockKey);        boolean isLocked = false;        try {            //尝试抢占锁            isLocked = lock.tryLock();            //没有拿到锁说明已经有了请求了            if (!isLocked) {                throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "您的操作太快了,请稍后重试");            }            //拿到锁后设置过期时间            lock.lock(requestLock.expire(), requestLock.timeUnit());            try {                return joinPoint.proceed();            } catch (Throwable throwable) {                throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "系统异常");            }        } catch (Exception e) {            throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "您的操作太快了,请稍后重试");        } finally {            //释放锁            if (isLocked && lock.isHeldByCurrentThread()) {                lock.unlock();            }        }    }}
+import java.lang.reflect.Method;
+
+import com.summo.demo.exception.biz.BizException;
+import com.summo.demo.model.response.ResponseCodeEnum;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.util.StringUtils;
+
+/**
+ * @description 分布式锁实现
+ */
+@Aspect
+@Configuration
+@Order(2)
+public class RedissonRequestLockAspect {
+    private RedissonClient redissonClient;
+
+    @Autowired
+    public RedissonRequestLockAspect(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
+    }
+
+    @Around("execution(public * * (..)) && @annotation(com.summo.demo.config.requestlock.RequestLock)")
+    public Object interceptor(ProceedingJoinPoint joinPoint) {
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        Method method = methodSignature.getMethod();
+        RequestLock requestLock = method.getAnnotation(RequestLock.class);
+        if (StringUtils.isEmpty(requestLock.prefix())) {
+            throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "重复提交前缀不能为空");
+        }
+        // 获取自定义key
+        final String lockKey = RequestKeyGenerator.getLockKey(joinPoint);
+        // 使用Redisson分布式锁的方式判断是否重复提交
+        RLock lock = redissonClient.getLock(lockKey);
+        boolean isLocked = false;
+        try {
+            // 尝试抢占锁
+            isLocked = lock.tryLock();
+            // 没有拿到锁说明已经有了请求了
+            if (!isLocked) {
+                throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "您的操作太快了,请稍后重试");
+            }
+            // 拿到锁后设置过期时间
+            lock.lock(requestLock.expire(), requestLock.timeUnit());
+            try {
+                return joinPoint.proceed();
+            } catch (Throwable throwable) {
+                throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "系统异常");
+            }
+        } catch (Exception e) {
+            throw new BizException(ResponseCodeEnum.BIZ_CHECK_FAIL, "您的操作太快了,请稍后重试");
+        } finally {
+            // 释放锁
+            if (isLocked && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+        }
+    }
+}
 ```
 
 > ❝
@@ -270,15 +424,15 @@ mport java.lang.reflect.Method;import com.summo.demo.exception.biz.BizException;
 
 测试一下。
 
-- **第一次提交，“添加用户成功”**
+- **第一次提交，"添加用户成功"**
 
 ![d83a72fe220c105756705c06d058ff38](/assets/images/learning/spring/springboot/spring-boot-debounce/d83a72fe220c105756705c06d058ff38.jpeg)
 
-- **短时间内重复提交，“BIZ-0001:您的操作太快了,请稍后重试”**
+- **短时间内重复提交，"BIZ-0001:您的操作太快了,请稍后重试"**
 
 ![e94dd441b421cefc097243ba5aa07563](/assets/images/learning/spring/springboot/spring-boot-debounce/e94dd441b421cefc097243ba5aa07563.jpeg)
 
-- **过几秒后再次提交，“添加用户成功”**
+- **过几秒后再次提交，"添加用户成功"**
 
 ![ebeb516566ec5fd089b1ae60f8655195](/assets/images/learning/spring/springboot/spring-boot-debounce/ebeb516566ec5fd089b1ae60f8655195.jpeg)
 
