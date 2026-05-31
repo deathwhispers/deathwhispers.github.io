@@ -62,9 +62,6 @@ public Semaphore(int permits) {
 public Semaphore(int permits, boolean fair) {
     sync = fair ? new FairSync(permits) : new NonfairSync(permits);
 }
-
-
-
 ```
 
 - Semaphore 默认选择**非公平锁**。
@@ -79,9 +76,6 @@ Semaphore 提供了 #acquire() 方法，来获取一个许可。
 public void acquire() throws InterruptedException {
     sync.acquireSharedInterruptibly(1);
 }
-
-
-
 ```
 
 - 内部调用 AQS 的 #acquireSharedInterruptibly(int arg) 方法，该方法以**共享模式**获取同步状态。代码如下：
@@ -91,9 +85,6 @@ public final void acquireSharedInterruptibly(int arg) throws InterruptedExceptio
     if (Thread.interrupted()) throw new InterruptedException();
     if (tryAcquireShared(arg) < 0) doAcquireSharedInterruptibly(arg);
 }
-
-
-
 ```
 
 在 #acquireSharedInterruptibly(int arg) 方法中，会调用 #tryAcquireShared(int arg) 方法。而 #tryAcquireShared(int arg) 方法，由子类来实现。对于 Semaphore 而言，如果我们选择非公平模式，则调用 NonfairSync 的#tryAcquireShared(int arg) 方法，否则调用 FairSync 的 #tryAcquireShared(int arg) 方法。若 #tryAcquireShared(int arg) 方法返回 < 0 时，则会**阻塞**等待，从而实现 Semaphore 信号量不足时的阻塞，代码如下：
@@ -126,9 +117,6 @@ private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {
         }
     }
 }
-
-
-
 ```
 
 - 老艿艿：另外，这也是为什么 Semaphore 在使用 AQS 时，state 代表的是，剩余可获取的许可数，而不是已经使用的许可数。我们假设 state 代表的是已经使用的许可数，那么 #tryAcquireShared(int arg) 返回的结果 = 原始许可数 - state ，这个操作在并发情况下，会存在线程不安全的问题。所以，**state 代表的是，剩余可获取的许可数，而不是已经使用的许可数**。
@@ -149,9 +137,6 @@ private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {
         if (remaining < 0 || compareAndSetState(available, remaining)) return remaining;
     }
 }
-
-
-
 ```
 
 - 通过 #hasQueuedPredecessors() 方法，判断该线程是否位于 CLH 队列的**列头**，从而实现公平锁。
@@ -171,9 +156,6 @@ final int nonfairTryAcquireShared(int acquires) {
         if (remaining < 0 || compareAndSetState(available, remaining)) return remaining;
     }
 }
-
-
-
 ```
 
 - 对于非公平而言，因为它**不需要**判断当前线程是否位于 CLH 同步队列列头，所以相对而言会简单些。
@@ -186,9 +168,6 @@ final int nonfairTryAcquireShared(int acquires) {
 public void release() {
     sync.releaseShared(1);
 }
-
-
-
 ```
 
 - 内部调用 AQS 的 #releaseShared(int arg) 方法，释放同步状态。
@@ -202,9 +181,6 @@ public final boolean releaseShared(int arg) {
     }
     return false;
 }
-
-
-
 ```
 
 ```text
@@ -225,9 +201,6 @@ protected final boolean tryReleaseShared(int releases) {
         if (compareAndSetState(current, next)) return true;
     }
 }
-
-
-
 ```
 
 ```text
@@ -311,9 +284,6 @@ public class SemaphoreTest {
         }
     }
 }
-
-
-
 ```
 
 运行结果如下：

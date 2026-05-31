@@ -52,9 +52,6 @@ public class ConditionObject implements Condition, java.io.Serializable {
     public ConditionObject() {
     }
     // … 省略内部代码 }
-
-
-
 ```
 
 - 从上面代码可以看出，ConditionObject 拥有首节点（firstWaiter），尾节点（lastWaiter）。当前线程调用 #await()方法时，将会以当前线程构造成一个节点（Node），并将节点加入到该队列的尾部。结构如下：
@@ -120,9 +117,6 @@ public final void await() throws InterruptedException {
     if (node.nextWaiter != null) // clean up if cancelled unlinkCancelledWaiters();
     if (interruptMode != 0) reportInterruptAfterWait(interruptMode);
 }
-
-
-
 ```
 
 - 首先，将当前线程新建一个节点同时加入到条件队列中。
@@ -151,9 +145,6 @@ private Node addConditionWaiter() {
     lastWaiter = node;
     return node;
 }
-
-
-
 ```
 
 - 该方法主要是将当前线程加入到 Condition 条件队列中。当然，在加入到尾节点之前，会调用 #unlinkCancelledWaiters() 方法，**清除**所有状态不为 Condition 的节点。
@@ -181,9 +172,6 @@ final long fullyRelease(Node node) {
         if (failed) node.waitStatus = Node.CANCELLED;
     }
 }
-
-
-
 ```
 
 - 正常情况下，释放锁都能成功，因为是**先**调用 Lock#lock() 方法，**再**调用 Condition#await() 方法。
@@ -202,9 +190,6 @@ final boolean isOnSyncQueue(Node node) {
     if (node.next != null) return true;
     return findNodeFromTail(node);
 }
-
-
-
 ```
 
 ### 2.1.1.4 unlinkCancelledWaiters
@@ -230,9 +215,6 @@ private void unlinkCancelledWaiters() {
         t = next;
     }
 }
-
-
-
 ```
 
 ### 2.2.2 其他 await 实现方法
@@ -253,9 +235,6 @@ public final void signal() {
     Node first = firstWaiter;
     if (first != null) doSignal(first);
     //唤醒 }
-
-
-
 ```
 
 - 该方法首先会判断当前线程是否已经获得了锁，这是前置条件。然后调用 #doSignal(Node first) 方法，唤醒条件队列中的头节点。代码如下：
@@ -269,9 +248,6 @@ private void doSignal(Node first) {
     }
     while (!transferForSignal(first) && (first = firstWaiter) != null);
 }
-
-
-
 ```
 
 - 主要是做两件事：1）修改头节点；2）调用 #transferForSignal(Node first) 方法将节点移动到 CLH 同步队列中。代码如下：
@@ -287,9 +263,6 @@ final boolean transferForSignal(Node node) {
     if (ws > 0 || !compareAndSetWaitStatus(p, ws, Node.SIGNAL)) LockSupport.unpark(node.thread);
     return true;
 }
-
-
-
 ```
 
 整个通知的流程如下：
@@ -359,9 +332,6 @@ public class ConditionTest {
                 return string;
             }
         }
-
-
-
 ```
 
 # 参考资料

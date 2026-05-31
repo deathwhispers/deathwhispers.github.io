@@ -22,7 +22,7 @@ week: 2025-W48
 
 在上篇博客中，我们介绍了 Java 四大并发工具之一的 CyclicBarrier ，今天要介绍的CountDownLatch 与 CyclicBarrier 有点儿**相似**。
 
-CyclicBarrier 所描述的是“允许一组线程互相等待，直到到达某个公共屏障点，才会进行后续任务”，而 CountDownLatch 所描述的是“在完成一组正在其他线程中执行的操作之前，它允许一个或多个线程一直等待”。在API中是这样描述的：
+CyclicBarrier 所描述的是"允许一组线程互相等待，直到到达某个公共屏障点，才会进行后续任务"，而 CountDownLatch 所描述的是"在完成一组正在其他线程中执行的操作之前，它允许一个或多个线程一直等待"。在API中是这样描述的：
 
 用给定的计数初始化 CountDownLatch。由于调用了 #countDown() 方法，所以在当前计数到达零之前，#await() 方法会一直受阻塞。之后，会释放所有等待的线程，#await() 的所有后续调用都将立即返回。这种现象只出现一次——计数无法被重置。如果需要重置计数，请考虑使用 CyclicBarrier 。
 
@@ -50,12 +50,9 @@ CountDownLatch 仅提供了一个构造方法，代码如下：
 
 ```java
 public CountDownLatch(int count) {
-    if (count < 0) throw new IllegalArgumentException(“count < 0”);
+    if (count < 0) throw new IllegalArgumentException("count < 0");
     this.sync = new Sync(count);
 }
-
-
-
 ```
 
 - 构造一个用给定计数初始化的 CountDownLatch 。
@@ -96,9 +93,6 @@ private static final class Sync extends AbstractQueuedSynchronizer {
         }
     }
 }
-
-
-
 ```
 
 - 通过这个内部类 Sync 实现类，我们可以清楚地看到， CountDownLatch 是采用**共享锁**来实现的。
@@ -112,9 +106,6 @@ CountDownLatch 提供 #await() 方法，来使当前线程在锁存器倒计数�
 public void await() throws InterruptedException {
     sync.acquireSharedInterruptibly(1);
 }
-
-
-
 ```
 
 - 该方法内部使用 AQS 的 #acquireSharedInterruptibly(int arg) 方法，代码如下：
@@ -125,9 +116,6 @@ public final void acquireSharedInterruptibly(int arg) throws InterruptedExceptio
     if (Thread.interrupted()) throw new InterruptedException();
     if (tryAcquireShared(arg) < 0) doAcquireSharedInterruptibly(arg);
 }
-
-
-
 ```
 
 ```text
@@ -139,9 +127,6 @@ public final void acquireSharedInterruptibly(int arg) throws InterruptedExceptio
 @Override protected int tryAcquireShared(int acquires) {
     return (getState() == 0) ? 1 : -1;
 }
-
-
-
 ```
 
 ```text
@@ -176,9 +161,6 @@ private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {
         }
     }
 }
-
-
-
 ```
 
 ```text
@@ -193,9 +175,6 @@ CountDownLatch 提供 #await(long timeout, TimeUnit unit) 方法，来使当前�
 public boolean await(long timeout, TimeUnit unit) throws InterruptedException {
     return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
 }
-
-
-
 ```
 
 - 调用 AQS 的 tryAcquireSharedNanos(int acquires, long nanosTimeout) 方法，逻辑和 [「2.2 await」](https://www.iocoder.cn/JUC/sike/CountDownLatch/#) 类似。
@@ -208,9 +187,6 @@ CountDownLatch 提供 #countDown() 方法，递减锁存器的计数。如果计
 public void countDown() {
     sync.releaseShared(1);
 }
-
-
-
 ```
 
 - 内部调用 AQS 的 #releaseShared(int arg) 方法，来释放共享锁同步状态：
@@ -224,9 +200,6 @@ public final boolean releaseShared(int arg) {
     }
     return false;
 }
-
-
-
 ```
 
 - #tryReleaseShared(int arg) 方法，被 CountDownLatch 的内部类 Sync 重写，代码如下：
@@ -239,15 +212,12 @@ public final boolean releaseShared(int arg) {
         int c = getState();
         //c == 0 直接返回，释放锁成功
         if (c == 0) return false;
-        //计算新“锁计数器”
+        //计算新"锁计数器"
         int nextc = c - 1;
         //更新锁状态（计数器）
         if (compareAndSetState(c, nextc)) return nextc == 0;
     }
 }
-
-
-
 ```
 
 ## 2.5 getCount
@@ -256,9 +226,6 @@ public final boolean releaseShared(int arg) {
 public long getCount() {
     return sync.getCount();
 }
-
-
-
 ```
 
 # 3. 总结
@@ -283,14 +250,14 @@ public class CountDownLatchTest {
     static class BossThread extends Thread {
         @Override
         public void run() {
-            System.out.println(“Boss在会议室等待，总共有” + countDownLatch.getCount() + “个人开会…”);
+            System.out.println("Boss在会议室等待，总共有" + countDownLatch.getCount() + "个人开会…");
             try {
                 // Boss等待
                 countDownLatch.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println(“所有人都已经到齐了，开会吧…”);
+            System.out.println("所有人都已经到齐了，开会吧…");
         }
     }
 
@@ -298,7 +265,7 @@ public class CountDownLatchTest {
     static class EmployeeThread extends Thread {
         @Override
         public void run() {
-            System.out.println(Thread.currentThread().getName() + “，到达会议室….”);
+            System.out.println(Thread.currentThread().getName() + "，到达会议室….");
             countDownLatch.countDown();
         }
     }
@@ -306,14 +273,9 @@ public class CountDownLatchTest {
     public static void main(String[] args) {
         // Boss线程启动
         new BossThread().start();
-        for (int i = 0;
-        i < countDownLatch.getCount();
-        i++) {
+        for (int i = 0; i < countDownLatch.getCount(); i++) {
             new EmployeeThread().start();
         }
     }
 }
-
-
-
 ```

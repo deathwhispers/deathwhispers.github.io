@@ -50,9 +50,6 @@ public CyclicBarrier(int parties, Runnable barrierAction) {
 public CyclicBarrier(int parties) {
     this(parties, null);
 }
-
-
-
 ```
 
 - parties 变量，表示拦截线程的**总**数量。
@@ -70,16 +67,12 @@ public CyclicBarrier(int parties) {
 public int await() throws InterruptedException, BrokenBarrierException {
     try {
         return dowait(false, 0L);
-        //不超时等待 }
-        catch (TimeoutException toe) {
-            throw new Error(toe);
-
-            // cannot
-            happen }
-        }
-
-
-
+        // 不超时等待
+    } catch (TimeoutException toe) {
+        throw new Error(toe);
+        // cannot happen
+    }
+}
 ```
 
 - 内部调用 #dowait(boolean timed, long nanos) 方法，执行阻塞等待( timed=true )。详细解析，见 [「2.3 dowait」](https://www.iocoder.cn/JUC/sike/CyclicBarrier/#) 。
@@ -106,80 +99,78 @@ public int await(long timeout, TimeUnit unit) throws InterruptedException, Broke
 
 ```java
 private int dowait(boolean timed, long nanos) throws InterruptedException, BrokenBarrierException, TimeoutException {
-    //获取锁
+    // 获取锁
     final ReentrantLock lock = this.lock;
     lock.lock();
     try {
-        //分代
+        // 分代
         final Generation g = generation;
-        //当前generation“已损坏”，抛出BrokenBarrierException异常
-        //抛出该异常一般都是某个线程在等待某个处于“断开”状态的CyclicBarrie
+        // 当前generation”已损坏”，抛出BrokenBarrierException异常
+        // 抛出该异常一般都是某个线程在等待某个处于”断开”状态的CyclicBarrie
         if (g.broken)
-        //当某个线程试图等待处于断开状态的 barrier 时，或者 barrier 进入断开状态而线程处于等待状态时，抛出该异常
-        throw new BrokenBarrierException();
-        //如果线程中断，终止CyclicBarrier
+            // 当某个线程试图等待处于断开状态的 barrier 时，或者 barrier 进入断开状态而线程处于等待状态时，抛出该异常
+            throw new BrokenBarrierException();
+        // 如果线程中断，终止CyclicBarrier
         if (Thread.interrupted()) {
             breakBarrier();
             throw new InterruptedException();
         }
-        //进来一个线程 count - 1
-        int index = –count;
-        //count == 0 表示所有线程均已到位，触发Runnable任务
+        // 进来一个线程 count - 1
+        int index = --count;
+        // count == 0 表示所有线程均已到位，触发Runnable任务
         if (index == 0) {
             // tripped
             boolean ranAction = false;
             try {
                 final Runnable command = barrierCommand;
-                //触发任务
+                // 触发任务
                 if (command != null)
-                command.run();
+                    command.run();
                 ranAction = true;
-                //唤醒所有等待线程，并更新generation
+                // 唤醒所有等待线程，并更新generation
                 nextGeneration();
                 return 0;
             } finally {
                 if (!ranAction)
-                // 未执行，说明 barrierCommand 执行报错，或者线程打断等等情况。
-                breakBarrier();
+                    // 未执行，说明 barrierCommand 执行报错，或者线程打断等等情况。
+                    breakBarrier();
             }
         }
         for (;;) {
             try {
-                //如果不是超时等待，则调用Condition.await()方法等待
-                if (!timed) trip.await();
+                // 如果不是超时等待，则调用Condition.await()方法等待
+                if (!timed)
+                    trip.await();
                 else if (nanos > 0L)
-                //超时等待，调用Condition.awaitNanos()方法等待
-                nanos = trip.awaitNanos(nanos);
+                    // 超时等待，调用Condition.awaitNanos()方法等待
+                    nanos = trip.awaitNanos(nanos);
             } catch (InterruptedException ie) {
-                if (g == generation && ! g.broken) {
+                if (g == generation && !g.broken) {
                     breakBarrier();
                     throw ie;
                 } else {
-                    // We’re about to finish waiting even
-                    if we had not
+                    // We’re about to finish waiting even if we had not
                     // been interrupted, so this interrupt is deemed to
                     // “belong” to subsequent execution.
                     Thread.currentThread().interrupt();
                 }
             }
             if (g.broken)
-            throw new BrokenBarrierException();
-            //generation已经更新，返回index
-            if (g != generation) return index;
-            //“超时等待”，并且时间已到,终止CyclicBarrier，并抛出异常
+                throw new BrokenBarrierException();
+            // generation已经更新，返回index
+            if (g != generation)
+                return index;
+            // “超时等待”，并且时间已到,终止CyclicBarrier，并抛出异常
             if (timed && nanos <= 0L) {
                 breakBarrier();
                 throw new TimeoutException();
             }
         }
     } finally {
-        //释放锁
+        // 释放锁
         lock.unlock();
     }
 }
-
-
-
 ```
 
 如果该线程不是到达的最后一个线程，则他会一直处于等待状态，除非发生以下情况：
@@ -265,9 +256,6 @@ public void reset() {
         lock.unlock();
     }
 }
-
-
-
 ```
 
 - 通过组合 #breakBarrier() 和 #nextGeneration() 方法来实现。
@@ -277,22 +265,15 @@ public void reset() {
 #getNumberWaiting() 方法，获得等待的线程数。代码如下：
 
 ```java
-public int getNumberWaiting()
-{
+public int getNumberWaiting() {
     final ReentrantLock lock = this.lock;
     lock.lock();
-    try
-    {
-        return parties - coun;
+    try {
+        return parties - count;
+    } finally {
+        lock.unlock();
     }
-} finally
-{
-    lock.unlock(;
 }
-}
-}
-
-
 ```
 
 ## 2.9 isBroken
@@ -310,8 +291,6 @@ public boolean isBroken() {
         lock.unlock();
     }
 }
-
-
 ```
 
 # 3. 应用场景
@@ -328,7 +307,7 @@ public class CyclicBarrierTest {
     static class CyclicBarrierThread extends Thread {
         public void run() {
             System.out.println(Thread.currentThread().getName() + “到了”);
-            //等待
+            // 等待
             try {
                 cyclicBarrier.await();
             } catch (Exception e) {
@@ -340,17 +319,12 @@ public class CyclicBarrierTest {
         cyclicBarrier = new CyclicBarrier(5, new Runnable() {
             @Override
             public void run() {
-                System.out.println(“人到齐了，开会吧….”);
+                System.out.println(“人到齐了，开会吧....”);
             }
         });
-        for (int i = 0;
-        i < 5;
-        i++) {
+        for (int i = 0; i < 5; i++) {
             new CyclicBarrierThread().start();
         }
     }
 }
-
-
-
 ```
