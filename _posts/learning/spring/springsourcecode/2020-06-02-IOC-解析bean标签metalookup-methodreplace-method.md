@@ -44,9 +44,7 @@ meta 所声明的 key 并不会在 Bean 中体现，只是一个额外的声明�
 //
 BeanDefinitionParserDelegate.javapublic void parseMetaElements(Element ele, BeanMetadataAttributeAccessor attributeAccessor) {
     NodeList nl = ele.getChildNodes(); // 遍历子节点
-    for (int i = 0;
-    i < nl.getLength();
-    i++) {
+    for (int i = 0; i < nl.getLength(); i++) {
         Node node = nl.item(i); // <meta key="special-data" value="sprecial stragey" />
         if (isCandidateElement(node) && nodeNameEquals(node, META_ELEMENT)) {
             // 标签名为 meta
@@ -57,9 +55,6 @@ BeanDefinitionParserDelegate.javapublic void parseMetaElements(Element ele, Bean
             attribute.setSource(extractSource(metaElement));
             // 添加到 BeanMetadataAttributeAccessor 中            attributeAccessor.addMetadataAttribute(attribute);
         }    }}
-
-
-
 ```
 
 - 解析过程较为简单，获取相应的 key - value 构建 BeanMetadataAttribute 对象，然后调用
@@ -162,9 +157,6 @@ public static void main(String[] args) {
     Display display = (Display) context.getBean("display");
     display.display();
 }
-
-
-
 ```
 
 XML 配置内容如下：
@@ -181,7 +173,7 @@ XML 配置内容如下：
 我是 hongqi
 ```
 
-如果将 bean=“hognqi” 替换为 bean=“bmw”，则运行结果变成：
+如果将 bean="hognqi" 替换为 bean="bmw"，则运行结果变成：
 
 ```plain text
 我是 BMW
@@ -195,9 +187,7 @@ XML 配置内容如下：
 //
 BeanDefinitionParserDelegate.javapublic void parseLookupOverrideSubElements(Element beanEle, MethodOverrides overrides) {
     NodeList nl = beanEle.getChildNodes(); // 遍历子节点
-    for (int i = 0;
-    i < nl.getLength();
-    i++) {
+    for (int i = 0; i < nl.getLength(); i++) {
         Node node = nl.item(i);
         if (isCandidateElement(node) && nodeNameEquals(node, LOOKUP_METHOD_ELEMENT)) {
             // 标签名为 lookup-method
@@ -208,9 +198,6 @@ BeanDefinitionParserDelegate.javapublic void parseLookupOverrideSubElements(Elem
             override.setSource(extractSource(ele));
             // 添加到 MethodOverrides 中            overrides.addOverride(override);
         }    }}
-
-
-
 ```
 
 解析过程和 meta 子元素没有多大区别，同样是解析 methodName、beanRef 构造一个 LookupOverride 对象，然后记录到 AbstractBeanDefinition 中的 methodOverrides 属性中。
@@ -283,9 +270,7 @@ public static void main(String[] args) {
 /** * Parse replaced-method sub-elements of the given bean element. */
 public void parseReplacedMethodSubElements(Element beanEle, MethodOverrides overrides) {
     NodeList nl = beanEle.getChildNodes(); // 遍历子节点
-    for (int i = 0;
-    i < nl.getLength();
-    i++) {
+    for (int i = 0; i < nl.getLength(); i++) {
         Node node = nl.item(i);
         if (isCandidateElement(node) && nodeNameEquals(node, REPLACED_METHOD_ELEMENT)) {
             // 标签名为 replace-method
@@ -306,9 +291,6 @@ public void parseReplacedMethodSubElements(Element beanEle, MethodOverrides over
             replaceOverride.setSource(extractSource(replacedMethodEle));
             // 添加到 MethodOverrides 中            overrides.addOverride(replaceOverride);
         }    }}
-
-
-
 ```
 
 该子元素和 lookup-method 标签的解析过程差不多，同样是提取 name 和 replacer 属性构建 ReplaceOverride 对象，然后记录到 AbstractBeanDefinition 中的 methodOverrides 属性中。

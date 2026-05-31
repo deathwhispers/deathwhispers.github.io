@@ -147,7 +147,7 @@ ip netns exec $NSPID ip route delete default
 ip netns exec $NSPID ip route add $GATEWAY/32 dev $CONTAINER_IFNAME
 ```
 
-4. 首先 pipework 检查是否存在 br0 网桥，若不存在，就自己创建。若以”ovs”开头，就会创建 OpenVswitch 网桥，以”br”开头，创建 Linux bridge。
+4. 首先 pipework 检查是否存在 br0 网桥，若不存在，就自己创建。若以"ovs"开头，就会创建 OpenVswitch 网桥，以"br"开头，创建 Linux bridge。
 5. 创建 veth pair 设备，用于为容器提供网卡并连接到 br0 网桥。
 6. 使用 docker inspect 找到容器在主机中的 PID，然后通过 PID 将容器的网络命名空间链接到 /var/run/netns/ 目录下。这么做的目的是，方便在主机上使用 ip netns 命令配置容器的网络。因为，在 Docker 容器中，我们没有权限配置网络环境。
 7. 将之前创建的 veth pair 设备分别加入容器和网桥中。在容器中的名称默认为 eth1，可以通过 pipework 的 -i 参数修改该名称。

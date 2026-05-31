@@ -177,7 +177,7 @@ plain 1: public class TelnetHandlerAdapter extends ChannelHandlerAdapter impleme
 ---
 
 - 第 8 至 10 行：处理 telnet 提示语，默认为
-“dubbo”
+"dubbo"
 ，可通过
 配置。提示语的效果，如下图所示红框部分：
 ![](/assets/images/learning/dubbo/dubbo-nio-server-telnet/65652f1c5d9036c374460952567f7c88.png)

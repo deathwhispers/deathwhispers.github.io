@@ -658,7 +658,7 @@ Cleanup can be safely postponed for low-usage hours.
 
 [http://docs.datastax.com/en/archived/cassandra/2.2/cassandra/operations/opsReplaceNode.html](http://docs.datastax.com/en/archived/cassandra/2.2/cassandra/operations/opsReplaceNode.html)
 
-假设要用10.21.38.102替换10.21.38.106，先“当掉”被替换的节点10.21.38.106，然后在新节点10.21.38.102中修改配置
+假设要用10.21.38.102替换10.21.38.106，先"当掉"被替换的节点10.21.38.106，然后在新节点10.21.38.102中修改配置
 
 ```plain text
 2.2.6 在cassandra-env.sh中
@@ -677,7 +677,7 @@ JVM_OPTS="$JVM_OPTS -Dcassandra.replace_address=10.21.38.106
 [http://docs.datastax.com/en/archived/cassandra/2.2/cassandra/operations/opsReplaceLiveNode.html](http://docs.datastax.com/en/archived/cassandra/2.2/cassandra/operations/opsReplaceLiveNode.html)
 
 1. 加入新节点，使用bootstrap加入后，对旧的需要替换的节点执行decommission
-2. 停掉旧节点，采用“旧节点当掉”的方式替换
+2. 停掉旧节点，采用"旧节点当掉"的方式替换
 
 ### **Streaming**
 
@@ -1496,11 +1496,11 @@ HEAP_NEWSIZE为100M*Core(不过有些文章说为Heap的1/4)：
 
 物理内存32G， 分配给JVM的16G， 新生代=1/4的堆内存
 
-JVM_OPTS=“$JVM_OPTS -Xms16G”
+JVM_OPTS="$JVM_OPTS -Xms16G"
 
-JVM_OPTS=“$JVM_OPTS -Xmx16G”
+JVM_OPTS="$JVM_OPTS -Xmx16G"
 
-JVM_OPTS=“$JVM_OPTS -Xmn4G”
+JVM_OPTS="$JVM_OPTS -Xmn4G"
 
 大内存
 
@@ -1563,9 +1563,9 @@ New : Old = 4G : 12G = 1 : 3
 - 对象在survivor中超过指定年龄，被promot到old
 - old满了，发生FullGC
 
-if you see long ParNew GC pauses it’s because many objects are being promoted.
+if you see long ParNew GC pauses it's because many objects are being promoted.
 
-If you have long ParNew pauses, it means that a lot of the objects in eden are not (yet) garbage, and they’re being copied around to the survivor space, or into the old gen.
+If you have long ParNew pauses, it means that a lot of the objects in eden are not (yet) garbage, and they're being copied around to the survivor space, or into the old gen.
 
 通常来说大部分的对象存活周期都很短(short lived objects)。找出并移除要被回收的对象是很快的。
 
@@ -1575,7 +1575,7 @@ If you have long ParNew pauses, it means that a lot of the objects in eden are n
 
 哪些对象会被提升：在新生代存活超过MaxTenuringThreshold(默认为1，因为大部分对象都是short live)
 
-By increasing the young generation space it decreases the frequency at which we have to run GC because more objects can accumulate before we reach 75% capacity. By increasing the young generation and the MaxTenuringThreshold you give the short lived objects more time to die, and dead objects don’t get promoted.
+By increasing the young generation space it decreases the frequency at which we have to run GC because more objects can accumulate before we reach 75% capacity. By increasing the young generation and the MaxTenuringThreshold you give the short lived objects more time to die, and dead objects don't get promoted.
 
 As of Cassandra 2.0, there are two major pieces of the storage engine that still depend on the JVM heap: memtables and the key cache.
 
@@ -1687,7 +1687,7 @@ Memtable越大->不容易写满Memtabel->不容易发生flush->即使发生flush
 
 堆外内存、OffHeap、DirectorBuffer、Native Memory的关系：堆外内存=OffHeap，通常Java使用DirectBuffer操作堆外内存.
 
-offheap_buffers: moves the cell name and value to DirectBuffer objects. This has the lowest impact on reads — the values are still “live” Java buffers — but only reduces heap significantly when you are storing large strings or blobs.
+offheap_buffers: moves the cell name and value to DirectBuffer objects. This has the lowest impact on reads — the values are still "live" Java buffers — but only reduces heap significantly when you are storing large strings or blobs.
 
 offheap_objects: moves the entire cell off heap, leaving only the NativeCell reference containing a pointer to the native (off-heap) data. This makes it effective for small values like ints or uuids as well, at the cost of having to copy it back on-heap temporarily when reading from it.
 
@@ -1731,11 +1731,11 @@ tobert: if you have a lot of flush writers, your cleanup threshold is going to b
 
 (Default: 1/(memtable_flush_writers + 1))note. Ratio used for automatic memtable flush. Casssandra adds memtable_heap_space_in_mb to memtable_offheap_space_in_mb and multiplies the total by memtable_cleanup_threshold to get a space amount in MB. When the total amount of memory being used by all non-flushing memtables exceeds this amount, Casandra flushes the largest memtable to disk.
 
-For example, consider a system in which the total of memtable_heap_space_in_mb and memtable_offheap_space_in_mb is 1000, and memtable_cleanup_threshold is 0.50. The “memtable_cleanup” amount is 500MB. This system has two memtables: Memtable A (150MB) and Memtable B (350MB) . When either memtable increases, the total space they use exceeds 500MB. When this happens, Cassandra flushes the Memtable B to disk.
+For example, consider a system in which the total of memtable_heap_space_in_mb and memtable_offheap_space_in_mb is 1000, and memtable_cleanup_threshold is 0.50. The "memtable_cleanup" amount is 500MB. This system has two memtables: Memtable A (150MB) and Memtable B (350MB) . When either memtable increases, the total space they use exceeds 500MB. When this happens, Cassandra flushes the Memtable B to disk.
 
 A larger value for memtable_cleanup_threshold means larger flushes, less frequent flushes and potentially less compaction activities, but also less concurrent flush activity, which can make it difficult to keep the disks saturated under heavy write load.
 
-This section documents the formula used to calculate the ratio based on the number of memtable_flush_writers. The default value in cassandra.yaml is 0.11, which works if the node has many disks or if you set the node’s memtable_flush_writers to 8. As another example, if the node uses a single SSD, the value for memttable_cleanup_threshold computes to 0.33, based on the minimum memtable_flush_writers value of 2
+This section documents the formula used to calculate the ratio based on the number of memtable_flush_writers. The default value in cassandra.yaml is 0.11, which works if the node has many disks or if you set the node's memtable_flush_writers to 8. As another example, if the node uses a single SSD, the value for memttable_cleanup_threshold computes to 0.33, based on the minimum memtable_flush_writers value of 2
 
 ### **KeyCache**
 
@@ -1767,7 +1767,7 @@ OpsCenter通过查看缓存的效率，通过来说，缓存达到90％以上的
 
 when data needs to be read from disk, it works best when it is performed as a single sequential operation.
 
-In order to design an effective data model in Cassandra, it’s good to keep these best practices in mind:
+In order to design an effective data model in Cassandra, it's good to keep these best practices in mind:
 
 Use clustering columns in your tables so that your rows are ordered on disk in the same order you want them in when read.
 
@@ -1832,7 +1832,7 @@ Disk I/O is expensive
 
 Write heavy workloads.
 
-Rows are write once. If the rows are written once and then never updated, they will be contained in a single SSTable naturally. There’s no point to use the more I/O intensive leveled compaction.
+Rows are write once. If the rows are written once and then never updated, they will be contained in a single SSTable naturally. There's no point to use the more I/O intensive leveled compaction.
 
 | **Leveled** | **velocity** |
 | --- | --- |

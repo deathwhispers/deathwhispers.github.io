@@ -63,9 +63,6 @@ public class PersonService {
         personMapper.updateById(person);
     }
 }
-
-
-
 ```
 
 - @Cacheable是最主要的注解，它指定了被注解方法的返回值是可被缓存的

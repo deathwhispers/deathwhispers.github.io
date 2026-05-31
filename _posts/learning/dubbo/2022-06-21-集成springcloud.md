@@ -116,7 +116,7 @@ plain // DefaultEchoService.java  @Service(version = "1.0.0", protocol = {"dubbo
 
 ---
 
-- @Service(version = “1.0.0”, protocol = {“dubbo”, “rest”})
+- @Service(version = "1.0.0", protocol = {"dubbo", "rest"})
 注解，提供 Dubbo 和 Rest 两种协议的服务。
 
 ### 2.4.5 DubboSpringCloudBootstrap
@@ -141,7 +141,7 @@ spring-cloud-alibaba-dubbo
 注解，后续我们会看到这个类中会提供基于 Spring MVC 的 HTTP API 接口。
 - echoService
 属性，使用
-@Reference(version = “1.0.0”)
+@Reference(version = "1.0.0")
 注解，引入 Dubbo 服务。这个方式，就是我们原先在 Dubbo 中就使用的。
 - feignEchoService
 属性，使用标准的 Feign Client 作为服务消费者，它使用 RestTemplate 调用的是 Dubbo 提供的 Rest 接口。代码如下：
@@ -218,7 +218,7 @@ spring-cloud-alibaba-dubbo
 
 **第二种方式**，使用 [Shell 脚本命令逐个 Maven 模块统计](http://blog.csdn.net/yhhwatl/article/details/52623879) 。
 
-一般情况下，笔者使用 find . -name “*.java”|xargs cat|grep -v -e ^$ -e ^//.*$|wc -l 。这个命令只过滤了**部分注释**，所以相比 [IDEA Statistic](https://plugins.jetbrains.com/plugin/4509-statistic) 会**偏多**。
+一般情况下，笔者使用 find . -name "*.java"|xargs cat|grep -v -e ^$ -e ^//.*$|wc -l 。这个命令只过滤了**部分注释**，所以相比 [IDEA Statistic](https://plugins.jetbrains.com/plugin/4509-statistic) 会**偏多**。
 
 当然，考虑到准确性，胖友需要手动 cd 到每个 Maven 项目的 src/main/java 目录下，以达到排除单元测试的代码量。
 
@@ -268,11 +268,11 @@ plain // DubboTransported.java  /**  * {@link DubboTransported @DubboTransported
 
 - protocol
 属性，使用的 Dubbo 协议，默认为
-“dubbo”
+"dubbo"
 。
 - cluster
 属性，使用 使用的集群容错方式，默认为
-“failover”
+"failover"
 。
 - 可标记在类或者方法上。
 
@@ -989,7 +989,7 @@ plain spring-cloud=org.springframework.cloud.alibaba.dubbo.registry.SpringCloudR
 ---
 
 - 前缀为
-“spring-cloud”
+"spring-cloud"
 。即，和我们配置的
 dubbo.registry.address: spring-cloud://nacos
 能够对应上。

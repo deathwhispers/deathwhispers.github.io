@@ -22,7 +22,7 @@ updated: 2019-03-12 22:17
 **空对象模式 (Null Object Pattern)** 是一种行为型设计模式，它用一个\*\*不执行任何操作（no-op）\*\*的对象来代替程序中的
 `null` 引用。
 
-这个“空对象”实现了与实际对象相同的接口或继承相同的抽象类，从而可以在客户端代码中**透明地使用**。
+这个"空对象"实现了与实际对象相同的接口或继承相同的抽象类，从而可以在客户端代码中**透明地使用**。
 
 ### 动机
 
@@ -32,7 +32,7 @@ updated: 2019-03-12 22:17
 空对象模式的核心价值在于：**消除条件检查，简化客户端代码。**
 
 * **消除条件逻辑：** 客户端代码可以直接调用方法，而无需关心它拿到的是一个真实对象还是一个空对象。
-* **提供默认行为：** 空对象可以提供默认的、安全且“无害”的行为，例如返回一个空字符串，或者执行一个空操作。
+* **提供默认行为：** 空对象可以提供默认的、安全且"无害"的行为，例如返回一个空字符串，或者执行一个空操作。
 
 ## 结构
 
@@ -71,7 +71,7 @@ public abstract class AbstractCustomer {
 #### 步骤 2: 实体类 $RealCustomer$ 和 $NullCustomer$
 
 * **RealCustomer:** 包含真实的客户信息。
-* **NullCustomer:** 不包含信息，返回默认的“不可用”字符串。
+* **NullCustomer:** 不包含信息，返回默认的"不可用"字符串。
 
 <!-- end list -->
 
@@ -105,9 +105,6 @@ public class NullCustomer extends AbstractCustomer {
         return true;
     }
 }
-
-
-
 ```
 
 #### 步骤 3: 工厂类 $CustomerFactory$
@@ -124,9 +121,7 @@ public class CustomerFactory {
     ;
 
     public static AbstractCustomer getCustomer(String name) {
-        for (int i = 0;
-        i < names.length;
-        i++) {
+        for (int i = 0; i < names.length; i++) {
             if (names[i].equalsIgnoreCase(name)) {
                 return new RealCustomer(name);
             }
@@ -135,9 +130,6 @@ public class CustomerFactory {
         return new NullCustomer();
     }
 }
-
-
-
 ```
 
 #### 4\. 客户端演示 $NullPatternDemo$
@@ -271,6 +263,6 @@ Not Available in Customer Database
 | 方面        | 优点 (Pros)                                    | 缺点 (Cons)                                             |
 |:----------|:---------------------------------------------|:------------------------------------------------------|
 | **代码可读性** | 极大地简化了客户端代码，消除了大量的 $if (obj != null)$ 检查。    | 增加了新的类（Null Object），可能导致类数量增多，增加维护负担。                 |
-| **错误处理**  | 将检查 $null$ 的逻辑集中到工厂，客户端无需关心。                 | 如果业务逻辑要求区分“不存在”和“存在但为空”，可能会引入额外的复杂性（例如 $isNil()$ 方法）。 |
+| **错误处理**  | 将检查 $null$ 的逻辑集中到工厂，客户端无需关心。                 | 如果业务逻辑要求区分"不存在"和"存在但为空"，可能会引入额外的复杂性（例如 $isNil()$ 方法）。 |
 | **健壮性**   | 保证了程序执行的流程，消除了潜在的 $NullPointerException$ 风险。 | 该模式必须基于一个稳定的、被所有真实对象和空对象实现的接口。                        |
 | **耦合性**   | 客户端对真实对象和空对象解耦，只依赖于抽象接口。                     | 只能用于可以预知 $null$ 检查的场景。如果 $null$ 出现的位置不确定，该模式无效。       |

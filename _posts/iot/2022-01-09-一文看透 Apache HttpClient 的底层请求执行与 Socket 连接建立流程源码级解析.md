@@ -135,9 +135,6 @@ if (followup == null) {
 
     roureq = followup;
 }
-
-
-
 ```
 
 ✅ 触发场景：
@@ -163,9 +160,6 @@ if ((response == null)
     entity = new BasicManagedEntity(entity, managedConn, reuse);
     response.setEntity(entity);
 }
-
-
-
 ```
 
 ✅ 这一段的核心目的只有一个：
@@ -195,9 +189,6 @@ final Object state) {
         }
     }
 }
-
-
-
 ```
 
 ✅ 这里做了两件事：
@@ -229,9 +220,6 @@ public ManagedClientConnection getConnection(HttpRoute route, Object state) {
     managedConn = new ConnAdapter(uniquePoolEntry, route);
     return managedConn;
 }
-
-
-
 ```
 
 ✅ 核心职责总结：
@@ -310,9 +298,6 @@ i < addresses.length;
         }
     }
 }
-
-
-
 ```
 
 ✅ 这一段完成了真正的底层动作：

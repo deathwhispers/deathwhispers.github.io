@@ -63,9 +63,7 @@ public
 void parseConstructorArgElements(Element beanEle,
 BeanDefinition bd) {
     NodeList nl = beanEle.getChildNodes();
-    for (int i = 0;
-    i < nl.getLength();
-    i++) {
+    for (int i = 0; i < nl.getLength(); i++) {
         Node node = nl.item(i);
         if (isCandidateElement(node) && nodeNameEquals(node, CONSTRUCTOR_ARG_ELEMENT)) {
             // 标签名为
@@ -172,9 +170,7 @@ String propertyName) {
     String elementName = (propertyName != null ?                          "<property> element for property '" + propertyName + "'" :                          "<constructor-arg> element"); // <1> 查找子节点中，是否有 ref、value、list 等元素    // Should only have one child element: ref, value, list, etc.
     NodeList nl = ele.getChildNodes();
     Element subElement = null;
-    for (int i = 0;
-    i < nl.getLength();
-    i++) {
+    for (int i = 0; i < nl.getLength(); i++) {
         Node node = nl.item(i); // meta 、description 不处理
         if (node instanceof
         Element && !nodeNameEquals(node, DESCRIPTION_ELEMENT) &&            !nodeNameEquals(node, META_ELEMENT)) {
@@ -192,9 +188,6 @@ String propertyName) {
         // 2. ref he value 存在一，并且 subElement 存在        error(elementName +              " is only allowed to contain either 'ref' attribute OR 'value' attribute OR sub-element", ele);    }    // <2> 将 ref 属性值，构造为 RuntimeBeanReference 实例对象
         if (hasRefAttribute) {
             String refName = ele.getAttribute(REF_ATTRIBUTE);
-
-
-
 ```
 
 ## 1.5 parsePropertySubElement
@@ -305,9 +298,7 @@ String defaultValueType) {
 /** * Parse property sub-elements of the given bean element. */
 public void parsePropertyElements(Element beanEle, BeanDefinition bd) {
     NodeList nl = beanEle.getChildNodes();
-    for (int i = 0;
-    i < nl.getLength();
-    i++) {
+    for (int i = 0; i < nl.getLength(); i++) {
         Node node = nl.item(i);
         if (isCandidateElement(node) && nodeNameEquals(node, PROPERTY_ELEMENT)) {
             // property 标签            parsePropertyElement((Element) node, bd);        }    }}
@@ -315,7 +306,7 @@ public void parsePropertyElements(Element beanEle, BeanDefinition bd) {
 
 ```
 
-和 constructor-arg 子元素差不多，同样是“提取”( 遍历 )所有的 property 的子元素，然后调用 #parsePropertyElement((Element ele, BeanDefinition b) 进行解析。
+和 constructor-arg 子元素差不多，同样是"提取"( 遍历 )所有的 property 的子元素，然后调用 #parsePropertyElement((Element ele, BeanDefinition b) 进行解析。
 
 ## 2.3 parsePropertyElement
 
@@ -345,9 +336,6 @@ public void parsePropertyElement(Element ele, BeanDefinition bd) {
         this.parseState.pop();
     }
 }
-
-
-
 ```
 
 与解析 constructor-arg 子元素步骤差不多：
@@ -389,9 +377,7 @@ public void parseQualifierElement(Element ele, AbstractBeanDefinition bd) {
             qualifier.setAttribute(AutowireCandidateQualifier.VALUE_KEY, value);
         } // 遍历子节点
         NodeList nl = ele.getChildNodes();
-        for (int i = 0;
-        i < nl.getLength();
-        i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Node node = nl.item(i);
             if (isCandidateElement(node) && nodeNameEquals(node, QUALIFIER_ATTRIBUTE_ELEMENT)) {
                 // attribute 标签
@@ -418,7 +404,4 @@ public void parseQualifierElement(Element ele, AbstractBeanDefinition bd) {
         this.parseState.pop();
     }
 }
-
-
-
 ```

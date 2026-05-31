@@ -167,9 +167,6 @@ this.delegate);
 // 设置 delegate 回老的
 BeanDefinitionParserDelegate 对象this.delegate = parent;
 }
-
-
-
 ```
 
 - <1>**解析 BeanDefinition**
@@ -241,9 +238,7 @@ protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate d
     if (delegate.isDefaultNamespace(root)) {
         // 遍历子节点
         NodeList nl = root.getChildNodes();
-        for (int i = 0;
-        i < nl.getLength();
-        i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Node node = nl.item(i);
             if (node instanceof Element) {
                 Element ele = (Element) node; // <1> 如果该节点使用默认命名空间，执行默认解析
@@ -258,9 +253,6 @@ protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate d
                 delegate.parseCustomElement(root);
             }
         }
-
-
-
 ```
 
 - Spring 有**两种**
@@ -297,9 +289,6 @@ private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate deleg
                 doRegisterBeanDefinitions(ele);
             }
         }
-
-
-
 ```
 
 ```plain text

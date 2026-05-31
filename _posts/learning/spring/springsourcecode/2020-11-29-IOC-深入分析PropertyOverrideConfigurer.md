@@ -53,7 +53,7 @@ PropertyOverrideConfigurer 的使用规则是beanName.propertyName=value，这�
 - 指定 student 的
 name
 属性值为
-“chenssy”
+"chenssy"
 。
 - 声明 PropertyOverrideConfigurer 加载的文件为
 application.properties
@@ -136,7 +136,7 @@ ${studentService.name}
 
 所以，上面的分析没有错。下面我们来分析**PropertyOverrideConfigurer 实现原理**。
 
-其实如果了解 PropertyPlaceholderConfigurer 的实现机制的话，那么 PropertyOverrideConfigurer 也不难猜测：加载指定 Properties，迭代其中的属性值，依据“.”来得到beanName（split(“.”)[0]），从容器中获取指定的 BeanDefinition，然后得到name属性，进行替换即可。
+其实如果了解 PropertyPlaceholderConfigurer 的实现机制的话，那么 PropertyOverrideConfigurer 也不难猜测：加载指定 Properties，迭代其中的属性值，依据"."来得到beanName（split(".")[0]），从容器中获取指定的 BeanDefinition，然后得到name属性，进行替换即可。
 
 # **2. 实现原理**
 
@@ -208,7 +208,7 @@ protected void processKey(ConfigurableListableBeanFactory factory, String key, S
 ```
 
 ```plain text
-- <font style="color:rgb(51, 51, 51);">获取分割符</font><font style="color:rgb(51, 51, 51);">“.”</font><font style="color:rgb(51, 51, 51);">的索引位置，得到</font><font style="color:rgb(51, 51, 51);">beanName</font><font style="color:rgb(51, 51, 51);">以及相应的属性，然后调用</font><font style="color:rgb(51, 51, 51);">#applyPropertyValue(ConfigurableListableBeanFactory factory, String beanName, String property, String value)</font><font style="color:rgb(51, 51, 51);">方法，代码如下：</font>
+- <font style="color:rgb(51, 51, 51);">获取分割符</font><font style="color:rgb(51, 51, 51);">"."</font><font style="color:rgb(51, 51, 51);">的索引位置，得到</font><font style="color:rgb(51, 51, 51);">beanName</font><font style="color:rgb(51, 51, 51);">以及相应的属性，然后调用</font><font style="color:rgb(51, 51, 51);">#applyPropertyValue(ConfigurableListableBeanFactory factory, String beanName, String property, String value)</font><font style="color:rgb(51, 51, 51);">方法，代码如下：</font>
 ```
 
 ```java

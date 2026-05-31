@@ -86,12 +86,12 @@ plain @SPI("jvalidation") public interface Validation {      /**      * 获得 V
 
 ---
 
-- @SPI(“jvalidation”)**拓展点**
+- @SPI("jvalidation")**拓展点**
 注解，Dubbo SPI
 ，默认为
-“jvalidation”
+"jvalidation"
 。
-- @Adaptive(“validation”)
+- @Adaptive("validation")
 注解，基于 Dubbo SPI Adaptive 机制，加载对应的 Validator 实现，使用
 URL.validation
 属性。
@@ -146,7 +146,7 @@ plain /**  * 服务接口类  */ private final Class<?> clazz; /**  * Validator 
 
 ---
 
-- “jvalidation”**指定**
+- "jvalidation"**指定**
 配置项，可
 具体的 JSR303 的实现类。
 - 如果我们**未配置**

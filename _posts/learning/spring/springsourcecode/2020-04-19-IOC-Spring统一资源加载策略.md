@@ -73,9 +73,6 @@ public interface Resource extends InputStreamSource {
     /**     * 资源的描述     */
     String getDescription();
 }
-
-
-
 ```
 
 ## 1.1 子类结构
@@ -224,9 +221,6 @@ public abstract class AbstractResource implements Resource {
         return getDescription().hashCode();
     }
 }
-
-
-
 ```
 
 如果我们想要实现自定义的 Resource ，记住不要实现 Resource 接口，而应该继承 AbstractResource 抽象类，然后根据当前的具体资源特性覆盖相应的方法即可。
@@ -258,13 +252,13 @@ Resource#exist()
 方法来判断。
     - 该方法支持以下模式的资源加载：
         - URL位置资源，如
-“file:C:/test.dat”
+"file:C:/test.dat"
 。
         - ClassPath位置资源，如
-“classpath:test.dat
+"classpath:test.dat
 。
         - 相对路径资源，如
-“WEB-INF/test.dat”
+"WEB-INF/test.dat"
 ，此时返回的Resource 实例，根据实现不同而不同。
     - 该方法的主要实现是在其子类 DefaultResourceLoader 中实现，具体过程我们在分析 DefaultResourceLoader 时做详细说明。
 - #getClassLoader()
@@ -361,16 +355,13 @@ public Resource getResource(String location) {
             }
         }
     }
-
-
-
 ```
 
 - 首先，通过 ProtocolResolver 来加载资源，成功返回 Resource 。
 - 其次，若
 location
 以
-“/”
+"/"
 开头，则调用
 #getResourceByPath()
 方法，构造 ClassPathContextResource 类型资源并返回。代码如下：
@@ -386,7 +377,7 @@ protected Resource getResourceByPath(String path) {
 - 再次，若
 location
 以
-“classpath:”
+"classpath:"
 开头，则构造 ClassPathResource 类型资源并返回。在构造该资源时，通过
 #getClassLoader()
 获取当前的 ClassLoader。
@@ -465,7 +456,7 @@ fileResource1
 ，我们更加希望是 FileSystemResource 资源类型。但是，事与愿违，它是 ClassPathResource 类型。为什么呢？在
 DefaultResourceLoader#getResource()
 方法的资源加载策略中，我们知道
-“D:/Users/chenming673/Documents/spark.txt”
+"D:/Users/chenming673/Documents/spark.txt"
 地址，其实在该方法中没有相应的资源类型，那么它就会在抛出 MalformedURLException 异常时，通过
 DefaultResourceLoader#getResourceByPath(…)
 方法，构造一个 ClassPathResource 类型的资源。
@@ -490,9 +481,6 @@ protected Resource getResourceByPath(String path) {
     new
     FileSystemContextResource(path);
 }
-
-
-
 ```
 
 ### 2.2.1 FileSystemContextResource
@@ -511,9 +499,6 @@ private static class FileSystemContextResource extends FileSystemResource implem
         return getPath();
     }
 }
-
-
-
 ```
 
 - 在构造器中，也是调用 FileSystemResource 的构造函数来构造 FileSystemResource 的。
@@ -550,12 +535,12 @@ public interface ResourcePatternResolver extends ResourceLoader {
 Resource 实例。
 - 同时，也新增了一种**新的协议**
 前缀
-“classpath*:“
+"classpath*:"
 ，该协议前缀由其子类负责实现。
 
 ## 2.5 PathMatchingResourcePatternResolver
 
-org.springframework.core.io.support.PathMatchingResourcePatternResolver ，为 ResourcePatternResolver 最常用的子类，它除了支持 ResourceLoader 和 ResourcePatternResolver 新增的 “classpath*:“ 前缀外，**还支持 Ant 风格的路径匹配模式**（类似于 ”**/*.xml”）。
+org.springframework.core.io.support.PathMatchingResourcePatternResolver ，为 ResourcePatternResolver 最常用的子类，它除了支持 ResourceLoader 和 ResourcePatternResolver 新增的 "classpath*:" 前缀外，**还支持 Ant 风格的路径匹配模式**（类似于 "**/*.xml"）。
 
 ### 2.5.1 构造函数
 
@@ -620,8 +605,8 @@ public Resource[] getResources(String locationPattern) throws IOException {
         else {
             // Generally only look
             for a pattern after a prefix here, // 通常只在这里的前缀后面查找模式        // and on Tomcat only after the "*/
-            " separator for its "war:" protocol. 而在 Tomcat 上只有在 “*/
-            ”分隔符之后才为其 “war:” 协议        int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/
+            " separator for its "war:" protocol. 而在 Tomcat 上只有在 "*/
+            "分隔符之后才为其 "war:" 协议        int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/
             ") + 1 :                locationPattern.indexOf(':') + 1);        // 路径包含通配符
             if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
                 // a file pattern            return findPathMatchingResources(locationPattern);        // 路径不包含通配符        }
@@ -635,15 +620,12 @@ public Resource[] getResources(String locationPattern) throws IOException {
                 }
             }
         }
-
-
-
 ```
 
 处理逻辑如下图：
 
 - **非不包含**
-“classpath*:“
+"classpath*:"
 开头，且路径
 通配符，直接委托给相应的 ResourceLoader 来实现。
 - 其他情况，调用
@@ -654,7 +636,7 @@ public Resource[] getResources(String locationPattern) throws IOException {
 
 ### 2.5.4 findAllClassPathResources
 
-当 locationPattern 以 “classpath*:“ 开头但是不包含通配符，则调用 #findAllClassPathResources(…) 方法加载资源。该方法返回 classes 路径下和所有 jar 包中的所有相匹配的资源。
+当 locationPattern 以 "classpath*:" 开头但是不包含通配符，则调用 #findAllClassPathResources(…) 方法加载资源。该方法返回 classes 路径下和所有 jar 包中的所有相匹配的资源。
 
 ```java
 protected Resource[] findAllClassPathResources(String location) throws IOException {
@@ -692,9 +674,6 @@ protected Set<Resource> doFindAllClassPathResources(String path) throws IOExcept
     }
     return result;
 }
-
-
-
 ```
 
 <1> 处，根据 ClassLoader 加载路径下的所有资源。在加载资源过程时，如果在构造 PathMatchingResourcePatternResolver 实例的时候如果传入了 ClassLoader，则调用该 ClassLoader 的 #getResources() 方法，否则调用 ClassLoader#getSystemResources(path) 方法。另外，ClassLoader#getResources() 方法，代码如下:
@@ -739,7 +718,7 @@ protected Resource convertClassLoaderURL(URL url) {
 处，若
 path
 为空（
-“”
+""
 ）时，则调用
 #addAllClassLoaderJarRoots(…)
 方法。该方法主要是加载路径下得所有 jar 包，方法较长也没有什么实际意义就不贴出来了。感兴趣的胖友，自己可以去看看。
@@ -784,9 +763,6 @@ protected Resource[] findPathMatchingResources(String locationPattern) throws IO
         return result.toArray(new
         Resource[0]);
     }
-
-
-
 ```
 
 方法有点儿长，但是思路还是很清晰的，主要分两步：
@@ -816,7 +792,7 @@ determineRootDir(String location) 方法，主要是用于确定根路径。代�
 */
 protected String determineRootDir(String location) {
     // 找到冒号的后一位    int prefixEnd = location.indexOf(':') + 1;    // 根目录结束位置
-    int rootDirEnd = location.length(); // 在从冒号开始到最后的字符串中，循环判断是否包含通配符，如果包含，则截断最后一个由”/”分割的部分。    // 例如：在我们路径中，就是最后的ap?-context.xml这一段。再循环判断剩下的部分，直到剩下的路径中都不包含通配符。
+    int rootDirEnd = location.length(); // 在从冒号开始到最后的字符串中，循环判断是否包含通配符，如果包含，则截断最后一个由"/"分割的部分。    // 例如：在我们路径中，就是最后的ap?-context.xml这一段。再循环判断剩下的部分，直到剩下的路径中都不包含通配符。
     while (rootDirEnd > prefixEnd && getPathMatcher().isPattern(location.substring(prefixEnd, rootDirEnd))) {
         rootDirEnd = location.lastIndexOf('/', rootDirEnd - 2) + 1;
     } // 如果查找完成后，rootDirEnd = 0 了，则将之前赋值的 prefixEnd 的值赋给 rootDirEnd ，也就是冒号的后一位

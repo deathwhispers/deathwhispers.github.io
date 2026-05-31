@@ -46,7 +46,7 @@ plain @Override public <T> Exporter<T> export(final Invoker<T> invoker) throws R
 
 在客户端使用，注册中心读取：
 
-或者，点对点直连：<dubbo:reference id=“store” interface=“java.util.Map” url=“memcached://10.20.153.10:11211”
+或者，点对点直连：<dubbo:reference id="store" interface="java.util.Map" url="memcached://10.20.153.10:11211"
 
 ## 2.2 refer
 

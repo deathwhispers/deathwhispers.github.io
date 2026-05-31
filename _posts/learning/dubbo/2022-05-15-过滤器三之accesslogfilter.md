@@ -18,7 +18,7 @@ updated: 2022-05-15 18:33
 
 # 1. 概述
 
-本文分享记录**访问日志**的过滤器 AccessLogFilter ，需要在  或  或  中，设置 “accesslog” 配置项**开启**。有两种配置项选择：
+本文分享记录**访问日志**的过滤器 AccessLogFilter ，需要在  或  或  中，设置 "accesslog" 配置项**开启**。有两种配置项选择：
 
 - 【配置方式一】
 true
@@ -121,7 +121,7 @@ access.20181023
 
 # 666. 彩蛋
 
-实际使用时，推荐使用 accesslog=“true” 配置项。
+实际使用时，推荐使用 accesslog="true" 配置项。
 
 ![](/assets/images/learning/dubbo/dubbo-filter-accesslog/96ca62e95e06bbe2fa74153d2158bc13.png)
 

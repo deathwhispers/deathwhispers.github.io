@@ -82,8 +82,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = DateTimeValidator.class)
 public @interface DateTime {
-    String message() default “格式错误”;
-    String format() default “yyyy-MM-dd”;
+    String message() default "格式错误";
+    String format() default "yyyy-MM-dd";
     Class<?>[] groups() default {}
     Class<? extends Payload>[] payload() default {}
 }
@@ -145,9 +145,6 @@ public class DateTimeValidator implements ConstraintValidator<DateTime, String> 
         return true;
     }
 }
-
-
-
 ```
 
 ## 控制层
@@ -169,13 +166,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 public class ValidateController {
-    @GetMapping(“/test”)
-    public String test(@DateTime(message = “您输入的格式错误，正确的格式为：
+    @GetMapping("/test")
+    public String test(@DateTime(message = "您输入的格式错误，正确的格式为：
     {
         format;
     }
-    ”, format = “yyyy-MM-dd HH:mm”) String date) {
-        return “success”;
+    ", format = "yyyy-MM-dd HH:mm") String date) {
+        return "success";
     }
 }
 
@@ -228,11 +225,11 @@ import java.math.BigDecimal;
 * @since 2018/6/7 0005
 */
 public class Book {
-    @NotNull(message = “id 不能为空”, groups = Groups.Update.class)
+    @NotNull(message = "id 不能为空", groups = Groups.Update.class)
     private Integer id;
-    @NotBlank(message = “name 不允许为空”, groups = Groups.Default.class)
+    @NotBlank(message = "name 不允许为空", groups = Groups.Default.class)
     private String name;
-    @NotNull(message = “price 不允许为空”, groups = Groups.Default.class)
+    @NotNull(message = "price 不允许为空", groups = Groups.Default.class)
     private BigDecimal price;
     // 省略 GET SET …
 }
@@ -260,18 +257,18 @@ import org.springframework.web.bind.annotation.RestController;
 */
 @RestController
 public class ValidateController {
-    @GetMapping(“/insert”)
+    @GetMapping("/insert")
     public String insert(@Validated(value = Groups.Default.class) Book book) {
-        return “insert”;
+        return "insert";
     }
 
-    @GetMapping(“/update”)
+    @GetMapping("/update")
     public String update(@Validated(value =
     {
         Groups.Default.class, Groups.Update.class;
     }
     ) Book book) {
-        return “update”;
+        return "update";
     }
 }
 

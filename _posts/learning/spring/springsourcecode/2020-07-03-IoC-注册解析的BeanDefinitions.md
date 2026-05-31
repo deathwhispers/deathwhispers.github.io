@@ -41,9 +41,6 @@ void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
         catch (BeanDefinitionStoreException ex) {
             getReaderContext().error("Failed to register bean definition with name '" +                                     bdHolder.getBeanName() + "'", ele, ex);
         } // 发出响应事件，通知相关的监听器，已完成该 Bean 标签的解析。        // Send registration event.        getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));    }}
-
-
-
 ```
 
 - 解析工作分为三步：
@@ -164,9 +161,6 @@ public void registerBeanDefinition(String beanName, BeanDefinition beanDefinitio
                         resetBeanDefinition(beanName);
                     }
                 }
-
-
-
 ```
 
 处理过程如下：
@@ -230,9 +224,6 @@ public void registerAlias(String name, String alias) {
             }
         }
     }
-
-
-
 ```
 
 - 注册 alias 和注册 BeanDefinition 的过程差不多。
@@ -256,9 +247,6 @@ public boolean hasAlias(String name, String alias) {
     }
     return false;
 }
-
-
-
 ```
 
 ```plain text

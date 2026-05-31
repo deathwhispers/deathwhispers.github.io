@@ -77,9 +77,6 @@ if (reuse) {
     }
     managedConn.setIdleDuration(duration, TimeUnit.MILLISECONDS);
 }
-
-
-
 ```
 
 这段代码表明，在一次 HTTP 请求完成后，连接不会立即关闭，而是通过一个**可重用策略（`ConnectionReuseStrategy`）**来判断连接是否可以保持以及可以保持多长时间。
@@ -142,9 +139,6 @@ public boolean keepAlive(final HttpResponse response, final HttpContext context)
     // 5. 默认策略：HTTP/1.1 及以上版本默认为持久连接，HTTP/1.0 及以下版本默认为非持久连接。
     return !ver.lessEquals(HttpVersion.HTTP_1_0);
 }
-
-
-
 ```
 
 #### `Proxy-Connection` 说明
@@ -192,9 +186,6 @@ public long getKeepAliveDuration(final HttpResponse response, final HttpContext 
     }
     return -1;
 }
-
-
-
 ```
 
 该方法解析响应头中的 `Keep-Alive` 字段。例如，如果响应头为 `Keep-Alive: timeout=5, max=100`，该方法会提取 `timeout` 的值 `5`，并将其转换为毫秒（5000ms）作为连接的空闲超时时间。

@@ -18,7 +18,7 @@ updated: 2019-05-11 22:17
 
 在 Redisson 中，提供了 8 种分布锁的实现，具体我们可以在 [《Redisson 文档 —— 分布式锁和同步器》](https://github.com/redisson/redisson/wiki/8.-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%92%8C%E5%90%8C%E6%AD%A5%E5%99%A8) 中看到。绝大数情况下，我们使用可重入锁（Reentrant Lock）就够了，对应到就是 [org.redisson.RedissonLock](https://github.com/YunaiV/redisson/blob/master/redisson/src/main/java/org/redisson/RedissonLock.java) 类，具体的使用示例可以看看 [《芋道 Spring Boot Redis 入门》](http://www.iocoder.cn/Spring-Boot/Redis/?vip=) 的「6.2 Redis 分布式锁」小节 。
 
-在 [《精尽 Redis 面试题》](http://svip.iocoder.cn/Redis/Interview/?self=) 的问题中，我们在聊到**“如何使用 Redis 实现分布式锁？”**这个题目中，提到了需要考虑的 7 个方面，这里我们再来重复看下：
+在 [《精尽 Redis 面试题》](http://svip.iocoder.cn/Redis/Interview/?self=) 的问题中，我们在聊到**"如何使用 Redis 实现分布式锁？"**这个题目中，提到了需要考虑的 7 个方面，这里我们再来重复看下：
 
 - 1、正确的获得锁
 set 指令附带 nx 参数，保证有且只有一个进程获得到。
@@ -298,7 +298,7 @@ plain // RedissonLock.java    1: @Override   2: public RFuture<Boolean> tryLockA
 #tryAcquireAsync(long leaseTime, TimeUnit unit, long threadId)
 方法，执行异步获得锁。详细解析，胖友先跳到
 中。
-- 继续开始我们“漫长”的回调之旅。其实也比较容易懂，走起~
+- 继续开始我们"漫长"的回调之旅。其实也比较容易懂，走起~
 - 第 13 至 17 行：如果发生异常，则通过
 result
 通知异常。
@@ -409,7 +409,7 @@ plain // RedissonLock.java    1: private void tryLockAsync(AtomicLong time, long
 基本一致，就不重复哔哔了。
 - 第 52 行：调用 [「4. LockPubSub」](http://svip.iocoder.cn/Redisson/ReentrantLock/#)
 #getEntry(long threadId)
-方法，获得当前线程对应的 RedissonLockEntry 对象。此处有点“失忆”的胖友，看看
+方法，获得当前线程对应的 RedissonLockEntry 对象。此处有点"失忆"的胖友，看看
 的结尾。
 - 第 53 至 55 行：尝试获得 [「5.2 ##tryLockAsync(AtomicLong time, long leaseTime, TimeUnit unit, RFuture subscribeFuture, RPromise result, long currentThreadId)」](http://svip.iocoder.cn/Redisson/ReentrantLock/#)
 entry
@@ -445,7 +445,7 @@ listener
 ，用于在 RedissonLockEntry 的回调，就是我们看到的 PublishSubscribe 监听到释放锁的消息，进行回调。
     - 第 79 行：添加 [「4. LockPubSub」](http://svip.iocoder.cn/Redisson/ReentrantLock/#)
 listener
-到 RedissonLockEntry 中。 如果胖友又“失忆”了，调回到
+到 RedissonLockEntry 中。 如果胖友又"失忆"了，调回到
 再瞅瞅。
     - 第 65 行：通过
 executed
@@ -579,7 +579,7 @@ plain // RedissonLock.java      @Override     public RFuture<Void> lockAsync() {
 
 ## 7.1 更强的 lockAsync
 
-实际上，#lockAsync(long leaseTime, TimeUnit unit, RFuture subscribeFuture, RPromise result, long currentThreadId) 方法，和 [「5.2 更强的 tryLockAsync」](http://svip.iocoder.cn/Redisson/ReentrantLock/#) 是**基本一致**的。那么为什么不直接重用呢？注意，这个方法**不需要考虑等待超时**，有一种“劳资有钱，必须拿到锁”。
+实际上，#lockAsync(long leaseTime, TimeUnit unit, RFuture subscribeFuture, RPromise result, long currentThreadId) 方法，和 [「5.2 更强的 tryLockAsync」](http://svip.iocoder.cn/Redisson/ReentrantLock/#) 是**基本一致**的。那么为什么不直接重用呢？注意，这个方法**不需要考虑等待超时**，有一种"劳资有钱，必须拿到锁"。
 
 代码如下：
 

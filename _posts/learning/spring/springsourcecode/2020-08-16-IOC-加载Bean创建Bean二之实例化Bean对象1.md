@@ -197,7 +197,7 @@ java // ConstructorResolver.java  // 没有指定，则尝试从配置文件中�
 
 - 如果缓存中存在构造参数，则需要调用 #resolvePreparedArguments(String beanName, RootBeanDefinition mbd, BeanWrapper bw, Executable executable, Object[] argsToResolve, boolean fallback) 方法，进行转换。
     - 本文不详细解析该方法，感兴趣的胖友，可以自己查看。
-- 因为缓存中的值有可能是最终值，也有可能不是最终值。比如我们构造函数中的类型为 Integer 类型的 1 ，但是原始的参数类型有可能是 String 类型的 “1” ，所以即便是从缓存中得到了构造参数，也需要经过一番的类型转换确保参数类型完全对应。
+- 因为缓存中的值有可能是最终值，也有可能不是最终值。比如我们构造函数中的类型为 Integer 类型的 1 ，但是原始的参数类型有可能是 String 类型的 "1" ，所以即便是从缓存中得到了构造参数，也需要经过一番的类型转换确保参数类型完全对应。
 
 ### 1.2.1.2.3 配置文件中解析
 
@@ -233,11 +233,11 @@ plain // AbstractAutowireCapableBeanFactory.java  // <2.3> getBean() 没有传�
 将参数包装成 ConstructorResolver.ArgumentsHolder 对象。该对象用于保存参数，我们称之为参数持有者。当将对象包装成 ArgumentsHolder 对象后，我们就可以通过它来进行构造函数匹配。匹配分为严格模式和宽松模式：
 
 - 严格模式：解析构造函数时，必须所有参数都需要匹配，否则抛出异常。
-- 宽松模式：使用具有”最接近的模式”进行匹配。
+- 宽松模式：使用具有"最接近的模式"进行匹配。
 
 判断的依据是根据 BeanDefinition 的 isLenientConstructorResolution 属性（该参数是我们在构造 AbstractBeanDefinition 对象是传递的）来获取类型差异权重（typeDiffWeight） 的。
 
-- 如果 typeDiffWeight < minTypeDiffWeight ，则代表“最接近的模式”，选择其作为构造函数。
+- 如果 typeDiffWeight < minTypeDiffWeight ，则代表"最接近的模式"，选择其作为构造函数。
 - 否则，只有两者具有相同的参数数量，且类型差异权重相等才会纳入考虑范围。
 
 至此，构造函数已经确认了。

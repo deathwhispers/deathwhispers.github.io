@@ -145,9 +145,6 @@ ErrorHandler errorHandler)throws ParserConfigurationException {
     }
     return docBuilder;
 }
-
-
-
 ```
 
 ```plain text
@@ -184,9 +181,6 @@ protected EntityResolver getEntityResolver() {
     }
     return this.entityResolver;
 }
-
-
-
 ```
 
 - 如果 ResourceLoader 不为
@@ -210,7 +204,7 @@ private static final String DTD_NAME = "spring-beans";
 
 - org.springframework.beans.factory.xml.PluggableSchemaResolver
 ，实现 EntityResolver 接口，读取 classpath 下的所有
-“META-INF/spring.schemas”
+"META-INF/spring.schemas"
 成一个 namespaceURI 与 Schema 文件地址的 map 。代码如下：
 
 ```java
@@ -463,9 +457,6 @@ private Map<String, String> getSchemaMappings() {
     }
     return schemaMappings;
 }
-
-
-
 ```
 
 ```plain text
@@ -568,12 +559,9 @@ public class MyResolver implements EntityResolver {
         }
     }
 }
-
-
-
 ```
 
-首先，我们将 “spring-student.xml” 文件中的 XSD 声明的地址改掉，如下：
+首先，我们将 "spring-student.xml" 文件中的 XSD 声明的地址改掉，如下：
 
 ![882e730ac463e3007c5f3c5cde8380bc](/assets/images/learning/spring/springsourcecode/ioc-get-document-object/882e730ac463e3007c5f3c5cde8380bc.png)
 

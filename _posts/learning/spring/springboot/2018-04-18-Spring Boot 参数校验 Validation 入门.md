@@ -28,7 +28,7 @@ week: 2018-W16
 
 可惜的是，在翻开自己的项目的时候，会发现大量的 API 接口，我们并没有添加相应的参数校验，而是把这个活交给调用方（例如说前端）来完成。😈 甚至在艿艿接触过的后端开发中，认为这是前端的活，简直了！
 
-世界比我们想象中的不安全，可能有“黑客”会绕过浏览器，直接使用 HTTP 工具，模拟请求向后端 API 接口传入违法的参数，以达到它们“不可告人”的目的。
+世界比我们想象中的不安全，可能有"黑客"会绕过浏览器，直接使用 HTTP 工具，模拟请求向后端 API 接口传入违法的参数，以达到它们"不可告人"的目的。
 
 又或者前端开发小哥，不小心漏做了一些 API 接口调用时的参数校验，结果导致用户提交了大量不正确的数据到后端 API 接口，并且这些数据**成功**入库了。这个时候，你是会甩锅给前端小哥，还是怒喷测试小姐姐验收不到位呢？
 
@@ -38,13 +38,13 @@ week: 2018-W16
 
 FROM [https://beanvalidation.org/specification/](https://beanvalidation.org/specification/)
 
-**Bean Validation 1.0** ：Bean Validation 1.0 (JSR [303](https://www.jcp.org/en/jsr/detail?id=303)) was the first version of Java’s standard for object validation. It was released in 2009 and is part of Java EE 6. You can learn more about Bean Validation 1.0 [here](https://beanvalidation.org/1.0/) (specification text, API docs etc).
+**Bean Validation 1.0** ：Bean Validation 1.0 (JSR [303](https://www.jcp.org/en/jsr/detail?id=303)) was the first version of Java's standard for object validation. It was released in 2009 and is part of Java EE 6. You can learn more about Bean Validation 1.0 [here](https://beanvalidation.org/1.0/) (specification text, API docs etc).
 
 **Bean Validation 1.1** ：Bean Validation 1.1 ([JSR 349](https://www.jcp.org/en/jsr/detail?id=349)) was finished in 2013 and is part of Java EE 7. Its main contributions are method-level validation, integration with CDI, group conversion and some more. You can learn more about Bean Validation 1.1 [here](https://beanvalidation.org/1.1/) (specification text, full change log, API docs etc).
 
 **Bean Validation 2.0** ：Bean Validation 2.0 ([JSR 380](https://www.jcp.org/en/jsr/detail?id=380)) was finished in August 2017.
 
-It’s part of Java EE 8 (but can of course be used with plain Java SE as the previous releases).
+It's part of Java EE 8 (but can of course be used with plain Java SE as the previous releases).
 
 You can learn more about Bean Validation 2.0 [here](https://beanvalidation.org/2.0/) (specification text, full change log, API docs etc).
 
@@ -57,7 +57,7 @@ Bean Validation 和我们很久以前学习过的 JPA 一样，只提供规范�
 
 实现 Bean Validation 规范的数据校验框架，主要有：
 
-- [Hibernate Validator](https://hibernate.org/validator/)不要以为 Hibernate 仅仅是一个 ORM 框架，这只是它的 [Hibernate ORM](https://hibernate.org/orm) 所提供的。Hibernate 可是打着“Everything data”口号的，它还提供了 [Hibernate Search](https://hibernate.org/)、[Hibernate OGM](https://hibernate.org/ogm) 等等解决方案的。😈所以，女朋友也是 data ，我们来 new 一个就好，不需要找。
+- [Hibernate Validator](https://hibernate.org/validator/)不要以为 Hibernate 仅仅是一个 ORM 框架，这只是它的 [Hibernate ORM](https://hibernate.org/orm) 所提供的。Hibernate 可是打着"Everything data"口号的，它还提供了 [Hibernate Search](https://hibernate.org/)、[Hibernate OGM](https://hibernate.org/ogm) 等等解决方案的。😈所以，女朋友也是 data ，我们来 new 一个就好，不需要找。
 - [Apache BVal](https://bval.apache.org/)
 
 **绝大多数情况下，也就 99.99% 吧，我们采用 Hibernate Validator 。**
@@ -187,7 +187,7 @@ Bean Validation 提供的 @Valid 注解，因为没有分组校验的属性，�
 
 在 [cn.iocoder.springboot.lab22.validation.dto](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/dto) 包路径下，创建 [UserAddDTO](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/dto/UserAddDTO.java) 类，为用户添加 DTO 类。代码如下：
 
-// UserAddDTO.java public class UserAddDTO { /** * 账号 */ @NotEmpty(message = “登录账号不能为空”) @Length(min = 5, max = 16, message = “账号长度为 5-16 位”) @Pattern(regexp = “[1](about:blank#fn1)+$”, message = “账号格式为数字以及字母”) private String username; /** * 密码 */ @NotEmpty(message = “密码不能为空”) @Length(min = 4, max = 16, message = “密码长度为 4-16 位”) private String password; // … 省略 setting/getting 方法 }
+// UserAddDTO.java public class UserAddDTO { /** * 账号 */ @NotEmpty(message = "登录账号不能为空") @Length(min = 5, max = 16, message = "账号长度为 5-16 位") @Pattern(regexp = "[1](about:blank#fn1)+$", message = "账号格式为数字以及字母") private String username; /** * 密码 */ @NotEmpty(message = "密码不能为空") @Length(min = 4, max = 16, message = "密码长度为 4-16 位") private String password; // … 省略 setting/getting 方法 }
 
 每个字段上的约束注解，胖友仔细瞅瞅。
 
@@ -195,7 +195,7 @@ Bean Validation 提供的 @Valid 注解，因为没有分组校验的属性，�
 
 在 [cn.iocoder.springboot.lab22.validation.controller](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/controller) 包路径下，创建 [UserController](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/controller/UserController.java) 类，提供用户 API 接口。代码如下：
 
-// UserController.java @RestController @RequestMapping(“/users”) @Validated public class UserController { private Logger logger = LoggerFactory.getLogger(getClass()); @GetMapping(“/get”) public void get(@RequestParam(“id”) @Min(value = 1L, message = “编号必须大于 0”) Integer id) { logger.info(“[get][id: {}]”, id); } @PostMapping(“/add”) public void add(@Valid UserAddDTO addDTO) { logger.info(“[add][addDTO: {}]”, addDTO); } }
+// UserController.java @RestController @RequestMapping("/users") @Validated public class UserController { private Logger logger = LoggerFactory.getLogger(getClass()); @GetMapping("/get") public void get(@RequestParam("id") @Min(value = 1L, message = "编号必须大于 0") Integer id) { logger.info("[get][id: {}]", id); } @PostMapping("/add") public void add(@Valid UserAddDTO addDTO) { logger.info("[add][addDTO: {}]", addDTO); } }
 
 - 在类上，添加 @Validated 注解，表示 UserController 是所有接口都需要进行参数校验。
 - 对于 #get(id) 方法，我们在 id 参数上，添加了 @Min 注解，校验 id 必须大于 0 。校验不通过示例如下图：
@@ -247,7 +247,7 @@ Bean Validation 提供的 @Valid 注解，因为没有分组校验的属性，�
 
 在 [cn.iocoder.springboot.lab22.validation.service](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/service) 包路径下，创建 [UserService](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/service/UserService.java) 类，提供用户 Service 逻辑。代码如下：
 
-// UserService.java @Service @Validated public class UserService { private Logger logger = LoggerFactory.getLogger(getClass()); public void get(@Min(value = 1L, message = “编号必须大于 0”) Integer id) { logger.info(“[get][id: {}]”, id); } public void add(@Valid UserAddDTO addDTO) { logger.info(“[add][addDTO: {}]”, addDTO); } public void add01(UserAddDTO addDTO) { this.add(addDTO); } public void add02(UserAddDTO addDTO) { self().add(addDTO); } private UserService self() { return (UserService) AopContext.currentProxy(); } }
+// UserService.java @Service @Validated public class UserService { private Logger logger = LoggerFactory.getLogger(getClass()); public void get(@Min(value = 1L, message = "编号必须大于 0") Integer id) { logger.info("[get][id: {}]", id); } public void add(@Valid UserAddDTO addDTO) { logger.info("[add][addDTO: {}]", addDTO); } public void add01(UserAddDTO addDTO) { this.add(addDTO); } public void add02(UserAddDTO addDTO) { self().add(addDTO); } private UserService self() { return (UserService) AopContext.currentProxy(); } }
 
 - 和 UserController 的方法是一致的，包括注解。
 - 额外添加了 #add01(addDTO) 和 #add02(addDTO) 方法，用于演示方法内部调用。
@@ -280,7 +280,7 @@ javax.validation.ConstraintViolationException: add.addDTO.username: 登录账号
 
 执行，抛出 IllegalStateException 异常。日志如下：
 
-java.lang.IllegalStateException: Cannot find current proxy: Set ‘exposeProxy’ property on Advised to ‘true’ to make it available. at org.springframework.aop.framework.AopContext.currentProxy(AopContext.java:69)
+java.lang.IllegalStateException: Cannot find current proxy: Set 'exposeProxy' property on Advised to 'true' to make it available. at org.springframework.aop.framework.AopContext.currentProxy(AopContext.java:69)
 
 - 理论来说，因为我们配置了 @EnableAspectJAutoProxy(exposeProxy = true) 注解，在 Spring AOP 拦截时，通过调用 AopContext.currentProxy() 方法，是可以获取到当前的代理对象。结果，此处抛出 IllegalStateException 异常。
 - 显然，这里并没有将当前的代理对象，设置到 AopContext 中，所以抛出 IllegalStateException 异常。目前猜测，可能是 BUG 。😈 暂时木有心情去调试，嘿嘿。
@@ -306,13 +306,13 @@ java.lang.IllegalStateException: Cannot find current proxy: Set ‘exposeProxy�
 
 修改 [ServiceExceptionEnum](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/constants/ServiceExceptionEnum.java) 枚举类，增加校验参数不通过的错误码枚举。代码如下：
 
-// ServiceExceptionEnum.java INVALID_REQUEST_PARAM_ERROR(2001001002, “请求参数不合法”),
+// ServiceExceptionEnum.java INVALID_REQUEST_PARAM_ERROR(2001001002, "请求参数不合法"),
 
 ## 4.3 GlobalExceptionHandler
 
 修改 [GlobalExceptionHandler](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/core/web/GlobalExceptionHandler.java) 类，增加 #constraintViolationExceptionHandler(…) 方法，处理 ConstraintViolationException 异常。代码如下：
 
-// GlobalExceptionHandler.java @ResponseBody @ExceptionHandler(value = ConstraintViolationException.class) public CommonResult constraintViolationExceptionHandler(HttpServletRequest req, ConstraintViolationException ex) { logger.debug(“[constraintViolationExceptionHandler]”, ex); // 拼接错误 StringBuilder detailMessage = new StringBuilder(); for (ConstraintViolation<?> constraintViolation : ex.getConstraintViolations()) { // 使用 ; 分隔多个错误 if (detailMessage.length() > 0) { detailMessage.append(“;”); } // 拼接内容到其中 detailMessage.append(constraintViolation.getMessage()); } // 包装 CommonResult 结果 return CommonResult.error(ServiceExceptionEnum.INVALID_REQUEST_PARAM_ERROR.getCode(), ServiceExceptionEnum.INVALID_REQUEST_PARAM_ERROR.getMessage() + “:” + detailMessage.toString()); }
+// GlobalExceptionHandler.java @ResponseBody @ExceptionHandler(value = ConstraintViolationException.class) public CommonResult constraintViolationExceptionHandler(HttpServletRequest req, ConstraintViolationException ex) { logger.debug("[constraintViolationExceptionHandler]", ex); // 拼接错误 StringBuilder detailMessage = new StringBuilder(); for (ConstraintViolation<?> constraintViolation : ex.getConstraintViolations()) { // 使用 ; 分隔多个错误 if (detailMessage.length() > 0) { detailMessage.append(";"); } // 拼接内容到其中 detailMessage.append(constraintViolation.getMessage()); } // 包装 CommonResult 结果 return CommonResult.error(ServiceExceptionEnum.INVALID_REQUEST_PARAM_ERROR.getCode(), ServiceExceptionEnum.INVALID_REQUEST_PARAM_ERROR.getMessage() + ":" + detailMessage.toString()); }
 
 - 将每个约束的错误内容提示，拼接起来，使用 ; 分隔。
 - 重新请求 UserController#get(id) 对应的接口，响应结果如下：
@@ -321,7 +321,7 @@ java.lang.IllegalStateException: Cannot find current proxy: Set ‘exposeProxy�
 
 修改 [GlobalExceptionHandler](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/core/web/GlobalExceptionHandler.java) 类，增加 #bindExceptionHandler(…) 方法，处理 BindException 异常。代码如下：
 
-// GlobalExceptionHandler.java @ResponseBody @ExceptionHandler(value = BindException.class) public CommonResult bindExceptionHandler(HttpServletRequest req, BindException ex) { logger.debug(“[bindExceptionHandler]”, ex); // 拼接错误 StringBuilder detailMessage = new StringBuilder(); for (ObjectError objectError : ex.getAllErrors()) { // 使用 ; 分隔多个错误 if (detailMessage.length() > 0) { detailMessage.append(“;”); } // 拼接内容到其中 detailMessage.append(objectError.getDefaultMessage()); } // 包装 CommonResult 结果 return CommonResult.error(ServiceExceptionEnum.INVALID_REQUEST_PARAM_ERROR.getCode(), ServiceExceptionEnum.INVALID_REQUEST_PARAM_ERROR.getMessage() + “:” + detailMessage.toString()); }
+// GlobalExceptionHandler.java @ResponseBody @ExceptionHandler(value = BindException.class) public CommonResult bindExceptionHandler(HttpServletRequest req, BindException ex) { logger.debug("[bindExceptionHandler]", ex); // 拼接错误 StringBuilder detailMessage = new StringBuilder(); for (ObjectError objectError : ex.getAllErrors()) { // 使用 ; 分隔多个错误 if (detailMessage.length() > 0) { detailMessage.append(";"); } // 拼接内容到其中 detailMessage.append(objectError.getDefaultMessage()); } // 包装 CommonResult 结果 return CommonResult.error(ServiceExceptionEnum.INVALID_REQUEST_PARAM_ERROR.getCode(), ServiceExceptionEnum.INVALID_REQUEST_PARAM_ERROR.getMessage() + ":" + detailMessage.toString()); }
 
 - 将每个约束的错误内容提示，拼接起来，使用 ; 分隔。
 - 重新请求 UserController#add(addDTO) 对应的接口，响应结果如下：
@@ -348,7 +348,7 @@ java.lang.IllegalStateException: Cannot find current proxy: Set ‘exposeProxy�
 
 在 [cn.iocoder.springboot.lab22.validation.constants](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/constants) 包路径下，创建 [GenderEnum](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/constants/GenderEnum.java) 枚举类，枚举性别。代码如下：
 
-// GenderEnum.java public enum GenderEnum implements IntArrayValuable { MALE(1, “男”), FEMALE(2, “女”); /** * 值数组 */ public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(GenderEnum::getValue).toArray(); /** * 性别值 */ private final Integer value; /** * 性别名 */ private final String name; GenderEnum(Integer value, String name) { this.value = value; this.name = name; } public Integer getValue() { return value; } public String getName() { return name; } @Override public int[] array() { return ARRAYS; } }
+// GenderEnum.java public enum GenderEnum implements IntArrayValuable { MALE(1, "男"), FEMALE(2, "女"); /** * 值数组 */ public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(GenderEnum::getValue).toArray(); /** * 性别值 */ private final Integer value; /** * 性别名 */ private final String name; GenderEnum(Integer value, String name) { this.value = value; this.name = name; } public Integer getValue() { return value; } public String getName() { return name; } @Override public int[] array() { return ARRAYS; } }
 
 - 实现 IntArrayValuable 接口，返回值数组 ARRAYS 。
 
@@ -356,18 +356,18 @@ java.lang.IllegalStateException: Cannot find current proxy: Set ‘exposeProxy�
 
 在 [cn.iocoder.springboot.lab22.validation.core.validator](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/core/validator) 包路径下，创建 [@InEnum](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/core/validator/InEnum.java) **自定义约束的注解**。代码如下：
 
-// InEnum.java @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE}) @Retention(RetentionPolicy.RUNTIME) @Documented @Constraint(validatedBy = InEnumValidator.class) public @interface InEnum { /** * @return 实现 IntArrayValuable 接口的 */ Class<? extends IntArrayValuable> value(); /** * @return 提示内容 */ String message() default “必须在指定范围 {value}”; /** * @return 分组 */ Class<?>[] groups() default {}; /** * @return Payload 数组 */ Class<? extends Payload>[] payload() default {}; /** * Defines several {@code @InEnum} constraints on the same element. */ @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE}) @Retention(RetentionPolicy.RUNTIME) @Documented @interface List { InEnum[] value(); } }
+// InEnum.java @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE}) @Retention(RetentionPolicy.RUNTIME) @Documented @Constraint(validatedBy = InEnumValidator.class) public @interface InEnum { /** * @return 实现 IntArrayValuable 接口的 */ Class<? extends IntArrayValuable> value(); /** * @return 提示内容 */ String message() default "必须在指定范围 {value}"; /** * @return 分组 */ Class<?>[] groups() default {}; /** * @return Payload 数组 */ Class<? extends Payload>[] payload() default {}; /** * Defines several {@code @InEnum} constraints on the same element. */ @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE}) @Retention(RetentionPolicy.RUNTIME) @Documented @interface List { InEnum[] value(); } }
 
 - 在类上，添加 @@Constraint(validatedBy = InEnumValidator.class) 注解，设置使用的**自定义约束的校验器**。
 - value() 属性，设置实现 IntArrayValuable 接口的类。这样，我们就能获得参数需要校验的值数组。
-- message() 属性，设置提示内容。默认为 “必须在指定范围 {value}” 。
+- message() 属性，设置提示内容。默认为 "必须在指定范围 {value}" 。
 - 其它属性，复制粘贴即可，都可以忽略不用理解。
 
 ## 5.4 InEnumValidator
 
 在 [cn.iocoder.springboot.lab22.validation.core.validator](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/core/validator) 包路径下，创建 [InEnumValidator](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/core/validator/InEnumValidator.java) **自定义约束的校验器**。代码如下：
 
-// InEnumValidator.java public class InEnumValidator implements ConstraintValidator<InEnum, Integer> { /** * 值数组 */ private Set values; @Override public void initialize(InEnum annotation) { IntArrayValuable[] values = annotation.value().getEnumConstants(); if (values.length == 0) { this.values = Collections.emptySet(); } else { this.values = Arrays.stream(values[0].array()).boxed().collect(Collectors.toSet()); } } @Override public boolean isValid(Integer value, ConstraintValidatorContext context) { // <2.1> 校验通过 if (values.contains(value)) { return true; } // <2.2.1>校验不通过，自定义提示语句（因为，注解上的 value 是枚举类，无法获得枚举类的实际值） context.disableDefaultConstraintViolation(); // 禁用默认的 message 的值 context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate() .replaceAll(“\{value}”, values.toString())).addConstraintViolation(); // 重新添加错误提示语句 return false; // <2.2.2.> } }
+// InEnumValidator.java public class InEnumValidator implements ConstraintValidator<InEnum, Integer> { /** * 值数组 */ private Set values; @Override public void initialize(InEnum annotation) { IntArrayValuable[] values = annotation.value().getEnumConstants(); if (values.length == 0) { this.values = Collections.emptySet(); } else { this.values = Arrays.stream(values[0].array()).boxed().collect(Collectors.toSet()); } } @Override public boolean isValid(Integer value, ConstraintValidatorContext context) { // <2.1> 校验通过 if (values.contains(value)) { return true; } // <2.2.1>校验不通过，自定义提示语句（因为，注解上的 value 是枚举类，无法获得枚举类的实际值） context.disableDefaultConstraintViolation(); // 禁用默认的 message 的值 context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate() .replaceAll("\{value}", values.toString())).addConstraintViolation(); // 重新添加错误提示语句 return false; // <2.2.2.> } }
 
 - 实现 [ConstraintValidator](https://github.com/beanvalidation/beanvalidation-api/blob/master/src/main/java/javax/validation/ConstraintValidator.java) 接口。
     - 第一个泛型为 A extends Annotation ，设置对应的自定义约束的注解。例如说，这里我们设置了 @InEnum 注解。
@@ -384,21 +384,21 @@ java.lang.IllegalStateException: Cannot find current proxy: Set ‘exposeProxy�
 
 在 [cn.iocoder.springboot.lab22.validation.dto](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/dto) 包路径下，创建 [UserUpdateGenderDTO](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/dto/UserUpdateGenderDTO.java) 类，为用户更新性别 DTO。代码如下：
 
-// UserUpdateGenderDTO.java public class UserUpdateGenderDTO { /** * 用户编号 */ @NotNull(message = “用户编号不能为空”) private Integer id; /** * 性别 */ @NotNull(message = “性别不能为空”) @InEnum(value = GenderEnum.class, message = “性别必须是 {value}”) private Integer gender; // … 省略 set/get 方法 }
+// UserUpdateGenderDTO.java public class UserUpdateGenderDTO { /** * 用户编号 */ @NotNull(message = "用户编号不能为空") private Integer id; /** * 性别 */ @NotNull(message = "性别不能为空") @InEnum(value = GenderEnum.class, message = "性别必须是 {value}") private Integer gender; // … 省略 set/get 方法 }
 
-- 在 gender 字段上，添加 @InEnum(value = GenderEnum.class, message = “性别必须是 {value}”) 注解，限制传入的参数值，必须在 GenderEnum 枚举范围内。
+- 在 gender 字段上，添加 @InEnum(value = GenderEnum.class, message = "性别必须是 {value}") 注解，限制传入的参数值，必须在 GenderEnum 枚举范围内。
 
 ## 5.6 UserController
 
 修改 [UserController](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/controller/UserController.java) 类，增加修改性别 API 接口。代码如下：
 
-// UserController.java @PostMapping(“/update_gender”) public void updateGender(@Valid UserUpdateGenderDTO updateGenderDTO) { logger.info(“[updateGender][updateGenderDTO: {}]”, updateGenderDTO); }
+// UserController.java @PostMapping("/update_gender") public void updateGender(@Valid UserUpdateGenderDTO updateGenderDTO) { logger.info("[updateGender][updateGenderDTO: {}]", updateGenderDTO); }
 
 模拟请求该 API 接口，响应结果如下：
 
 ![b7ce5d660b9051bf77d32ee438e15986](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/b7ce5d660b9051bf77d32ee438e15986.png)
 
-因为我们传入的请求参数 gender 的值为 null ，显然不在 GenderEnum 范围内，所以校验不通过，输出 “性别必须是 [1, 2]” 。
+因为我们传入的请求参数 gender 的值为 null ，显然不在 GenderEnum 范围内，所以校验不通过，输出 "性别必须是 [1, 2]" 。
 
 # 6. 分组校验
 
@@ -410,7 +410,7 @@ java.lang.IllegalStateException: Cannot find current proxy: Set ‘exposeProxy�
 
 在 [cn.iocoder.springboot.lab22.validation.dto](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/dto) 包路径下，创建 [UserUpdateStatusDTO](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/dto/UserUpdateStatusDTO.java) 类，为用户更新状态 DTO 。代码如下：
 
-// UserUpdateStatusDTO.java public class UserUpdateStatusDTO { /** * 分组 01 ，要求状态必须为 true */ public interface Group01 {} /** * 状态 02 ，要求状态必须为 false */ public interface Group02 {} /** * 状态 */ @AssertTrue(message = “状态必须为 true”, groups = Group01.class) @AssertFalse(message = “状态必须为 false”, groups = Group02.class) private Boolean status; // … 省略 set/get 方法 }
+// UserUpdateStatusDTO.java public class UserUpdateStatusDTO { /** * 分组 01 ，要求状态必须为 true */ public interface Group01 {} /** * 状态 02 ，要求状态必须为 false */ public interface Group02 {} /** * 状态 */ @AssertTrue(message = "状态必须为 true", groups = Group01.class) @AssertFalse(message = "状态必须为 false", groups = Group02.class) private Boolean status; // … 省略 set/get 方法 }
 
 - 创建了 Group01 和 Group02 接口，作为两个校验分组。不一定要定义在 UserUpdateStatusDTO 类中，这里仅仅是为了方便。
 - status 字段，在 Group01 校验分组时，必须为 true ；在 Group02 校验分组时，必须为 false 。
@@ -419,7 +419,7 @@ java.lang.IllegalStateException: Cannot find current proxy: Set ‘exposeProxy�
 
 修改 [UserController](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/controller/UserController.java) 类，增加两个修改状态的 API 接口。代码如下：
 
-// UserController.java @PostMapping(“/update_status_true”) public void updateStatusTrue(@Validated(UserUpdateStatusDTO.Group01.class) UserUpdateStatusDTO updateStatusDTO) { logger.info(“[updateStatusTrue][updateStatusDTO: {}]”, updateStatusDTO); } @PostMapping(“/update_status_false”) public void updateStatusFalse(@Validated(UserUpdateStatusDTO.Group02.class) UserUpdateStatusDTO updateStatusDTO) { logger.info(“[updateStatusFalse][updateStatusDTO: {}]”, updateStatusDTO); }
+// UserController.java @PostMapping("/update_status_true") public void updateStatusTrue(@Validated(UserUpdateStatusDTO.Group01.class) UserUpdateStatusDTO updateStatusDTO) { logger.info("[updateStatusTrue][updateStatusDTO: {}]", updateStatusDTO); } @PostMapping("/update_status_false") public void updateStatusFalse(@Validated(UserUpdateStatusDTO.Group02.class) UserUpdateStatusDTO updateStatusDTO) { logger.info("[updateStatusFalse][updateStatusDTO: {}]", updateStatusDTO); }
 
 - 对于 #updateStatusTrue(updateStatusDTO) 方法，我们在 updateStatusDTO 参数上，添加了 @Validated 注解，并且设置校验分组为 Group01 。校验不通过示例如下图：
 
@@ -439,7 +439,7 @@ java.lang.IllegalStateException: Cannot find current proxy: Set ‘exposeProxy�
 
 修改 [UserServiceTest](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-22/lab-22-validation-01/src/test/java/cn/iocoder/springboot/lab22/validation/service/UserServiceTest.java) 测试类，增加手动参数校验的示例。代码如下：
 
-// UserServiceTest.java @Autowired // <1.1> private Validator validator; @Test public void testValidator() { // 打印，查看 validator 的类型 // <1.2> System.out.println(validator); // 创建 UserAddDTO 对象 // <2> UserAddDTO addDTO = new UserAddDTO(); // 校验 // <3> Set<ConstraintViolation> result = validator.validate(addDTO); // 打印校验结果 // <4> for (ConstraintViolation constraintViolation : result) { // 属性:消息 System.out.println(constraintViolation.getPropertyPath() + “:” + constraintViolation.getMessage()); } }
+// UserServiceTest.java @Autowired // <1.1> private Validator validator; @Test public void testValidator() { // 打印，查看 validator 的类型 // <1.2> System.out.println(validator); // 创建 UserAddDTO 对象 // <2> UserAddDTO addDTO = new UserAddDTO(); // 校验 // <3> Set<ConstraintViolation> result = validator.validate(addDTO); // 打印校验结果 // <4> for (ConstraintViolation constraintViolation : result) { // 属性:消息 System.out.println(constraintViolation.getPropertyPath() + ":" + constraintViolation.getMessage()); } }
 
 - <1.1> 处，注入 Validator Bean 对象。
 - <1.2> 处，打印 validator 的类型。输出如下：
@@ -499,7 +499,7 @@ UserUpdateDTO.id.NotNull=ユーザー番号は空にできません
 
 在 [cn.iocoder.springboot.lab22.validation.dto](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/dto) 包路径下，创建 [UserUpdateDTO](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/dto/UserUpdateDTO.java) 类，为用户更新 DTO 。代码如下：
 
-// UserUpdateDTO.java public class UserUpdateDTO { /** * 用户编号 */ @NotNull(message = “{UserUpdateDTO.id.NotNull}”) private Integer id; // … 省略 get/set 方法 }
+// UserUpdateDTO.java public class UserUpdateDTO { /** * 用户编号 */ @NotNull(message = "{UserUpdateDTO.id.NotNull}") private Integer id; // … 省略 get/set 方法 }
 
 - 不同于我们上面看到的约束注解的 message 属性的设置，这里我们使用了 {} 占位符。
 
@@ -507,7 +507,7 @@ UserUpdateDTO.id.NotNull=ユーザー番号は空にできません
 
 修改 [UserController](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/controller/UserController.java) 类，增加用户更新的 API 接口。代码如下：
 
-// UserController.java @PostMapping(“/update”) public void update(@Valid UserUpdateDTO updateDTO) { logger.info(“[update][updateDTO: {}]”, updateDTO); }
+// UserController.java @PostMapping("/update") public void update(@Valid UserUpdateDTO updateDTO) { logger.info("[update][updateDTO: {}]", updateDTO); }
 
 下面，我们来进行下 API 接口测试。有一点要注意，SpringMVC 通过 Accept-Language 请求头，实现 i18n 国际化。
 
@@ -525,7 +525,7 @@ UserUpdateDTO.id.NotNull=ユーザー番号は空にできません
 
 至此，我们的 Validator 的 i18n 国际化已经完成了。
 
-不过细心的胖友，会发现 “请求参数不合法” 并没有国际化处理。是的~实际上，国际化是个大工程，涉及到方方面面。例如说，业务信息表的国际化，商品同时支持中文、英文、韩文等多种语言。😈 最近艿艿手头有个新项目，需要做国际化，有这方面需求的胖友，可以一起多多交流呀。
+不过细心的胖友，会发现 "请求参数不合法" 并没有国际化处理。是的~实际上，国际化是个大工程，涉及到方方面面。例如说，业务信息表的国际化，商品同时支持中文、英文、韩文等多种语言。😈 最近艿艿手头有个新项目，需要做国际化，有这方面需求的胖友，可以一起多多交流呀。
 
 # 666. 彩蛋
 

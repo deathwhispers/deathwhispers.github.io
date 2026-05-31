@@ -101,9 +101,6 @@ public class FraudDetectionJob {
         env.execute("Fraud Detection");
     }
 }
-
-
-
 ```
 
 ### FraudDetector.java
@@ -377,9 +374,6 @@ public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert
         Types.BOOLEAN);
         flagState = getRuntimeContext().getState(flagDescriptor);
     }
-
-
-
 ```
 
 Scala
@@ -499,9 +493,6 @@ public void open(Configuration parameters) {
     Types.LONG);
     timerState = getRuntimeContext().getState(timerDescriptor);
 }
-
-
-
 ```
 
 Scala
@@ -703,9 +694,6 @@ public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert
         flagState.clear();
     }
 }
-
-
-
 ```
 
 Scala

@@ -36,8 +36,8 @@ Spring AOP中pointcut 表达式详解： [https://www.cnblogs.com/rainy-shurun/p
 spring Aop的八个概念：
 
 1. 通知(advice):通知定义了在切入点代码执行时间点附近需要做的工作
-2. 连接点(joinPoint)：程序能够应用通知的一个“时机”，这些“时机”就是连接点，例如：方法调用时、异常抛出时、方法返回后等
-3. 切入点(pointcut)：通知定义了切面要发生的“故事”，连接点定义了“故事”发生的时机，那么切入点就定义了“故事”发生”的地点“，例如某个类或方法的名称，Spring中允许我们使用正则表达式来定义。
+2. 连接点(joinPoint)：程序能够应用通知的一个"时机"，这些"时机"就是连接点，例如：方法调用时、异常抛出时、方法返回后等
+3. 切入点(pointcut)：通知定义了切面要发生的"故事"，连接点定义了"故事"发生的时机，那么切入点就定义了"故事"发生"的地点"，例如某个类或方法的名称，Spring中允许我们使用正则表达式来定义。
 4. 切面(Aspect)：通知、连接点和切入点共同组成了切面：时间、地点和要发生的故事
 5. 引入(Introduction)：引入允许我们向现有的类添加新的方法和属性（Spring提供了一个方法注入的功能）
 6. 目标对象(target)：即被通知对象，解耦和，通知的逻辑从具体的业务类分离到aop切面中
@@ -131,7 +131,4 @@ public Object aroundMethod(ProceedingJoinPoint pjd)
     }
     //后置通知System.out.println("The method " + methodName + " ends");
     return result;
-
-
-
 ```

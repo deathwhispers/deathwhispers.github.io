@@ -132,14 +132,14 @@ _**datadir**__:数据库数据存储目录，这个就是前面mkdir data前面�
 **配置mysql的环境变量**
 
 ```bash
-echo‘PATH=/usr/local/mysql/bin:$PATH’>>/etc/profile
+echo'PATH=/usr/local/mysql/bin:$PATH'>>/etc/profile
 ```
 
 ```bash
 source/etc/profile
 ```
 
-# 修改密码alteruser‘root’@‘localhost’ identified by ‘root’;
+# 修改密码alteruser'root'@'localhost' identified by 'root';
 
 # 刷新权限flushprivileges;
 

@@ -65,13 +65,13 @@ final HttpContext context) {
 
 if (exception == null) {
 
-throw new IllegalArgumentException(“Exception parameter may not be null”);
+throw new IllegalArgumentException("Exception parameter may not be null");
 
 }
 
 if (context == null) {
 
-throw new IllegalArgumentException(“HTTP context may not be null”);
+throw new IllegalArgumentException("HTTP context may not be null");
 
 }
 
@@ -135,7 +135,7 @@ if (!sent || this.requestSentRetryEnabled) {
 
 // Retry if the request has not been sent fully or
 
-// if it’s OK to retry methods that have been sent
+// if it's OK to retry methods that have been sent
 
 return true;
 

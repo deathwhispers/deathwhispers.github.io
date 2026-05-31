@@ -73,7 +73,7 @@ java // AbstractBeanFactory.java  protected boolean isPrototypeCurrentlyInCreati
 ---
 
 ```plain text
-- 其实检测逻辑和单例模式一样，一个“集合”存放着正在创建的 Bean ，从该集合中进行判断即可，只不过单例模式的“集合”为 Set ，而原型模式的则是 ThreadLocal 。prototypesCurrentlyInCreation 定义如下：
+- 其实检测逻辑和单例模式一样，一个"集合"存放着正在创建的 Bean ，从该集合中进行判断即可，只不过单例模式的"集合"为 Set ，而原型模式的则是 ThreadLocal 。prototypesCurrentlyInCreation 定义如下：
 ```
 
 ```plain text
@@ -102,7 +102,7 @@ java // AbstractBeanFactory.java  protected String originalBeanName(String name)
 
 ```plain text
 - <1> 处，#transformedBeanName(String name) 方法，是对 name 进行转换，获取真正的 beanName 。在 [《【死磕 Spring】—— IoC 之开启 Bean 的加载》](http://svip.iocoder.cn/Spring/IoC-get-Bean-begin) 中，已经有详细解析。
-- <2> 处，如果 name 是以 “&” 开头的，则加上 “&” ，因为在 #transformedBeanName(String name) 方法，将 “&” 去掉了，这里补上。
+- <2> 处，如果 name 是以 "&" 开头的，则加上 "&" ，因为在 #transformedBeanName(String name) 方法，将 "&" 去掉了，这里补上。
 ```
 
 # 3. 类型检查

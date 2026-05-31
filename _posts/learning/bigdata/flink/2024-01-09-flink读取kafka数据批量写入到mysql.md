@@ -87,9 +87,6 @@ public class KafkaUtil {
         writeToKafka();
     }
 }
-
-
-
 ```
 
 从 kafka 中读取数据，然后序列化成 student 对象。
@@ -124,9 +121,6 @@ student.timeWindowAll(Time.minutes(1)).apply(new AllWindowFunction<Student, List
         }
     }
 });
-
-
-
 ```
 
 ### 写入数据库
@@ -239,9 +233,6 @@ public class SinkToMySQL extends RichSinkFunction<List<Student>> {
         return con;
     }
 }
-
-
-
 ```
 
 ### 核心类 Main
@@ -278,9 +269,6 @@ public class Main {
         env.execute("flink learning connectors kafka");
     }
 }
-
-
-
 ```
 
 ### 运行项目

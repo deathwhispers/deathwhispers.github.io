@@ -304,9 +304,6 @@ public class WordCountApp {
         System.exit(result ? 0 : -1);
     }
 }
-
-
-
 ```
 
 需要注意的是：如果不设置 Mapper 操作的输出类型，则程序默认它和 Reducer 操作输出的类型相同。

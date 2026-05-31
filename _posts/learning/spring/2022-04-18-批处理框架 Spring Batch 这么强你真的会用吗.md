@@ -220,9 +220,6 @@ public class BlogInfo {
         this.blogItem = blogItem;
     }
 }
-
-
-
 ```
 
 ### mapper层
@@ -314,9 +311,6 @@ public JobRepository myJobRepository(DataSource dataSource, PlatformTransactionM
     jobRepositoryFactoryBean.setDataSource(dataSource);
     return jobRepositoryFactoryBean.getObject();
 }
-
-
-
 ```
 
 ### JobLauncher
@@ -338,9 +332,6 @@ public SimpleJobLauncher myJobLauncher(DataSource dataSource, PlatformTransactio
     jobLauncher.setJobRepository(myJobRepository(dataSource, transactionManager));
     return jobLauncher;
 }
-
-
-
 ```
 
 ### Job
@@ -363,9 +354,6 @@ public Job myJob(JobBuilderFactory jobs, Step myStep) {
     .listener(myJobListener())
     .build();
 }
-
-
-
 ```
 
 对于Job的运行，是可以配置监听器的
@@ -383,9 +371,6 @@ public Job myJob(JobBuilderFactory jobs, Step myStep) {
 public MyJobListener myJobListener() {
     return new MyJobListener();
 }
-
-
-
 ```
 
 这是一个我们自己自定义的监听器，所以是单独创建的，MyJobListener.java：
@@ -414,9 +399,6 @@ public class MyJobListener implements JobExecutionListener {
         ",jobExecution.getJobId());
     }
 }
-
-
-
 ```
 
 ### Step（ItemReader ItemProcessor ItemWriter）
@@ -463,9 +445,6 @@ public ItemReader<BlogInfo> reader() {
     });
     return reader;
 }
-
-
-
 ```
 
 简单代码解析：
@@ -499,9 +478,6 @@ public class MyReadListener implements ItemReadListener<BlogInfo> {
         }
     }
 }
-
-
-
 ```
 
 ### ItemProcessor
@@ -520,9 +496,6 @@ public ItemProcessor<BlogInfo, BlogInfo> processor() {
     myItemProcessor.setValidator(myBeanValidator());
     return myItemProcessor;
 }
-
-
-
 ```
 
 数据处理器，是我们自定义的，里面主要是包含我们对数据处理的业务逻辑，并且我们设置了一些数据校验器，我们这里使用 JSR-303的Validator来作为校验器。
@@ -540,9 +513,6 @@ public ItemProcessor<BlogInfo, BlogInfo> processor() {
 public MyBeanValidator myBeanValidator() {
     return new MyBeanValidator<BlogInfo>();
 }
-
-
-
 ```
 
 创建MyItemProcessor.java ：
@@ -578,9 +548,6 @@ public class MyItemProcessor extends ValidatingItemProcessor<BlogInfo> {
         return item;
     }
 }
-
-
-
 ```
 
 创建MyBeanValidator.java：
@@ -629,9 +596,6 @@ public class MyBeanValidator<T> implements Validator<T>, InitializingBean {
         validator = validatorFactory.usingContext().getValidator();
     }
 }
-
-
-
 ```
 
 > ps：其实该篇文章没有使用这个数据校验器，大家想使用的话，可以在实体类上添加一些校验器的注解@NotNull @Max @Email等等。我偏向于直接在处理器里面进行处理，想把关于数据处理的代码都写在一块。
@@ -659,9 +623,6 @@ public ItemWriter<BlogInfo> writer(DataSource dataSource) {
     writer.setDataSource(dataSource);
     return writer;
 }
-
-
-
 ```
 
 简单代码解析：
@@ -705,9 +666,6 @@ public class MyWriteListener implements ItemWriteListener<BlogInfo> {
         }
     }
 }
-
-
-
 ```
 
 ItemReader、ItemProcessor、ItemWriter，这三个小组件到这里，我们都实现了，那么接下来就是把这三个小组件跟我们的step去绑定起来。
@@ -800,9 +758,6 @@ public class TestController {
         jobLauncher.run(myJob, jobParameters);
     }
 }
-
-
-
 ```
 
 对了，我准备了一个csv文件 bloginfo.csv，里面大概8万多条数据，用来进行批处理测试：
@@ -898,9 +853,6 @@ public class MyItemProcessorNew extends ValidatingItemProcessor<BlogInfo> {
         return item;
     }
 }
-
-
-
 ```
 
 然后其他重新定义的小组件，写在MyBatchConfig类里：
@@ -983,9 +935,6 @@ public ItemWriter<BlogInfo> writerNew(DataSource dataSource) {
     writer.setDataSource(dataSource);
     return writer;
 }
-
-
-
 ```
 
 ### [代码需要注意的点](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247487551&idx=1&sn=18f64ba49f3f0f9d8be9d1fdef8857d9&scene=21#wechat_redirect)

@@ -42,7 +42,7 @@ Integer age = person.f1 ;
 
 ### POJOs
 
-如果满足以下条件，Flink 将数据类型识别为 POJO 类型（并允许“按名称”字段引用）：
+如果满足以下条件，Flink 将数据类型识别为 POJO 类型（并允许"按名称"字段引用）：
 
 - 该类是公有且独立的（没有非静态内部类）
 - 该类有公有的无参构造函数
@@ -61,9 +61,6 @@ public class Person
         . . .    }
     }
     Person person = new Person("Fred Flintstone", 35);
-
-
-
 ```
 
 Flink 的序列化器[支持的 POJO 类型数据结构升级](https://www.bookstack.cn/read/flink-1.15-zh/4e57547db68bc936.md#pojo-types)。

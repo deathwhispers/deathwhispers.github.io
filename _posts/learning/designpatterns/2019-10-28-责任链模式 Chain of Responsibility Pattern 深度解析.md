@@ -64,9 +64,6 @@ public final Response handleMessage(Request request){
 }
 return response;
 }
-
-
-
 ```
 
 ## 💻 3. 代码示例：日志记录链 (Java/Python)
@@ -154,9 +151,6 @@ public class ChainPatternDemo {
         loggerChain.logMessage(AbstractLogger.ERROR, "This is an error information.");
     }
 }
-
-
-
 ```
 
 **运行结果分析:**

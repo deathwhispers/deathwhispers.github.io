@@ -67,7 +67,7 @@ java // DefaultSingletonBeanRegistry.java  /**  * Cache of singleton objects: be
 - 一个 put、一个 add、两个 remove 操作。
 - 【put】singletonObjects 属性，单例 bean 的缓存。
 - 【remove】singletonFactories 属性，单例 bean Factory 的缓存。
-- 【remove】earlySingletonObjects 属性，“早期”创建的单例 bean 的缓存。
+- 【remove】earlySingletonObjects 属性，"早期"创建的单例 bean 的缓存。
 - 【add】registeredSingletons 属性，已经注册的单例缓存。
 
 # 2. 原型模式

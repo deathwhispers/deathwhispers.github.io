@@ -46,7 +46,7 @@ RateLimiter 的实现。相比
     - 令牌桶算法，桶里装的是令牌。每次能拿取到令牌，就可以进行访问。并且，令牌会按照速率不断恢复放到令牌桶中直到桶满。
     - 漏桶算法，桶里装的是请求。当桶满了，请求就进不来。例如说，Hystrix 使用线程池或者 Semaphore 信号量，只有在请求未满的时候，才可以进行执行。
 
-上面哔哔了非常多的字，只看本文的话，就那一句话：“**Redisson 提供的是基于滑动窗口 RateLimiter 的实现。**”。
+上面哔哔了非常多的字，只看本文的话，就那一句话："**Redisson 提供的是基于滑动窗口 RateLimiter 的实现。**"。
 
 # 2. 整体一览
 
@@ -99,7 +99,7 @@ plain // RedissonRateLimiter.java  @Override public boolean trySetRate(RateType 
 ---
 
 - 将限流器的配置写入到 Redis 中。这个和我们看到的很多分布式限流器的实现不同，它们只提供获取令牌的功能，而 Redisson 多了持久化配置限流器的配置到 Redis 中，相当于说，Redis 起到了一个**配置中心相同名字**
-的功能，分布式下的相同限流器（“相同”指的是
+的功能，分布式下的相同限流器（"相同"指的是
 的限流器）使用同一的配置。
 - 参数 [org.redisson.api.RateType](https://github.com/YunaiV/redisson/blob/master/redisson/src/main/java/org/redisson/api/RateType.java)
 type

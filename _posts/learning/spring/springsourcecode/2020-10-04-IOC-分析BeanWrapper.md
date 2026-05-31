@@ -27,7 +27,7 @@ updated: 2020-10-04 18:00
 
 ![dfd73f60540dd579297a1f9df9f95fe8](/assets/images/learning/spring/springsourcecode/ioc-analyze-beanwrapper/dfd73f60540dd579297a1f9df9f95fe8.jpeg)
 
-所以这里 BeanWrapper 是一个从 BeanDefinition 到 Bean 直接的**中间产物**，我们可以称它为”低级 bean“。在一般情况下，我们不会在实际项目中用到它。BeanWrapper 是 Spring 框架中重要的组件类，它就相当于一个代理类，Spring 委托 BeanWrapper 完成 Bean 属性的填充工作。在 Bean 实例被 InstantiationStrategy 创建出来后，Spring 容器会将 Bean 实例通过 BeanWrapper 包裹起来，是通过如如下代码实现：
+所以这里 BeanWrapper 是一个从 BeanDefinition 到 Bean 直接的**中间产物**，我们可以称它为"低级 bean"。在一般情况下，我们不会在实际项目中用到它。BeanWrapper 是 Spring 框架中重要的组件类，它就相当于一个代理类，Spring 委托 BeanWrapper 完成 Bean 属性的填充工作。在 Bean 实例被 InstantiationStrategy 创建出来后，Spring 容器会将 Bean 实例通过 BeanWrapper 包裹起来，是通过如如下代码实现：
 
 ![3a5c719e69c1113dcc8cdc7ff124929d](/assets/images/learning/spring/springsourcecode/ioc-analyze-beanwrapper/3a5c719e69c1113dcc8cdc7ff124929d.jpeg)
 

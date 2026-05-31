@@ -14,10 +14,10 @@ updated: 2025-11-28 09:57
 
 ## 引言
 
-> 前面几章咱把`@Scheduled` 从“黑盒”改成了“透明体”——有长期记忆（持久化），还能实时监控（看状态、查日志），相当于开了“上帝视角”。但光看不行啊，真正的“掌控”得能动手：业务高峰时，得能暂停非核心任务；运营要数据，得能马上触发报表生成；甚至不用重启服务，就能新建或删掉任务。
+> 前面几章咱把`@Scheduled` 从"黑盒"改成了"透明体"——有长期记忆（持久化），还能实时监控（看状态、查日志），相当于开了"上帝视角"。但光看不行啊，真正的"掌控"得能动手：业务高峰时，得能暂停非核心任务；运营要数据，得能马上触发报表生成；甚至不用重启服务，就能新建或删掉任务。
 
-> 这一章，咱就给框架装“手臂”——一套设计好的RESTful API。跟大家唠唠`SchedulerController`
-> 是咋设计的，看看咋靠几个简单的接口，把所有定时任务的生命周期捏在手里，真正做到“坐在后台，控制所有任务”。
+> 这一章，咱就给框架装"手臂"——一套设计好的RESTful API。跟大家唠唠`SchedulerController`
+> 是咋设计的，看看咋靠几个简单的接口，把所有定时任务的生命周期捏在手里，真正做到"坐在后台，控制所有任务"。
 
 ## 第一部分：任务调度控制器——`SchedulerController` & `SchedulerLogController`
 
@@ -53,14 +53,14 @@ graph TD
 * **`/tasks` 资源**: 代表所有被管理的任务，管查询和生命周期控制。
 * **`/logs` 资源**: 代表任务的执行日志，目前只支持按任务ID查。
 
-可能有人会问：“启停、触发这些操作，为啥不用`PUT`或`GET`，全用`POST`？”
+可能有人会问："启停、触发这些操作，为啥不用`PUT`或`GET`，全用`POST`？"
 
-这是实际用的时候权衡过的：严格来说，启停算“改状态”（该用`PUT`），触发算“执行动作”（该用`POST`）。但为了简化——不管前端还是后端，不用记哪个接口用啥方法，而且
-`GET`请求有“无副作用”的规矩（不能改状态），干脆把所有“改状态、做动作”的操作全统一成`POST`，省得搞混，用起来也简单。
+这是实际用的时候权衡过的：严格来说，启停算"改状态"（该用`PUT`），触发算"执行动作"（该用`POST`）。但为了简化——不管前端还是后端，不用记哪个接口用啥方法，而且
+`GET`请求有"无副作用"的规矩（不能改状态），干脆把所有"改状态、做动作"的操作全统一成`POST`，省得搞混，用起来也简单。
 
 ## 第二部分：核心控制能力的构建与实现
 
-`SchedulerController`里的每个接口方法，其实都是“转发器”——把请求转给`TaskManager`，让它去干实际的活儿。
+`SchedulerController`里的每个接口方法，其实都是"转发器"——把请求转给`TaskManager`，让它去干实际的活儿。
 
 ### 1. 任务生命周期管控：启动、暂停与手动触发实践
 
@@ -73,21 +73,21 @@ graph TD
     2. 先查状态——要是已经在跑了，直接返回，不做无用功。
     3. 把`ManagedTask`和持久化层（`TaskStore`）里的状态都改成`RUNNING`（同步状态，防止重启后丢配置）。
     4. 按`TaskDefinition`里的规则（比如Cron表达式），重新建个`Trigger`。
-    5. 调用`ThreadPoolTaskScheduler.schedule()`提交任务，把返回的`ScheduledFuture`（相当于“任务把手”）存回`ManagedTask`
+    5. 调用`ThreadPoolTaskScheduler.schedule()`提交任务，把返回的`ScheduledFuture`（相当于"任务把手"）存回`ManagedTask`
        ，后面停任务要用。
 
 * **`stop(String taskId)`**: 调用`taskManager.stop(taskId)`，停止任务。
 
-  内部流程要注意“优雅停机”：
+  内部流程要注意"优雅停机"：
     1. 找到`ManagedTask`，拿到里面的`ScheduledFuture`。
-    2. 调用`future.cancel(false)`——这里的`false`很关键，意思是“不中断正在执行的任务”，只取消未来的调度。比如任务正在生成报表，总不能半路杀了它，得让它跑完，不然数据会乱。
+    2. 调用`future.cancel(false)`——这里的`false`很关键，意思是"不中断正在执行的任务"，只取消未来的调度。比如任务正在生成报表，总不能半路杀了它，得让它跑完，不然数据会乱。
     3. 把`ManagedTask`和持久化层的状态改成`STOPPED`。
 
 * **`triggerOnce(String taskId)`**: 调用`taskManager.triggerOnce(taskId)`，临时触发一次任务。
 
   这个操作很实用，比如运营临时要一份数据，不用等定时：
     1. 找到`ManagedTask`。
-    2. 直接调用`taskScheduler.schedule(runnable, Instant.now())`——让任务“现在就跑”，而且不影响原来的调度周期（比如原来每天凌晨跑，触发一次后，下次还是凌晨）。
+    2. 直接调用`taskScheduler.schedule(runnable, Instant.now())`——让任务"现在就跑"，而且不影响原来的调度周期（比如原来每天凌晨跑，触发一次后，下次还是凌晨）。
 
 ### 2. 动态调度：解锁定时任务框架的核心引擎
 
@@ -121,18 +121,18 @@ graph TD
       style Z3 fill:#fbb,stroke:#f00,stroke-width:2px
   ```
 
-  这套流程能保证：只有“合法能跑”的任务才会被创建，不会出现“存了但跑不起来”的脏数据。
+  这套流程能保证：只有"合法能跑"的任务才会被创建，不会出现"存了但跑不起来"的脏数据。
 
 * **`deleteTask(String taskId)`**: 调用`taskManager.deleteTask(taskId)`，删除任务。
 
-  删任务得“先停再删”，不然可能出问题：
+  删任务得"先停再删"，不然可能出问题：
     1. 先调用`stop(taskId)`——确保任务已经不调度了，正在跑的也让它跑完。
     2. 从`runtimeTasks`里把`ManagedTask`删掉——内存里清干净。
     3. 调用`taskStore.deleteById(taskId)`——从持久化层彻底删掉，下次重启也不会再出现。
 
 ### 3. API调用时序图示例：创建一个动态任务
 
-用一张时序图，看看调用“新建动态任务”接口时，整个系统是咋配合的：
+用一张时序图，看看调用"新建动态任务"接口时，整个系统是咋配合的：
 
 ```mermaid
 sequenceDiagram
@@ -147,15 +147,15 @@ sequenceDiagram
     Note right of TM: 校验ID唯一性
     Store -->> TM: not found（没找到，ID可用）
     TM ->> TM: resolveTaskDefinition() // 预解析：Bean和Method存在吗？
-    Note right of TM: 比如查Spring容器里有没有叫“reportService”的Bean，有没有“generateDaily”方法
+    Note right of TM: 比如查Spring容器里有没有叫"reportService"的Bean，有没有"generateDaily"方法
     TM ->> Store: save(definition) // 存到持久化层
     Note right of TM: 持久化任务定义，防止重启丢失
     Store -->> TM: success（保存成功）
     TM ->> TM: put to runtimeTasks cache // 加到内存缓存
     TM ->>+ TM: start(taskId) // 启动任务
-    TM ->> Store: updateStatus(RUNNING) // 把状态改成“运行中”
+    TM ->> Store: updateStatus(RUNNING) // 把状态改成"运行中"
     TM ->> Scheduler: schedule(runnable, trigger) // 提交给调度器
-    Scheduler -->> TM: returns ScheduledFuture // 返回任务“把手”
+    Scheduler -->> TM: returns ScheduledFuture // 返回任务"把手"
     TM -->>- TM: success（启动成功）
     TM -->> Controller: success（创建成功）
     Controller -->>- Client: 201 Created (body: TaskDetailDTO) // 给前端返回任务详情
@@ -163,9 +163,9 @@ sequenceDiagram
 
 ## 结语：从被动执行到主动掌控的飞跃
 
-这一章，咱给调度框架装了“遥控器”——一套功能全的RESTful API。这套API不只是“开关”，更重要的是它带来了**动态性**和**可编程性**
-：通过`create`和`delete`接口，咱的调度系统从“只能跑代码里写死的任务”，变成了“能被外部系统（配置中心、运维平台）随时控制的服务”。
+这一章，咱给调度框架装了"遥控器"——一套功能全的RESTful API。这套API不只是"开关"，更重要的是它带来了**动态性**和**可编程性**
+：通过`create`和`delete`接口，咱的调度系统从"只能跑代码里写死的任务"，变成了"能被外部系统（配置中心、运维平台）随时控制的服务"。
 
-现在咱既有“上帝视角”（监控），又有“上帝之手”（API控制），看似啥都能搞定了。但在真实生产环境里，尤其是集群部署时，还有个“幽灵”没解决——
+现在咱既有"上帝视角"（监控），又有"上帝之手"（API控制），看似啥都能搞定了。但在真实生产环境里，尤其是集群部署时，还有个"幽灵"没解决——
 **并发安全**。比如多个节点同时改一个任务的状态，或者同一个任务在多个节点上跑重复了。下一章，咱就聊`hadoken-scheduler`
-的分布式锁设计，给任务在集群里“保驾护航”，确保“指令不会乱，任务不重复跑”。
+的分布式锁设计，给任务在集群里"保驾护航"，确保"指令不会乱，任务不重复跑"。

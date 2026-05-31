@@ -109,9 +109,6 @@ public void mkDirWithPermission() throws Exception {
     fileSystem.mkdirs(new Path("/hdfs-api/test1/"),
     new FsPermission(FsAction.READ_WRITE, FsAction.READ, FsAction.READ));
 }
-
-
-
 ```
 
 ### 2.4 创建文件，并写入内容
@@ -129,9 +126,6 @@ public void create() throws Exception {
     out.flush();
     out.close();
 }
-
-
-
 ```
 
 ### 2.5 判断文件是否存在
@@ -187,9 +181,6 @@ private static String inputStreamToString(InputStream inputStream, String encode
     }
     return null;
 }
-
-
-
 ```
 
 ### 2.7 文件重命名
@@ -218,9 +209,6 @@ public void delete() throws Exception {
     boolean result = fileSystem.delete(new Path("/hdfs-api/test/b.txt"), true);
     System.out.println(result);
 }
-
-
-
 ```
 
 ### 2.9 上传文件到HDFS
@@ -256,9 +244,6 @@ public void copyFromLocalBigFile() throws Exception {
     });
     IOUtils.copyBytes(in, out, 4096);
 }
-
-
-
 ```
 
 ### 2.11 从HDFS上下载文件
@@ -277,9 +262,6 @@ public void copyToLocalFile() throws Exception {
     */
     fileSystem.copyToLocalFile(false, src, dst, true);
 }
-
-
-
 ```
 
 ### 2.12 查看指定目录下所有文件的信息

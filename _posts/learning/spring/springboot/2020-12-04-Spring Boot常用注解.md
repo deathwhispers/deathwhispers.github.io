@@ -66,14 +66,14 @@ public static void main(String[] args) {
 
 @ResponseBody：表示该方法的返回结果直接写入HTTP response body中，一般在异步获取数据时使用，用于构建RESTful的api。在使用@RequestMapping后，返回值通常解析为跳转路径，加上@esponsebody后返回结果不会被解析为跳转路径，而是直接写入HTTP response body中。比如异步获取json数据，加上@Responsebody后，会直接返回json数据。该注解一般会配合@RequestMapping一起使用。示例代码：
 
-@RequestMapping(“/test”)
+@RequestMapping("/test")
 
 @ResponseBody
 
 public String test(){
 
 ```plain text
- <font style="color:rgb(0, 0, 255);">return</font>”ok”;
+ <font style="color:rgb(0, 0, 255);">return</font>"ok";
 ```
 
 }
@@ -84,7 +84,7 @@ public String test(){
 
 @RequestMapping：提供路由信息，负责URL到Controller中的具体函数的映射
 
-@EnableAutoConfiguration：SpringBoot自动配置（auto-configuration）：尝试根据你添加的jar依赖自动配置你的Spring应用。例如，如果你的classpath下存在HSQLDB，并且你没有手动配置任何数据库连接beans，那么我们将自动配置一个内存型（in-memory）数据库”。你可以将
+@EnableAutoConfiguration：SpringBoot自动配置（auto-configuration）：尝试根据你添加的jar依赖自动配置你的Spring应用。例如，如果你的classpath下存在HSQLDB，并且你没有手动配置任何数据库连接beans，那么我们将自动配置一个内存型（in-memory）数据库"。你可以将
 
 @EnableAutoConfiguration或者@SpringBootApplication注解添加到一个@Configuration类上来选择自动配置。如果发现应用了你不想要的特定自动配置类，你可以使用@EnableAutoConfiguration注解的排除属性来禁用它们。
 
@@ -112,7 +112,7 @@ public String test(){
 
 @Value：注入Spring boot application.properties配置的属性的值。示例代码：
 
-1 @Value(value = “#{message}”)
+1 @Value(value = "#{message}")
 
 2private String message;
 
@@ -124,19 +124,19 @@ public String test(){
 
 @AutoWired：自动导入依赖的bean。byType方式。把配置好的Bean拿来用，完成属性、方法的组装，它可以对类成员变量、方法及构造函数进行标注，完成自动装配的工作。当加上（required=false）时，就算找不到bean也不报错。
 
-@Qualifier：当有多个同一类型的Bean时，可以用@Qualifier(“name”)来指定。与@Autowired配合使用。@Qualifier限定描述符除了能根据名字进行注入，但能进行更细粒度的控制如何选择候选者，具体使用方式如下：
+@Qualifier：当有多个同一类型的Bean时，可以用@Qualifier("name")来指定。与@Autowired配合使用。@Qualifier限定描述符除了能根据名字进行注入，但能进行更细粒度的控制如何选择候选者，具体使用方式如下：
 
 1 @Autowired
 
-2 @Qualifier(value = “demoInfoService”)
+2 @Qualifier(value = "demoInfoService")
 
 3private DemoInfoService demoInfoService;
 
-@Resource(name=”name”,type=”type”)：没有括号内内容的话，默认byName。与@Autowired干类似的事。
+@Resource(name="name",type="type")：没有括号内内容的话，默认byName。与@Autowired干类似的事。
 
 ## 三、JPA注解
 
-@Entity：@Table(name=”“)：表明这是一个实体类。一般用于jpa这两个注解一般一块使用，但是如果表名和实体类名相同的话，@Table可以省略
+@Entity：@Table(name="")：表明这是一个实体类。一般用于jpa这两个注解一般一块使用，但是如果表名和实体类名相同的话，@Table可以省略
 
 @MappedSuperClass:用在确定是父类的entity上。父类的属性子类可以继承。
 
@@ -146,21 +146,21 @@ public String test(){
 
 @Id：表示该属性为主键。
 
-@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = “repair_seq”)：表示主键生成策略是sequence（可以为Auto、IDENTITY、native等，Auto表示可在多个数据库间切换），指定sequence的名字是repair_seq。
+@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "repair_seq")：表示主键生成策略是sequence（可以为Auto、IDENTITY、native等，Auto表示可在多个数据库间切换），指定sequence的名字是repair_seq。
 
-@SequenceGeneretor(name = “repair_seq”, sequenceName = “seq_repair”, allocationSize = 1)：name为sequence的名称，以便使用，sequenceName为数据库的sequence名称，两个名称可以一致。
+@SequenceGeneretor(name = "repair_seq", sequenceName = "seq_repair", allocationSize = 1)：name为sequence的名称，以便使用，sequenceName为数据库的sequence名称，两个名称可以一致。
 
 @Transient：表示该属性并非一个到数据库表的字段的映射,ORM框架将忽略该属性。如果一个属性并非数据库表的字段映射,就务必将其标示为@Transient,否则,ORM框架默认其注解为@Basic。@Basic(fetch=FetchType.LAZY)：标记可以指定实体属性的加载方式
 
 @JsonIgnore：作用是json序列化时将[Java](http://lib.csdn.net/base/java)bean中的一些属性忽略掉,序列化和反序列化都受影响。
 
-@JoinColumn（name=”loginId”）:一对一：本表中指向另一个表的外键。一对多：另一个表指向本表的外键。
+@JoinColumn（name="loginId"）:一对一：本表中指向另一个表的外键。一对多：另一个表指向本表的外键。
 
 @OneToOne、@OneToMany、@ManyToOne：对应[hibernate](http://lib.csdn.net/base/javaee)配置文件中的一对一，一对多，多对一。
 
 ## 四、springMVC相关注解
 
-@RequestMapping：@RequestMapping(“/path”)表示该控制器处理所有“/path”的UR L请求。RequestMapping是一个用来处理请求地址映射的注解，可用于类或方法上。
+@RequestMapping：@RequestMapping("/path")表示该控制器处理所有"/path"的UR L请求。RequestMapping是一个用来处理请求地址映射的注解，可用于类或方法上。
 
 用于类上，表示类中的所有响应请求的方法都是以该地址作为父路径。该注解有六个属性：
 
@@ -180,11 +180,11 @@ produces:指定返回的内容类型，仅当request请求头中的(Accept)类�
 
 @RequestParam
 
-String a =request.getParameter(“a”)。
+String a =request.getParameter("a")。
 
 @PathVariable:路径变量。如
 
-1 RequestMapping(“user/get/mac/{macAddress}”)
+1 RequestMapping("user/get/mac/{macAddress}")
 
 2public String getByMacAddress(@PathVariable String macAddress){
 
@@ -226,9 +226,9 @@ String a =request.getParameter(“a”)。
 
 3nullable属性：nullable属性表示该字段是否可以为null值，默认为true
 
-4insertable属性：insertable属性表示在使用”INSERT”语句插入数据时，是否需要插入该字段的值
+4insertable属性：insertable属性表示在使用"INSERT"语句插入数据时，是否需要插入该字段的值
 
-5updateable属性：updateable属性表示在使用”UPDATE”语句插入数据时，是否需要更新该字段的值
+5updateable属性：updateable属性表示在使用"UPDATE"语句插入数据时，是否需要更新该字段的值
 
 6insertable和updateable属性：一般多用于只读的属性，例如主键和外键等，这些字段通常是自动生成的
 

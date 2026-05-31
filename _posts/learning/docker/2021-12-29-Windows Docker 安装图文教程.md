@@ -32,17 +32,17 @@ Docker Desktop for Windows 是 Docker 公司为 Windows 用户提供的官方产
 
 在安装 Docker 之前，需要先开启 Windows 的相关功能。
 
-1.  右键单击 **开始** 按钮，选择 **“应用和功能”**。
-2.  在右侧或底部找到并点击 **“程序和功能”**。
-3.  点击 **“启用或关闭 Windows 功能”**。
-4.  在弹出的窗口中，确保勾选 **`Hyper-V`** 和 **`容器`** 复选框，然后点击 **“确定”**。
+1.  右键单击 **开始** 按钮，选择 **"应用和功能"**。
+2.  在右侧或底部找到并点击 **"程序和功能"**。
+3.  点击 **"启用或关闭 Windows 功能"**。
+4.  在弹出的窗口中，确保勾选 **`Hyper-V`** 和 **`容器`** 复选框，然后点击 **"确定"**。
 
     ![启用 Hyper-V 和容器功能](../../../assets/images/learning/docker/windows-docker-install-tutorial/5c67f5f2f7c951d93fd133ed32954b8b.gif)
 
     ![功能安装过程](../../../assets/images/learning/docker/windows-docker-install-tutorial/2b7e58639b9b1fb4af410d6972af51fe.gif)
 
 > **注意**
-> “容器”功能仅在 Windows 10 Anniversary Update (Build 14393) 及以上版本中可用。完成此步骤后，系统会提示您重启计算机，请务必重启以使设置生效。
+> "容器"功能仅在 Windows 10 Anniversary Update (Build 14393) 及以上版本中可用。完成此步骤后，系统会提示您重启计算机，请务必重启以使设置生效。
 
 ## 3. 下载并安装 Docker Desktop
 
@@ -92,7 +92,7 @@ Docker Desktop 允许您在 Linux 容器和原生 Windows 容器之间切换。
 
 ### 切换到 Windows 容器
 
-如果您需要运行 Windows 容器，可以右键单击通知栏的 Docker 鲸鱼图标，选择 **“Switch to Windows containers...”**。
+如果您需要运行 Windows 容器，可以右键单击通知栏的 Docker 鲸鱼图标，选择 **"Switch to Windows containers..."**。
 
 或者，您也可以使用以下命令切换（需在 Docker 安装目录的 `resources` 文件夹下执行）：
 

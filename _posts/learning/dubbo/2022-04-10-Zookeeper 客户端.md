@@ -217,7 +217,7 @@ plain @SPI("curator") public interface ZookeeperTransporter {      /**      * �
 
 - #connect(url)
 方法，连接创建 ZookeeperClient 对象。
-- @SPI(“curator”)
+- @SPI("curator")
 注解，使用 Dubbo SPI 机制，默认使用 Curator 实现。
 - @Adaptive({Constants.CLIENT_KEY, Constants.TRANSPORTER_KEY})
 注解，使用 Dubbo SPI Adaptive 机制，根据

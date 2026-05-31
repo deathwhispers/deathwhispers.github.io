@@ -24,7 +24,7 @@ updated: 2023-06-04 18:33
 
 ## 一、设备配置/设备类型
 
-添加一个叫”路灯”的设备配置。
+添加一个叫"路灯"的设备配置。
 
 **设备配置**听起来比较抽象，可以认为是设备类型或者是设备类型的配置。实际上，ThingsBoard 中很多时候让选择设备类型，就是选的这个。
 
@@ -44,7 +44,7 @@ updated: 2023-06-04 18:33
 
 ## 二、设备
 
-接下来添加一个叫”路灯1”的设备：
+接下来添加一个叫"路灯1"的设备：
 
 ![](/assets/images/iot/thingsboard/thingsboard-device-access/c55096403bb5b3781d6bcc6c6f53fa00.jpg)
 
@@ -68,19 +68,19 @@ ThingsBoard支持使用HTTP,COAP,MQTT三种方式直接接入平台，我们就�
 
 使用[curl](https://so.csdn.net/so/search?q=curl&spm=1001.2101.3001.7020)发送开关和亮度信息：
 
-curl -v -X POST -d ‘{“turn”:“1”,“light”:“90”}’ http://{SERVER_IP}:9090/api/v1/A1_TEST_TOKEN/telemetry –header “Content-Type:application/json”
+curl -v -X POST -d '{"turn":"1","light":"90"}' http://{SERVER_IP}:9090/api/v1/A1_TEST_TOKEN/telemetry –header "Content-Type:application/json"
 
 ### COAP
 
 mqtt命令需要安装npm库mqtt，安装指令npm install coap-cli -g 使用coap发送电量信息：
 
-coap post coap://{SERVER_IP}:5683/api/v1/A1_TEST_TOKEN/telemetry -p ‘{“battery”:“90”}’
+coap post coap://{SERVER_IP}:5683/api/v1/A1_TEST_TOKEN/telemetry -p '{"battery":"90"}'
 
 ### MQTT
 
 mqtt命令需要安装npm库mqtt，安装指令npm install mqtt -g 使用mqtt发送经纬度信息：
 
-mqtt pub -v -h “{SERVER_IP}” -p 1883 -t “v1/devices/me/telemetry” -u ‘A1_TEST_TOKEN’ -m ‘{“latitude”:“22.54845664”,“longitude”:“114.06455184”}’
+mqtt pub -v -h "{SERVER_IP}" -p 1883 -t "v1/devices/me/telemetry" -u 'A1_TEST_TOKEN' -m '{"latitude":"22.54845664","longitude":"114.06455184"}'
 
 ![](/assets/images/iot/thingsboard/thingsboard-device-access/278222561ca4d54d6c56078d1feabd3d.jpg)
 

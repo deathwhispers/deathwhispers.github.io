@@ -43,7 +43,7 @@ plain @SPI(RandomLoadBalance.NAME) public interface LoadBalance {      /**      
 - @SPI(RandomLoadBalance.NAME)**拓展点随机**
 注解，Dubbo SPI
 ，默认为
-“random”
+"random"
 ，即
 。
 - @Adaptive
@@ -98,7 +98,7 @@ plain static int calculateWarmupWeight(int uptime, int warmup, int weight) {    
 ---
 
 ```plain text
-- <font style="color:rgb(51, 51, 51);">计算权重的代码这么写看起来比较“绕”，我们来修改成 </font><font style="color:rgb(51, 51, 51);">(uptime / warmup) * weight</font><font style="color:rgb(51, 51, 51);"> ，是否就好理解多了，相当于</font>**<font style="color:rgb(51, 51, 51);">进度百分比 * 权重</font>**<font style="color:rgb(51, 51, 51);">。</font>
+- <font style="color:rgb(51, 51, 51);">计算权重的代码这么写看起来比较"绕"，我们来修改成 </font><font style="color:rgb(51, 51, 51);">(uptime / warmup) * weight</font><font style="color:rgb(51, 51, 51);"> ，是否就好理解多了，相当于</font>**<font style="color:rgb(51, 51, 51);">进度百分比 * 权重</font>**<font style="color:rgb(51, 51, 51);">。</font>
 - <font style="color:rgb(51, 51, 51);">如下是我飞哥举的一个例子，感觉非常赞。</font><font style="color:rgb(51, 51, 51);">根据calculateWarmupWeight()方法实现可知，随着provider的启动时间越来越长，慢慢提升权重直到weight，且权重最小值为1，所以：</font>
     * <font style="color:rgb(51, 51, 51);">如果 provider 运行了 1 分钟，那么 weight 为 10，即只有最终需要承担的 10% 流量；</font>
     * <font style="color:rgb(51, 51, 51);">如果 provider 运行了 2 分钟，那么 weight 为 20，即只有最终需要承担的 20% 流量；</font>
@@ -107,8 +107,8 @@ plain static int calculateWarmupWeight(int uptime, int warmup, int weight) {    
 
 … …
 * 如果 provider 运行了 10 分钟，那么 weight 为 100，即只有最终需要承担的 100% 流量；
-+ “weight” 配置项，默认为 100 。
-+ “warmup” 配置项，默认为 10  60  1000 = 10 分钟。
++ "weight" 配置项，默认为 100 。
++ "warmup" 配置项，默认为 10  60  1000 = 10 分钟。
 
 # 4. RandomLoadBalance
 
@@ -184,7 +184,7 @@ AtomicPositiveInteger 对象，作为
 开始了。
 - 第 38 至 56 行：权重**不相等权重**
 ，顺序根据权重分配。因为顺序分配的过程需要考虑
-，所以看起来比较“绕”。我们可以理解成：
+，所以看起来比较"绕"。我们可以理解成：
     - 顺序发
 mod
 次牌

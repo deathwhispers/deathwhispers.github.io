@@ -102,7 +102,7 @@ yarn start
 
 项目下找到文件proxy.conf.js
 
-const forwardUrl = “http://IP:9090/”; const wsForwardUrl = “ws://IP:9090”; // const forwardUrl = “http://localhost:8080”; // const wsForwardUrl = “ws://localhost:8080”;
+const forwardUrl = "http://IP:9090/"; const wsForwardUrl = "ws://IP:9090"; // const forwardUrl = "http://localhost:8080"; // const wsForwardUrl = "ws://localhost:8080";
 
 ### 修改
 
@@ -124,13 +124,13 @@ title的文件地址是src/index.html 找到：
 
 找到源码目录src.ts和environment.prod.ts文件
 
-修改appTitle = “主题名称”
+修改appTitle = "主题名称"
 
-修改defaultLang = “默认语言”
+修改defaultLang = "默认语言"
 
 修改后效果如下：
 
-export const environment = { appTitle: “主题名称”, production: false, // @ts-ignore tbVersion: TB_VERSION, // @ts-ignore supportedLangs: SUPPORTED_LANGS, defaultLang: “主题名称” };
+export const environment = { appTitle: "主题名称", production: false, // @ts-ignore tbVersion: TB_VERSION, // @ts-ignore supportedLangs: SUPPORTED_LANGS, defaultLang: "主题名称" };
 
 4. powered by
 
@@ -150,7 +150,7 @@ export const environment = { appTitle: “主题名称”, production: false, //
 
 可以参考目前国内流行的配色比如 [ElementUI](https://element-plus.gitee.io/zh-CN/component/color.html)。
 
-6. 注释页面“帮助问号？”
+6. 注释页面"帮助问号？"
 
 找到文件：src.component.htmls
 

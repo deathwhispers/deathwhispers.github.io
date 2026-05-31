@@ -38,9 +38,6 @@ public Girl addGirl(@Valid Girl girl, BindingResult bindingResult) {
     }
     return girlResposity.save(girl);
 }
-
-
-
 ```
 
 注: 通常不在这里处理异常, 由统一的exceptioin全局异常处理
@@ -98,7 +95,7 @@ Controller
 
 @Valid 作为标准JSR-303规范，还没有吸收分组的功能。
 
-@Validated Spring’s JSR-303规范，是标准JSR-303的一个变种, 提供了一个分组功能，可以在入参验证时，根据不同的分组采用不同的验证机制。
+@Validated Spring's JSR-303规范，是标准JSR-303的一个变种, 提供了一个分组功能，可以在入参验证时，根据不同的分组采用不同的验证机制。
 
 ### 注解地方
 
@@ -130,7 +127,7 @@ Controller
 @Future     // 验证 Date 和 Calendar 对象是否在当前时间之后
 @Pattern    // 验证 String 对象是否符合正则表达式的规则
 
-// 数值检查，建议使用在Stirng,Integer类型，不建议使用在int类型上，因为表单值为“”时无法转换为int，但可以转换为Stirng为"",Integer为null
+// 数值检查，建议使用在Stirng,Integer类型，不建议使用在int类型上，因为表单值为""时无法转换为int，但可以转换为Stirng为"",Integer为null
 @Min            // 验证 Number 和 String 对象是否大等于指定的值
 @Max            // 验证 Number 和 String 对象是否小等于指定的值
 @DecimalMax     // 被标注的值必须不大于约束中指定的最大值. 这个约束的参数是一个通过BigDecimal定义的最大值的字符串表示.小数存在精度

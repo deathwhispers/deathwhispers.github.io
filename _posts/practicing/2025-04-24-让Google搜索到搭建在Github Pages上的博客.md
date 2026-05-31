@@ -30,9 +30,9 @@ site:http://xxxx.github.io
 
 我们可以选择网址前缀，并输入你的博客地址：
 
-点击“继续”，网站会提示需要验证网站所有权
+点击"继续"，网站会提示需要验证网站所有权
 ![img_3.png](../../assets/images/practicing/让google搜索到搭建在github-pages上的博客/c2361ba1167a36e1ab0b3f28da85a07e.png)
-网站给我们提示了一个推荐验证方法：是通过在你的网站上添加一个它提供的HTML文件来验证，我们将这个 html 文件下载下来，并上传到 GitHub，通过浏览器能正常访问该文件就可以。点击“验证”提示已完成所有权验证
+网站给我们提示了一个推荐验证方法：是通过在你的网站上添加一个它提供的HTML文件来验证，我们将这个 html 文件下载下来，并上传到 GitHub，通过浏览器能正常访问该文件就可以。点击"验证"提示已完成所有权验证
 ![img_4.png](../../assets/images/practicing/让google搜索到搭建在github-pages上的博客/855df8844637ba95e44e7d849f655368.png)
 这个文件是不能被删除的，否则验证会失效，因此可以考虑增加多种验证方法来保证稳定性。
 ![img_5.png](../../assets/images/practicing/让google搜索到搭建在github-pages上的博客/bcff2572594453c5842f3c1895e21920.png)

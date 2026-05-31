@@ -78,9 +78,6 @@ public void refresh() throws BeansException, IllegalStateException {
         }
     }
 }
-
-
-
 ```
 
 这里每一个方法都非常重要，需要一个一个地解释说明。
@@ -106,9 +103,6 @@ void prepareRefresh() {
     new
     LinkedHashSet<>();
 }
-
-
-
 ```
 
 该方法主要是做一些准备工作，如：
@@ -135,9 +129,6 @@ protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
     }
     return beanFactory;
 }
-
-
-
 ```
 
 核心方法就在`<font style="color:rgb(51, 51, 51);">#refreshBeanFactory()</font>`方法，该方法的核心任务就是创建 `<font style="color:rgb(51, 51, 51);">BeanFactory</font>` 并对其就行一番初始化。如下：
@@ -165,9 +156,6 @@ protected final void refreshBeanFactory() throws BeansException {
         throw new ApplicationContextException("I/O error parsing bean definition source for " + getDisplayName(), ex);
     }
 }
-
-
-
 ```
 
 5. 判断当前容器是否存在一个 `<font style="color:rgb(51, 51, 51);">BeanFactory</font>`
@@ -220,9 +208,6 @@ protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throw
     subclass to provide custom initialization of the reader,    // then proceed with actually loading the bean definitions.    // 对 XmlBeanDefinitionReader 进行设置，可以进行覆盖    initBeanDefinitionReader(beanDefinitionReader);    // 从
     Resource 们中，加载 BeanDefinition 们    loadBeanDefinitions(beanDefinitionReader);
 }
-
-
-
 ```
 
 - 新建 XmlBeanDefinitionReader 实例对象 beanDefinitionReader，调用
@@ -299,9 +284,6 @@ void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
         beanFactory.registerSingleton(SYSTEM_ENVIRONMENT_BEAN_NAME, getEnvironment().getSystemEnvironment());
     }
 }
-
-
-
 ```
 
 看上面的源码知道这个就是对 `<font style="color:rgb(51, 51, 51);">BeanFactory</font>` 设置各种各种的功能。
@@ -336,10 +318,10 @@ void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 、
 12. 注册 WEB 应用特定的域（scope）到 `<font style="color:rgb(51, 51, 51);">beanFactory</font><font style="color:rgb(51, 51, 51);">WebApplicationContext</font>`
 中，以便
-可以使用它们。比如 “request” , “session” , “globalSession” , “application”
+可以使用它们。比如 "request" , "session" , "globalSession" , "application"
 13. 注册 WEB 应用特定的 Environment bean 到 `<font style="color:rgb(51, 51, 51);">beanFactory</font><font style="color:rgb(51, 51, 51);">WebApplicationContext</font>`
 中，以便
-可以使用它们。如：”contextParameters”, “contextAttributes”
+可以使用它们。如："contextParameters", "contextAttributes"
 
 # **5. invokeBeanFactoryPostProcessors()**
 
@@ -455,9 +437,6 @@ static void invokeBeanFactoryPostProcessors(        ConfigurableListableBeanFact
             invokeBeanFactoryPostProcessors(nonOrderedPostProcessors, beanFactory); // Clear cached merged bean definitions since the post-processors might have    //
             modified the original metadata, e.g. replacing placeholders in values...    beanFactory.clearMetadataCache();
         }
-
-
-
 ```
 
 上述代码较长，但是处理逻辑较为单一，就是对所有的 BeanDefinitionRegistryPostProcessors 、手动注册的 BeanFactoryPostProcessor 以及通过配置文件方式的 BeanFactoryPostProcessor 按照 PriorityOrdered 、 Ordered、no ordered 三种方式分开处理、调用。
@@ -524,9 +503,6 @@ static void registerBeanPostProcessors(        ConfigurableListableBeanFactory b
     internalPostProcessors); // 重新注册用来自动探测内部ApplicationListener的post-processor，这样可以将他们移到处理器链条的末尾    beanFactory.addBeanPostProcessor(new
     ApplicationListenerDetector(applicationContext));
 }
-
-
-
 ```
 
 # 7. initMessageSource
@@ -540,7 +516,7 @@ static void registerBeanPostProcessors(        ConfigurableListableBeanFactory b
 protected
 void initMessageSource() {
     ConfigurableListableBeanFactory beanFactory = getBeanFactory();
-    // 包含 “messageSource” bean    if (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) {        this.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource.class);
+    // 包含 "messageSource" bean    if (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) {        this.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource.class);
     // 如果有父类        // HierarchicalMessageSource 分级处理的 MessageSource        if (this.parent !=
     null &&
     this.messageSource
@@ -561,9 +537,6 @@ void initMessageSource() {
             if (logger.isDebugEnabled()) {
                 logger.debug("Unable to locate
                 MessageSource with name '" + MESSAGE_SOURCE_BEAN_NAME +                    "': using default [" + this.messageSource + "]");        }    }}
-
-
-
 ```
 
 # 8. initApplicationEventMulticaster
@@ -588,9 +561,6 @@ void initApplicationEventMulticaster() {
         if (logger.isDebugEnabled()) {
             logger.debug("Unable to locate
             ApplicationEventMulticaster with name '" +                         APPLICATION_EVENT_MULTICASTER_BEAN_NAME +                         "': using default [" + this.applicationEventMulticaster + "]");        }    }}
-
-
-
 ```
 
 如果当前容器中存在 applicationEventMulticaster 的 bean，则对 applicationEventMulticaster 赋值，否则新建一个 SimpleApplicationEventMulticaster 的对象（默认的），并完成注册。
@@ -625,9 +595,6 @@ void registerListeners() {
         }
     }
 }
-
-
-
 ```
 
 # 10. finishBeanFactoryInitialization
@@ -654,9 +621,6 @@ void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory
     //    beanFactory.freezeConfiguration();
     // 初始化所有剩余的单例（非延迟初始化）    beanFactory.preInstantiateSingletons();
 }
-
-
-
 ```
 
 # **11. finishRefresh**

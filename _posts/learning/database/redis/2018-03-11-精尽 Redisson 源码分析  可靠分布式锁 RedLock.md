@@ -71,7 +71,7 @@ Redis Master 获得到锁
 anylock
 。
 
-理论来说，出现 **2 个** Redis Master 都挂了，并且数据都未同步到 Redis Slave 的情况，已经是小概率的事件。当然，哈哈哈哈，我们就是可爱的“杠精”，就是要扣一扣这个边界情况。
+理论来说，出现 **2 个** Redis Master 都挂了，并且数据都未同步到 Redis Slave 的情况，已经是小概率的事件。当然，哈哈哈哈，我们就是可爱的"杠精"，就是要扣一扣这个边界情况。
 
 同时，我们也可以发现，在时候用 RedLock 的时候，Redis Master 越多，集群的可靠性就越高，性能也会越低。 架构设计中，从来没有银弹。我们想要得到更高的可靠性，往往需要失去一定的性能。
 
@@ -100,8 +100,8 @@ plain // RedissonRedLock.java  public class RedissonRedLock extends RedissonMult
 
 ---
 
-- RedissonMultiLock ，联锁，正如其名字“**联**
-”，可以将多个 RLock 锁关联成一个联锁。使用示例如下：
+- RedissonMultiLock ，联锁，正如其名字"**联**
+"，可以将多个 RLock 锁关联成一个联锁。使用示例如下：
 
 ```plain text
 plain RedissonMultiLock lock = new RedissonMultiLock(lock1, lock2, lock3); // 给lock1，lock2，lock3加锁，如果没有手动解开的话，10秒钟后将会自动解开 lock.lock(10, TimeUnit.SECONDS);  // 为加锁等待100秒时间，并在加锁成功10秒钟后自动解开 boolean res = lock.tryLock(100, 10, TimeUnit.SECONDS); ... lock.unlock();

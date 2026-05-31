@@ -71,7 +71,7 @@ week: 2019-W21
 
 在 [cn.iocoder.springboot.lab25.springwebsocket.websocket](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-25/lab-websocket-25-01/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/websocket) 包路径下，创建 [WebsocketServerEndpoint](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-25/lab-websocket-25-01/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/websocket/WebsocketServerEndpoint.java) 类，定义 Websocket 服务的端点（EndPoint）。代码如下：
 
-// WebsocketServerEndpoint.java @Controller @ServerEndpoint(“/”) public class WebsocketServerEndpoint { private Logger logger = LoggerFactory.getLogger(getClass()); @OnOpen public void onOpen(Session session, EndpointConfig config) { logger.info(“[onOpen][session({}) 接入]”, session); } @OnMessage public void onMessage(Session session, String message) { logger.info(“[onOpen][session({}) 接收到一条消息({})]”, session, message); // 生产环境下，请设置成 debug 级别 } @OnClose public void onClose(Session session, CloseReason closeReason) { logger.info(“[onClose][session({}) 连接关闭。关闭原因是({})}]”, session, closeReason); } @OnError public void onError(Session session, Throwable throwable) { logger.info(“[onClose][session({}) 发生异常]”, session, throwable); } }
+// WebsocketServerEndpoint.java @Controller @ServerEndpoint("/") public class WebsocketServerEndpoint { private Logger logger = LoggerFactory.getLogger(getClass()); @OnOpen public void onOpen(Session session, EndpointConfig config) { logger.info("[onOpen][session({}) 接入]", session); } @OnMessage public void onMessage(Session session, String message) { logger.info("[onOpen][session({}) 接收到一条消息({})]", session, message); // 生产环境下，请设置成 debug 级别 } @OnClose public void onClose(Session session, CloseReason closeReason) { logger.info("[onClose][session({}) 连接关闭。关闭原因是({})}]", session, closeReason); } @OnError public void onError(Session session, Throwable throwable) { logger.info("[onClose][session({}) 发生异常]", session, throwable); } }
 
 - 在类上，添加 @Controller 注解，保证创建一个 WebsocketServerEndpoint Bean 。
 - 在类上，添加 JSR-356 定义的 [@ServerEndpoint](https://github.com/eclipse-ee4j/websocket-api/blob/master/api/server/src/main/java/javax/websocket/server/ServerEndpoint.java) 注解，标记这是一个 WebSocket EndPoint ，路径为 / 。
@@ -107,7 +107,7 @@ week: 2019-W21
 
 因为 WebSocket 协议，不像 HTTP 协议有 URI 可以区分不同的 API 请求操作，所以我们需要在 WebSocket 的 Message 里，增加能够标识消息类型，这里我们采用 type 字段。所以在这个示例中，我们采用的 Message 采用 JSON 格式编码，格式如下：
 
-{ type: ““, // 消息类型 body: {} // 消息体 }
+{ type: "", // 消息类型 body: {} // 消息体 }
 
 - type 字段，消息类型。通过该字段，我们知道使用哪个 MessageHandler 消息处理器。关于 MessageHandler ，我们在 [「2.6 消息处理器」](https://www.iocoder.cn/Spring-Boot/WebSocket/#) 中，详细解析。
 - body 字段，消息体。不同的消息类型，会有不同的消息体。
@@ -127,14 +127,14 @@ week: 2019-W21
 
 创建 [AuthRequest](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-25/lab-websocket-25-01/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/message/AuthRequest.java) 类，用户认证请求。代码如下：
 
-// AuthRequest.java public class AuthRequest implements Message { public static final String TYPE = “AUTH_REQUEST”; /** * 认证 Token */ private String accessToken; // … 省略 set/get 方法 }
+// AuthRequest.java public class AuthRequest implements Message { public static final String TYPE = "AUTH_REQUEST"; /** * 认证 Token */ private String accessToken; // … 省略 set/get 方法 }
 
 - TYPE 静态属性，消息类型为 AUTH_REQUEST 。
 - accessToken 属性，认证 Token 。在 WebSocket 协议中，我们也需要认证当前连接，用户身份是什么。一般情况下，我们采用用户调用 HTTP 登录接口，登录成功后返回的访问令牌 accessToken 。这里，我们先不拓展开讲，事后胖友可以看看 [《基于 Token 认证的 WebSocket 连接》](https://yq.aliyun.com/articles/229057) 文章。
 
 虽然说，WebSocket 协议是基于 Message 模型，进行交互。但是，这并不意味着它的操作，不需要响应结果。例如说，用户认证请求，是需要用户认证响应的。所以，我们创建 [AuthResponse](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-25/lab-websocket-25-01/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/message/AuthResponse.java) 类，作为用户认证响应。代码如下：
 
-// AuthResponse.java public class AuthResponse implements Message { public static final String TYPE = “AUTH_RESPONSE”; /** * 响应状态码 */ private Integer code; /** * 响应提示 */ private String message; // … 省略 set/get 方法 }
+// AuthResponse.java public class AuthResponse implements Message { public static final String TYPE = "AUTH_RESPONSE"; /** * 响应状态码 */ private Integer code; /** * 响应提示 */ private String message; // … 省略 set/get 方法 }
 
 - TYPE 静态属性，消息类型为 AUTH_REQUEST 。实际上，我们在每个 Message 实现类上，都增加了 TYPE 静态属性，作为消息类型。下面，我们就不重复赘述了。
 - code 属性，响应状态码。
@@ -142,7 +142,7 @@ week: 2019-W21
 
 在本示例中，用户成功认证之后，会广播用户加入群聊的通知 Message ，使用 [UserJoinNoticeRequest](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-25/lab-websocket-25-01/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/message/UserJoinNoticeRequest.java) 。代码如下：
 
-// UserJoinNoticeRequest.java public class UserJoinNoticeRequest implements Message { public static final String TYPE = “USER_JOIN_NOTICE_REQUEST”; /** * 昵称 */ private String nickname; // … 省略 set/get 方法 }
+// UserJoinNoticeRequest.java public class UserJoinNoticeRequest implements Message { public static final String TYPE = "USER_JOIN_NOTICE_REQUEST"; /** * 昵称 */ private String nickname; // … 省略 set/get 方法 }
 
 **优化小想法**
 
@@ -159,25 +159,25 @@ week: 2019-W21
 
 创建 [SendToOneRequest](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-25/lab-websocket-25-01/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/message/SendToOneRequest.java) 类，发送给指定人的私聊消息的 Message。代码如下：
 
-// SendToOneRequest.java public class SendToOneRequest implements Message { public static final String TYPE = “SEND_TO_ONE_REQUEST”; /** * 发送给的用户 */ private String toUser; /** * 消息编号 */ private String msgId; /** * 内容 */ private String content; // … 省略 set/get 方法 }
+// SendToOneRequest.java public class SendToOneRequest implements Message { public static final String TYPE = "SEND_TO_ONE_REQUEST"; /** * 发送给的用户 */ private String toUser; /** * 消息编号 */ private String msgId; /** * 内容 */ private String content; // … 省略 set/get 方法 }
 
 - 每个字段，胖友自己看注释噢。
 
 创建 [SendToAllRequest](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-25/lab-websocket-25-01/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/message/SendToAllRequest.java) 类，发送给所有人的群聊消息的 Message。代码如下：
 
-// SendToAllRequest.java public class SendToAllRequest implements Message { public static final String TYPE = “SEND_TO_ALL_REQUEST”; /** * 消息编号 */ private String msgId; /** * 内容 */ private String content; // … 省略 set/get 方法 }
+// SendToAllRequest.java public class SendToAllRequest implements Message { public static final String TYPE = "SEND_TO_ALL_REQUEST"; /** * 消息编号 */ private String msgId; /** * 内容 */ private String content; // … 省略 set/get 方法 }
 
 - 每个字段，胖友自己看注释噢。
 
 在服务端接收到发送消息的请求，需要**异步**响应发送是否成功。所以，创建 [SendResponse](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-25/lab-websocket-25-01/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/message/SendResponse.java) 类，发送消息响应结果的 Message 。代码如下：
 
-// SendResponse.java public class SendResponse implements Message { public static final String TYPE = “SEND_RESPONSE”; /** * 消息编号 */ private String msgId; /** * 响应状态码 */ private Integer code; /** * 响应提示 */ private String message; // … 省略 set/get 方法 }
+// SendResponse.java public class SendResponse implements Message { public static final String TYPE = "SEND_RESPONSE"; /** * 消息编号 */ private String msgId; /** * 响应状态码 */ private Integer code; /** * 响应提示 */ private String message; // … 省略 set/get 方法 }
 
 - 重点看 msgId 字段，消息编号。客户端在发送消息，通过使用 [UUID](https://zh.wikipedia.org/zh-hans/%E9%80%9A%E7%94%A8%E5%94%AF%E4%B8%80%E8%AF%86%E5%88%AB%E7%A0%81) 算法，生成全局唯一消息编号。这样，服务端通过 SendResponse 消息响应，通过 msgId 做映射。
 
 在服务端接收到发送消息的请求，需要转发消息给对应的人。所以，创建 [SendToUserRequest](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-25/lab-websocket-25-01/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/message/SendToUserRequest.java) 类，发送消息给一个用户的 Message 。代码如下：
 
-// SendResponse.java public class SendToUserRequest implements Message { public static final String TYPE = “SEND_TO_USER_REQUEST”; /** * 消息编号 */ private String msgId; /** * 内容 */ private String content; // … 省略 set/get 方法 }
+// SendResponse.java public class SendToUserRequest implements Message { public static final String TYPE = "SEND_TO_USER_REQUEST"; /** * 消息编号 */ private String msgId; /** * 内容 */ private String content; // … 省略 set/get 方法 }
 
 - 相比 SendToOneRequest 来说，少一个 toUser 字段。因为，我们可以通过 WebSocket 连接，已经知道发送给谁了。
 
@@ -201,7 +201,7 @@ week: 2019-W21
 
 创建 [AuthMessageHandler](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-25/lab-websocket-25-01/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/handler/AuthMessageHandler.java) 类，处理 AuthRequest 消息。代码如下：
 
-// AuthMessageHandler.java @Component public class AuthMessageHandler implements MessageHandler { @Override public void execute(Session session, AuthRequest message) { // 如果未传递 accessToken if (StringUtils.isEmpty(message.getAccessToken())) { WebSocketUtil.send(session, AuthResponse.TYPE, new AuthResponse().setCode(1).setMessage(“认证 accessToken 未传入”)); return; } // 添加到 WebSocketUtil 中 WebSocketUtil.addSession(session, message.getAccessToken()); // 考虑到代码简化，我们先直接使用 accessToken 作为 User // 判断是否认证成功。这里，假装直接成功 WebSocketUtil.send(session, AuthResponse.TYPE, new AuthResponse().setCode(0)); // 通知所有人，某个人加入了。这个是可选逻辑，仅仅是为了演示 WebSocketUtil.broadcast(UserJoinNoticeRequest.TYPE, new UserJoinNoticeRequest().setNickname(message.getAccessToken())); // 考虑到代码简化，我们先直接使用 accessToken 作为 User } @Override public String getType() { return AuthRequest.TYPE; } }
+// AuthMessageHandler.java @Component public class AuthMessageHandler implements MessageHandler { @Override public void execute(Session session, AuthRequest message) { // 如果未传递 accessToken if (StringUtils.isEmpty(message.getAccessToken())) { WebSocketUtil.send(session, AuthResponse.TYPE, new AuthResponse().setCode(1).setMessage("认证 accessToken 未传入")); return; } // 添加到 WebSocketUtil 中 WebSocketUtil.addSession(session, message.getAccessToken()); // 考虑到代码简化，我们先直接使用 accessToken 作为 User // 判断是否认证成功。这里，假装直接成功 WebSocketUtil.send(session, AuthResponse.TYPE, new AuthResponse().setCode(0)); // 通知所有人，某个人加入了。这个是可选逻辑，仅仅是为了演示 WebSocketUtil.broadcast(UserJoinNoticeRequest.TYPE, new UserJoinNoticeRequest().setNickname(message.getAccessToken())); // 考虑到代码简化，我们先直接使用 accessToken 作为 User } @Override public String getType() { return AuthRequest.TYPE; } }
 
 - 代码比较简单，胖友跟着代码读读即可。
 - 关于 WebSocketUtil 类，我们在 [「2.7 WebSocketUtil」](https://www.iocoder.cn/Spring-Boot/WebSocket/#) 中来看看。
@@ -231,7 +231,7 @@ week: 2019-W21
 
 整体代码比较简单，胖友自己瞅瞅哟。代码如下：
 
-// WebSocketUtil.java public class WebSocketUtil { private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketUtil.class); // ========== 会话相关 ========== /** * Session 与用户的映射 */ private static final Map<Session, String> SESSION_USER_MAP = new ConcurrentHashMap<>(); /** * 用户与 Session 的映射 */ private static final Map<String, Session> USER_SESSION_MAP = new ConcurrentHashMap<>(); /** * 添加 Session 。在这个方法中，会添加用户和 Session 之间的映射 * * @param session Session * @param user 用户 */ public static void addSession(Session session, String user) { // 更新 USER_SESSION_MAP USER_SESSION_MAP.put(user, session); // 更新 SESSION_USER_MAP SESSION_USER_MAP.put(session, user); } /** * 移除 Session 。 * * @param session Session */ public static void removeSession(Session session) { // 从 SESSION_USER_MAP 中移除 String user = SESSION_USER_MAP.remove(session); // 从 USER_SESSION_MAP 中移除 if (user != null && user.length() > 0) { USER_SESSION_MAP.remove(user); } } // ========== 消息相关 ========== /** * 广播发送消息给所有在线用户 * * @param type 消息类型 * @param message 消息体 * @param  消息类型 */ public static  void broadcast(String type, T message) { // 创建消息 String messageText = buildTextMessage(type, message); // 遍历 SESSION_USER_MAP ，进行逐个发送 for (Session session : SESSION_USER_MAP.keySet()) { sendTextMessage(session, messageText); } } /** * 发送消息给单个用户的 Session * * @param session Session * @param type 消息类型 * @param message 消息体 * @param  消息类型 */ public static  void send(Session session, String type, T message) { // 创建消息 String messageText = buildTextMessage(type, message); // 遍历给单个 Session ，进行逐个发送 sendTextMessage(session, messageText); } /** * 发送消息给指定用户 * * @param user 指定用户 * @param type 消息类型 * @param message 消息体 * @param  消息类型 * @return 发送是否成功你那个 */ public static  boolean send(String user, String type, T message) { // 获得用户对应的 Session Session session = USER_SESSION_MAP.get(user); if (session == null) { LOGGER.error(“[send][user({}) 不存在对应的 session]”, user); return false; } // 发送消息 send(session, type, message); return true; } /** * 构建完整的消息 * * @param type 消息类型 * @param message 消息体 * @param  消息类型 * @return 消息 */ private static  String buildTextMessage(String type, T message) { JSONObject messageObject = new JSONObject(); messageObject.put(“type”, type); messageObject.put(“body”, message); return messageObject.toString(); } /** * 真正发送消息 * * @param session Session * @param messageText 消息 */ private static void sendTextMessage(Session session, String messageText) { if (session == null) { LOGGER.error(“[sendTextMessage][session 为 null]”); return; } RemoteEndpoint.Basic basic = session.getBasicRemote(); if (basic == null) { LOGGER.error(“[sendTextMessage][session 的 为 null]”); return; } try { basic.sendText(messageText); } catch (IOException e) { LOGGER.error(“[sendTextMessage][session({}) 发送消息{}) 发生异常”, session, messageText, e); } } }
+// WebSocketUtil.java public class WebSocketUtil { private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketUtil.class); // ========== 会话相关 ========== /** * Session 与用户的映射 */ private static final Map<Session, String> SESSION_USER_MAP = new ConcurrentHashMap<>(); /** * 用户与 Session 的映射 */ private static final Map<String, Session> USER_SESSION_MAP = new ConcurrentHashMap<>(); /** * 添加 Session 。在这个方法中，会添加用户和 Session 之间的映射 * * @param session Session * @param user 用户 */ public static void addSession(Session session, String user) { // 更新 USER_SESSION_MAP USER_SESSION_MAP.put(user, session); // 更新 SESSION_USER_MAP SESSION_USER_MAP.put(session, user); } /** * 移除 Session 。 * * @param session Session */ public static void removeSession(Session session) { // 从 SESSION_USER_MAP 中移除 String user = SESSION_USER_MAP.remove(session); // 从 USER_SESSION_MAP 中移除 if (user != null && user.length() > 0) { USER_SESSION_MAP.remove(user); } } // ========== 消息相关 ========== /** * 广播发送消息给所有在线用户 * * @param type 消息类型 * @param message 消息体 * @param  消息类型 */ public static  void broadcast(String type, T message) { // 创建消息 String messageText = buildTextMessage(type, message); // 遍历 SESSION_USER_MAP ，进行逐个发送 for (Session session : SESSION_USER_MAP.keySet()) { sendTextMessage(session, messageText); } } /** * 发送消息给单个用户的 Session * * @param session Session * @param type 消息类型 * @param message 消息体 * @param  消息类型 */ public static  void send(Session session, String type, T message) { // 创建消息 String messageText = buildTextMessage(type, message); // 遍历给单个 Session ，进行逐个发送 sendTextMessage(session, messageText); } /** * 发送消息给指定用户 * * @param user 指定用户 * @param type 消息类型 * @param message 消息体 * @param  消息类型 * @return 发送是否成功你那个 */ public static  boolean send(String user, String type, T message) { // 获得用户对应的 Session Session session = USER_SESSION_MAP.get(user); if (session == null) { LOGGER.error("[send][user({}) 不存在对应的 session]", user); return false; } // 发送消息 send(session, type, message); return true; } /** * 构建完整的消息 * * @param type 消息类型 * @param message 消息体 * @param  消息类型 * @return 消息 */ private static  String buildTextMessage(String type, T message) { JSONObject messageObject = new JSONObject(); messageObject.put("type", type); messageObject.put("body", message); return messageObject.toString(); } /** * 真正发送消息 * * @param session Session * @param messageText 消息 */ private static void sendTextMessage(Session session, String messageText) { if (session == null) { LOGGER.error("[sendTextMessage][session 为 null]"); return; } RemoteEndpoint.Basic basic = session.getBasicRemote(); if (basic == null) { LOGGER.error("[sendTextMessage][session 的 为 null]"); return; } try { basic.sendText(messageText); } catch (IOException e) { LOGGER.error("[sendTextMessage][session({}) 发送消息{}) 发生异常", session, messageText, e); } } }
 
 ## 2.8 完善 WebsocketServerEndpoint
 
@@ -241,7 +241,7 @@ week: 2019-W21
 
 实现 [InitializingBean](https://github.com/spring-projects/spring-framework/blob/master/spring-beans/src/main/java/org/springframework/beans/factory/InitializingBean.java) 接口，在 #afterPropertiesSet() 方法中，扫描所有 MessageHandler Bean ，添加到 MessageHandler 集合中。代码如下：
 
-// WebsocketServerEndpoint.java /** * 消息类型与 MessageHandler 的映射 * * 注意，这里设置成静态变量。虽然说 WebsocketServerEndpoint 是单例，但是 Spring Boot 还是会为每个 WebSocket 创建一个 WebsocketServerEndpoint Bean 。 */ private static final Map<String, MessageHandler> HANDLERS = new HashMap<>(); @Autowired private ApplicationContext applicationContext; @Override public void afterPropertiesSet() throws Exception { // 通过 ApplicationContext 获得所有 MessageHandler Bean applicationContext.getBeansOfType(MessageHandler.class).values() // 获得所有 MessageHandler Bean .forEach(messageHandler -> HANDLERS.put(messageHandler.getType(), messageHandler)); // 添加到 handlers 中 logger.info(“[afterPropertiesSet][消息处理器数量：{}]”, HANDLERS.size()); }
+// WebsocketServerEndpoint.java /** * 消息类型与 MessageHandler 的映射 * * 注意，这里设置成静态变量。虽然说 WebsocketServerEndpoint 是单例，但是 Spring Boot 还是会为每个 WebSocket 创建一个 WebsocketServerEndpoint Bean 。 */ private static final Map<String, MessageHandler> HANDLERS = new HashMap<>(); @Autowired private ApplicationContext applicationContext; @Override public void afterPropertiesSet() throws Exception { // 通过 ApplicationContext 获得所有 MessageHandler Bean applicationContext.getBeansOfType(MessageHandler.class).values() // 获得所有 MessageHandler Bean .forEach(messageHandler -> HANDLERS.put(messageHandler.getType(), messageHandler)); // 添加到 handlers 中 logger.info("[afterPropertiesSet][消息处理器数量：{}]", HANDLERS.size()); }
 
 通过这样的方式，可以避免手动配置 MessageHandler 与消息类型的映射。
 
@@ -249,7 +249,7 @@ week: 2019-W21
 
 重新实现 #onOpen(Session session, EndpointConfig config) 方法，实现连接时，使用 accessToken 参数进行用户认证。代码如下：
 
-// WebsocketServerEndpoint.java @OnOpen public void onOpen(Session session, EndpointConfig config) { logger.info(“[onOpen][session({}) 接入]”, session); // <1> 解析 accessToken List accessTokenValues = session.getRequestParameterMap().get(“accessToken”); String accessToken = !CollectionUtils.isEmpty(accessTokenValues) ? accessTokenValues.get(0) : null; // <2> 创建 AuthRequest 消息类型 AuthRequest authRequest = new AuthRequest().setAccessToken(accessToken); // <3> 获得消息处理器 MessageHandler messageHandler = HANDLERS.get(AuthRequest.TYPE); if (messageHandler == null) { logger.error(“[onOpen][认证消息类型，不存在消息处理器]”); return; } messageHandler.execute(session, authRequest); }
+// WebsocketServerEndpoint.java @OnOpen public void onOpen(Session session, EndpointConfig config) { logger.info("[onOpen][session({}) 接入]", session); // <1> 解析 accessToken List accessTokenValues = session.getRequestParameterMap().get("accessToken"); String accessToken = !CollectionUtils.isEmpty(accessTokenValues) ? accessTokenValues.get(0) : null; // <2> 创建 AuthRequest 消息类型 AuthRequest authRequest = new AuthRequest().setAccessToken(accessToken); // <3> 获得消息处理器 MessageHandler messageHandler = HANDLERS.get(AuthRequest.TYPE); if (messageHandler == null) { logger.error("[onOpen][认证消息类型，不存在消息处理器]"); return; } messageHandler.execute(session, authRequest); }
 
 - <1> 处，解析 ws:// 地址上的 accessToken 的请求参。例如说：ws://127.0.0.1:8080?accessToken=芋艿 。
 - <2> 处，创建 AuthRequest 消息类型，并设置 accessToken 属性。
@@ -272,13 +272,13 @@ week: 2019-W21
 
 重新实现 #onMessage(Session session, String message) 方法，实现不同的消息，转发给不同的 MessageHandler 消息处理器。代码如下：
 
-// WebsocketServerEndpoint.java @OnMessage public void onMessage(Session session, String message) { logger.info(“[onOpen][session({}) 接收到一条消息({})]”, session, message); // 生产环境下，请设置成 debug 级别 try { // <1> 获得消息类型 JSONObject jsonMessage = JSON.parseObject(message); String messageType = jsonMessage.getString(“type”); // <2> 获得消息处理器 MessageHandler messageHandler = HANDLERS.get(messageType); if (messageHandler == null) { logger.error(“[onMessage][消息类型({}) 不存在消息处理器]”, messageType); return; } // <3> 解析消息 Class<? extends Message> messageClass = this.getMessageClass(messageHandler); // <4> 处理消息 Message messageObj = JSON.parseObject(jsonMessage.getString(“body”), messageClass); messageHandler.execute(session, messageObj); } catch (Throwable throwable) { logger.info(“[onMessage][session({}) message({}) 发生异常]”, session, throwable); } }
+// WebsocketServerEndpoint.java @OnMessage public void onMessage(Session session, String message) { logger.info("[onOpen][session({}) 接收到一条消息({})]", session, message); // 生产环境下，请设置成 debug 级别 try { // <1> 获得消息类型 JSONObject jsonMessage = JSON.parseObject(message); String messageType = jsonMessage.getString("type"); // <2> 获得消息处理器 MessageHandler messageHandler = HANDLERS.get(messageType); if (messageHandler == null) { logger.error("[onMessage][消息类型({}) 不存在消息处理器]", messageType); return; } // <3> 解析消息 Class<? extends Message> messageClass = this.getMessageClass(messageHandler); // <4> 处理消息 Message messageObj = JSON.parseObject(jsonMessage.getString("body"), messageClass); messageHandler.execute(session, messageObj); } catch (Throwable throwable) { logger.info("[onMessage][session({}) message({}) 发生异常]", session, throwable); } }
 
-- <1> 处，获得消息类型，从 “type” 字段中。
+- <1> 处，获得消息类型，从 "type" 字段中。
 - <2> 处，获得消息类型对应的 MessageHandler 消息处理器。
 - <3> 处，调用 #getMessageClass(MessageHandler handler) 方法，通过 MessageHandler 中，通过解析其类上的泛型，获得消息类型对应的 Class 类。代码如下：
 
-// WebsocketServerEndpoint.java private Class<? extends Message> getMessageClass(MessageHandler handler) { // 获得 Bean 对应的 Class 类名。因为有可能被 AOP 代理过。 Class<?> targetClass = AopProxyUtils.ultimateTargetClass(handler); // 获得接口的 Type 数组 Type[] interfaces = targetClass.getGenericInterfaces(); Class<?> superclass = targetClass.getSuperclass(); while ((Objects.isNull(interfaces) || 0 == interfaces.length) && Objects.nonNull(superclass)) { // 此处，是以父类的接口为准 interfaces = superclass.getGenericInterfaces(); superclass = targetClass.getSuperclass(); } if (Objects.nonNull(interfaces)) { // 遍历 interfaces 数组 for (Type type : interfaces) { // 要求 type 是泛型参数 if (type instanceof ParameterizedType) { ParameterizedType parameterizedType = (ParameterizedType) type; // 要求是 MessageHandler 接口 if (Objects.equals(parameterizedType.getRawType(), MessageHandler.class)) { Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); // 取首个元素 if (Objects.nonNull(actualTypeArguments) && actualTypeArguments.length > 0) { return (Class) actualTypeArguments[0]; } else { throw new IllegalStateException(String.format(“类型(%s) 获得不到消息类型”, handler)); } } } } } throw new IllegalStateException(String.format(“类型(%s) 获得不到消息类型”, handler)); }
+// WebsocketServerEndpoint.java private Class<? extends Message> getMessageClass(MessageHandler handler) { // 获得 Bean 对应的 Class 类名。因为有可能被 AOP 代理过。 Class<?> targetClass = AopProxyUtils.ultimateTargetClass(handler); // 获得接口的 Type 数组 Type[] interfaces = targetClass.getGenericInterfaces(); Class<?> superclass = targetClass.getSuperclass(); while ((Objects.isNull(interfaces) || 0 == interfaces.length) && Objects.nonNull(superclass)) { // 此处，是以父类的接口为准 interfaces = superclass.getGenericInterfaces(); superclass = targetClass.getSuperclass(); } if (Objects.nonNull(interfaces)) { // 遍历 interfaces 数组 for (Type type : interfaces) { // 要求 type 是泛型参数 if (type instanceof ParameterizedType) { ParameterizedType parameterizedType = (ParameterizedType) type; // 要求是 MessageHandler 接口 if (Objects.equals(parameterizedType.getRawType(), MessageHandler.class)) { Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); // 取首个元素 if (Objects.nonNull(actualTypeArguments) && actualTypeArguments.length > 0) { return (Class) actualTypeArguments[0]; } else { throw new IllegalStateException(String.format("类型(%s) 获得不到消息类型", handler)); } } } } } throw new IllegalStateException(String.format("类型(%s) 获得不到消息类型", handler)); }
 
 ```plain text
 - 这是参考 [rocketmq-spring](https://github.com/apache/rocketmq-spring/) 项目的 [DefaultRocketMQListenerContainer#getMessageType()](https://github.com/apache/rocketmq-spring/blob/8b2426ea89d704d61c00497a1320b9b9ccd5a61e/rocketmq-spring-boot/src/main/java/org/apache/rocketmq/spring/support/DefaultRocketMQListenerContainer.java#L408-L435) 方法，进行略微修改。
@@ -294,11 +294,11 @@ week: 2019-W21
 
 - 一条 SendToOneRequest 私聊消息
 
-{ type: “SEND_TO_ONE_REQUEST”, body: { toUser: “番茄”, msgId: “eaef4a3c-35dd-46ee-b548-f9c4eb6396fe”, content: “我是一条单聊消息” } }
+{ type: "SEND_TO_ONE_REQUEST", body: { toUser: "番茄", msgId: "eaef4a3c-35dd-46ee-b548-f9c4eb6396fe", content: "我是一条单聊消息" } }
 
 - 一条 SendToAllHandler 群聊消息：
 
-{ type: “SEND_TO_ALL_REQUEST”, body: { msgId: “838e97e1-6ae9-40f9-99c3-f7127ed64747”, content: “我是一条群聊消息” } }
+{ type: "SEND_TO_ALL_REQUEST", body: { msgId: "838e97e1-6ae9-40f9-99c3-f7127ed64747", content: "我是一条群聊消息" } }
 
 最终结果如下图：
 
@@ -311,13 +311,13 @@ week: 2019-W21
 
 重新实现 #onClose(Session session, CloseReason closeReason) 方法，实现移除关闭的 Session 。代码如下：
 
-// WebsocketServerEndpoint.java @OnClose public void onClose(Session session, CloseReason closeReason) { logger.info(“[onClose][session({}) 连接关闭。关闭原因是({})}]”, session, closeReason); WebSocketUtil.removeSession(session); }
+// WebsocketServerEndpoint.java @OnClose public void onClose(Session session, CloseReason closeReason) { logger.info("[onClose][session({}) 连接关闭。关闭原因是({})}]", session, closeReason); WebSocketUtil.removeSession(session); }
 
 ### 2.8.5 onError
 
 #onError(Session session, Throwable throwable) 方法，保持不变。代码如下：
 
-// WebsocketServerEndpoint.java @OnError public void onError(Session session, Throwable throwable) { logger.info(“[onClose][session({}) 发生异常]”, session, throwable); }
+// WebsocketServerEndpoint.java @OnError public void onError(Session session, Throwable throwable) { logger.info("[onClose][session({}) 发生异常]", session, throwable); }
 
 # 3. Spring WebSocket 快速入门
 
@@ -342,13 +342,13 @@ week: 2019-W21
 
 在 [cn.iocoder.springboot.lab25.springwebsocket.websocket](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-25/lab-websocket-25-02/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/websocket/) 包路径下，创建 [DemoWebSocketShakeInterceptor](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-25/lab-websocket-25-02/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/websocket/DemoWebSocketShakeInterceptor.java) 拦截器。因为 WebSocketSession 无法获得 ws 地址上的请求参数，所以只好通过该拦截器，获得 accessToken 请求参数，设置到 attributes 中。代码如下：
 
-// DemoWebSocketShakeInterceptor.java public class DemoWebSocketShakeInterceptor extends HttpSessionHandshakeInterceptor { @Override // 拦截 Handshake 事件 public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception { // 获得 accessToken if (request instanceof ServletServerHttpRequest) { ServletServerHttpRequest serverRequest = (ServletServerHttpRequest) request; attributes.put(“accessToken”, serverRequest.getServletRequest().getParameter(“accessToken”)); } // 调用父方法，继续执行逻辑 return super.beforeHandshake(request, response, wsHandler, attributes); } }
+// DemoWebSocketShakeInterceptor.java public class DemoWebSocketShakeInterceptor extends HttpSessionHandshakeInterceptor { @Override // 拦截 Handshake 事件 public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception { // 获得 accessToken if (request instanceof ServletServerHttpRequest) { ServletServerHttpRequest serverRequest = (ServletServerHttpRequest) request; attributes.put("accessToken", serverRequest.getServletRequest().getParameter("accessToken")); } // 调用父方法，继续执行逻辑 return super.beforeHandshake(request, response, wsHandler, attributes); } }
 
 ## 3.4 DemoWebSocketHandler
 
 在 [cn.iocoder.springboot.lab25.springwebsocket.websocket](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-25/lab-websocket-25-02/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/websocket/) 包路径下，创建 [DemoWebSocketHandler](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-25/lab-websocket-25-02/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/websocket/DemoWebSocketHandler.java) 处理器。该处理器参考 [「2.8 完善 WebsocketServerEndpoint」](https://www.iocoder.cn/Spring-Boot/WebSocket/#) 小节，编写它的代码。代码如下：
 
-// DemoWebSocketHandler.java public class DemoWebSocketHandler extends TextWebSocketHandler implements InitializingBean { private Logger logger = LoggerFactory.getLogger(getClass()); /** * 消息类型与 MessageHandler 的映射 * * 无需设置成静态变量 */ private final Map<String, MessageHandler> HANDLERS = new HashMap<>(); @Autowired private ApplicationContext applicationContext; @Override // 对应 open 事件 public void afterConnectionEstablished(WebSocketSession session) throws Exception { logger.info(“[afterConnectionEstablished][session({}) 接入]”, session); // 解析 accessToken String accessToken = (String) session.getAttributes().get(“accessToken”); // 创建 AuthRequest 消息类型 AuthRequest authRequest = new AuthRequest().setAccessToken(accessToken); // 获得消息处理器 MessageHandler messageHandler = HANDLERS.get(AuthRequest.TYPE); if (messageHandler == null) { logger.error(“[onOpen][认证消息类型，不存在消息处理器]”); return; } messageHandler.execute(session, authRequest); } @Override // 对应 message 事件 public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception { logger.info(“[handleMessage][session({}) 接收到一条消息({})]”, session, textMessage); // 生产环境下，请设置成 debug 级别 try { // 获得消息类型 JSONObject jsonMessage = JSON.parseObject(textMessage.getPayload()); String messageType = jsonMessage.getString(“type”); // 获得消息处理器 MessageHandler messageHandler = HANDLERS.get(messageType); if (messageHandler == null) { logger.error(“[onMessage][消息类型({}) 不存在消息处理器]”, messageType); return; } // 解析消息 Class<? extends Message> messageClass = this.getMessageClass(messageHandler); // 处理消息 Message messageObj = JSON.parseObject(jsonMessage.getString(“body”), messageClass); messageHandler.execute(session, messageObj); } catch (Throwable throwable) { logger.info(“[onMessage][session({}) message({}) 发生异常]”, session, throwable); } } @Override // 对应 close 事件 public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception { logger.info(“[afterConnectionClosed][session({}) 连接关闭。关闭原因是({})}]”, session, status); WebSocketUtil.removeSession(session); } @Override // 对应 error 事件 public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception { logger.info(“[handleTransportError][session({}) 发生异常]”, session, exception); } @Override public void afterPropertiesSet() throws Exception { // 通过 ApplicationContext 获得所有 MessageHandler Bean applicationContext.getBeansOfType(MessageHandler.class).values() // 获得所有 MessageHandler Bean .forEach(messageHandler -> HANDLERS.put(messageHandler.getType(), messageHandler)); // 添加到 handlers 中 logger.info(“[afterPropertiesSet][消息处理器数量：{}]”, HANDLERS.size()); } private Class<? extends Message> getMessageClass(MessageHandler handler) { // 获得 Bean 对应的 Class 类名。因为有可能被 AOP 代理过。 Class<?> targetClass = AopProxyUtils.ultimateTargetClass(handler); // 获得接口的 Type 数组 Type[] interfaces = targetClass.getGenericInterfaces(); Class<?> superclass = targetClass.getSuperclass(); while ((Objects.isNull(interfaces) || 0 == interfaces.length) && Objects.nonNull(superclass)) { // 此处，是以父类的接口为准 interfaces = superclass.getGenericInterfaces(); superclass = targetClass.getSuperclass(); } if (Objects.nonNull(interfaces)) { // 遍历 interfaces 数组 for (Type type : interfaces) { // 要求 type 是泛型参数 if (type instanceof ParameterizedType) { ParameterizedType parameterizedType = (ParameterizedType) type; // 要求是 MessageHandler 接口 if (Objects.equals(parameterizedType.getRawType(), MessageHandler.class)) { Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); // 取首个元素 if (Objects.nonNull(actualTypeArguments) && actualTypeArguments.length > 0) { return (Class) actualTypeArguments[0]; } else { throw new IllegalStateException(String.format(“类型(%s) 获得不到消息类型”, handler)); } } } } } throw new IllegalStateException(String.format(“类型(%s) 获得不到消息类型”, handler)); } }
+// DemoWebSocketHandler.java public class DemoWebSocketHandler extends TextWebSocketHandler implements InitializingBean { private Logger logger = LoggerFactory.getLogger(getClass()); /** * 消息类型与 MessageHandler 的映射 * * 无需设置成静态变量 */ private final Map<String, MessageHandler> HANDLERS = new HashMap<>(); @Autowired private ApplicationContext applicationContext; @Override // 对应 open 事件 public void afterConnectionEstablished(WebSocketSession session) throws Exception { logger.info("[afterConnectionEstablished][session({}) 接入]", session); // 解析 accessToken String accessToken = (String) session.getAttributes().get("accessToken"); // 创建 AuthRequest 消息类型 AuthRequest authRequest = new AuthRequest().setAccessToken(accessToken); // 获得消息处理器 MessageHandler messageHandler = HANDLERS.get(AuthRequest.TYPE); if (messageHandler == null) { logger.error("[onOpen][认证消息类型，不存在消息处理器]"); return; } messageHandler.execute(session, authRequest); } @Override // 对应 message 事件 public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception { logger.info("[handleMessage][session({}) 接收到一条消息({})]", session, textMessage); // 生产环境下，请设置成 debug 级别 try { // 获得消息类型 JSONObject jsonMessage = JSON.parseObject(textMessage.getPayload()); String messageType = jsonMessage.getString("type"); // 获得消息处理器 MessageHandler messageHandler = HANDLERS.get(messageType); if (messageHandler == null) { logger.error("[onMessage][消息类型({}) 不存在消息处理器]", messageType); return; } // 解析消息 Class<? extends Message> messageClass = this.getMessageClass(messageHandler); // 处理消息 Message messageObj = JSON.parseObject(jsonMessage.getString("body"), messageClass); messageHandler.execute(session, messageObj); } catch (Throwable throwable) { logger.info("[onMessage][session({}) message({}) 发生异常]", session, throwable); } } @Override // 对应 close 事件 public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception { logger.info("[afterConnectionClosed][session({}) 连接关闭。关闭原因是({})}]", session, status); WebSocketUtil.removeSession(session); } @Override // 对应 error 事件 public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception { logger.info("[handleTransportError][session({}) 发生异常]", session, exception); } @Override public void afterPropertiesSet() throws Exception { // 通过 ApplicationContext 获得所有 MessageHandler Bean applicationContext.getBeansOfType(MessageHandler.class).values() // 获得所有 MessageHandler Bean .forEach(messageHandler -> HANDLERS.put(messageHandler.getType(), messageHandler)); // 添加到 handlers 中 logger.info("[afterPropertiesSet][消息处理器数量：{}]", HANDLERS.size()); } private Class<? extends Message> getMessageClass(MessageHandler handler) { // 获得 Bean 对应的 Class 类名。因为有可能被 AOP 代理过。 Class<?> targetClass = AopProxyUtils.ultimateTargetClass(handler); // 获得接口的 Type 数组 Type[] interfaces = targetClass.getGenericInterfaces(); Class<?> superclass = targetClass.getSuperclass(); while ((Objects.isNull(interfaces) || 0 == interfaces.length) && Objects.nonNull(superclass)) { // 此处，是以父类的接口为准 interfaces = superclass.getGenericInterfaces(); superclass = targetClass.getSuperclass(); } if (Objects.nonNull(interfaces)) { // 遍历 interfaces 数组 for (Type type : interfaces) { // 要求 type 是泛型参数 if (type instanceof ParameterizedType) { ParameterizedType parameterizedType = (ParameterizedType) type; // 要求是 MessageHandler 接口 if (Objects.equals(parameterizedType.getRawType(), MessageHandler.class)) { Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); // 取首个元素 if (Objects.nonNull(actualTypeArguments) && actualTypeArguments.length > 0) { return (Class) actualTypeArguments[0]; } else { throw new IllegalStateException(String.format("类型(%s) 获得不到消息类型", handler)); } } } } } throw new IllegalStateException(String.format("类型(%s) 获得不到消息类型", handler)); } }
 
 代码及其相似，胖友简单撸下即可。
 
@@ -356,7 +356,7 @@ week: 2019-W21
 
 修改 [WebSocketConfiguration](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-25/lab-websocket-25-02/src/main/java/cn/iocoder/springboot/lab25/springwebsocket/config/WebSocketConfiguration.java) 配置类，代码如下：
 
-// WebSocketConfiguration.java @Configuration @EnableWebSocket // 开启 Spring WebSocket public class WebSocketConfiguration implements WebSocketConfigurer { @Override public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) { registry.addHandler(this.webSocketHandler(), “/”) // 配置处理器 .addInterceptors(new DemoWebSocketShakeInterceptor()) // 配置拦截器 .setAllowedOrigins(“*“); // 解决跨域问题 } @Bean public DemoWebSocketHandler webSocketHandler() { return new DemoWebSocketHandler(); } @Bean public DemoWebSocketShakeInterceptor webSocketShakeInterceptor() { return new DemoWebSocketShakeInterceptor(); } }
+// WebSocketConfiguration.java @Configuration @EnableWebSocket // 开启 Spring WebSocket public class WebSocketConfiguration implements WebSocketConfigurer { @Override public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) { registry.addHandler(this.webSocketHandler(), "/") // 配置处理器 .addInterceptors(new DemoWebSocketShakeInterceptor()) // 配置拦截器 .setAllowedOrigins("*"); // 解决跨域问题 } @Bean public DemoWebSocketHandler webSocketHandler() { return new DemoWebSocketHandler(); } @Bean public DemoWebSocketShakeInterceptor webSocketShakeInterceptor() { return new DemoWebSocketShakeInterceptor(); } }
 
 - 在类上，添加 @EnableWebSocket 注解，开启 Spring WebSocket 功能。
 - 实现 WebSocketConfigurer 接口，自定义 WebSocket 的配置。具体的，胖友可以看看 #registerWebSocketHandlers(registry) 方法，配置 WebSocket 处理器、拦截器，以及允许跨域。
@@ -365,7 +365,7 @@ week: 2019-W21
 
 # 666. 彩蛋
 
-虽然说，WebSocket 协议已经在主流的浏览器上，得到非常好的支持，但是总有一些“异类”，是不兼容的。所以就诞生了 [SockJS](https://github.com/sockjs/sockjs-client) 库。关于它的介绍与使用，胖友可以看看 [《SockJS 简单介绍》](https://blog.csdn.net/John_62/article/details/78208177) 文章。
+虽然说，WebSocket 协议已经在主流的浏览器上，得到非常好的支持，但是总有一些"异类"，是不兼容的。所以就诞生了 [SockJS](https://github.com/sockjs/sockjs-client) 库。关于它的介绍与使用，胖友可以看看 [《SockJS 简单介绍》](https://blog.csdn.net/John_62/article/details/78208177) 文章。
 
 在上述的提供的 Tomcat WebSocket 和 Spring WebSocket 示例中，我们相当于在 WebSocket 实现了自定义的子协议，就是基于 type + body 的消息结构。而 Spring WebSocket 内置了对 [STOMP](https://docs.spring.io/spring-framework/docs/5.0.0.BUILD-SNAPSHOT/spring-framework-reference/html/websocket.html#websocket-stomp-overview) 的支持，关于这块的示例，艿艿暂时没有提供，主要是自己也不想写前端代码，哈哈哈哈。感兴趣的胖友，可以自己看如下的文章：
 
@@ -377,7 +377,7 @@ week: 2019-W21
 
 大家肯定能够想到的是，如果用户不处于在线的时候，消息持久化到 MySQL、MongoDB 等等数据库中。这个是正确，且是必须要做的。
 
-我们在一起考虑下边界场景，客户端网络环境较差，特别是在移动端场景下，出现网络**闪断**，可能会出现连接实际已经断开，而服务端以为客户端处于在线的情况。此时，服务端会将消息发给客户端，那么消息实际就发送到“空气”中，产生丢失的情况。要解决这种情况下的问题，需要引入客户端的 ACK 消息机制。目前，主流的有两种做法。
+我们在一起考虑下边界场景，客户端网络环境较差，特别是在移动端场景下，出现网络**闪断**，可能会出现连接实际已经断开，而服务端以为客户端处于在线的情况。此时，服务端会将消息发给客户端，那么消息实际就发送到"空气"中，产生丢失的情况。要解决这种情况下的问题，需要引入客户端的 ACK 消息机制。目前，主流的有两种做法。
 
 第一种，基于每一条消息编号 ACK 。整体流程如下：
 

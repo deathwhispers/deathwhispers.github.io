@@ -19,7 +19,7 @@ updated: 2019-04-07 18:34
 
 Cassandra 的数据模型是基于列族 （Column Family）的思维或五维模型
 
-它借鉴了 Amazon 的 Dynamo 和 Goggle’s Big Table 的数据结构和功能特点，采用 Memtable 的方式进行存储。
+它借鉴了 Amazon 的 Dynamo 和 Goggle's Big Table 的数据结构和功能特点，采用 Memtable 的方式进行存储。
 
 在 Cassandra 写入数据之前，需要先记录日志 （CommitLog），然后数据开始写入到 Column Family 对应的 Memtalbe 中， Memtable 是一种按照 key 排序数据的内存结构，在满足一定条件时，再把 Memtable 的数据批量的刷新到磁盘上，存储为 SSTable.
 

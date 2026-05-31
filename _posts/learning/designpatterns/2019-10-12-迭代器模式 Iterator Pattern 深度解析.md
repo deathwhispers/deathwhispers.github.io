@@ -129,9 +129,6 @@ public class IteratorPatternDemo {
         }
     }
 }
-
-
-
 ```
 
 ### 3.2. Python 代码示例 (Pythonic Iterator Pattern)

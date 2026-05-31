@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 聊聊 Linux 上软件实现的“交换机” - Bridge！
+title: 聊聊 Linux 上软件实现的"交换机" - Bridge！
 author: deathwhispers
 date: 2019-10-14
 slug: bridge-on-linux
@@ -15,7 +15,7 @@ updated: 2019-10-14 09:57
 week: 2019-W44
 ---
 
-# 聊聊 Linux 上软件实现的“交换机” - Bridge！
+# 聊聊 Linux 上软件实现的"交换机" - Bridge！
 
 原创张彦飞allen[开发内功修炼](about:blank#)*2021-10-14 09:08*
 
@@ -39,7 +39,7 @@ Linux 中的 veth 是一对儿能互相连接、互相通信的虚拟网卡。�
 
 在我们的网络虚拟化环境里，和物理网络中的交换机一样，也需要这样的一个软件实现的设备。它需要有很多个虚拟端口，能把更多的虚拟网卡连接在一起，通过自己的转发功能让这些虚拟网卡之间可以通信。在 Linux 下这个软件实现交换机的技术就叫做 bridge（再强调下，这是纯软件实现的）。
 
-各个 Docker 容器都通过 veth 连接到 bridge 上，bridge 负责在不同的“端口”之间转发数据包。这样各个 Docker 之间就可以互相通信了！
+各个 Docker 容器都通过 veth 连接到 bridge 上，bridge 负责在不同的"端口"之间转发数据包。这样各个 Docker 之间就可以互相通信了！
 
 今天我们来展开聊聊 bridge 的详细工作过程。
 
@@ -92,7 +92,7 @@ Bridge 是用来连接两个不同的虚拟网络的，所以在准备实验 bri
 
 在上一个步骤中，我们只是创建出来了两个独立的网络环境而已。这个时候这两个环境之间还不能互相通信。我们需要创建一个虚拟交换机 - bridge， 来把这两个网络环境连起来。
 
-创建过程如下。创建一个 bridge 设备, 把刚刚创建的两对儿 veth 中剩下的两头“插”到 bridge 上来。
+创建过程如下。创建一个 bridge 设备, 把刚刚创建的两对儿 veth 中剩下的两头"插"到 bridge 上来。
 
 ```plain text
 # brctl addbr br0

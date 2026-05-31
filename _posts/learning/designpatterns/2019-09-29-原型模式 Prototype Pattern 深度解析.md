@@ -153,9 +153,6 @@ public class ShapeCache {
         System.out.println("Cache loaded with Rectangle ID 3.");
     }
 }
-
-
-
 ```
 
 ### 5.2. Python 代码示例 (深浅拷贝)

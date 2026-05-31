@@ -20,7 +20,7 @@ updated: 2022-04-26 18:33
 
 本文分享 Dubbo **动态代理**的实现。
 
-在 [《Dubbo 用户指南 —— schema 配置参考手册》](http://dubbo.apache.org/zh-cn/docs/user/references/xml/introduction.html) 中，我们可以看到  和  标签中，可以通过 “proxy” 属性，可以配置动态代理的生成方式：
+在 [《Dubbo 用户指南 —— schema 配置参考手册》](http://dubbo.apache.org/zh-cn/docs/user/references/xml/introduction.html) 中，我们可以看到  和  标签中，可以通过 "proxy" 属性，可以配置动态代理的生成方式：
 
 生成动态代理方式，可选：jdk / javassist
 

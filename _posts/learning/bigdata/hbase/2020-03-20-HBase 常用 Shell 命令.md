@@ -54,7 +54,7 @@ list
 
 ### 2.2 创建表
 
-**命令格式**： create ‘表名称’, ‘列族名称 1’,‘列族名称 2’,‘列名称 N’
+**命令格式**： create '表名称', '列族名称 1','列族名称 2','列名称 N'
 
 ```plain text
 # 创建一张名为Student的表,包含基本信息（baseInfo）、学校信息（schoolInfo）两个列族
@@ -63,7 +63,7 @@ create 'Student','baseInfo','schoolInfo'
 
 ### 2.3 查看表的基本信息
 
-**命令格式**：desc ‘表名’
+**命令格式**：desc '表名'
 
 ```plain text
 describe 'Student'
@@ -103,7 +103,7 @@ drop 'Student'
 
 ### 3.1 添加列族
 
-**命令格式**： alter ‘表名’, ‘列族名’
+**命令格式**： alter '表名', '列族名'
 
 ```plain text
 alter 'Student', 'teacherInfo'
@@ -111,7 +111,7 @@ alter 'Student', 'teacherInfo'
 
 ### 3.2 删除列族
 
-**命令格式**：alter ‘表名’, {NAME => ‘列族名’, METHOD => ‘delete’}
+**命令格式**：alter '表名', {NAME => '列族名', METHOD => 'delete'}
 
 ```plain text
 alter 'Student', {NAME => 'teacherInfo', METHOD => 'delete'}
@@ -127,7 +127,7 @@ alter 'Student',{NAME=>'baseInfo',VERSIONS=>3}
 
 ### 3.4 插入数据
 
-**命令格式**：put ‘表名’, ‘行键’,‘列族:列’,‘值’
+**命令格式**：put '表名', '行键','列族:列','值'
 
 **注意：如果新增数据的行键值、列族名、列名与原有数据完全相同，则相当于更新操作**
 

@@ -112,12 +112,12 @@ plain @SPI("lru") public interface CacheFactory {      /**      * 获得缓存�
 
 ---
 
-- @SPI(“lru”)**拓展点**
+- @SPI("lru")**拓展点**
 注解，Dubbo SPI
 ，默认为
-“lru”
+"lru"
 。
-- @Adaptive(“cache”)
+- @Adaptive("cache")
 注解，基于 Dubbo SPI Adaptive 机制，加载对应的 Cache 实现，使用
 URL.cache
 属性。
@@ -146,7 +146,7 @@ plain public class LruCache implements Cache {      /**      * 缓存集合     
 
 ---
 
-- “cache.size”**大小**
+- "cache.size"**大小**
 配置项，设置缓存
 。
 - 基于

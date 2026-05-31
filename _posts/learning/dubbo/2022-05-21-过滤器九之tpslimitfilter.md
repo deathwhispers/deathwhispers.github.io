@@ -83,10 +83,10 @@ plain 1: public class DefaultTPSLimiter implements TPSLimiter {  2:   3:     /**
 属性，StatItem 集合，Key 为 服务名，
 。
 - 第 13 行：获得 TPS 大小配置项
-“tps”
+"tps"
 。
 - 第 15 行：获得 TPS 周期配置项
-“tps.interval”
+"tps.interval"
 ，默认 60 * 1000 毫秒。
 - 第 17 至 27 行：若要限流，调用
 StatItem#isAllowable(url, invocation)

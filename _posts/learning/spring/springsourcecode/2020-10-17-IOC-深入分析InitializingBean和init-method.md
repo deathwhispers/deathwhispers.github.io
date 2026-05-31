@@ -35,7 +35,7 @@ java public interface InitializingBean {      /**      * 该方法在 BeanFactor
 
 ---
 
-Spring 在完成实例化后，设置完所有属性，进行 “Aware 接口” 和 “BeanPostProcessor 前置处理”之后，会接着检测当前 bean 对象是否实现了 InitializingBean 接口。如果是，则会调用其 #afterPropertiesSet() 方法，进一步调整 bean 实例对象的状态。
+Spring 在完成实例化后，设置完所有属性，进行 "Aware 接口" 和 "BeanPostProcessor 前置处理"之后，会接着检测当前 bean 对象是否实现了 InitializingBean 接口。如果是，则会调用其 #afterPropertiesSet() 方法，进一步调整 bean 实例对象的状态。
 
 ## 1.1 示例
 

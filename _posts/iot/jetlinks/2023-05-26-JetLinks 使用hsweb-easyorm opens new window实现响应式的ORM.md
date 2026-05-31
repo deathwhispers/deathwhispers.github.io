@@ -56,7 +56,7 @@ ReactiveRepository<TestEntity,String> testRepository;
 
 TIP
 
-启动类上需要注解: @EnableEasyormRepository(“实体类所在包,如: org.jetlinks.community.**.entity”).
+启动类上需要注解: @EnableEasyormRepository("实体类所在包,如: org.jetlinks.community.**.entity").
 
 ### 自定义通用查询条件
 
@@ -129,13 +129,13 @@ hsweb提供来一套统一的权限控制API,方便进行细粒度的权限控�
 : 定义对资源对操作,通常注解在方法上.
 3. @QueryAction
 : 继承自
-@ResourceAction(, name = “查询”)
+@ResourceAction(, name = "查询")
 4. @SaveAction
 : 继承自
-@ResourceAction(, name = “保存”)
+@ResourceAction(, name = "保存")
 5. @DeleteAction
 : 继承自
-@ResourceAction(, name = “删除”)
+@ResourceAction(, name = "删除")
 6. @Authorze
 : 声明权限控制,注解在类或者方法上,可通过注解属性配置控制权限方式.
 7. @EnableAopAuthorize

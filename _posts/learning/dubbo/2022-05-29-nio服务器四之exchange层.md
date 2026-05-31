@@ -352,7 +352,7 @@ plain private static long newId() {     // getAndIncrement() When it grows to MA
 
 - version
 属性，版本号。目前使用 Dubbo 大版本，
-“2.0.0”
+"2.0.0"
 。
 - mTwoWay**需要**
 属性，标记请求是否响应( Response )，默认
@@ -891,7 +891,7 @@ plain @SPI(HeaderExchanger.NAME) public interface Exchanger {      /**      * bi
 - @SPI(HeaderExchanger.NAME)**拓展点**
 注解，Dubbo SPI
 ，默认为
-“header”
+"header"
 ，即 HeaderExchanger 。
 - @Adaptive({Constants.EXCHANGER_KEY})
 注解，基于 Dubbo SPI Adaptive 机制，加载对应的 Server 实现，使用

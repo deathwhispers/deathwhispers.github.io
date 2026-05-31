@@ -48,9 +48,6 @@ object NetworkWordCount {
         ssc.awaitTermination()
     }
 }
-
-
-
 ```
 
 使用本地模式启动 Spark 程序，然后使用 nc -lk 9999 打开端口并输入测试数据：
@@ -150,9 +147,6 @@ object NetworkWordCountV2 {
         Some(current + pre)
     }
 }
-
-
-
 ```
 
 使用 updateStateByKey 算子，你必须使用 ssc.checkpoint() 设置检查点，这样当使用 updateStateByKey 算子时，它会去检查点中取出上一次保存的信息，并使用自定义的 updateFunction 函数将上一次的数据和本次数据进行相加，然后返回。
@@ -194,9 +188,9 @@ Spark Streaming 支持以下输出操作：
 | Output Operation | Meaning |
 | --- | --- |
 | **print**() | 在运行流应用程序的 driver 节点上打印 DStream 中每个批次的前十个元素。用于开发调试。 |
-| **saveAsTextFiles**(*prefix*, [*suffix*]) | 将 DStream 的内容保存为文本文件。每个批处理间隔的文件名基于前缀和后缀生成：“prefix-TIME_IN_MS [.suffix]”。 |
-| **saveAsObjectFiles**(*prefix*, [*suffix*]) | 将 DStream 的内容序列化为 Java 对象，并保存到 SequenceFiles。每个批处理间隔的文件名基于前缀和后缀生成：“prefix-TIME_IN_MS [.suffix]”。 |
-| **saveAsHadoopFiles**(*prefix*, [*suffix*]) | 将 DStream 的内容保存为 Hadoop 文件。每个批处理间隔的文件名基于前缀和后缀生成：“prefix-TIME_IN_MS [.suffix]”。 |
+| **saveAsTextFiles**(*prefix*, [*suffix*]) | 将 DStream 的内容保存为文本文件。每个批处理间隔的文件名基于前缀和后缀生成："prefix-TIME_IN_MS [.suffix]"。 |
+| **saveAsObjectFiles**(*prefix*, [*suffix*]) | 将 DStream 的内容序列化为 Java 对象，并保存到 SequenceFiles。每个批处理间隔的文件名基于前缀和后缀生成："prefix-TIME_IN_MS [.suffix]"。 |
+| **saveAsHadoopFiles**(*prefix*, [*suffix*]) | 将 DStream 的内容保存为 Hadoop 文件。每个批处理间隔的文件名基于前缀和后缀生成："prefix-TIME_IN_MS [.suffix]"。 |
 | **foreachRDD**(*func*) | 最通用的输出方式，它将函数 func 应用于从流生成的每个 RDD。此函数应将每个 RDD 中的数据推送到外部系统，例如将 RDD 保存到文件，或通过网络将其写入数据库。 |
 
 前面的四个 API 都是直接调用即可，下面主要讲解通用的输出方式 foreachRDD(func)，通过该 API 你可以将数据保存到任何你需要的数据源。
@@ -252,9 +246,6 @@ ssc.start()
 ssc.awaitTermination()
 }
 }
-
-
-
 ```
 
 其中 JedisPoolUtil 的代码如下：
@@ -285,9 +276,6 @@ public class JedisPoolUtil {
         return jedisPool.getResource();
     }
 }
-
-
-
 ```
 
 ### 3.3 代码说明

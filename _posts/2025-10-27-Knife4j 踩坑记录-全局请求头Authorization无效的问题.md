@@ -52,17 +52,14 @@ public OpenAPI customOpenAPI() {
     // 【关键点二】：将安全方案应用到全局（SecurityRequirement）
     .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"));
 }
-
-
-
 ```
 
 ### 3. 遇到的现象
 
 | **文档界面** | **预期效果 (全局认证)** | **实际效果** |
 | --- | --- | --- |
-| 原生 `/swagger-ui.html` | 页面顶部有“Authorize”按钮，点击后设置 Token，所有接口请求头自动携带。 | **✅ 正常生效** |
-| Knife4j 页面 | 页面顶部有“Authorization”输入框/按钮，点击后设置 Token，所有接口请求头自动携带。 | **❌ 不生效** |
+| 原生 `/swagger-ui.html` | 页面顶部有"Authorize"按钮，点击后设置 Token，所有接口请求头自动携带。 | **✅ 正常生效** |
+| Knife4j 页面 | 页面顶部有"Authorization"输入框/按钮，点击后设置 Token，所有接口请求头自动携带。 | **❌ 不生效** |
 
 在 `Knife4j` 界面中，尽管配置了全局 `SecurityRequirement`，但接口详情页的请求头区域并不会自动继承这个全局配置，用户仍然需要手动在每个接口中输入认证信息，这完全违背了全局配置的初衷。
 
@@ -124,9 +121,6 @@ public GlobalOpenApiCustomizer globalAuthCustomizer() {
         }
     }
 }
-
-
-
 ```
 
 > 注意： 在实际项目中，如果你的配置中使用了 HttpHeaders.AUTHORIZATION 作为 Key，则 addList 的参数应保持一致，例如 addList(HttpHeaders.AUTHORIZATION) 或 addList("Bearer Authentication")，这取决于你在 SecurityScheme 中定义的名称。

@@ -222,9 +222,6 @@ throws HttpException, IOException {
     throw ex;
 }
 }
-
-
-
 ```
 
 ### 步骤 1：获取连接 (`getConnection`)
@@ -244,9 +241,6 @@ public final ClientConnectionRequest requestConnection(final HttpRoute route, fi
         }
     }
 }
-
-
-
 ```
 
 接着调用 `getConnection` 方法，该方法的核心作用是创建或复用 `PoolEntry`，并用它来构造一个 `ConnAdapter` 返回。
@@ -288,9 +282,6 @@ public ManagedClientConnection getConnection(HttpRoute route, Object state) {
     managedConn = new ConnAdapter(uniquePoolEntry, route);
     return managedConn;
 }
-
-
-
 ```
 
 > **核心关系**：`DefaultRequestDirector` -> `ClientConnectionManager` -> `ConnAdapter` -> `PoolEntry` ->
@@ -299,7 +290,7 @@ public ManagedClientConnection getConnection(HttpRoute route, Object state) {
 
 ### 步骤 2：连接过时检查 (`Stale Check`)
 
-`http.connection.stalecheck` 参数决定了是否在重用连接前检查其是否“过时”（即，服务器端是否已关闭）。
+`http.connection.stalecheck` 参数决定了是否在重用连接前检查其是否"过时"（即，服务器端是否已关闭）。
 
 > **性能提示**：这个检查会产生额外的网络开销（约 30ms），因此在性能敏感的场景中，**建议关闭此选项**
 > 。现代网络环境下，通过异常处理来应对连接失效通常是更高效的方式。
@@ -324,9 +315,6 @@ public void open(HttpRoute route, HttpContext context, HttpParams params) throws
     );
     // ...
 }
-
-
-
 ```
 
 `openConnection` 方法负责：
@@ -370,9 +358,6 @@ public void openConnection(OperatedClientConnection conn, HttpHost target, ...) 
         }
     }
 }
-
-
-
 ```
 
 ### 步骤 5：执行请求与重试
@@ -456,9 +441,6 @@ public ManagedClientConnection getConnection(HttpRoute route, Object state) {
     managedConn = new ConnAdapter(uniquePoolEntry, route);
     return managedConn;
 }
-
-
-
 ```
 
 > **核心关系**：`DefaultRequestDirector` -> `ClientConnectionManager` -> `ConnAdapter` -> `PoolEntry` ->
@@ -468,7 +450,7 @@ public ManagedClientConnection getConnection(HttpRoute route, Object state) {
 
 ### 步骤 2：连接过时检查 (`Stale Check`)
 
-`http.connection.stalecheck` 参数决定了是否在重用连接前检查其是否“过时”（即，服务器端是否已关闭）。
+`http.connection.stalecheck` 参数决定了是否在重用连接前检查其是否"过时"（即，服务器端是否已关闭）。
 
 > **性能提示**：这个检查会产生额外的网络开销（约 30ms），因此在性能敏感的场景中，**建议关闭此选项**
 > 。现代网络环境下，通过异常处理来应对连接失效通常是更高效的方式。
@@ -499,9 +481,6 @@ public void openConnection(...) throws IOException {
     }
     // ...
 }
-
-
-
 ```
 
 此方法负责：

@@ -100,7 +100,7 @@ CLion 是 Jetbrains 团队提供的 C/C++ 开发工具。所以，所以和我�
 
 ---
 
-至此，我们已经完成了我们的第一个小目标“*启动 Redis Server ，成功断点调试 Server 的启动过程*”。
+至此，我们已经完成了我们的第一个小目标"*启动 Redis Server ，成功断点调试 Server 的启动过程*"。
 
 点击左下方的**绿色**小箭头，恢复 Redis Server 的启动，不然等会 Redis Client 都连接不上来。在 CLion 的控制台，我们会看到 Redis Server 启动成功的日志如下：
 
@@ -138,11 +138,11 @@ Redis Client 读取 key
 
 ---
 
-至此，我们已经完成了我们的第二个小目标“*使用 ****redis-cli**** 启动一个 Client 连接上 Server，并使用 ****get key**** 指令，发起一次 key 的读取*”。
+至此，我们已经完成了我们的第二个小目标"*使用 ****redis-cli**** 启动一个 Client 连接上 Server，并使用 ****get key**** 指令，发起一次 key 的读取*"。
 
 # 7. 源码解析
 
-Redis 源码是使用 C 实现的，对于 Java 程序员的我们来说，还是有一定“门槛”的，所以最好借助下市面上 Redis 相关的书籍。
+Redis 源码是使用 C 实现的，对于 Java 程序员的我们来说，还是有一定"门槛"的，所以最好借助下市面上 Redis 相关的书籍。
 
 ① [《Redis 设计与实现》](https://github.com/YunaiV/books)，针对 Redis 3.X 版本，豆瓣评分 8.6 分，对应详细注释的 Redis 仓库 [https://github.com/YunaiV/redis-3.0-annotated.git](https://github.com/YunaiV/redis-3.0-annotated.git) 。
 

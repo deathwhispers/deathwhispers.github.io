@@ -79,9 +79,6 @@ public class FilterChain {
         this.target = target;
     }
 }
-
-
-
 ```
 
 #### 3\. 过滤管理器 (Filter Manager)
@@ -103,9 +100,6 @@ public class FilterManager {
         filterChain.execute(request); // 客户端通过 Manager 触发链的执行
     }
 }
-
-
-
 ```
 
 ## 🌐 3. 模式应用
@@ -185,9 +179,6 @@ public class CriteriaSingle implements Criteria {
         return singlePersons;
     }
 }
-
-
-
 ```
 
 #### 4\. 组合标准 (AndCriteria)
@@ -211,9 +202,6 @@ public class AndCriteria implements Criteria {
         return otherCriteria.meetCriteria(firstCriteriaPersons);
     }
 }
-
-
-
 ```
 
 ## 🌐 3. 模式应用
@@ -223,7 +211,7 @@ public class AndCriteria implements Criteria {
 
 -----
 
-## 总结：两种“过滤器”模式的对比
+## 总结：两种"过滤器"模式的对比
 
 虽然名字相似，但两者目的和实现方式有本质区别：
 

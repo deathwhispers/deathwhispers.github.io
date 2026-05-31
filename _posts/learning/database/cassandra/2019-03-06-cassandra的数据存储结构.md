@@ -105,9 +105,6 @@ public static void recover(File[] clogs) throws IOException{
     }
     ...
 }
-
-
-
 ```
 
 这段代码的思路是：反序列化 CommitLog 文件的 header 为 CommitLogHeader 对象，寻找 header 对象中没有被回写的最小 RowMutation 位置，然后根据这个位置取出这个 RowMutation 对象的序列化数据，然后反序列化为 RowMutation 对象，然后取出 RowMutation 对象中的数据重新保存到 Memtable 中，而不是直接写到磁盘中。CommitLog 的操作过程可以用下图来清楚的表示：

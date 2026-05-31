@@ -59,7 +59,7 @@ c.必须在BIOS设置中启用BIOS级硬件虚拟化支持。
 
 ### 3.1 检查当前系统版本
 
-Windows徽标键+R，弹出运行窗口，键入winver，点击“确定”，查看系统当前版本，如图:
+Windows徽标键+R，弹出运行窗口，键入winver，点击"确定"，查看系统当前版本，如图:
 
 ![](../../../assets/images/learning/docker/win10-home-docker-install/ce41b0a3e2ebd3f915df4e6c8ca6d8f8.png)
 
@@ -91,11 +91,11 @@ del hyper-v.txt
 Dism /online /enable-feature /featurename:Microsoft-Hyper-V-All /LimitAccess /ALL
 ```
 
-3.鼠标右键选中“以管理员身份运行”，窗口运行执行代码，直到运行结束，显示提示是否重启，输入Y，重启电脑，如图：
+3.鼠标右键选中"以管理员身份运行"，窗口运行执行代码，直到运行结束，显示提示是否重启，输入Y，重启电脑，如图：
 
 ![](../../../assets/images/learning/docker/win10-home-docker-install/ed64a10e09b8e90480aa501a48c8014f.png)
 
-4.重启完毕，打开控制面板控->程序->程序和功能,点击“启用和关闭Windows功能”，弹出窗口，可看到Hyper-V已添加，如图：
+4.重启完毕，打开控制面板控->程序->程序和功能,点击"启用和关闭Windows功能"，弹出窗口，可看到Hyper-V已添加，如图：
 
 ![](../../../assets/images/learning/docker/win10-home-docker-install/dd49325b05bca370bd47289e975d7928.png)
 
@@ -107,13 +107,13 @@ Dism /online /enable-feature /featurename:Microsoft-Hyper-V-All /LimitAccess /AL
 
 官网地址：[https://hub.docker.com/editions/community/docker-ce-desktop-windows?tab=description](https://hub.docker.com/editions/community/docker-ce-desktop-windows?tab=description)
 
-点击“Get Docker Desktop for Windows(Stable）”，下载保存到本地，如图：
+点击"Get Docker Desktop for Windows(Stable）"，下载保存到本地，如图：
 
 ![](../../../assets/images/learning/docker/win10-home-docker-install/8910a841851943d96a311ea7812f2461.png)
 
 ### 六，安装Docker Desktop Installer
 
-本地选中软件Docker Desktop Installer，右键安装，进入安装首页，取消勾选“Enable WSL 2 Windows Features”，点击【ok】,如图：
+本地选中软件Docker Desktop Installer，右键安装，进入安装首页，取消勾选"Enable WSL 2 Windows Features"，点击【ok】,如图：
 
 ![](../../../assets/images/learning/docker/win10-home-docker-install/70b21ed3c3d3096ba2cc4adc0aa602aa.png)
 
@@ -141,7 +141,7 @@ REG ADD "HKEY_LOCAL_MACHINE\software\Microsoft\Windows NT\CurrentVersion" /v Edi
 
 ![](../../../assets/images/learning/docker/win10-home-docker-install/17280a50acd470c69d1e8a7dc19fff2d.png)
 
-执行完毕，运行窗口输入”regedit”,打开注册表，定位到HKEY_LOCAL_MACHINENT，点击current version，在右侧找到EditionId，查看其已经更新为Professional。
+执行完毕，运行窗口输入"regedit",打开注册表，定位到HKEY_LOCAL_MACHINENT，点击current version，在右侧找到EditionId，查看其已经更新为Professional。
 
 ![](../../../assets/images/learning/docker/win10-home-docker-install/cafcbd406dc772dd2811fd9761e41997.png)
 
@@ -149,17 +149,17 @@ REG ADD "HKEY_LOCAL_MACHINE\software\Microsoft\Windows NT\CurrentVersion" /v Edi
 
 ### 7.2 直接修改注册表
 
-直接在注册表修改，运行窗口输入”regedit”,打开注册表，定位到HKEY_LOCAL_MACHINENT，点击current version，在右侧找到EditionId，如图：
+直接在注册表修改，运行窗口输入"regedit",打开注册表，定位到HKEY_LOCAL_MACHINENT，点击current version，在右侧找到EditionId，如图：
 
 ![](../../../assets/images/learning/docker/win10-home-docker-install/a482c9a20ea85f56ea7554a77118223f.png)
 
-右键点击EditionId 选择“修改“，在弹出的对话框中将第二项”数值数据”的内容改为Professional，点击确定。
+右键点击EditionId 选择"修改"，在弹出的对话框中将第二项"数值数据"的内容改为Professional，点击确定。
 
 **需要注意的一点是，这种方式修改注册表，在下次重启之后会自动还原。每次启动Docker需要再次手动修改。**
 
 ### 7.3 注册表未修改报错
 
-如果未提前修改注册表，桌面用管理员运行Docker Desktop，弹出窗口，会提示“WSL 2 is not installed”。
+如果未提前修改注册表，桌面用管理员运行Docker Desktop，弹出窗口，会提示"WSL 2 is not installed"。
 
 ```plain text
 WSL 2 is not installed
@@ -179,7 +179,7 @@ Enable-WindowsOptionalFeature -Online -FeatureName $("VirtualMachinePlatform", "
 
 ### 8.1 验证Docker安装
 
-1.桌面选中Docker Desktop的鲸鱼图标，右键选择以管理员身份运行，系统托盘新增一个鲸鱼的小图标，点击后展示菜单，选择“About Docker Desktop”,可查看Docker版本，如图：
+1.桌面选中Docker Desktop的鲸鱼图标，右键选择以管理员身份运行，系统托盘新增一个鲸鱼的小图标，点击后展示菜单，选择"About Docker Desktop",可查看Docker版本，如图：
 
 ![](../../../assets/images/learning/docker/win10-home-docker-install/d03f3d8a556763f52ad8197fb8ec7658.png)
 
@@ -199,7 +199,7 @@ Enable-WindowsOptionalFeature -Online -FeatureName $("VirtualMachinePlatform", "
 
 ![](../../../assets/images/learning/docker/win10-home-docker-install/7912cdb00b27b117a8e650e2eeb7795a.png)
 
-备注：第一次输入ps时报错“Error response from daemon: open ._engine_linux: The system cannot find the file specified.”，输入命令即可：
+备注：第一次输入ps时报错"Error response from daemon: open ._engine_linux: The system cannot find the file specified."，输入命令即可：
 
 ```plain text
 Net stop com.docker.service

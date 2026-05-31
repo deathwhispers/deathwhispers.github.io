@@ -33,11 +33,11 @@ public class TestJApiDocs {
     public static void main(String[] args) {
         // 1. 创建生成文档的配置
         DocsConfig config = new DocsConfig();
-        config.setProjectPath(“/Users/yunai/Java/SpringBoot-Labs/lab-24/lab-24-apidoc-japidocs”); // 项目所在目录
-        config.setDocsPath(“/Users/yunai/Downloads/”); // 生成 HTML 接口文档的目标目录
+        config.setProjectPath("/Users/yunai/Java/SpringBoot-Labs/lab-24/lab-24-apidoc-japidocs"); // 项目所在目录
+        config.setDocsPath("/Users/yunai/Downloads/"); // 生成 HTML 接口文档的目标目录
         config.setAutoGenerate(true); // 是否给所有 Controller 生成接口文档
-        config.setProjectName(“示例项目”); // 项目名
-        config.setApiVersion(“V1.0”); // API 版本号
+        config.setProjectName("示例项目"); // 项目名
+        config.setApiVersion("V1.0"); // API 版本号
         config.addPlugin(new MarkdownDocPlugin()); // 使用 MD 插件，额外生成 MD 格式的接口文档
         // 2. 执行生成 HTML 接口文档
         Docs.buildHtmlDocs(config);
@@ -98,7 +98,7 @@ JApiDocs 自定义了 @ApiDoc 和 @Ignore 注解，用于针对指定接口，�
 
 具体的使用**示例**如下：
 
-// 示例一 @ApiDoc(result = AdminVO.class, url = “/api/v1/admin/login2”, method = “post”) // 示例二：针对 `stringResult` 属性 @ApiDoc(stringResult = “{code: 0, data: ‘success’}”) @GetMapping(value = “custom-json”) public Map customJsonResult() {}
+// 示例一 @ApiDoc(result = AdminVO.class, url = "/api/v1/admin/login2", method = "post") // 示例二：针对 `stringResult` 属性 @ApiDoc(stringResult = "{code: 0, data: 'success'}") @GetMapping(value = "custom-json") public Map customJsonResult() {}
 
 ## 3.2 @Ignore 注解
 
@@ -106,7 +106,7 @@ JApiDocs 自定义了 @ApiDoc 和 @Ignore 注解，用于针对指定接口，�
 
 具体的使用**示例**如下：
 
-// 示例一：声明在 Controller 类上，忽略该 Controller 的所有接口 @Ignore public class UserController {} // 示例二：声明在接口方法上，忽略该接口 @Ignore @PostMapping(“save”) public ApiResult saveUser() {} // 示例三：声明在接口使用到的对象的属性上，忽略该属性 public class UserCreateReqVO { @Ignore private Integer age; }
+// 示例一：声明在 Controller 类上，忽略该 Controller 的所有接口 @Ignore public class UserController {} // 示例二：声明在接口方法上，忽略该接口 @Ignore @PostMapping("save") public ApiResult saveUser() {} // 示例三：声明在接口使用到的对象的属性上，忽略该属性 public class UserCreateReqVO { @Ignore private Integer age; }
 
 ## 3.3 @description 注释
 
@@ -120,11 +120,11 @@ JApiDocs 自定义了 @ApiDoc 和 @Ignore 注解，用于针对指定接口，�
 
 ② 在**接口方法**上使用 @description 注释，则可以在接口方法下面额外添加一行说明。示例代码如下：
 
-/** * 获得用户列表 * * @param listReqVO 列表筛选条件 * @return 用户列表 * @description 不同的前端界面，可能有不同的查询诉求，通过该接口统一满足。 */ @GetMapping(“list”) public List list(UserListReqVO listReqVO){ return null; }
+/** * 获得用户列表 * * @param listReqVO 列表筛选条件 * @return 用户列表 * @description 不同的前端界面，可能有不同的查询诉求，通过该接口统一满足。 */ @GetMapping("list") public List list(UserListReqVO listReqVO){ return null; }
 
 # 666. 彩蛋
 
-至此，我们已经**“精通”** JApiDocs 的入门使用，通过在接口上添加 Java 注释，即可生成 HTTP API 的**接口文档**，非常的便捷。更多内容，胖友可以阅读[《JApiDocs 官方文档》](https://github.com/YeDaxia/JApiDocs/blob/master/docs/zh-cn/README.md)。
+至此，我们已经**"精通"** JApiDocs 的入门使用，通过在接口上添加 Java 注释，即可生成 HTTP API 的**接口文档**，非常的便捷。更多内容，胖友可以阅读[《JApiDocs 官方文档》](https://github.com/YeDaxia/JApiDocs/blob/master/docs/zh-cn/README.md)。
 
 不过真正在团队中使用的话，艿艿还是会选择 Swagger，而不是 JApiDocs 作为接口文档的工具。主要有如下原因：
 

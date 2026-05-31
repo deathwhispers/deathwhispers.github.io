@@ -41,7 +41,7 @@ plain @SPI public interface ConfiguratorFactory {      /**      * get the config
 - @SPI**拓展点**
 注解，Dubbo SPI
 ，无默认值。
-- @Adaptive(“protocol”)
+- @Adaptive("protocol")
 注解，基于 Dubbo SPI Adaptive 机制，加载对应的 Configurator 实现，使用
 URL.protocol
 属性。
@@ -149,17 +149,17 @@ plain 1: private URL configureIfMatch(String host, URL url) {  2:     // 匹配 
 
 - 第 3 行：匹配 **HOST**
 。
-- 第 4 至 8 行：匹配 **“application”**
+- 第 4 至 8 行：匹配 **"application"**
 。
 - 第 9 至 14 行：配置 URL 中的**条件 KEYS 集合内置属性**
 。其中下面四个 KEY ，不算是条件，而是
 。考虑到下面要移除，所以添加到该集合中。
-- 第 15 至 27 行：判断传入的 **带有 “~” 开头的 KEY ，也是条件**
+- 第 15 至 27 行：判断传入的 **带有 "~" 开头的 KEY ，也是条件**
 url
 是否匹配配置规则 URL 的条件。除了
-“application”
+"application"
 和
-“side”
+"side"
 之外，
 。
     - 第 21 至 25 行： 若**不相等不匹配**
@@ -198,10 +198,10 @@ plain @Override public int compareTo(Configurator o) {     if (o == null) {     
 host
 于
 (
-“0.0.0.0”
+"0.0.0.0"
 ) 。
 - 其次，按照 **降序**
-“priority”
+"priority"
 。
 
 ## 3.2 OverrideConfigurator

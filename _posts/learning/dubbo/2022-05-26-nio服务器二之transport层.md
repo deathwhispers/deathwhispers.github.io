@@ -73,8 +73,8 @@ plain 1: /**  2:  * 通道处理器  3:  */  4: private final ChannelHandler han
 handler
 的方法，进行执行逻辑处理。
     - 参见代码：[传送门](https://github.com/YunaiV/dubbo/blob/7fad710c2dbf66356d5e7b7995e843b8f6225652/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractPeer.java#L114-L141)
-    - 这种方式在设计模式中被称作 “[装饰模式](https://www.cnblogs.com/java-my-life/archive/2012/04/20/2455726.html)**大量的**
-“ 。在下文中，我们会看到
+    - 这种方式在设计模式中被称作 "[装饰模式](https://www.cnblogs.com/java-my-life/archive/2012/04/20/2455726.html)**大量的**
+" 。在下文中，我们会看到
 装饰模式的使用。实际上，这也是
 dubbo-remoting
 抽象 API + 实现最核心的方式之一。
@@ -249,7 +249,7 @@ plain /**  * 重连次数  */ private final AtomicInteger reconnect_count = new 
         - 第 18 至 33 行：**符合错误告警**
 条件时，打印
 或
-日志。为什么要符合条件才打印呢？之前也和朋友聊起来过，线上因为中间件组件，打印了太多的日志，结果整个 JVM 崩了。特别在网络场景 + 大量“无限”重试的场景，特别容易打出满屏的日志。这块，我们可以学习下。另外，Eureka 在集群同步，也有类似处理。
+日志。为什么要符合条件才打印呢？之前也和朋友聊起来过，线上因为中间件组件，打印了太多的日志，结果整个 JVM 崩了。特别在网络场景 + 大量"无限"重试的场景，特别容易打出满屏的日志。这块，我们可以学习下。另外，Eureka 在集群同步，也有类似处理。
     - 第 36 行：发起任务，**定时**
 检查，是否需要重连。
 - reconnect=false to close reconnect
@@ -296,7 +296,7 @@ plain public static URL setThreadName(URL url, String defaultName) {     String 
 ，即
 URL.threadpool=xxx
 。默认情况下，使用
-“cached”
+"cached"
 类型，这个和 Server 是不同的，下面我们会看到。
     - [《精尽 Dubbo 源码分析 —— 线程池》](http://svip.iocoder.cn/Dubbo/thread-pool/?self=)
 - 第 14 行：调用 [「8. Dispacher」](http://svip.iocoder.cn/Dubbo/remoting-api-transport/#)
@@ -633,7 +633,7 @@ plain public class AllDispatcher implements Dispatcher {      public static fina
 
 ---
 
-在该类的 #dispatch(…) 的方法中，我们可以看到创建 AllChannelHandler 对象，并传入 handler 属性。 聪慧如你，已经猜到 AllChannelHandler 也是 ChannelHandlerDelegate 类型。也就是说“**线程模型**”，也是通过**装饰器模式**，组合而成。
+在该类的 #dispatch(…) 的方法中，我们可以看到创建 AllChannelHandler 对象，并传入 handler 属性。 聪慧如你，已经猜到 AllChannelHandler 也是 ChannelHandlerDelegate 类型。也就是说"**线程模型**"，也是通过**装饰器模式**，组合而成。
 
 每个 Dispatcher 实现类，都对应一个 ChannelHandler 实现类。默认**未配置**的情况下，使用 AllDispatcher 调度。
 

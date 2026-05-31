@@ -151,9 +151,7 @@ I am doing something like this:
 
 ```java
 StringBuilder stringBuilder = new StringBuilder();
-for (int i = 0;
-i < value.length;
-i++) {
+for (int i = 0; i < value.length; i++) {
     stringBuilder.append(values[i]);
     if (i < value.length - 1) {
         stringBuilder.append(", ");

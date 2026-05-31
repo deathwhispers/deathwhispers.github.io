@@ -76,9 +76,6 @@ public class JMSService implements BusinessService {
         System.out.println("Processing task by invoking JMS Service");
     }
 }
-
-
-
 ```
 
 ### 步骤 3: 业务查询服务 (LookUp Service)
@@ -102,9 +99,6 @@ public class BusinessLookUp {
         }
     }
 }
-
-
-
 ```
 
 ### 步骤 4: 业务代表 (Business Delegate)
@@ -137,9 +131,6 @@ public class BusinessDelegate {
         }
     }
 }
-
-
-
 ```
 
 ### 步骤 5: 客户端 (Client)
@@ -161,9 +152,6 @@ public class Client {
         businessService.doTask();
     }
 }
-
-
-
 ```
 
 ### 步骤 6: 演示 (Demo)
@@ -183,9 +171,6 @@ public class BusinessDelegatePatternDemo {
         client.doTask();
     }
 }
-
-
-
 ```
 
 **运行结果：**

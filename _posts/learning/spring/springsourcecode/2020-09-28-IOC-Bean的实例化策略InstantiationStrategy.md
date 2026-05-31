@@ -356,9 +356,6 @@ public int accept(Method method) {
     }
     throw new UnsupportedOperationException("Unexpected MethodOverride subclass: " +                                            methodOverride.getClass().getName());
 }
-
-
-
 ```
 
 - 根据 BeanDefinition 中定义的 MethodOverride 不同，返回不同的值， 这里返回的**下标**
@@ -414,9 +411,6 @@ static class LookupOverrideMethodInterceptor extends CglibIdentitySupport implem
         }
     }
 }
-
-
-
 ```
 
 ## 4.3 ReplaceOverrideMethodInterceptor
@@ -440,9 +434,6 @@ static class ReplaceOverrideMethodInterceptor extends CglibIdentitySupport imple
         return mr.reimplement(obj, method, args);
     }
 }
-
-
-
 ```
 
 通过这两个拦截器，再加上这篇博客：[【死磕 Spring】—— IoC 之解析 bean 标签：meta、lookup-method、replace-method](http://svip.iocoder.cn/Spring/IoC-parse-BeanDefinitions-for-meta-and-look-method-and-replace-method)，是不是一道绝佳的美食。

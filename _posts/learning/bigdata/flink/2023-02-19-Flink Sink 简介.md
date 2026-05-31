@@ -117,9 +117,6 @@ properties.setProperty("bootstrap.servers", "192.168.200.0:9092");
 // 4. 定义Flink Kafka生产者FlinkKafkaProducer<String> kafkaProducer = new FlinkKafkaProducer<>("flink-stream-out-topic",                                                                    kafkaSerializationSchema,                                                                    properties,                                                                    FlinkKafkaProducer.Semantic.AT_LEAST_ONCE, 5);
 // 5. 将接收到输入元素*2后写出到Kafkastream.map((MapFunction<String, String>) value -> value + value).addSink(kafkaProducer);
 env.execute("Flink Streaming");
-
-
-
 ```
 
 ### 3.2 创建输出主题
@@ -209,9 +206,6 @@ if (stmt != null)
 }
 }
 }
-
-
-
 ```
 
 ### 4.3 使用自定义 Sink

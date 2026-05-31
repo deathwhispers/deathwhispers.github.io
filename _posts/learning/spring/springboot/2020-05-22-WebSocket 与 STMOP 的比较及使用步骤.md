@@ -207,9 +207,6 @@ public class MyHandler extends TextWebSocketHandler {
         }
     }
 }
-
-
-
 ```
 
 对每个函数功能不作解释，有二点要注意
@@ -272,9 +269,6 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
     public void afterHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Exception e) {
     }
 }
-
-
-
 ```
 
 attributes属性最终在WebSocketSession里,可能通过webSocketSession.getAttributes().get(key值)获得。
@@ -375,9 +369,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         .withSockJS();
     }
 }
-
-
-
 ```
 
 登录后复制
@@ -427,9 +418,6 @@ public class GreetingController {
         return new Greeting("感谢你订阅了我。。。");
     }
 }
-
-
-
 ```
 
 @MessageMapping是接收客户端发送的消息映射，看名字也知道。由于上面定义了controll层拦截请求的前缀，所以请求/app/hello才能进入controller层。

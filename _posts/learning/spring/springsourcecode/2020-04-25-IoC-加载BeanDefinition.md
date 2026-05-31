@@ -130,9 +130,6 @@ public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefin
             }
         }
     }
-
-
-
 ```
 
 - <1>
@@ -144,7 +141,7 @@ encodedResource
 resourcesCurrentlyBeingLoaded
 中已经存在该资源，则抛出 BeanDefinitionStoreException 异常。
     - 为什么需要这么做呢？答案在 **死循环**
-“Detected cyclic loading”
+"Detected cyclic loading"
 ，避免一个 EncodedResource 在加载时，还没加载完成，又加载自身，从而导致
 。
     - 也因此，在
@@ -196,9 +193,6 @@ protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)t
         throw new BeanDefinitionStoreException(resource.getDescription(),                                               "Unexpected exception parsing XML document from " + resource, ex);
     }
 }
-
-
-
 ```
 
 - 在

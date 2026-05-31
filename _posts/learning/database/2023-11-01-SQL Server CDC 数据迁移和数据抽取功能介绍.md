@@ -35,9 +35,9 @@ updated: 2023-11-01 22:08
 
 ![6f244bebf6be3082d786071db0455d44](../../../assets/images/learning/database/sql-server-cdc-data-migration-and-extraction-features-introduction/6f244bebf6be3082d786071db0455d44.png)
 
-5. @SERVERNAME、serverproperty(‘servername’)两者（本地服务器名和服务器实例的属性必须一致）必须一致。下面脚本可将两者调整成一致。如果执行后两者仍不一致，需要重启SQL Server服务。
+5. @SERVERNAME、serverproperty('servername')两者（本地服务器名和服务器实例的属性必须一致）必须一致。下面脚本可将两者调整成一致。如果执行后两者仍不一致，需要重启SQL Server服务。
 
-if serverproperty(‘servername’) <> @@servername
+if serverproperty('servername') <> @@servername
 
 begin
 
@@ -47,15 +47,15 @@ set @server = @@servername
 
 exec sp_dropserver@server =@server
 
-set @server = cast(serverproperty(‘servername’) as sysname)
+set @server = cast(serverproperty('servername') as sysname)
 
-exec sp_addserver@server = @server , @local = ‘LOCAL’
+exec sp_addserver@server = @server , @local = 'LOCAL'
 
-PRINT ‘ok’
+PRINT 'ok'
 
 end
 
-select @@SERVERNAME,serverproperty(‘servername’)
+select @@SERVERNAME,serverproperty('servername')
 
 ```plain text
 1. 必须开启SQL Sever代理服务。CDC功能必须通过作业来实现。

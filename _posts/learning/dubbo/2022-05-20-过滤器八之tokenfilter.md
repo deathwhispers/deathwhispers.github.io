@@ -48,7 +48,7 @@ plain // token ，参见《令牌校验》http://dubbo.apache.org/zh-cn/docs/use
 
 # 3.【服务消费者】发送 Token
 
-RpcInvocation 在创建时，“**自动**”带上 Token ，如下图所示：
+RpcInvocation 在创建时，"**自动**"带上 Token ，如下图所示：
 
 ![](/assets/images/learning/dubbo/dubbo-filter-token/51c7e2508e80c68647ca1eb34398d566.png)
 

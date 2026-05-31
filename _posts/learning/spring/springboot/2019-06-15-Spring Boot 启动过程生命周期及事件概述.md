@@ -54,7 +54,7 @@ spring-boot-starter-actuator
 spring-cloud-context
 （注意：并非spring-cloud-starter，并不含有spring-cloud-commons哦）
 
-总的来说：本例导包是非常非常“干净”的，这样在流程上才更有说服力嘛~
+总的来说：本例导包是非常非常"干净"的，这样在流程上才更有说服力嘛~
 
 ---
 
@@ -79,9 +79,6 @@ public abstract class SpringApplicationEvent extends ApplicationEvent {
         return this.args;
     }
 }
-
-
-
 ```
 
 它是抽象类，扩展自Spring Framwork的ApplicationEvent，确保了事件和应用实体SpringApplication产生关联（当然还有String[] args）。它有如下实现子类（7个）：
@@ -103,7 +100,7 @@ public abstract class SpringApplicationEvent extends ApplicationEvent {
 - SpringApplication
 实例已实例化：
 new SpringApplication(primarySources)
-    - 它在实例化阶段完成了如下几件“大”事：
+    - 它在实例化阶段完成了如下几件"大"事：
         - 推断出应用类型
 webApplicationType
 、main方法所在类
@@ -203,11 +200,11 @@ SpringApplication
 5. BootstrapApplicationListener
 ：来自SC。优先级最高，用于启动/创建Spring Cloud的应用上下文。需要注意的是：到此时SB的上下文
 ApplicationContext
-还并没有创建哦。这个流程“嵌套”特别像Bean初始化流程：初始化Bean A时，遇到了Bean B，就需要先去完成Bean B的初始化，再回头来继续完成Bean A的步骤。
+还并没有创建哦。这个流程"嵌套"特别像Bean初始化流程：初始化Bean A时，遇到了Bean B，就需要先去完成Bean B的初始化，再回头来继续完成Bean A的步骤。
 - 说明：在创建SC的应用的时候，使用的也是
 SpringApplication#run()
 完成的（非web），因此也会走下一整套SpringApplication的生命周期逻辑，所以请你务必区分。
-    - 特别是这种case会让“绝大多数”初始化器、监听器等执行多次，若你有那种只需要执行一次的需求（比如只想让SB容器生命周期内执行，SC生命周期不执行），**请务必自行处理**
+    - 特别是这种case会让"绝大多数"初始化器、监听器等执行多次，若你有那种只需要执行一次的需求（比如只想让SB容器生命周期内执行，SC生命周期不执行），**请务必自行处理**
 ，否则会被执行多次而带来不可预知的结果
 - SC应用上下文读取的外部化配置文件名默认是：
 bootstrap
@@ -256,7 +253,7 @@ JsonParser
 application.properties/yaml
 等外部化配置，解析好后放进环境里（这应该是最为重要的）。
     - 外部化配置默认的优先级为：
-“classpath:/,classpath:/config/,file:./,file:./config/”
+"classpath:/,classpath:/config/,file:./,file:./config/"
 。当前工程下的config目录里的application.properties优先级最高，当前工程类路径下的application.properties优先级最低
     - 值得强调的是：bootstrap.xxx也是由它负责加载的，处理规则一样
     - DebugAgentEnvironmentPostProcessor
@@ -329,7 +326,7 @@ banner.txt
 ，这样才是最为实用，最高级的（但需要你定制化开发，并且支持可配置，最好对使用者无感，属于一个common组件）
 - 根据是否是web环境、是否是REACTIVE等，用空构造器创建出一个
 ConfigurableApplicationContext
-上下文实例（因为使用的是空构造器，所以不会立马“启动”上下文）
+上下文实例（因为使用的是空构造器，所以不会立马"启动"上下文）
     - SERVLET -> AnnotationConfigServletWebServerApplicationContext
     - REACTIVE -> AnnotationConfigReactiveWebServerApplicationContext
     - 非web环境 -> AnnotationConfigApplicationContext（SC应用的容器就是使用的它）
@@ -380,7 +377,7 @@ spring.application.name
 8.
 ConfigurationWarningsApplicationContextInitializer
 ：@since 1.2.0。对错误的配置进行警告（不会终止程序），以warn()日志输出在控制台。默认内置的只有对包名的检查：若你扫包含有
-“org.springframework”/“org”
+"org.springframework"/"org"
 这种包名就警告
     - 若你想自定义检查规则，请实现
 Check
@@ -404,7 +401,7 @@ WebServer
 已启动完成，所以已经有了监听的端口号
     - 该监听器做的事有两个：
     -
-“local.” + getName(context.getServerNamespace()) + “.port”
+"local." + getName(context.getServerNamespace()) + ".port"
 作为key（默认值是
 local.server.port
 ），value是端口值。这样可以通过@Value来获取到本机端口了（但貌似端口写0的时候，SB在显示上有个小bug）
@@ -495,9 +492,9 @@ SpringApplication#setDefaultProperties
 API方式放进来的，一般不会使用到，留个印象即可
 24. LoggingApplicationListener
 ：因为这时已经有Bean工厂了嘛，所以它做的事是：向工厂内放入Bean
-- “springBootLoggingSystem” -> loggingSystem
-- “springBootLogFile” -> logFile
-- “springBootLoggerGroups” -> loggerGroups
+- "springBootLoggingSystem" -> loggingSystem
+- "springBootLogFile" -> logFile
+- "springBootLoggerGroups" -> loggerGroups
 25. BackgroundPreinitializer
 ：本事件达到时无动作
 26. RestartListener
@@ -598,7 +595,7 @@ SpringApplication是有可能在启动的时候失败（如端口号已被占用
 
 ### ApplicationFailedEvent：应用启动失败
 
-当SpringApplication在启动时抛出异常：可能是端口绑定、也可能是你自定义的监听器你写了个bug等，就会“可能”发送此事件。
+当SpringApplication在启动时抛出异常：可能是端口绑定、也可能是你自定义的监听器你写了个bug等，就会"可能"发送此事件。
 
 ---
 
@@ -639,4 +636,4 @@ Application failed to start with classpath: …
 
 # 总结
 
-关于SpringApplication的生命周期体系的介绍就到这了，相信通过此“万字长文”你能体会到A哥的用心。翻了翻市面上的相关文章，本文Almost可以保证是总结得最到位的，让你通过一文便可从大的方面基本掌握Spring Boot，这不管是你使用SB，还是后续自行扩展、精雕细琢SB，以及去深入了解Spring Cloud均由非常重要的意义，希望对你有帮助，谢谢你的三连。
+关于SpringApplication的生命周期体系的介绍就到这了，相信通过此"万字长文"你能体会到A哥的用心。翻了翻市面上的相关文章，本文Almost可以保证是总结得最到位的，让你通过一文便可从大的方面基本掌握Spring Boot，这不管是你使用SB，还是后续自行扩展、精雕细琢SB，以及去深入了解Spring Cloud均由非常重要的意义，希望对你有帮助，谢谢你的三连。

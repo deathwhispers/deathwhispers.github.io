@@ -717,7 +717,7 @@ Deployment也需要 [.spec section](https://github.com/kubernetes/community/blob
 
 ### **策略**
 
-.spec.strategy 指定新的Pod替换旧的Pod的策略。 .spec.strategy.type 可以是”Recreate”或者是 “RollingUpdate”。“RollingUpdate”是默认值。
+.spec.strategy 指定新的Pod替换旧的Pod的策略。 .spec.strategy.type 可以是"Recreate"或者是 "RollingUpdate"。"RollingUpdate"是默认值。
 
 ### **Recreate Deployment**
 

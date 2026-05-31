@@ -63,9 +63,6 @@ processBeanDefinition(ele, delegate);
 doRegisterBeanDefinitions(ele);
 }
 }
-
-
-
 ```
 
 该方法的功能一目了然，分别是对四种不同的标签进行解析，分别是 import、alias、bean、beans 。咱门从第一个标签 import 开始。
@@ -185,9 +182,6 @@ protected void importBeanDefinitionResource(Element ele) {
     Resource[] actResArray = actualResources.toArray(new Resource[0]);
     getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
 }
-
-
-
 ```
 
 解析 import 标签的过程较为清晰，整个过程如下：
@@ -313,9 +307,6 @@ public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualRe
         return count;
     }
 }
-
-
-
 ```
 
 整个逻辑比较简单：

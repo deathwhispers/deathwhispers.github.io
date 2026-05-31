@@ -173,9 +173,7 @@ JDK 1.6 引入了更加聪明的自旋锁，即自适应自旋锁。
 ```java
 public void vectorTest(){
     Vector vector = new Vector();
-    for (int i = 0;
-    i < 10;
-    i++){
+    for (int i = 0; i < 10; i++){
         vector.add(i + "");
     }
     System.out.println(vector);

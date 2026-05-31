@@ -111,9 +111,6 @@ public static void main(String[] args) {
     SpringApplication.run(DubboRegistryZooKeeperConsumerBootstrap.class) // 启动
     .close(); // <X> 关闭
 }
-
-
-
 ```
 
 -
@@ -141,7 +138,7 @@ Statistic 统计代码量
 
 **第二种方式**，使用 [Shell 脚本命令逐个 Maven 模块统计](http://blog.csdn.net/yhhwatl/article/details/52623879) 。
 
-一般情况下，笔者使用 find . -name “*.java”|xargs cat|grep -v -e ^$ -e ^//.*$|wc -l 。这个命令只过滤了**部分注释**，所以相比 [IDEA Statistic](https://plugins.jetbrains.com/plugin/4509-statistic) 会**偏多**。
+一般情况下，笔者使用 find . -name "*.java"|xargs cat|grep -v -e ^$ -e ^//.*$|wc -l 。这个命令只过滤了**部分注释**，所以相比 [IDEA Statistic](https://plugins.jetbrains.com/plugin/4509-statistic) 会**偏多**。
 
 当然，考虑到准确性，胖友需要手动 cd 到每个 Maven 项目的 src/main/java 目录下，以达到排除单元测试的代码量。
 
@@ -274,14 +271,11 @@ public ServiceAnnotationBeanPostProcessor serviceAnnotationBeanPostProcessor(Env
     // <2> 创建 ServiceAnnotationBeanPostProcessor 对象
     return new ServiceAnnotationBeanPostProcessor(packagesToScan);
 }
-
-
-
 `````
 
 - <1>
 处，获得
-“dubbo.scan.base-package”
+"dubbo.scan.base-package"
 属性，即要扫描 Dubbo 注解的包。
 - <2>
 处，创建 ServiceAnnotationBeanPostProcessor 对象。后续，ServiceAnnotationBeanPostProcessor 会扫描
@@ -293,7 +287,7 @@ packagesToScan
 
 ### 4.1.2 referenceAnnotationBeanPostProcessor
 
-#referenceAnnotationBeanPostProcessor() 方法，创建 Bean 名字为 “referenceAnnotationBeanPostProcessor” 的 ReferenceAnnotationBeanPostProcessor Bean 对象。代码如下：
+#referenceAnnotationBeanPostProcessor() 方法，创建 Bean 名字为 "referenceAnnotationBeanPostProcessor" 的 ReferenceAnnotationBeanPostProcessor Bean 对象。代码如下：
 
 ```java
 // DubboAutoConfiguration.java
@@ -392,9 +386,9 @@ dubbo.consumer
 @EnableDubboConfig(multiple = true)
 。
     - 要求配置
-“dubbo.config.multiple=true”
+"dubbo.config.multiple=true"
 。默认情况下，Dubbo 自带
-“dubbo.config.multiple=true”
+"dubbo.config.multiple=true"
 ，所以也会创建。
     - 引入了多个 Dubbo 配置绑定 Bean 的配置。即配置文件如下属性：
 
@@ -481,9 +475,6 @@ private BindHandler getBindHandler() {
     }
     return handler;
 }
-
-
-
 `````
 
 ```plain text
@@ -515,9 +506,9 @@ dubbo.config.qos-enable=false
 ```
 
 - 因此，我们只要配置了
-“spring.application.name”
+"spring.application.name"
 的属性，
-“dubbo.application.name”
+"dubbo.application.name"
 就会自动生成。
 
 ### 4.3.1 postProcessEnvironment
@@ -604,9 +595,6 @@ private void setDubboConfigMultipleProperty(Map<String, Object> defaultPropertie
 private void setDubboApplicationQosEnableProperty(Map<String, Object> defaultProperties) {
     defaultProperties.put(DUBBO_APPLICATION_QOS_ENABLE_PROPERTY, Boolean.FALSE.toString());
 }
-
-
-
 ``````
 
 ```plain text
@@ -646,9 +634,6 @@ private void addOrReplace(MutablePropertySources propertySources, Map<String, Ob
         propertySources.addLast(target);
     }
 }
-
-
-
 ``````
 
 ```plain text
@@ -715,16 +700,13 @@ public class WelcomeLogoApplicationListener implements ApplicationListener<Appli
         return bannerTextBuilder.toString();
     }
 }
-
-
-
 ``````
 
 - 简单，就不多做解释了。
 
 ## 4.5 OverrideDubboConfigApplicationListener
 
-com.alibaba.boot.dubbo.context.event.OverrideDubboConfigApplicationListener ，实现 ApplicationListener 接口，也是处理 ApplicationEnvironmentPreparedEvent 事件，根据 “dubbo.config.override” 的属性值，若为 true 时，则覆盖 environment 中 “dubbo.” 开头的配置，添加到 Dubbo Properties 对象中。代码如下：
+com.alibaba.boot.dubbo.context.event.OverrideDubboConfigApplicationListener ，实现 ApplicationListener 接口，也是处理 ApplicationEnvironmentPreparedEvent 事件，根据 "dubbo.config.override" 的属性值，若为 true 时，则覆盖 environment 中 "dubbo." 开头的配置，添加到 Dubbo Properties 对象中。代码如下：
 
 ```java
 // OverrideDubboConfigApplicationListener.java
@@ -767,14 +749,11 @@ public class OverrideDubboConfigApplicationListener implements ApplicationListen
     }
 }
 }
-
-
-
 ``````
 
 - <1>
 处，获得
-“dubbo.config.override”
+"dubbo.config.override"
 属性对应的值。默认情况下为
 true
 。代码如下：
@@ -806,7 +785,7 @@ DubboUtils#filterDubboProperties(ConfigurableEnvironment environment)
 方法，从
 environment
 中，提取
-“dubbo.”
+"dubbo."
 开头的配置。代码如下：
 
 ```java
@@ -847,9 +826,6 @@ public static SortedMap<String, Object> filterDubboProperties(ConfigurableEnviro
     // 返回 dubboProperties
     return Collections.unmodifiableSortedMap(dubboProperties);
 }
-
-
-
 ``````
 
 ```plain text
@@ -886,9 +862,6 @@ public boolean supportsEventType(Class<? extends ApplicationEvent> eventType) {
 private static <T> T[] of(T... values) {
     return values;
 }
-
-
-
 ``````
 
 - 为什么呢，我们接着往下看。
@@ -953,9 +926,6 @@ protected void onApplicationReadyEvent(ApplicationReadyEvent event) {
     // <2> 启动一个用户线程，从而实现等待
     await();
 }
-
-
-
 ``````
 
 - <1>
@@ -1006,9 +976,6 @@ private void executeMutually(Runnable runnable) {
         lock.unlock();
     }
 }
-
-
-
 ``````
 
 ```plain text
@@ -1051,9 +1018,6 @@ protected void release() {
         }
     });
 }
-
-
-
 ``````
 
 ```plain text
@@ -1178,15 +1142,12 @@ public class DubboEndpointsAutoConfiguration {
         return new DubboShutdownEndpoint();
     }
 }
-
-
-
 ``````
 
 - 每个方法，创建一个 Dubbo Endpint Bean 。一共有 6 个。
 - @PropertySource
 注解，导入
-“classpath:/META-INF/dubbo-endpoins-default.properties”
+"classpath:/META-INF/dubbo-endpoins-default.properties"
 配置文件。代码如下：
 
 ```plain text
@@ -1241,9 +1202,6 @@ public class DubboHealthIndicatorAutoConfiguration {
         return new DubboHealthIndicator();
     }
 }
-
-
-
 ``````
 
 - 每个注解，看后面的代码注释。
@@ -1313,7 +1271,7 @@ public class DubboHealthIndicatorProperties {
 ``````
 
 - 读取以
-“management.health.dubbo”
+"management.health.dubbo"
 开头的配置。
 
 如下开始，是 health 包下。
@@ -1375,9 +1333,6 @@ protected void doHealthCheck(Health.Builder builder) throws Exception {
         builder.withDetail(statusCheckerName, detail);
     }
 }
-
-
-
 ``````
 
 - 大体比较简单，胖友顺着注释来瞅瞅即可。
@@ -1423,9 +1378,6 @@ protected Map<String, String> resolveStatusCheckerNamesMap() {
     statusCheckerNamesMap.putAll(resolveStatusCheckerNamesMapFromProviderConfig());
     return statusCheckerNamesMap;
 }
-
-
-
 ``````
 
 - <1>
@@ -1453,9 +1405,6 @@ private Map<String, String> resolveStatusCheckerNamesMapFromDubboHealthIndicator
     }
     return statusCheckerNamesMap;
 }
-
-
-
 ``````
 
 - <2>
@@ -1503,9 +1452,6 @@ private Set<String> getStatusCheckerNames(ProviderConfig providerConfig) {
 private String buildSource(String beanName, Object bean) {
     return beanName + "@" + bean.getClass().getSimpleName() + ".getStatus()";
 }
-
-
-
 ``````
 
 - <3>
@@ -1539,9 +1485,6 @@ private Map<String, String> resolveStatusCheckerNamesMapFromProviderConfig() {
     }
     return statusCheckerNamesMap;
 }
-
-
-
 `````
 
 - 最终的结果，示例如下图：
@@ -1616,9 +1559,6 @@ private static boolean isSimpleType(Class<?> type) {
     || type == URL.class
     || type == Class.class;
 }
-
-
-
 ``````
 
 - 目的是读取 Bean 的基本属性。示例如下图：
@@ -1701,9 +1641,6 @@ public class DubboEndpoint {
         return metaData;
     }
 }
-
-
-
 ``````
 
 ## 5.8 DubboConfigsMetadataEndpoint
@@ -1761,9 +1698,6 @@ public class DubboConfigsMetadataEndpoint extends AbstractDubboEndpoint {
         configsMap.put(name, beansMetadata);
     }
 }
-
-
-
 ``````
 
 ## 5.7 DubboPropertiesEndpoint
@@ -1782,9 +1716,6 @@ public class DubboPropertiesEndpoint extends AbstractDubboEndpoint {
         return DubboUtils.filterDubboProperties(environment);
     }
 }
-
-
-
 ``````
 
 ## 5.8 DubboReferencesMetadataEndpoint
@@ -1840,9 +1771,6 @@ public class DubboReferencesMetadataEndpoint extends AbstractDubboEndpoint {
         return referencesMetadata;
     }
 }
-
-
-
 ``````
 
 ## 5.9 DubboServicesMetadataEndpoint
@@ -1899,9 +1827,6 @@ public class DubboServicesMetadataEndpoint extends AbstractDubboEndpoint {
         return null;
     }
 }
-
-
-
 ``````
 
 ## 5.10 DubboShutdownEndpoint
@@ -1955,9 +1880,6 @@ public class DubboShutdownEndpoint extends AbstractDubboEndpoint {
         return shutdownData;
     }
 }
-
-
-
 ``````
 
 - 通过调用该接口，我们就可以远程关闭 Dubbo 服务。

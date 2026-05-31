@@ -87,14 +87,14 @@ vi docker-compose.yml
 
 由于 docker 搭建环境非常方便，我们直接使用兼容性最好的thingsboard/tb-postgres镜像。
 
-version: ‘2.2’ services: zookeeper: restart: always image: “zookeeper:3.5” ports: - “2181:2181” environment: ZOO_MY_ID: 1 ZOO_SERVERS: server.1=zookeeper:2888:3888;zookeeper:2181 kafka: restart: always image: wurstmeister/kafka depends_on: - zookeeper ports: - “9092:9092” environment: KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181 KAFKA_LISTENERS: INSIDE://:9093,OUTSIDE://:9092 KAFKA_ADVERTISED_LISTENERS: INSIDE://:9093,OUTSIDE://kafka:9092 KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE volumes: - /var/run/docker.sock:/var/run/docker.sock mytb: restart: always image: “thingsboard/tb-postgres” depends_on: - kafka ports: - “9090:9090” - “1883:1883” - “5683:5683/udp” environment: TB_QUEUE_TYPE: kafka TB_KAFKA_SERVERS: kafka:9092 volumes: - /data/.mytb-data:/data - /data/.mytb-logs:/var/log/thingsboard
+version: '2.2' services: zookeeper: restart: always image: "zookeeper:3.5" ports: - "2181:2181" environment: ZOO_MY_ID: 1 ZOO_SERVERS: server.1=zookeeper:2888:3888;zookeeper:2181 kafka: restart: always image: wurstmeister/kafka depends_on: - zookeeper ports: - "9092:9092" environment: KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181 KAFKA_LISTENERS: INSIDE://:9093,OUTSIDE://:9092 KAFKA_ADVERTISED_LISTENERS: INSIDE://:9093,OUTSIDE://kafka:9092 KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE volumes: - /var/run/docker.sock:/var/run/docker.sock mytb: restart: always image: "thingsboard/tb-postgres" depends_on: - kafka ports: - "9090:9090" - "1883:1883" - "5683:5683/udp" environment: TB_QUEUE_TYPE: kafka TB_KAFKA_SERVERS: kafka:9092 volumes: - /data/.mytb-data:/data - /data/.mytb-logs:/var/log/thingsboard
 
 **说明：**
 
 - mytb - ThingsBoard服务名称
 - restart: always - 在系统重新启动的情况下自动启动ThingsBoard在出现故障的情况下自动重新启动ThingsBoard。
 - image: thingsboard/tb-postgres - docker镜像也可以是thingsboard/tb-cassandra或thingsboard/tb
-- “PORT:PORT” 顺序是 “本地端口:Docker容器内端口”
+- "PORT:PORT" 顺序是 "本地端口:Docker容器内端口"
 
 8080:9090 - 将本地端口9090转发至Docker容器内的HTTP端口9090
 
@@ -102,7 +102,7 @@ version: ‘2.2’ services: zookeeper: restart: always image: “zookeeper:3.5�
 
 5683:5683 - 将本地端口5683转发至Docker容器内的COAP端口5683
 
-- “DIR:DIR” 顺序是 “本地主机目录:Docker容器内目录”
+- "DIR:DIR" 顺序是 "本地主机目录:Docker容器内目录"
 
 /data/.mytb-data:/data - 将主机的目录/data/.mytb-data挂载到ThingsBoard数据目录
 
@@ -198,7 +198,7 @@ docker ps
 
 3.2 使用curl发送HTTP请求
 
-curl -v -X POST -d ‘{“turn”:“1”,“light”:“90”}’ http://103.44.238.67:9090/api/v1/A1_TEST_TOKEN/telemetry –header “Content-Type:application/json”
+curl -v -X POST -d '{"turn":"1","light":"90"}' http://103.44.238.67:9090/api/v1/A1_TEST_TOKEN/telemetry –header "Content-Type:application/json"
 
 3.3 查看更新后的遥测值
 

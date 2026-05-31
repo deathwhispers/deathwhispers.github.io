@@ -18,7 +18,7 @@ updated: 2022-05-18 18:33
 
 # 1. 概述
 
-本文分享过滤器 DeprecatedFilter ，用于服务**消费者**中，通过 <dubbo: service /> 或  或  的 “deprecated” 配置项为 true 来开启。
+本文分享过滤器 DeprecatedFilter ，用于服务**消费者**中，通过 <dubbo: service /> 或  或  的 "deprecated" 配置项为 true 来开启。
 
 # 2. DeprecatedFilter
 

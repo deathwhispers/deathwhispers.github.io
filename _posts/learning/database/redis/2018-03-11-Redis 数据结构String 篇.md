@@ -44,7 +44,7 @@ SET key value [EX seconds] [PX milliseconds] [NX|XX]
   ```redis
   SET phone_number:13800138000 "123456" EX 600
   ```
-- **分布式锁**：利用 `NX` 实现“不存在则设置”的原子操作，是实现分布式锁的基础。
+- **分布式锁**：利用 `NX` 实现"不存在则设置"的原子操作，是实现分布式锁的基础。
   ```redis
   SET lock_key "request_id" NX EX 60
   ```
@@ -368,7 +368,7 @@ Increment the float value of a key by the given amount
 
 1 redis> set a 1.52OK
 
-3 redis> incrbyfloat a 10.14“11.6”5 redis> incrbyfloat a 10.16“21.7”7 redis> incrbyfloat a -10.18“11.6”9 redis> incrbyfloat a -1.5e210“-138.39999999999999999”
+3 redis> incrbyfloat a 10.14"11.6"5 redis> incrbyfloat a 10.16"21.7"7 redis> incrbyfloat a -10.18"11.6"9 redis> incrbyfloat a -1.5e210"-138.39999999999999999"
 
 ![](assets/images/learning/database/redis/redis-String篇/copycode.gif)
 
@@ -390,7 +390,7 @@ Sets or clears the bit at offset in the string value stored at key
 
 1 redis> setbit a 012 (integer) 03 redis> setbit a 114 (integer) 05 redis> setbit a 216 (integer) 07 redis> setbit a 318 (integer) 09 redis> geta
 
-10“”
+10""
 
 ![](assets/images/learning/database/redis/redis-String篇/copycode.gif)
 
@@ -448,29 +448,29 @@ NOT操作后面只有一个目标key和srckey，是因为NOT操作是一元的�
 
 ![](assets/images/learning/database/redis/redis-String篇/copycode.gif)
 
-1 redis> set key1 “”2OK
+1 redis> set key1 ""2OK
 
-3 redis> set key2 “0f0f”4OK
+3 redis> set key2 "0f0f"4OK
 
-5 redis> set key3 “”6OK
+5 redis> set key3 ""6OK
 
 7 redis> bitop and destkey key1 key2 key3
 
 8 (integer) 29 redis> getdestkey
 
-10“”11 redis> bitop or destkey key1 key2 key3
+10""11 redis> bitop or destkey key1 key2 key3
 
 12 (integer) 213 redis> getdestkey
 
-14“”15 redis> bitop xor destkey key1 key2 key3
+14""15 redis> bitop xor destkey key1 key2 key3
 
 16 (integer) 217 redis> getdestkey
 
-18“”19 redis> bitop not destkey key1
+18""19 redis> bitop not destkey key1
 
 20 (integer) 221 redis> getdestkey
 
-22“0f0f”
+22"0f0f"
 
 ![](assets/images/learning/database/redis/redis-String篇/copycode.gif)
 
@@ -494,7 +494,7 @@ Find first bit set or clear in a string
 
 ![](assets/images/learning/database/redis/redis-String篇/copycode.gif)
 
-redis> set bits “”
+redis> set bits ""
 
 OK
 

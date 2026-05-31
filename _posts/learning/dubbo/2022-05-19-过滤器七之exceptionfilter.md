@@ -69,7 +69,7 @@ plain public static String toString(Throwable e) {     UnsafeStringWriter w = ne
 
 一开始想错了，怪不得觉得好奇怪。
 
-另外，笔者有个想法。我们在实际使用时，可能会定义通用的 BusinessException ，并且每个接口，实际都会抛出该异常。那么要求开发每个接口都定义抛出 BusinessException 是比较“麻烦”的。但是，按照 ExceptionFilter 的逻辑，会打印异常日志。所以，笔者的想法是，重写 ExceptionFilter ，定义一些通用异常，允许直接返回结果。
+另外，笔者有个想法。我们在实际使用时，可能会定义通用的 BusinessException ，并且每个接口，实际都会抛出该异常。那么要求开发每个接口都定义抛出 BusinessException 是比较"麻烦"的。但是，按照 ExceptionFilter 的逻辑，会打印异常日志。所以，笔者的想法是，重写 ExceptionFilter ，定义一些通用异常，允许直接返回结果。
 
 - 墙裂推荐 [《Dubbo(四) 异常处理》](https://blog.csdn.net/qq315737546/article/details/53915067)
 - [《浅谈 Dubbo 的 ExceptionFilter 异常处理》](https://blog.csdn.net/mj158518/article/details/51228649)

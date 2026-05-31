@@ -222,7 +222,7 @@ ColumnFamily Id，然后取出这个这个被序列化 RowMutation 对象的起�
 
 这里是启动过程中最重要的一步。这里将会启动一系列服务，主要包括如下步骤。
 
-创建 StorageMetadata。StorageMetadata 将包含三个关键信息：本节点的 Token、当前 generation 以及 ClusterName，Cassandra 判断如果是第一次启动，Cassandra 将会创建三列分别存储这些信息并将它们存在在系统表的 LocationInfo ColumnFamily 中，key 是“L”。如果不是第一次启动将会更新这三个值。这里的 Token 是判断用户是否指定，如果指定了使用用户指定的，否则随机生成一个 Token。但是这个 Token 有可能在后面被修改。这三个信息被存在 StorageService 类的 storageMetadata_ 属性中，以便后面随时调用。
+创建 StorageMetadata。StorageMetadata 将包含三个关键信息：本节点的 Token、当前 generation 以及 ClusterName，Cassandra 判断如果是第一次启动，Cassandra 将会创建三列分别存储这些信息并将它们存在在系统表的 LocationInfo ColumnFamily 中，key 是"L"。如果不是第一次启动将会更新这三个值。这里的 Token 是判断用户是否指定，如果指定了使用用户指定的，否则随机生成一个 Token。但是这个 Token 有可能在后面被修改。这三个信息被存在 StorageService 类的 storageMetadata_ 属性中，以便后面随时调用。
 
 GCInspector.instance.start 服务。主要是统计统计当前系统中资源的使用情况，将这个信息记录到日志文件中，这个可以作为系统的监控日志使用。
 

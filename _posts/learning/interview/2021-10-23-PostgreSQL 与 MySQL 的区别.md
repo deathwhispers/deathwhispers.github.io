@@ -134,7 +134,7 @@ MyISAM和InnoDB都支持`spatial extensions`，但差别在于：如果使用MyI
 
 对于web应用来说,mysql 5.6 的内置MC API功能很好用，PGSQL差一些。
 
-PG 的“无锁定”特性非常突出，甚至包括 vacuum 这样的整理数据空间的操作，这个和PGSQL的MVCC实现有关系。
+PG 的"无锁定"特性非常突出，甚至包括 vacuum 这样的整理数据空间的操作，这个和PGSQL的MVCC实现有关系。
 
 ## [12 维护团队](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247487551&idx=1&sn=18f64ba49f3f0f9d8be9d1fdef8857d9&scene=21#wechat_redirect)
 
