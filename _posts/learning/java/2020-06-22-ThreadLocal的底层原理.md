@@ -20,7 +20,7 @@ week: 2025-W48
 
 ## 1. ThreadLocal 是什么
 
-`ThreadLocal` 提供“线程本地变量”能力：同一个 `ThreadLocal` 对象，在不同线程里读到的是各自独立的数据副本。
+`ThreadLocal` 提供"线程本地变量"能力：同一个 `ThreadLocal` 对象，在不同线程里读到的是各自独立的数据副本。
 
 它的目标不是线程共享，而是线程隔离。
 

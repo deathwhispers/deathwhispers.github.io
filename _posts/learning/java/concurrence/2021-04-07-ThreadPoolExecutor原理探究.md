@@ -91,9 +91,6 @@ public static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory thr
     new LinkedBlockingQueue<Runnable>(),
     threadFactory);
 }
-
-
-
 ```
 
 创建一个核心线程数和做大线程数都是nThreads的线程池，并且阻塞队列长度为Integer.MAX_VALUE。keepAliveTime=0说明只要线程个数比核心线程个数多并且当前空闲则回收。
@@ -107,9 +104,6 @@ public static ExecutorService newSingleThreadExecutor() {
     0L, TimeUnit.MILLISECONDS,
     new LinkedBlockingQueue<Runnable>()));
 }
-
-
-
 ```
 
 创建一个核心线程个数和最大线程个数都是1的线程池。
@@ -122,9 +116,6 @@ public static ExecutorService newCachedThreadPool() {
     60L, TimeUnit.SECONDS,
     new SynchronousQueue<Runnable>());
 }
-
-
-
 ```
 
 创建一个按需创建线程的线程池，初始线程个数为0，最多线程个数为Integer.MAX_VALUE。KeepAliveTime=60说明只要当前线程在60s内空闲就会被回收。这个类型的特殊之处在于，加入同步队列的任务会被马上执行，同步队列里面最多只有一个任务。
@@ -249,9 +240,6 @@ private boolean addWorker(Runnable firstTask, boolean core) {
     }
     return workerStarted;
 }
-
-
-
 ```
 
 ### Worker的执行
@@ -308,9 +296,6 @@ final void runWorker(Worker w) {
         processWorkerExit(w, completedAbruptly);
     }
 }
-
-
-
 ```
 
 在构造函数中设置Worker的状态为-1是为了避免当前Worker在调用runWorker方法前被中断（当其他线程调用了shutdownNow方法，如果Worker状态>=0则会中断该线程）。
@@ -353,9 +338,6 @@ private void processWorkerExit(Worker w, boolean completedAbruptly) {
         addWorker(null, false);
     }
 }
-
-
-
 ```
 
 ### void shutdown()
@@ -478,9 +460,6 @@ final void tryTerminate() {
         else retry on failed CAS
     }
 }
-
-
-
 ```
 
 ### List shutdownNow()
@@ -517,9 +496,6 @@ private void interruptWorkers() {
         mainLock.unlock();
     }
 }
-
-
-
 ```
 
 ### boolean awaitTermination(long timeout, TimeUnit unit)
@@ -546,7 +522,4 @@ throws InterruptedException {
         mainLock.unlock();
     }
 }
-
-
-
 ```

@@ -68,9 +68,6 @@ public void write(int j ) {
 public int read() {
     return i;
 }
-
-
-
 ```
 
 我们约定线程 A 执行 #write(int j)，线程 B 执行 #read()，且线程 A 优先于线程 B 执行，那么线程 B 获得结果是什么？

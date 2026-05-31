@@ -39,9 +39,6 @@ public class PreconditionsTest {
         }
     }
 }
-
-
-
 ```
 
 说明：参数验证，我们每次都要添加if语句来做判断, 重复的工作会做好多次。getPerson方法只有2个参数，验证规则也不是很复杂，如果参数过度，验证规则复杂后，上面代码的可读性都会很差的，复用性就更谈不上了。
@@ -80,9 +77,6 @@ public class PreconditionsTest {
         System.out.println("a person age:" + age + ",neme:" + neme);
     }
 }
-
-
-
 ```
 
 运行结果:
@@ -207,9 +201,6 @@ public class PreconditionsTest {
         Preconditions.checkElementIndex(index, intList.size(), "index 为 " + index + " 不在 list中， List size为： " + intList.size());
     }
 }
-
-
-
 ```
 
 输出结果:
@@ -230,4 +221,4 @@ index 为 16 不在 list中， List size为： 9
 
 Guava的preconditions有这样几个优点:
 
-在静态导入后, 方法很明确无歧义, checkNotNull可以清楚地告诉你它是干什么的, 它会抛出怎样的异常. checkNotNull在验证通过后直接返回, 可以这样方便地写代码: this.field = checkNotNull(field). 简单而又强大的可变参数’printf’风格的自定义错误信息.
+在静态导入后, 方法很明确无歧义, checkNotNull可以清楚地告诉你它是干什么的, 它会抛出怎样的异常. checkNotNull在验证通过后直接返回, 可以这样方便地写代码: this.field = checkNotNull(field). 简单而又强大的可变参数'printf'风格的自定义错误信息.

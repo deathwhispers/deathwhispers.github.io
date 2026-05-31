@@ -192,9 +192,6 @@ public class DemoApplication {
         }
     }
 }
-
-
-
 ```
 
 运行结果如下：
@@ -210,9 +207,9 @@ public class DemoApplication {
 HDMI
 端口的标准。在上面的代码中，
 MessageService
-接口就是这个“
+接口就是这个"
 HDMI
-端口”，定义了如何与外部设备交流。
+端口"，定义了如何与外部设备交流。
 - **为服务接口提供实现**
 ：这类似于制造商为
 HDMI
@@ -220,9 +217,9 @@ HDMI
 HelloMessageService
 和
 HiMessageService
-就是这些 “
+就是这些 "
 HDMI
-设备”。每个设备/实现 都有其独特的输出，但都遵循了统一的
+设备"。每个设备/实现 都有其独特的输出，但都遵循了统一的
 HDMI
 标准（
 MessageService
@@ -230,15 +227,15 @@ MessageService
 - **注册服务提供者**
 ：当我们购买了一个
 HDMI
-设备，它通常都会在包装盒上明确标明 “适用于
+设备，它通常都会在包装盒上明确标明 "适用于
 HDMI
-”。这就像一个标识，告诉用户它可以连接到任何带有
+"。这就像一个标识，告诉用户它可以连接到任何带有
 HDMI
 接口的电视。在
 SPI
 的例子中，
 META-INF/services/
-目录和其中的文件就像这个 “标签”，告诉
+目录和其中的文件就像这个 "标签"，告诉
 JDK
 哪些类是
 MessageService
@@ -256,7 +253,7 @@ MessageService
 
 ## 3. SPI 在 Spring 框架中的应用
 
-Spring 官方在其文档和源代码中多次提到了 SPI（Service Provider Interface）的概念。但是，当我们说 “Spring 的 SPI” 时，通常指的是 Spring 框架为开发者提供的一套可扩展的接口和抽象类，开发者可以基于这些接口和抽象类实现自己的版本。
+Spring 官方在其文档和源代码中多次提到了 SPI（Service Provider Interface）的概念。但是，当我们说 "Spring 的 SPI" 时，通常指的是 Spring 框架为开发者提供的一套可扩展的接口和抽象类，开发者可以基于这些接口和抽象类实现自己的版本。
 
 在 Spring 中，SPI 的概念与 Spring Boot 使用的 spring.factories 文件的机制不完全一样，但是它们都体现了可插拔、可扩展的思想。
 
@@ -301,7 +298,7 @@ Spring Boot
 
 ### 3.1 传统 Spring 框架中的 SPI 思想
 
-在传统的 Spring 框架中，虽然没有直接使用名为 “SPI” 的术语，但其核心思想仍然存在。Spring 提供了多个扩展点，其中最具代表性的就是 BeanPostProcessor。在本节中，我们将通过一个简单的 MessageService 接口及其实现来探讨如何利用 Spring 的 BeanPostProcessor 扩展点体现 SPI 的思想。
+在传统的 Spring 框架中，虽然没有直接使用名为 "SPI" 的术语，但其核心思想仍然存在。Spring 提供了多个扩展点，其中最具代表性的就是 BeanPostProcessor。在本节中，我们将通过一个简单的 MessageService 接口及其实现来探讨如何利用 Spring 的 BeanPostProcessor 扩展点体现 SPI 的思想。
 
 提供两个简单的实现类。
 
@@ -360,9 +357,6 @@ public class MessageServicePostProcessor implements BeanPostProcessor {
         return bean;
     }
 }
-
-
-
 ```
 
 修改 Spring 配置
@@ -390,9 +384,6 @@ public class MessageServiceConfig {
         return new MessageServicePostProcessor();
     }
 }
-
-
-
 ```
 
 执行程序
@@ -424,17 +415,17 @@ public class DemoApplication {
 
 ![](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/f9eb1ec3cd179454a6e567557aa13037.png)
 
-现在，每一个 MessageService 实现都被 BeanPostProcessor 处理了，添加了额外的消息 “[Processed by Spring SPI]”。这演示了 Spring 的 SPI 概念，通过 BeanPostProcessor 来扩展或修改 Spring 容器中的 bean。
+现在，每一个 MessageService 实现都被 BeanPostProcessor 处理了，添加了额外的消息 "[Processed by Spring SPI]"。这演示了 Spring 的 SPI 概念，通过 BeanPostProcessor 来扩展或修改 Spring 容器中的 bean。
 
 有人可能留意到这里红色的警告，这个之前在讲 BeanPostProcessor 的时候也提到过，当 BeanPostProcessor 自身被一个或多个 BeanPostProcessor 处理时，就会出现这种情况。简单地说，由于 BeanPostProcessor 需要在其他 bean 之前初始化，所以某些 BeanPostProcessor 无法处理早期初始化的 bean，包括配置类和其他 BeanPostProcessor。解决办法就是不要把 MessageServicePostProcessor 放在配置类初始化，在配置类删掉，再把 MessageServicePostProcessor 加上 @Component 注解。
 
 类比文章开头的电视机的例子：
 
 - **电视机与 USB 插口: 在这个新的示例中，电视机仍然是核心的 Spring 应用程序，具体来说是 DemoApplication 类。这个核心应用程序需要从某个服务（即 MessageService）获取并打印一条消息。**
-- **USB 插口: 与之前一样，MessageService 接口就是这个 “***USB*** 插口”。它为电视机提供了一个标准化的接口，即 getMessage() 方法，但没有规定具体怎么实现。**
-- **设备制造商与他们的产品: 在这里，我们有两种设备制造商或第三方提供者：HelloMessageService 和 HiMessageService。它们为 “***USB*** 插口”（即 MessageService 接口）提供了不同的设备或实现。一个显示 “Hello from HelloMessageService!”，另一个显示 “Hi from HiMessageService!”。**
-- **BeanPostProcessor: 这是一个特殊的 “魔法盒子”，可以将其视为一个能够拦截并修改电视机显示内容的智能设备。当插入 USB 设备（即 MessageService 的实现）并尝试从中获取消息时，这个 “魔法盒子” 会介入，并为每条消息添加 “[Processed by Spring SPI]”。**
-- **Spring 上下文配置: 这依然是电视机的使用说明书，但现在是使用了基于 Java 的配置方式，即 MessageServiceConfig 类。这个 “使用说明书” 指导 Spring 容器如何创建并管理 MessageService 的实例，并且还指导它如何使用 “魔法盒子”（即 MessageServicePostProcessor）来处理消息。**
+- **USB 插口: 与之前一样，MessageService 接口就是这个 "***USB*** 插口"。它为电视机提供了一个标准化的接口，即 getMessage() 方法，但没有规定具体怎么实现。**
+- **设备制造商与他们的产品: 在这里，我们有两种设备制造商或第三方提供者：HelloMessageService 和 HiMessageService。它们为 "***USB*** 插口"（即 MessageService 接口）提供了不同的设备或实现。一个显示 "Hello from HelloMessageService!"，另一个显示 "Hi from HiMessageService!"。**
+- **BeanPostProcessor: 这是一个特殊的 "魔法盒子"，可以将其视为一个能够拦截并修改电视机显示内容的智能设备。当插入 USB 设备（即 MessageService 的实现）并尝试从中获取消息时，这个 "魔法盒子" 会介入，并为每条消息添加 "[Processed by Spring SPI]"。**
+- **Spring 上下文配置: 这依然是电视机的使用说明书，但现在是使用了基于 Java 的配置方式，即 MessageServiceConfig 类。这个 "使用说明书" 指导 Spring 容器如何创建并管理 MessageService 的实例，并且还指导它如何使用 "魔法盒子"（即 MessageServicePostProcessor）来处理消息。**
 
 总的来说，与之前的例子相比，这个新示例提供了一个更加动态的场景，其中 Spring 的 BeanPostProcessor 扩展点允许我们拦截并修改 bean 的行为，就像一个能够干预并改变电视机显示内容的智能设备。
 
@@ -500,7 +491,7 @@ com.example.demo.service.MessageService=com.example.demo.service.HelloMessageSer
 
 注意这里 com.example.demo.service.MessageService 是接口的全路径，而 com.example.demo.service.HelloMessageService,com.example.demo.service.HiMessageService 是实现类的全路径。如果有多个实现类，它们应当用逗号分隔。
 
-spring.factories 文件中的条目键和值之间不能有换行，即 key=value 形式的结构必须在同一行开始。但是，如果有多个值需要列出（如多个实现类），并且这些值是逗号分隔的，那么可以使用反斜杠（““）来换行。spring.factories 的名称是约定俗成的。如果试图使用一个不同的文件名，那么 Spring Boot 的自动配置机制将不会识别它。
+spring.factories 文件中的条目键和值之间不能有换行，即 key=value 形式的结构必须在同一行开始。但是，如果有多个值需要列出（如多个实现类），并且这些值是逗号分隔的，那么可以使用反斜杠（""）来换行。spring.factories 的名称是约定俗成的。如果试图使用一个不同的文件名，那么 Spring Boot 的自动配置机制将不会识别它。
 
 这里 spring.factories 又可以写为
 
@@ -528,9 +519,6 @@ public class DemoApplication {
         }
     }
 }
-
-
-
 ```
 
 SpringFactoriesLoader.loadFactories 的第二个参数是类加载器，此处我们使用默认的类加载器，所以传递 null。
@@ -643,9 +631,6 @@ public class JdbcExample {
         }
     }
 }
-
-
-
 ```
 
 在上述代码中，我们没有明确指定使用哪个 JDBC 驱动程序，因为 DriverManager 会自动为我们选择合适的驱动程序。
@@ -745,18 +730,15 @@ public class MessageAutoConfiguration {
         return new EmailService();
     }
 }
-
-
-
 ```
 
 这个类提供两个条件性的 beans（组件），分别是 SmsService 和 EmailService。这些 beans 的创建取决于 application.properties 文件中特定的属性值。
 
-- **@ConditionalOnProperty(name = “message.type”, havingValue = “sms”)**
+- **@ConditionalOnProperty(name = "message.type", havingValue = "sms")**
 
 当 application.properties 或 application.yml 中定义的属性 message.type 的值为 sms 时，此条件为 true。此时，smsService() 方法将被调用，从而创建一个 SmsService 的 bean。
 
-- **@ConditionalOnProperty(name = “message.type”, havingValue = “email”)**
+- **@ConditionalOnProperty(name = "message.type", havingValue = "email")**
 
 当 application.properties 或 application.yml 中定义的属性 message.type 的值为 email 时，此条件为 true。此时，emailService() 方法将被调用，从而创建一个 EmailService 的 bean。
 
@@ -918,11 +900,11 @@ ServiceLoader
 - 为框架或库的用户提供更多的自定义选项和灵活性。
 - 允许框架的核心部分保持稳定，同时能够容纳新的功能和扩展。
 
-**SPI 与 “开闭原则”**：
+**SPI 与 "开闭原则"**：
 
-“开闭原则” 提倡软件实体应该对扩展开放，但对修改封闭。即在不改变现有代码的前提下，通过扩展来增加新的功能。
+"开闭原则" 提倡软件实体应该对扩展开放，但对修改封闭。即在不改变现有代码的前提下，通过扩展来增加新的功能。
 
-**SPI 如何体现 “开闭原则”**:
+**SPI 如何体现 "开闭原则"**:
 
 - 对扩展开放：
 SPI
@@ -932,4 +914,4 @@ SPI
 SPI
 实现可以独立地进化和发展，互不影响。
 
-总之，SPI 是一种使软件框架或库更加模块化、可扩展和可维护的有效方法。通过遵循 “开闭原则”，SPI 确保了系统的稳定性和灵活性，从而满足了不断变化的业务需求。
+总之，SPI 是一种使软件框架或库更加模块化、可扩展和可维护的有效方法。通过遵循 "开闭原则"，SPI 确保了系统的稳定性和灵活性，从而满足了不断变化的业务需求。

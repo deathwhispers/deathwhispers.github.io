@@ -114,9 +114,9 @@ public @interface MyColumn {
 
 ## 运用在Hero对象上
 
-像[以注解方式配置Product类](https://how2j.cn/k/hibernate/hibernate-annotation/1052.html#step4010) 那样，在Hero类上运用这些自定义注解：当注解的方法是value的时候，给这个注解赋值时，本来应该是：@MyColumn(value=“name_”)
+像[以注解方式配置Product类](https://how2j.cn/k/hibernate/hibernate-annotation/1052.html#step4010) 那样，在Hero类上运用这些自定义注解：当注解的方法是value的时候，给这个注解赋值时，本来应该是：@MyColumn(value="name_")
 
-现在可以简略一点，写为@MyColumn(“name_”)
+现在可以简略一点，写为@MyColumn("name_")
 
 只有当名称是value的时候可以这样，其他名称如name,stratgy等不行
 
@@ -195,9 +195,6 @@ public class ParseHibernateAnnotation {
         }
     }
 }
-
-
-
 ```
 
 ## 可运行项目

@@ -28,7 +28,7 @@ Gives something like : serverId_1, serverId_2, serverId_3,
 
 I would like to delete the last character in the StringBuilder (without converting it because I still need it after this loop).
 
-Others have pointed out the deleteCharAt method, but here’s another alternative approach:
+Others have pointed out the deleteCharAt method, but here's another alternative approach:
 
 ```java
 String prefix = "";
@@ -51,7 +51,7 @@ sb.setLength(sb.length() - 1);
 
 A more complicated solution:
 
-The above solution assumes that sb.length() > 0 … i.e. there is a “last character” to remove. If you can’t make that assumption, and/or you can’t deal with the exception that would ensue if the assumption is incorrect, then check the StringBuilder’s length first; e.g.
+The above solution assumes that sb.length() > 0 … i.e. there is a "last character" to remove. If you can't make that assumption, and/or you can't deal with the exception that would ensue if the assumption is incorrect, then check the StringBuilder's length first; e.g.
 
 ```java
 // Readable version
@@ -77,9 +77,9 @@ In this case,
 sb.setLength(sb.length() - 1);
 ```
 
-is preferable as it just assign the last value to ‘\0’ whereas deleting last character does System.arraycopy
+is preferable as it just assign the last value to '\0' whereas deleting last character does System.arraycopy
 
-As of Java 8, there’s a new StringJoiner class built in.
+As of Java 8, there's a new StringJoiner class built in.
 
 ```java
 StringJoiner sj = new StringJoiner(", ");
@@ -128,7 +128,7 @@ for (String serverId : serverIds) {
 sb.deleteCharAt(sb.lastIndexOf(","));
 ```
 
-Since lastIndexOf will perform a reverse search, and you know that it will find at the first try, performance won’t be an issue here.
+Since lastIndexOf will perform a reverse search, and you know that it will find at the first try, performance won't be an issue here.
 
 Yet another alternative:
 
@@ -145,9 +145,6 @@ public String join(Collection<String> collection, String seperator) {
     }
     return sb.toString();
 }
-
-
-
 ```
 
 I am doing something like this:
@@ -202,7 +199,7 @@ for (String item : list) {
 
 ```
 
-Yet another solution similar to the “prefix” solution above avoids multiple prefix assignments in the loop. i.e. Just in case the optimizer does not unroll the first loop iteration.
+Yet another solution similar to the "prefix" solution above avoids multiple prefix assignments in the loop. i.e. Just in case the optimizer does not unroll the first loop iteration.
 
 ```java
 StringBuilder sb = new StringBuilder();

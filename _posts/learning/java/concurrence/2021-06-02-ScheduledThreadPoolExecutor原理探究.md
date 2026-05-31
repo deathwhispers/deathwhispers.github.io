@@ -72,9 +72,6 @@ RejectedExecutionHandler handler) {
     super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
     new DelayedWorkQueue(), threadFactory, handler);
 }
-
-
-
 ```
 
 从上面的代码中可以看到，ScheduledThreadPoolExecutor的线程池队列为DelayedWorkQueue。
@@ -98,9 +95,6 @@ public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) 
     delayedExecute(t);
     return t;
 }
-
-
-
 ```
 
 以下是ScheduledFutureTask的相关代码：
@@ -171,9 +165,6 @@ void ensurePrestart() {
     else if (wc == 0)
     addWorker(null, false);
 }
-
-
-
 ```
 
 线程池中具体执行任务的是Worker，Worker通过调用run方法来执行。这里的任务是ScheduledFutureTask，下面来看其run方法。
@@ -225,9 +216,6 @@ void reExecutePeriodic(RunnableScheduledFuture<?> task) {
         ensurePrestart();
     }
 }
-
-
-
 ```
 
 ### scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)

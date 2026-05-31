@@ -20,7 +20,7 @@ week: 2025-W48
 
 # 1. 简介
 
-信号量 Semaphore 是一个控制访问多个共享资源的计数器，和 CountDownLatch 一样，其本质上是一个“**共享锁**”。
+信号量 Semaphore 是一个控制访问多个共享资源的计数器，和 CountDownLatch 一样，其本质上是一个"**共享锁**"。
 
 Semaphore，在 API 是这么介绍的：
 
@@ -131,7 +131,7 @@ private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {
         if (hasQueuedPredecessors()) return -1;
         //获取当前的信号量许可
         int available = getState();
-        //设置“获得acquires个信号量许可之后，剩余的信号量许可数”
+        //设置"获得acquires个信号量许可之后，剩余的信号量许可数"
         int remaining = available - acquires;
         //CAS设置信号量
         if (remaining < 0 || compareAndSetState(available, remaining)) return remaining;
@@ -195,7 +195,7 @@ protected final boolean tryReleaseShared(int releases) {
         //信号量的许可数 = 当前信号许可数 + 待释放的信号许可数
         int next = current + releases;
         if (next < current) {
-            throw new Error(“Maximum permit count exceeded”);
+            throw new Error("Maximum permit count exceeded");
         }
         //设置可获取的信号许可数为next
         if (compareAndSetState(current, next)) return true;
@@ -253,9 +253,9 @@ public class SemaphoreTest {
             try {
                 semaphore.acquire();
                 long time = (long) (Math.random() * 10);
-                System.out.println(Thread.currentThread().getName() + “进入停车场，停车” + time + “秒…”);
+                System.out.println(Thread.currentThread().getName() + "进入停车场，停车" + time + "秒…");
                 Thread.sleep(time * 1000);
-                System.out.println(Thread.currentThread().getName() + “开出停车场…”);
+                System.out.println(Thread.currentThread().getName() + "开出停车场…");
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } finally {

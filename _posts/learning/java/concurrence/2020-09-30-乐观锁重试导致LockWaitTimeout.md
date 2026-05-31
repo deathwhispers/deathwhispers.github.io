@@ -44,7 +44,7 @@ public boolean updateUserAccount(Long userId, int amount) {
             attemptNumber++;
             retryable = attemptNumber < 5;
             if (attemptNumber == 5) {
-                log.error(“超过最大重试次数”);
+                log.error("超过最大重试次数");
                 break;
             }
             try {
@@ -56,9 +56,6 @@ public boolean updateUserAccount(Long userId, int amount) {
     } while (retryable);
     return false;
 }
-
-
-
 ```
 
 ```sql

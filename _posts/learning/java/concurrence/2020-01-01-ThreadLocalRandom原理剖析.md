@@ -59,9 +59,6 @@ protected int next(int bits) {
     } while (!seed.compareAndSet(oldseed, nextseed));
     return (int)(nextseed >>> (48 - bits));
 }
-
-
-
 ```
 
 由此可见，生成新的随机数需要两步：
@@ -114,9 +111,6 @@ static final void localInit() {
     UNSAFE.putLong(t, SEED, seed);
     UNSAFE.putInt(t, PROBE, probe);
 }
-
-
-
 ```
 
 如果线程中第一次调用current()方法，则调用localInit()进行初始化设置当前线程中的threadLocalRandomProb和threadLocalRandomSeed变量。
@@ -147,9 +141,6 @@ final long nextSeed() {
     r = UNSAFE.getLong(t, SEED) + GAMMA);
     return r;
 }
-
-
-
 ```
 
 如上，首先调用nextSeed()根据当前Thread中的threadLocalRandomSeed变量生成并存入新种子，然后经过特定算法得出了nextInt的值。

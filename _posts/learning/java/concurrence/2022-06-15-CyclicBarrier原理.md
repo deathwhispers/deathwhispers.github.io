@@ -105,8 +105,8 @@ private int dowait(boolean timed, long nanos) throws InterruptedException, Broke
     try {
         // 分代
         final Generation g = generation;
-        // 当前generation”已损坏”，抛出BrokenBarrierException异常
-        // 抛出该异常一般都是某个线程在等待某个处于”断开”状态的CyclicBarrie
+        // 当前generation"已损坏"，抛出BrokenBarrierException异常
+        // 抛出该异常一般都是某个线程在等待某个处于"断开"状态的CyclicBarrie
         if (g.broken)
             // 当某个线程试图等待处于断开状态的 barrier 时，或者 barrier 进入断开状态而线程处于等待状态时，抛出该异常
             throw new BrokenBarrierException();
@@ -149,9 +149,9 @@ private int dowait(boolean timed, long nanos) throws InterruptedException, Broke
                     breakBarrier();
                     throw ie;
                 } else {
-                    // We’re about to finish waiting even if we had not
+                    // We're about to finish waiting even if we had not
                     // been interrupted, so this interrupt is deemed to
-                    // “belong” to subsequent execution.
+                    // "belong" to subsequent execution.
                     Thread.currentThread().interrupt();
                 }
             }
@@ -160,7 +160,7 @@ private int dowait(boolean timed, long nanos) throws InterruptedException, Broke
             // generation已经更新，返回index
             if (g != generation)
                 return index;
-            // “超时等待”，并且时间已到,终止CyclicBarrier，并抛出异常
+            // "超时等待"，并且时间已到,终止CyclicBarrier，并抛出异常
             if (timed && nanos <= 0L) {
                 breakBarrier();
                 throw new TimeoutException();
@@ -212,9 +212,6 @@ private void breakBarrier() {
     count = parties;
     trip.signalAll();
 }
-
-
-
 ```
 
 - 在 breakBarrier() 方法中，中除了将 broken设置为 true ，还会调用 #signalAll() 方法，将在 CyclicBarrier 处于**等待状态的线程**全部唤醒。
@@ -306,7 +303,7 @@ public class CyclicBarrierTest {
     private static CyclicBarrier cyclicBarrier;
     static class CyclicBarrierThread extends Thread {
         public void run() {
-            System.out.println(Thread.currentThread().getName() + “到了”);
+            System.out.println(Thread.currentThread().getName() + "到了");
             // 等待
             try {
                 cyclicBarrier.await();
@@ -319,7 +316,7 @@ public class CyclicBarrierTest {
         cyclicBarrier = new CyclicBarrier(5, new Runnable() {
             @Override
             public void run() {
-                System.out.println(“人到齐了，开会吧....”);
+                System.out.println("人到齐了，开会吧....");
             }
         });
         for (int i = 0; i < 5; i++) {

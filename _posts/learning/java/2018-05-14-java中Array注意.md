@@ -55,9 +55,6 @@ public Object[] toArray(Object a[]) {
     a[size] = null;
     return a;
 }
-
-
-
 ```
 
 因此在使用toArray的时候可以参考以下三种方式

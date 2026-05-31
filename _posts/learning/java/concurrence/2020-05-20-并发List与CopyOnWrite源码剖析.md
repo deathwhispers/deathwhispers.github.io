@@ -62,12 +62,9 @@ public CopyOnWriteArrayList(Collection<? extends E> c) {
     }
     setArray(elements);
 }
-
-
-
 ```
 
-关于“c.toArray might (incorrectly) not return Object[] (see 6260652)”的注释可参考[《JDK1.6集合框架bug：c.toArray might (incorrectly) not return Object[] (see 6260652)》](https://blog.csdn.net/aitangyong/article/details/30274749)。
+关于"c.toArray might (incorrectly) not return Object[] (see 6260652)"的注释可参考[《JDK1.6集合框架bug：c.toArray might (incorrectly) not return Object[] (see 6260652)》](https://blog.csdn.net/aitangyong/article/details/30274749)。
 
 ### 添加元素
 
@@ -92,9 +89,6 @@ public boolean add(E e) {
         lock.unlock();
     }
 }
-
-
-
 ```
 
 调用add方法的线程会首先获取独占锁，保证同时最多有一个线程调用此方法，其他线程会被阻塞直到锁被释放。
@@ -154,9 +148,6 @@ public E set(int index, E element) {
         lock.unlock();
     }
 }
-
-
-
 ```
 
 首先获取独占锁，从而阻止其他线程对array数组进行修改，然后获取当前数组，并调用get方法获取指定位置的元素，如果指定位置的元素值与新值不一致就创建新数组并复制元素，然后在新数组上修改指定位置的元素值并设置新数组到array。即使指定位置的元素值与新值一样，为了保证volatile语义，也需要重新设置array（此处可参看[《CopyOnWriteArrayList与java内存模型》](https://blog.csdn.net/cumtwyc/article/details/52267414)）。
@@ -188,9 +179,6 @@ public E remove(int index) {
         lock.unlock();
     }
 }
-
-
-
 ```
 
 首先获取独占锁以保证线程安全，然后获取要被删除的元素，并把剩余的元素复制到新数组，之后使用新数组替换原来的数组，最后在返回前释放锁。
@@ -221,9 +209,6 @@ static final class COWIterator<E> implements ListIterator<E> {
         return (E) snapshot[cursor++];
     }
 }
-
-
-
 ```
 
 调用iterator()方法时实际上会返回一个COWIterator对象，COWIterator对象的snapshot变量保存了当前list的内容。之所以说snapshot是list的快照是因为虽然snapshot获得了array的引用，但当其他线程修改了list时，array会指向新复制出来的数组，而snapshot仍指向原来array指向的数组，两者操作不同的数组，这就是弱一致性。
@@ -284,9 +269,6 @@ public class CopyListTest {
         }
     }
 }
-
-
-
 ```
 
 输出如图：
