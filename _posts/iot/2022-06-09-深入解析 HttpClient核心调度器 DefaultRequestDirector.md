@@ -335,9 +335,7 @@ public void openConnection(OperatedClientConnection conn, HttpHost target, ...) 
 
     InetAddress[] addresses = InetAddress.getAllByName(target.getHostName());
 
-    for (int i = 0;
-    i < addresses.length;
-    ++i) {
+    for (int i = 0; i < addresses.length; ++i) {
         Socket sock = plain_sf.createSocket();
         conn.opening(sock, target);
 

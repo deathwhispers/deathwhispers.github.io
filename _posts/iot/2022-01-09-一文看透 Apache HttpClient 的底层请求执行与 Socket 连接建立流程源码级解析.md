@@ -271,9 +271,7 @@ DefaultClientConnectionOperator.openConnection(...)
 ```java
 InetAddress[] addresses = InetAddress.getAllByName(target.getHostName());
 
-for (int i = 0;
-i < addresses.length;
-++i) {
+for (int i = 0; i < addresses.length; ++i) {
 
     Socket sock = socketFactory.createSocket();
     conn.opening(sock, target);
