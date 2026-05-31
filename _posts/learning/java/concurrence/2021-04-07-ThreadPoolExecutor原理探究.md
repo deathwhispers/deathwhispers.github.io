@@ -130,14 +130,14 @@ ThreadPoolExecutor的实现实际是一个生产-消费模型，当用户添加�
 // 执行任务
 public void execute(Runnable command) {
     if (command == null)
-    throw new NullPointerException();
+        throw new NullPointerException();
     // 获取线程池状态
     int c = ctl.get();
     // 如果Worker个数小于核心线程数则新增一个Worker
     if (workerCountOf(c) < corePoolSize) {
         // 添加Worker，第二个参数为true表示新增Worker为核心线程
         if (addWorker(command, true))
-        return;
+            return;
         // 重新获取ctl，多线程下ctl变化比较频繁，要确保所获取的状态是最新的
         c = ctl.get();
     }
@@ -147,16 +147,16 @@ public void execute(Runnable command) {
         int recheck = ctl.get();
         // 可能任务入队后线程池又关闭了，则直接移除该任务
         if (! isRunning(recheck) && remove(command))
-        reject(command);
+            reject(command);
         // 在该任务成功入队前，可能所有Worker都因为keepAliveTime到达而被回收，
         // 这时需要重新创建一个Worker来处理任务队列里面的任务
         else if (workerCountOf(recheck) == 0)
-        addWorker(null, false);
+            addWorker(null, false);
     }
     // 如果任务队列满了，则尝试增加一个非核心线程来处理任务，
     // 失败则执行拒绝策略
     else if (!addWorker(command, false))
-    reject(command);
+        reject(command);
 }
 // 添加一个Worker
 private boolean addWorker(Runnable firstTask, boolean core) {
@@ -177,16 +177,16 @@ private boolean addWorker(Runnable firstTask, boolean core) {
         // 在未设置Worker过期时间且Worker数小于corePoolSize的情况下，
         // 仍需要添加一个Worker来提高处理剩余任务的效率。
         if (rs >= SHUTDOWN &&
-        ! (rs == SHUTDOWN &&
-        firstTask == null &&
-        ! workQueue.isEmpty()))
-        return false;
+            ! (rs == SHUTDOWN &&
+               firstTask == null &&
+               ! workQueue.isEmpty()))
+            return false;
         for (;;) {
             int wc = workerCountOf(c);
             // Worker数量检测
             if (wc >= CAPACITY ||
-            wc >= (core ? corePoolSize : maximumPoolSize))
-            return false;
+                wc >= (core ? corePoolSize : maximumPoolSize))
+                return false;
             // 成功增加了Worker个数，直接跳出外层for循环执行实际添加Worker的代码
             if (compareAndIncrementWorkerCount(c))
             break retry;
@@ -387,8 +387,8 @@ private void advanceRunState(int targetState) {
     for (;;) {
         int c = ctl.get();
         if (runStateAtLeast(c, targetState) ||
-        ctl.compareAndSet(c, ctlOf(targetState, workerCountOf(c))))
-        break;
+            ctl.compareAndSet(c, ctlOf(targetState, workerCountOf(c))))
+            break;
     }
 }
 // 设置所有空闲线程的中断标志
@@ -414,7 +414,7 @@ private void interruptIdleWorkers(boolean onlyOne) {
             }
             // 如果只中断一个则退出循环
             if (onlyOne)
-            break;
+                break;
         }
     } finally {
         mainLock.unlock();
@@ -428,9 +428,9 @@ final void tryTerminate() {
         // 或处于TIDYING状态（说明有其他线程调用了tryTerminate方法且即将成功终止线程池）
         // 或线程池正处于SHUTDOWN状态且任务队列不为空时不可终止
         if (isRunning(c) ||
-        runStateAtLeast(c, TIDYING) ||
-        (runStateOf(c) == SHUTDOWN && ! workQueue.isEmpty()))
-        return;
+            runStateAtLeast(c, TIDYING) ||
+            (runStateOf(c) == SHUTDOWN && ! workQueue.isEmpty()))
+            return;
         // 还有Worker的话，中断一个空闲Worker后返回
         // 正在执行任务的Worker会在执行完任务后调用tryTerminate方法
         if (workerCountOf(c) != 0) {
