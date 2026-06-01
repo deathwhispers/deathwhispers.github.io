@@ -120,18 +120,18 @@ static final void localInit() {
 ```java
 public int nextInt(int bound) {
     if (bound <= 0)
-    throw new IllegalArgumentException(BadBound);
+        throw new IllegalArgumentException(BadBound);
     //根据当前Thread中的threadLocalRandomSeed变量生成新种子
     int r = mix32(nextSeed());
     int m = bound - 1;
     if ((bound & m) == 0) // power of two
-    r &= m;
+        r &= m;
     else { // reject over-represented candidates
-    for (int u = r >>> 1;
-    u + m - (r = u % bound) < 0;
-    u = mix32(nextSeed()) >>> 1)
-    ;
-}
+        for (int u = r >>> 1;
+             u + m - (r = u % bound) < 0;
+             u = mix32(nextSeed()) >>> 1)
+            ;
+    }
 return r;
 }
 final long nextSeed() {

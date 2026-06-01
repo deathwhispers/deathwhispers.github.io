@@ -56,9 +56,9 @@ public CopyOnWriteArrayList(Collection<? extends E> c) {
     else {
         elements = c.toArray();
         // c.toArray might (incorrectly) not
-        return Object[] (see 6260652)
+        // return Object[] (see 6260652)
         if (elements.getClass() != Object[].class)
-        elements = Arrays.copyOf(elements, elements.length, Object[].class);
+            elements = Arrays.copyOf(elements, elements.length, Object[].class);
     }
     setArray(elements);
 }
@@ -166,7 +166,7 @@ public E remove(int index) {
         E oldValue = get(elements, index);
         int numMoved = len - index - 1;
         if (numMoved == 0)
-        setArray(Arrays.copyOf(elements, len - 1));
+            setArray(Arrays.copyOf(elements, len - 1));
         else {
             Object[] newElements = new Object[len - 1];
             System.arraycopy(elements, 0, newElements, 0, index);
@@ -205,7 +205,7 @@ static final class COWIterator<E> implements ListIterator<E> {
     }
     public E next() {
         if (! hasNext())
-        throw new NoSuchElementException();
+            throw new NoSuchElementException();
         return (E) snapshot[cursor++];
     }
 }
