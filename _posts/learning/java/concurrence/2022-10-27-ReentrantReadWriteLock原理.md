@@ -522,13 +522,13 @@ final int fullTryAcquireShared(Thread current) {
                     if (rh == null || rh.tid != getThreadId(current)) {
                         rh = readHolds.get();
                         if (rh.count == 0)
-                        // 计数为 0 ，说明没得到读锁，清空线程变量
-                        readHolds.remove();
+                            // 计数为 0 ，说明没得到读锁，清空线程变量
+                            readHolds.remove();
                     }
                 }
                 if (rh.count == 0)
-                // 说明没得到读锁
-                return -1;
+                    // 说明没得到读锁
+                    return -1;
             }
         }
         //读锁超出最大范围
