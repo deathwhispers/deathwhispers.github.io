@@ -169,7 +169,8 @@ final long fullyRelease(Node node) {
         }
     }
     finally {
-        if (failed) node.waitStatus = Node.CANCELLED;
+        if (failed)
+            node.waitStatus = Node.CANCELLED;
     }
 }
 ```
