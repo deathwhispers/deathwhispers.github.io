@@ -135,12 +135,12 @@ private void delayedExecute(RunnableScheduledFuture<?> task) {
         // 如果线程池被关闭则判断当前任务是否可以在当前状态下继续执行
         // 不能继续执行则移除当前任务
         if (isShutdown() &&
-        !canRunInCurrentRunState(task.isPeriodic()) &&
-        remove(task))
-        task.cancel(false);
+            !canRunInCurrentRunState(task.isPeriodic()) &&
+            remove(task))
+            task.cancel(false);
         else
-        // 保证至少有一个线程存活可以从任务队列中获取任务处理任务
-        ensurePrestart();
+            // 保证至少有一个线程存活可以从任务队列中获取任务处理任务
+            ensurePrestart();
     }
 }
 // 判断任务是否是周期执行的
@@ -154,16 +154,16 @@ public boolean isPeriodic() {
 // 为false则取消当前任务
 boolean canRunInCurrentRunState(boolean periodic) {
     return isRunningOrShutdown(periodic ?
-    continueExistingPeriodicTasksAfterShutdown :
-    executeExistingDelayedTasksAfterShutdown);
+                               continueExistingPeriodicTasksAfterShutdown :
+                               executeExistingDelayedTasksAfterShutdown);
 }
 // 确保至少有一个线程存活来执行任务
 void ensurePrestart() {
     int wc = workerCountOf(ctl.get());
     if (wc < corePoolSize)
-    addWorker(null, true);
+        addWorker(null, true);
     else if (wc == 0)
-    addWorker(null, false);
+        addWorker(null, false);
 }
 ```
 
