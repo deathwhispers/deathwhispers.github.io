@@ -44,7 +44,7 @@ Semaphore 通常用于限制可以访问某些资源（物理或逻辑的）的�
 
 java.util.concurrent.Semaphore 结构如下图：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-semaphore/cd3ff930253e651fa67708be2dfaf807.jpg)
+![Semaphore结构图](/assets/images/learning/java/concurrencecode/concurrent-source-code-semaphore/cd3ff930253e651fa67708be2dfaf807.jpg)
 
 从上图可以看出，Semaphore 内部包含公平锁（FairSync）和非公平锁（NonfairSync），继承内部类 Sync ，其中 Sync 继承 AQS（再一次阐述 AQS 的重要性）。
 
@@ -183,9 +183,7 @@ public final boolean releaseShared(int arg) {
 }
 ```
 
-```text
-- releaseShared(int arg) 方法，会调用 Semaphore 内部类 Sync 的 #tryReleaseShared(int arg) 方法，释放同步状态。
-```
+- `releaseShared(int arg)` 方法，会调用 Semaphore 内部类 Sync 的 `#tryReleaseShared(int arg)` 方法，释放同步状态。
 
 ```java
 // Sync.java
@@ -203,12 +201,10 @@ protected final boolean tryReleaseShared(int releases) {
 }
 ```
 
-```text
-    * 如该方法返回 **true** 时，代表释放同步状态成功，从而在 #releaseShared(int args) 方法中，调用 #doReleaseShared() 方法，**可唤醒阻塞等待 Semaphore 的许可的线程**。
-    * 对于信号量的获取释放详细过程，请参考如下博客：
-        + [《【死磕 Java 并发】—– J.U.C 之 AQS：同步状态的获取与释放》](http://www.iocoder.cn/JUC/sike/aqs-2)
-        + [《【死磕 Java 并发】—– J.U.C 之 AQS：阻塞和唤醒线程》](http://www.iocoder.cn/JUC/sike/aqs-3)
-```
+- 如该方法返回 **true** 时，代表释放同步状态成功，从而在 `#releaseShared(int args)` 方法中，调用 `#doReleaseShared()` 方法，**可唤醒阻塞等待 Semaphore 的许可的线程**。
+- 对于信号量的获取释放详细过程，请参考如下博客：
+    - [《【死磕 Java 并发】—– J.U.C 之 AQS：同步状态的获取与释放》](http://www.iocoder.cn/JUC/sike/aqs-2)
+    - [《【死磕 Java 并发】—– J.U.C 之 AQS：阻塞和唤醒线程》](http://www.iocoder.cn/JUC/sike/aqs-3)
 
 ## 2.3 其他方法
 
@@ -288,4 +284,4 @@ public class SemaphoreTest {
 
 运行结果如下：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-semaphore/f576e88ac1baa96291f99e2c815c93f4.jpg)
+![Semaphore测试运行结果](/assets/images/learning/java/concurrencecode/concurrent-source-code-semaphore/f576e88ac1baa96291f99e2c815c93f4.jpg)

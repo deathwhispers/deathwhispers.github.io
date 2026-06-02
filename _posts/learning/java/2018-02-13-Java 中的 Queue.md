@@ -19,7 +19,7 @@ week: 2025-W48
 
 queue容器：
 
-![](/assets/images/learning/java/java-queue/8d6f56121c8ebd06f9519f8e2d246360.png)
+![Queue容器类图](/assets/images/learning/java/java-queue/8d6f56121c8ebd06f9519f8e2d246360.png)
 
 1.ConcurrentLinkedQueue：基础链表同步队列
 
@@ -50,8 +50,8 @@ ReentrantLock & Condition(只能在独占模式下使用)
 
 offer():
 
-```plain text
-1. 单参数offer方法，不阻塞。容量不足时，返回false。<font style="background-color:rgb(255, 250, 165);">当前新增数据操作放弃</font>
+```text
+1. 单参数offer方法，不阻塞。容量不足时，返回false。当前新增数据操作放弃
 2. 三参数offer方法（offer(value,times,timeunit)），容量不足时，阻塞times时长（单位为timeunit），如果在阻塞时长内，有容量空闲，新增数据返回true。如果阻塞时长范围内，无容量空闲，放弃新增数据，返回false
 ```
 
@@ -87,7 +87,7 @@ transient：表示当前的属性不需要序列化
 
 4.TransferQueue
 
-```plain text
+```text
 并发容器 － LinkedTransferQueue
 
 转移队列，使用 transfer 方法，实现数据的即时处理。没有消费者，就阻塞。
@@ -110,4 +110,4 @@ transfer - 是TransferQueue的特有方法。必须有消费者
 - put 方法，**有阻塞**
 。若没有消费线程阻塞等待数据，则阻塞。
 
-![](/assets/images/learning/java/java-queue/14045b7547dc41257f7d209dbb0c8136.png)
+![SynchronousQueue示例](/assets/images/learning/java/java-queue/14045b7547dc41257f7d209dbb0c8136.png)

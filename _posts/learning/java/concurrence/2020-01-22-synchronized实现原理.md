@@ -49,7 +49,7 @@ public class SynchronizedTest {
 
 利用 Javap 工具查看生成的 class 文件信息来分析 synchronized 的实现
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/c88e78c0c7272e9281968612013245f1.jpg)
+![Javap查看SynchronizedTest类信息](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/c88e78c0c7272e9281968612013245f1.jpg)
 
 从上面可以看出：1）同步代码块是使用 monitorenter 和 monitorexit 指令实现的；2）同步方法（在这看不出来需要看JVM底层实现）依靠的是方法修饰符上的ACC_SYNCHRONIZED 实现。
 
@@ -77,17 +77,17 @@ Mark Word 用于存储对象自身的运行时数据，如哈希码（HashCode�
 
 下图是 Java 对象头的存储结构（32位虚拟机）：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/ac9eefb970bc45ce015482fef369b877.jpg)
+![Java对象头存储结构](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/ac9eefb970bc45ce015482fef369b877.jpg)
 
 对象头信息是与对象自身定义的数据无关的额外存储成本，但是考虑到虚拟机的空间效率，Mark Word 被设计成一个**非固定**的数据结构以便在极小的空间内存存储尽量多的数据，它会根据对象的状态复用自己的存储空间，也就是说，Mark Word 会随着程序的运行发生变化，变化状态如下：
 
 32 位虚拟机：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/c2003677fbc980c5601d5be054545248.jpg)
+![32位虚拟机Mark Word变化状态](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/c2003677fbc980c5601d5be054545248.jpg)
 
 64 位虚拟机：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/80fb7892b77a63c03454e7b6ef6ce842.jpg)
+![64位虚拟机Mark Word变化状态](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/80fb7892b77a63c03454e7b6ef6ce842.jpg)
 
 - 对于 32 位无锁状态，有 25 bits 没有使用。
 
@@ -105,7 +105,7 @@ FROM 《Java并发编程的艺术》的 [「2.2 synchronized 的实现原理与�
 
 Monitor Record 是线程**私有**的数据结构，每一个线程都有一个可用 Monitor Record 列表，同时还有一个全局的可用列表。 每一个被锁住的对象都会和一个 Monitor Record 关联（对象头的 MarkWord 中的 LockWord 指向 Monitor 的起始地址），Monitor Record 中有一个 Owner 字段，存放拥有该锁的线程的唯一标识，表示该锁被这个线程占用。其结构如下：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/8a209475c9b2a5d1dcdd6603147c63cd.jpg)
+![Monitor Record结构](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/8a209475c9b2a5d1dcdd6603147c63cd.jpg)
 
 **Owner**：1）初始时为 NULL 表示当前没有任何线程拥有该 Monitor Record；2）当线程成功拥有该锁后保存线程唯一标识；3）当锁被释放时又设置为 NULL 。
 
@@ -228,7 +228,7 @@ public void vectorTest(){
 
 下图是争夺锁导致的**锁膨胀**的流程图：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/9804a562b87b23826fdee75252e13fef.jpg)
+![轻量级锁膨胀流程图](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/9804a562b87b23826fdee75252e13fef.jpg)
 
 - 其中，绿框的 0 指的是无偏向锁，01 指的是无锁状态。
 
@@ -283,7 +283,7 @@ public void vectorTest(){
 
 下图是偏向锁的获取和释放流程：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/b2db65504ed8aebade4b13e36a09a7c4.jpg)
+![偏向锁获取和释放流程](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/b2db65504ed8aebade4b13e36a09a7c4.jpg)
 
 **关闭偏向锁**
 
@@ -301,12 +301,12 @@ public void vectorTest(){
 
 如下是引用自 [《Java并发编程的艺术》](https://www.iocoder.cn/JUC/sike/synchronized/#) 的**对比图**：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/990f541b9f6f15c893febe3c4f90599d.jpg)
+![锁对比图](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/990f541b9f6f15c893febe3c4f90599d.jpg)
 
 如下是三种锁之间的**转换图**：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/0f8adf562f2fd6986c12269bf81a3e6d.png)
+![三种锁之间的转换图](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/0f8adf562f2fd6986c12269bf81a3e6d.png)
 
 如果觉得解释不够清晰的胖友，推荐阅读**占小狼**的 [《JVM 源码分析之 synchronized 实现》](https://www.jianshu.com/p/c5058b6fe8e5) 。
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/2aa75281afc1991bbc10dc6d1427a5a9.png)
+![锁状态变化流程](/assets/images/learning/java/concurrencecode/concurrent-source-code-synchronized/2aa75281afc1991bbc10dc6d1427a5a9.png)

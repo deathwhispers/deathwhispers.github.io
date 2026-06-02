@@ -26,7 +26,7 @@ CyclicBarrier 所描述的是"允许一组线程互相等待，直到到达某�
 
 用给定的计数初始化 CountDownLatch。由于调用了 #countDown() 方法，所以在当前计数到达零之前，#await() 方法会一直受阻塞。之后，会释放所有等待的线程，#await() 的所有后续调用都将立即返回。这种现象只出现一次——计数无法被重置。如果需要重置计数，请考虑使用 CyclicBarrier 。
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-countdownlatch/2bc7625994b600347525618fe08126c8.jpg)
+![CountDownLatch工作原理](/assets/images/learning/java/concurrencecode/concurrent-source-code-countdownlatch/2bc7625994b600347525618fe08126c8.jpg)
 
 CountDownLatch 是通过一个计数器来实现的，当我们在 new 一个 CountDownLatch 对象的时候，需要带入该计数器值，该值就表示了线程的数量。
 
@@ -42,7 +42,7 @@ CountDownLatch 是通过一个计数器来实现的，当我们在 new 一个 Co
 
 java.util.concurrent.CountDownLatch 结构如下图：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-countdownlatch/0ac7a338de420e733f8e243b1fb96cb5.jpg)
+![CountDownLatch结构图](/assets/images/learning/java/concurrencecode/concurrent-source-code-countdownlatch/0ac7a338de420e733f8e243b1fb96cb5.jpg)
 
 通过上面的结构图我们可以看到，CountDownLatch 内部依赖 Sync 实现，而 Sync 继承 AQS 。
 
@@ -118,20 +118,17 @@ public final void acquireSharedInterruptibly(int arg) throws InterruptedExceptio
 }
 ```
 
-```text
-- 在内部类 Sync 中重写了 #tryAcquireShared(int arg)方法，代码如下：
-```
+在内部类 Sync 中重写了 #tryAcquireShared(int arg)方法，代码如下：
 
 ```java
 // Sync.java
-@Override protected int tryAcquireShared(int acquires) {
+@Override
+protected int tryAcquireShared(int acquires) {
     return (getState() == 0) ? 1 : -1;
 }
 ```
 
-```text
-    * getState() 方法，获取同步状态，其值等于计数器的值。从这里我们可以看到，如果计数器值**不等于** 0，则会调用 #doAcquireSharedInterruptibly(int arg) 方法。该方法为一个自旋方法会尝试一直去获取同步状态，代码如下：
-```
+getState() 方法，获取同步状态，其值等于计数器的值。从这里我们可以看到，如果计数器值**不等于** 0，则会调用 #doAcquireSharedInterruptibly(int arg) 方法。该方法为一个自旋方法会尝试一直去获取同步状态，代码如下：
 
 ```java
 // AQS.java
@@ -161,10 +158,6 @@ private void doAcquireSharedInterruptibly(int arg) throws InterruptedException {
         }
     }
 }
-```
-
-```text
-        + x
 ```
 
 ## 2.3 await
@@ -206,15 +199,16 @@ public final boolean releaseShared(int arg) {
 
 ```java
 // Sync.java
-@Override protected boolean tryReleaseShared(int releases) {
+@Override
+protected boolean tryReleaseShared(int releases) {
     for (;;) {
-        //获取锁状态
+        // 获取锁状态
         int c = getState();
-        //c == 0 直接返回，释放锁成功
+        // c == 0 直接返回，释放锁成功
         if (c == 0) return false;
-        //计算新"锁计数器"
+        // 计算新"锁计数器"
         int nextc = c - 1;
-        //更新锁状态（计数器）
+        // 更新锁状态（计数器）
         if (compareAndSetState(c, nextc)) return nextc == 0;
     }
 }

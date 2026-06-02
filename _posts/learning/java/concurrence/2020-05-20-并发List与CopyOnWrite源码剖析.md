@@ -37,8 +37,6 @@ private transient volatile Object[] array;
 public CopyOnWriteArrayList() {
     setArray(new Object[0]);
 }
-
-
 ```
 
 下面看有参构造函数：
@@ -52,7 +50,7 @@ public CopyOnWriteArrayList(E[] toCopyIn) {
 public CopyOnWriteArrayList(Collection<? extends E> c) {
     Object[] elements;
     if (c.getClass() == CopyOnWriteArrayList.class)
-    elements = ((CopyOnWriteArrayList<?>)c).getArray();
+        elements = ((CopyOnWriteArrayList<?>)c).getArray();
     else {
         elements = c.toArray();
         // c.toArray might (incorrectly) not
@@ -109,19 +107,17 @@ private E get(Object[] a, int index) {
 final Object[] getArray() {
     return array;
 }
-
-
 ```
 
 获取指定位置的元素需要两步：首先获取array，然后通过下标访问指定位置的元素。整个过程没有加锁，在多线程下会出现**弱一致性**问题。
 
 假设某一时刻CopyOnWriteArrayList中有1，2，3中三个元素，如下图所示：
 
-![](/assets/images/learning/java/concurrence/java-concurrent-list-source-code-analysis/fd33ad925c615a3de3e3dc0fa196b50e.png)
+![CopyOnWriteArrayList元素示意图](/assets/images/learning/java/concurrence/java-concurrent-list-source-code-analysis/fd33ad925c615a3de3e3dc0fa196b50e.png)
 
 由于整个过程未加锁，可能导致一个线程x在获取array后，另一个线程y进行了remove操作，假设要删除的元素为3。remove操作首先会获取独占锁，然后进行写时复制操作，也就是复制一份当前array数组，然后再复制的数组里面删除线程x通过get方法要访问的元素3，之后让array指向复制的数组。而这时线程x仍持有对原来的array的引用，导致虽然线程y删除了元素3，线程x仍能获得3这个元素，如图：
 
-![](/assets/images/learning/java/concurrence/java-concurrent-list-source-code-analysis/5a6914d2a26ec133a03246a29a6a9fd1.png)
+![弱一致性问题示意图](/assets/images/learning/java/concurrence/java-concurrent-list-source-code-analysis/5a6914d2a26ec133a03246a29a6a9fd1.png)
 
 ### 修改指定元素
 
@@ -171,7 +167,7 @@ public E remove(int index) {
             Object[] newElements = new Object[len - 1];
             System.arraycopy(elements, 0, newElements, 0, index);
             System.arraycopy(elements, index + 1, newElements, index,
-            numMoved);
+                numMoved);
             setArray(newElements);
         }
         return oldValue;
@@ -217,34 +213,13 @@ static final class COWIterator<E> implements ListIterator<E> {
 
 ```java
 public class CopyListTest {
-    private static volatile CopyOnWriteArrayList<String> arrayList  = new CopyOnWriteArrayList<>();
+    private static volatile CopyOnWriteArrayList<String> arrayList = new CopyOnWriteArrayList<>();
     public static void main(String[] args) throws InterruptedException {
         arrayList.add("Java");
         arrayList.add("Scala");
         arrayList.add("Groovy");
         arrayList.add("Kotlin");
         Thread threadOne = new Thread(new Runnable() {
-
-            ## 并发容器补充（并入）
-
-            ### ConcurrentHashMap / ConcurrentHashSet
-
-            典型特征：
-
-            - 线程安全、高并发下性能优于传统同步容器。
-            - `key` 与 `value` 不允许为 `null`。
-            - 设计目标是降低锁竞争（历史实现有分段锁思路，JDK 8 以后实现细节有演进）。
-
-            ### ConcurrentSkipListMap / ConcurrentSkipListSet
-
-            - 底层基于跳表（SkipList）。
-            - 有序容器，支持范围查询。
-            - 通常比 `ConcurrentHashMap` 在纯哈希场景稍慢，但换来有序能力。
-
-            ### CopyOnWrite 适用场景总结
-
-            - 读多写少：白名单、黑名单、配置快照。
-            - 写时复制会产生额外内存与复制开销，不适合高频写。
             @Override
             public void run() {
                 arrayList.set(0, "hello");
@@ -257,14 +232,14 @@ public class CopyListTest {
         // 等待子线程执行完毕
         threadOne.join();
         // 迭代
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             System.out.println(it.next());
         }
         System.out.println("=========================================");
         // 再次迭代
         it = arrayList.iterator();
         // 迭代
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             System.out.println(it.next());
         }
     }
@@ -273,6 +248,27 @@ public class CopyListTest {
 
 输出如图：
 
-![](/assets/images/learning/java/concurrence/java-concurrent-list-source-code-analysis/55b0730e0828efcf83a7abc38c1b8acf.png)
+![弱一致性示例输出结果](/assets/images/learning/java/concurrence/java-concurrent-list-source-code-analysis/55b0730e0828efcf83a7abc38c1b8acf.png)
 
 由上可知，对list的修改对于首次迭代是不可见的，这即是弱一致性的体现。
+
+## 并发容器补充
+
+### ConcurrentHashMap / ConcurrentHashSet
+
+典型特征：
+
+- 线程安全、高并发下性能优于传统同步容器。
+- `key` 与 `value` 不允许为 `null`。
+- 设计目标是降低锁竞争（历史实现有分段锁思路，JDK 8 以后实现细节有演进）。
+
+### ConcurrentSkipListMap / ConcurrentSkipListSet
+
+- 底层基于跳表（SkipList）。
+- 有序容器，支持范围查询。
+- 通常比 `ConcurrentHashMap` 在纯哈希场景稍慢，但换来有序能力。
+
+### CopyOnWrite 适用场景总结
+
+- 读多写少：白名单、黑名单、配置快照。
+- 写时复制会产生额外内存与复制开销，不适合高频写。

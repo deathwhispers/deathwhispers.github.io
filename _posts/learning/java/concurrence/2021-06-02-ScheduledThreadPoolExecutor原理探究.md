@@ -20,7 +20,7 @@ week: 2025-W48
 
 ScheduledThreadPoolExecutor时一个可以在指定一定延迟时间后或者定时进行任务调度执行的线程池。
 
-![](/assets/images/learning/java/concurrence/java-scheduled-thread-pool-executor-principle-pursuit/13.png)
+![ScheduledThreadPoolExecutor类图结构](/assets/images/learning/java/concurrence/java-scheduled-thread-pool-executor-principle-pursuit/13.png)
 
 ScheduledThreadPoolExecutor继承了ThreadPoolExecutor并实现了ScheduledExecutorService接口。
 
@@ -51,26 +51,26 @@ ScheduledFutureTask内部用一个变量period来表示任务的类型：
 ```java
 public ScheduledThreadPoolExecutor(int corePoolSize) {
     super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
-    new DelayedWorkQueue());
+        new DelayedWorkQueue());
 }
 // 指定了线程工厂
 public ScheduledThreadPoolExecutor(int corePoolSize,
-ThreadFactory threadFactory) {
+    ThreadFactory threadFactory) {
     super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
-    new DelayedWorkQueue(), threadFactory);
+        new DelayedWorkQueue(), threadFactory);
 }
 // 指定了拒绝策略
 public ScheduledThreadPoolExecutor(int corePoolSize,
-RejectedExecutionHandler handler) {
+    RejectedExecutionHandler handler) {
     super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
-    new DelayedWorkQueue(), handler);
+        new DelayedWorkQueue(), handler);
 }
 // 指定了线程工厂和拒绝策略
 public ScheduledThreadPoolExecutor(int corePoolSize,
-ThreadFactory threadFactory,
-RejectedExecutionHandler handler) {
+    ThreadFactory threadFactory,
+    RejectedExecutionHandler handler) {
     super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
-    new DelayedWorkQueue(), threadFactory, handler);
+        new DelayedWorkQueue(), threadFactory, handler);
 }
 ```
 
@@ -86,11 +86,11 @@ RejectedExecutionHandler handler) {
 public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
     // 参数校验
     if (command == null || unit == null)
-    throw new NullPointerException();
+        throw new NullPointerException();
     // 将任务包装成ScheduledFutureTask
     // triggerTime方法用来计算触发时间（即任务开始执行的绝对时间）
     RunnableScheduledFuture<?> t = decorateTask(command,
-    new ScheduledFutureTask<Void>(command, null, triggerTime(delay, unit)));
+        new ScheduledFutureTask<Void>(command, null, triggerTime(delay, unit)));
     // 添加任务到延迟队列
     delayedExecute(t);
     return t;
@@ -113,8 +113,6 @@ public FutureTask(Runnable runnable, V result) {
     this.callable = Executors.callable(runnable, result);
     this.state = NEW;       // ensure visibility of callable
 }
-
-
 ```
 
 delayedExecute的代码如下：
@@ -123,7 +121,7 @@ delayedExecute的代码如下：
 private void delayedExecute(RunnableScheduledFuture<?> task) {
     //  线程池关闭则执行拒绝策略
     if (isShutdown())
-    reject(task);
+        reject(task);
     else {
         // 将任务添加到任务队列中
         // 任务队列为DelayedWorkQueue
@@ -154,8 +152,8 @@ public boolean isPeriodic() {
 // 为false则取消当前任务
 boolean canRunInCurrentRunState(boolean periodic) {
     return isRunningOrShutdown(periodic ?
-                               continueExistingPeriodicTasksAfterShutdown :
-                               executeExistingDelayedTasksAfterShutdown);
+        continueExistingPeriodicTasksAfterShutdown :
+        executeExistingDelayedTasksAfterShutdown);
 }
 // 确保至少有一个线程存活来执行任务
 void ensurePrestart() {
@@ -175,11 +173,11 @@ public void run() {
     boolean periodic = isPeriodic();
     // 判断是否需要取消任务
     if (!canRunInCurrentRunState(periodic))
-    cancel(false);
+        cancel(false);
     // 一次性任务
     else if (!periodic)
-    // 调用FutureTask的run方法
-    ScheduledFutureTask.super.run();
+        // 调用FutureTask的run方法
+        ScheduledFutureTask.super.run();
     // 周期性任务
     // runAndReset为FutureTask中的方法
     // 用于执行当前任务但不改变future的状态
@@ -195,13 +193,13 @@ private void setNextRunTime() {
     long p = period;
     // p > 0表示任务执行频率一定
     if (p > 0)
-    // time为此次任务（已执行完毕）刚开始执行时的时间
-    time += p;
+        // time为此次任务（已执行完毕）刚开始执行时的时间
+        time += p;
     // p < 0表示任务固定延迟时间
     // 即此次任务完成后会等待-p时间再执行下次任务
     else
-    // 获取-p时间后的绝对时间
-    time = triggerTime(-p);
+        // 获取-p时间后的绝对时间
+        time = triggerTime(-p);
 }
 // 周期性执行
 void reExecutePeriodic(RunnableScheduledFuture<?> task) {
@@ -211,9 +209,9 @@ void reExecutePeriodic(RunnableScheduledFuture<?> task) {
         // 再次将自身添加到任务队列中，从而达到周期性执行效果
         super.getQueue().add(task);
         if (!canRunInCurrentRunState(true) && remove(task))
-        task.cancel(false);
+            task.cancel(false);
         else
-        ensurePrestart();
+            ensurePrestart();
     }
 }
 ```
@@ -227,21 +225,21 @@ void reExecutePeriodic(RunnableScheduledFuture<?> task) {
 // initialDelay： 提交任务后等待多少时间再开始执行任务
 // delay： 一次任务执行完后等待多少时间才执行下次任务
 public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command,
-long initialDelay,
-long delay,
-TimeUnit unit) {
+    long initialDelay,
+    long delay,
+    TimeUnit unit) {
     // 参数校验
     if (command == null || unit == null)
-    throw new NullPointerException();
+        throw new NullPointerException();
     if (delay <= 0)
-    throw new IllegalArgumentException();
+        throw new IllegalArgumentException();
     // 将Runnable任务转换成ScheduledFutureTask
     // 第四个参数period为-delay < 0表示当前任务是固定延迟的
     ScheduledFutureTask<Void> sft =
-    new ScheduledFutureTask<Void>(command,
-    null,
-    triggerTime(initialDelay, unit),
-    unit.toNanos(-delay));
+        new ScheduledFutureTask<Void>(command,
+            null,
+            triggerTime(initialDelay, unit),
+            unit.toNanos(-delay));
     // decorateTask默认直接返回第二个参数，即sft
     RunnableScheduledFuture<Void> t = decorateTask(command, sft);
     // 默认情况下t = sft
@@ -253,10 +251,9 @@ TimeUnit unit) {
 // 可被子类重写拓展
 // 默认实现只是简单的返回task
 protected <V> RunnableScheduledFuture<V> decorateTask(
-Runnable runnable, RunnableScheduledFuture<V> task) {
+    Runnable runnable, RunnableScheduledFuture<V> task) {
     return task;
 }
-
 ```
 
 主要不同在于设置了period=-delay，其他代码与schedule相同，相应的代码会判断period的取值从而决定程序不同的行为。
@@ -267,25 +264,24 @@ Runnable runnable, RunnableScheduledFuture<V> task) {
 
 ```java
 public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
-long initialDelay,
-long period,
-TimeUnit unit) {
+    long initialDelay,
+    long period,
+    TimeUnit unit) {
     if (command == null || unit == null)
-    throw new NullPointerException();
+        throw new NullPointerException();
     if (period <= 0)
-    throw new IllegalArgumentException();
+        throw new IllegalArgumentException();
     // 关键在于此处第四个参数period > 0
     ScheduledFutureTask<Void> sft =
-    new ScheduledFutureTask<Void>(command,
-    null,
-    triggerTime(initialDelay, unit),
-    unit.toNanos(period));
+        new ScheduledFutureTask<Void>(command,
+            null,
+            triggerTime(initialDelay, unit),
+            unit.toNanos(period));
     RunnableScheduledFuture<Void> t = decorateTask(command, sft);
     sft.outerTask = t;
     delayedExecute(t);
     return t;
 }
-
 ```
 
 除了设置period的值大于0外，总体与scheduleWithFixedDelay类似，不再赘述。

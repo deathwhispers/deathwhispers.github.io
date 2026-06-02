@@ -45,7 +45,7 @@ As of Java 8, StringJoiner is part of the standard JRE.
 
 Another simple solution is:
 
-```plain text
+```java
 sb.setLength(sb.length() - 1);
 ```
 
@@ -157,7 +157,6 @@ for (int i = 0; i < value.length; i++) {
         stringBuilder.append(", ");
     }
 }
-
 ```
 
 With Java-8 you can use static method of String class,
@@ -174,13 +173,11 @@ public class Test {
         System.out.println(String.join(",", names));
     }
 }
-
-
 ```
 
 OUTPUT
 
-```plain text
+```text
 James,Harry,Roy
 ```
 
@@ -191,10 +188,9 @@ String prefix = "";
 for (String item : list) {
     sb.append(prefix);
     if (TextUtils.isEmpty(prefix))
-    prefix = ",";
+        prefix = ",";
     sb.append(item);
 }
-
 ```
 
 Yet another solution similar to the "prefix" solution above avoids multiple prefix assignments in the loop. i.e. Just in case the optimizer does not unroll the first loop iteration.
@@ -205,16 +201,15 @@ boolean firstEntry = true;
 
 for (String serverId : serverIds) {
     if (firstEntry)
-    firstEntry = false;
+        firstEntry = false;
     else
-    sb.append(",");
+        sb.append(",");
     sb.append(serverId);
 }
-
 ```
 
 You can use:
 
 ```java
-string finalString=sb.Remove(sb.Length - 1, 1).ToString();
+String finalString = sb.Remove(sb.Length - 1, 1).ToString();
 ```

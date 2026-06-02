@@ -80,7 +80,7 @@ public @interface MyId {}
 
 [MyGeneratedValue.java](https://how2j.cn/k/annotation/annotation-like-hibernate/1058.html#nowhere)
 
-```plain text
+```java
 package hibernate_annotation;
 
 import java.lang.annotation.ElementType;

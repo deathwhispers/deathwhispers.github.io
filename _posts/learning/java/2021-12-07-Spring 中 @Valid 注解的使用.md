@@ -19,7 +19,7 @@ week: 2025-W48
 
 @Valid是java自带的参数校验注解，在**javax.validation包下**
 
-![](/assets/images/learning/java/valid注解的使用/0b35db080830181482d6d4022ba09302.png)
+![javax.validation包结构](/assets/images/learning/java/valid注解的使用/0b35db080830181482d6d4022ba09302.png)
 
 **javax.validation.constraints中校验参数的注解**
 

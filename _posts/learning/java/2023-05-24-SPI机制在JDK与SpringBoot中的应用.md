@@ -168,7 +168,7 @@ com.example.demo.service.HelloMessageService
 com.example.demo.service.HiMessageService
 ```
 
-![](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/f5bb50ebf675af1189675b70eb5fa5b1.png)
+![META-INF/services目录结构](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/f5bb50ebf675af1189675b70eb5fa5b1.png)
 
 META-INF/services/ 是 Java SPI (Service Provider Interface) 机制中约定俗成的特定目录。它不是随意选择的，而是 SPI 规范中明确定义的。
 
@@ -196,7 +196,7 @@ public class DemoApplication {
 
 运行结果如下：
 
-![](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/5e5817bf8e3c6f109a714fdf14dd6bf2.png)
+![ServiceLoader运行结果](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/5e5817bf8e3c6f109a714fdf14dd6bf2.png)
 
 这说明 ServiceLoader 成功地加载了我们为 MessageService 接口提供的两个实现，并且我们可以在不修改 Main 类的代码的情况下，通过添加更多的实现类和更新 META-INF/services/com.example.MessageService 文件来扩展我们的服务。
 
@@ -413,7 +413,7 @@ public class DemoApplication {
 
 运行结果：
 
-![](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/f9eb1ec3cd179454a6e567557aa13037.png)
+![BeanPostProcessor处理结果](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/f9eb1ec3cd179454a6e567557aa13037.png)
 
 现在，每一个 MessageService 实现都被 BeanPostProcessor 处理了，添加了额外的消息 "[Processed by Spring SPI]"。这演示了 Spring 的 SPI 概念，通过 BeanPostProcessor 来扩展或修改 Spring 容器中的 bean。
 
@@ -487,7 +487,7 @@ public class HiMessageService implements MessageService {
 com.example.demo.service.MessageService=com.example.demo.service.HelloMessageService,com.example.demo.service.HiMessageService
 ```
 
-![](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/7bd4c0e1419d065e398e92dba8c106e4.png)
+![spring.factories文件位置](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/7bd4c0e1419d065e398e92dba8c106e4.png)
 
 注意这里 com.example.demo.service.MessageService 是接口的全路径，而 com.example.demo.service.HelloMessageService,com.example.demo.service.HiMessageService 是实现类的全路径。如果有多个实现类，它们应当用逗号分隔。
 
@@ -495,7 +495,7 @@ spring.factories 文件中的条目键和值之间不能有换行，即 key=valu
 
 这里 spring.factories 又可以写为
 
-```plain text
+```properties
 com.example.demo.service.MessageService=com.example.demo.service.HelloMessageService,\
 com.example.demo.service.HiMessageService
 ```
@@ -525,7 +525,7 @@ SpringFactoriesLoader.loadFactories 的第二个参数是类加载器，此处�
 
 运行结果：
 
-![](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/2ebeefc24a93904f8edc27d151a0ae68.png)
+![SpringFactoriesLoader运行结果](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/2ebeefc24a93904f8edc27d151a0ae68.png)
 
 这种方式利用了 Spring 的 SpringFactoriesLoader，它允许开发者提供接口的多种实现，并通过 spring.factories 文件来注册它们。这与 JDK 的 SPI 思想非常相似，只是在实现细节上有所不同。这也是 Spring Boot 如何自动配置的基础，它会查找各种 spring.factories 文件，根据其中定义的类来初始化和配置 bean。
 
@@ -591,7 +591,7 @@ public class com.mysql.cj.jdbc.Driver implements java.sql.Driver {
 
 直接上图：
 
-![](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/77c4ac898a3c441fa128a7a0cab34a64.png)
+![MySQL Driver实现类](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/77c4ac898a3c441fa128a7a0cab34a64.png)
 
 **注册服务提供者**：
 
@@ -603,7 +603,7 @@ com.mysql.cj.jdbc.Driver
 
 直接上图：
 
-![](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/2a8fcfdfb8be4569fcb0025fd958aa14.png)
+![MySQL JDBC驱动SPI配置文件](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/2a8fcfdfb8be4569fcb0025fd958aa14.png)
 
 看到这里是不是发现和第 2 节举的 JDK SPI 的例子一样？体会一下。
 
@@ -643,7 +643,7 @@ public class JdbcExample {
 
 例如：
 
-```plain text
+```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/mydatabase
 spring.datasource.username=root
 spring.datasource.password=password
@@ -746,14 +746,14 @@ public class MessageAutoConfiguration {
 
 在 src/main/resources/META-INF 目录下创建一个 spring.factories 文件，内容如下：
 
-```plain text
+```properties
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.example.demo.configuration.MessageAutoConfiguration
 ```
 
 **application.properties 文件**：
 
-```plain text
+```properties
 message.type=sms
 ```
 
@@ -801,7 +801,7 @@ public class DemoApplication {
 
 运行结果：
 
-![](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/16fa9a9c6c9a2256c49505ebcc4c563f.png)
+![自动配置运行结果](/assets/images/learning/java/spi-mechanism-in-jdk-and-springboot/16fa9a9c6c9a2256c49505ebcc4c563f.png)
 
 在上述例子中，我们创建了一个 MessageService 接口和两个实现（SmsService 和 EmailService）。然后，我们创建了一个自动配置类，其中包含两个 bean 定义，这两个 bean 定义分别基于 application.properties 中的属性值条件性地创建。在 spring.factories 文件中，我们声明了这个自动配置类，以便 Spring Boot 在启动时能够自动加载它。
 

@@ -20,20 +20,28 @@ week: 2025-W48
 
 在没有 Lock 之前，我们使用 synchronized 来控制同步，配合 Object 的 #wait()、#notify() 等一系列方法可以实现**等待 / 通知模式**。在 Java SE 5 后，Java 提供了 Lock 接口，相对于 synchronized 而言，Lock 提供了条件 Condition ，对线程的等待、唤醒操作更加详细和灵活。下图是 Condition 与 Object 的监视器方法的对比（摘自《Java并发编程的艺术》）：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-condition/83feea37794656e89d0ce574bcae3389.jpg)
+![Condition与Object监视器方法对比](/assets/images/learning/java/concurrencecode/concurrent-source-code-condition/83feea37794656e89d0ce574bcae3389.jpg)
 
 # 1. Condition
 
 java.util.concurrent.locks.Condition ，条件 Condition 接口，定义了一系列的方法，来对阻塞和唤醒线程：
 
 ```java
-// ========== 阻塞 ========== void await() throws InterruptedException;
-// 造成当前线程在接到信号或被中断之前一直处于等待状态。 void awaitUninterruptibly();
-// 造成当前线程在接到信号之前一直处于等待状态。【注意：该方法对中断不敏感】。 long awaitNanos(long nanosTimeout) throws InterruptedException;
-// 造成当前线程在接到信号、被中断或到达指定等待时间之前一直处于等待状态。返回值表示剩余时间，如果在`nanosTimeout` 之前唤醒，那么返回值 `= nanosTimeout - 消耗时间` ，如果返回值 `<= 0` ,则可以认定它已经超时了。 boolean await(long time, TimeUnit unit) throws InterruptedException;
-// 造成当前线程在接到信号、被中断或到达指定等待时间之前一直处于等待状态。 boolean awaitUntil(Date deadline) throws InterruptedException;
-// 造成当前线程在接到信号、被中断或到达指定最后期限之前一直处于等待状态。如果没有到指定时间就被通知，则返回 true ，否则表示到了指定时间，返回返回 false 。 // ========== 唤醒 ========== void signal();
-// 唤醒一个等待线程。该线程从等待方法返回前必须获得与Condition相关的锁。 void signalAll();
+// ========== 阻塞 ==========
+void await() throws InterruptedException;
+// 造成当前线程在接到信号或被中断之前一直处于等待状态。
+void awaitUninterruptibly();
+// 造成当前线程在接到信号之前一直处于等待状态。【注意：该方法对中断不敏感】。
+long awaitNanos(long nanosTimeout) throws InterruptedException;
+// 造成当前线程在接到信号、被中断或到达指定等待时间之前一直处于等待状态。返回值表示剩余时间，如果在`nanosTimeout` 之前唤醒，那么返回值 `= nanosTimeout - 消耗时间` ，如果返回值 `<= 0` ,则可以认定它已经超时了。
+boolean await(long time, TimeUnit unit) throws InterruptedException;
+// 造成当前线程在接到信号、被中断或到达指定等待时间之前一直处于等待状态。
+boolean awaitUntil(Date deadline) throws InterruptedException;
+// 造成当前线程在接到信号、被中断或到达指定最后期限之前一直处于等待状态。如果没有到指定时间就被通知，则返回 true ，否则表示到了指定时间，返回返回 false 。
+// ========== 唤醒 ==========
+void signal();
+// 唤醒一个等待线程。该线程从等待方法返回前必须获得与Condition相关的锁。
+void signalAll();
 // 唤醒所有等待线程。能够从等待方法返回的线程必须获得与Condition相关的锁。
 ```
 
@@ -45,20 +53,19 @@ Condition 是一种广义上的条件队列。他为线程提供了一种更为�
 
 ```java
 public class ConditionObject implements Condition, java.io.Serializable {
-    /** First node of condition queue. */ private transient Node firstWaiter;
-    // 头节点 /** Last node of condition queue. */
-    private transient Node lastWaiter;
-    // 尾节点
+    /** First node of condition queue. */
+    private transient Node firstWaiter; // 头节点
+    /** Last node of condition queue. */
+    private transient Node lastWaiter; // 尾节点
     public ConditionObject() {
     }
-    // … 省略内部代码 }
+    // … 省略内部代码
+}
 ```
 
 - 从上面代码可以看出，ConditionObject 拥有首节点（firstWaiter），尾节点（lastWaiter）。当前线程调用 #await()方法时，将会以当前线程构造成一个节点（Node），并将节点加入到该队列的尾部。结构如下：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-condition/9783b4b580df7d3d99ce268971de1064.jpg)
-
-[assets/images/learning/java/concurrencecode/2025-11-28-concurrent-source-code-condition/9783b4b580df7d3d99ce268971de1064.jpg](assets/images/learning/java/concurrencecode/2025-11-28-concurrent-source-code-condition/9783b4b580df7d3d99ce268971de1064.jpg)
+![ConditionObject队列结构](/assets/images/learning/java/concurrencecode/concurrent-source-code-condition/9783b4b580df7d3d99ce268971de1064.jpg)
 
 - Node 里面包含了当前线程的引用。Node 定义与 AQS 的 CLH 同步队列的节点使用的都是同一个类（AbstractQueuedSynchronized 的 Node 静态内部类）。
 - ConditionObject 的队列结构比 CLH 同步队列的结构简单些，新增过程较为简单，只需要将原尾节点的 Node.next 指向新增节点，然后更新 ConditionObject.lastWaiter 即可。
@@ -75,19 +82,19 @@ AQS 等待队列与 Condition 队列是**两个相互独立的队列**
 
 **I.初始化状态**：AQS等待队列有 3 个Node，Condition 队列有 1 个Node(也有可能 1 个都没有)
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-condition/6c7bff601db87a8d8f2176b5480d1b38.png)
+![初始化状态：AQS等待队列与Condition队列](/assets/images/learning/java/concurrencecode/concurrent-source-code-condition/6c7bff601db87a8d8f2176b5480d1b38.png)
 
 **II.节点1执行 Condition.await()**
 
 将 head 后移释放节点 1 的锁并从 AQS 等待队列中移除将节点 1 加入到 Condition 的等待队列中更新 lastWaiter 为节点 1
 
-![](https://static.iocoder.cn/csdn//20150423091555989)
+![节点1执行Condition.await()](https://static.iocoder.cn/csdn//20150423091555989)
 
 **III.节点 2 执行 Condition.signal() 操作**
 
 将 firstWaiter后移将节点 4 移出 Condition 队列将节点 4 加入到 AQS 的等待队列中去更新 AQS 的等待队列的 tail
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-condition/4c23d43c3890898ac9a9d1762af2e520.png)
+![节点2执行Condition.signal()操作](/assets/images/learning/java/concurrencecode/concurrent-source-code-condition/4c23d43c3890898ac9a9d1762af2e520.png)
 
 ## 2.2 等待
 
@@ -98,24 +105,32 @@ AQS 等待队列与 Condition 队列是**两个相互独立的队列**
 ```java
 public final void await() throws InterruptedException {
     // 当前线程中断
-    if (Thread.interrupted()) throw new InterruptedException();
-    //当前线程加入等待队列
+    if (Thread.interrupted())
+        throw new InterruptedException();
+    // 当前线程加入等待队列
     Node node = addConditionWaiter();
-    //释放锁
+    // 释放锁
     long savedState = fullyRelease(node);
     int interruptMode = 0;
-    /** * 检测此节点的线程是否在同步队上，如果不在，则说明该线程还不具备竞争锁的资格，则继续等待 * 直到检测到此节点在同步队列上 */ while (!isOnSyncQueue(node)) {
-
-        //线程挂起
+    /**
+     * 检测此节点的线程是否在同步队上，如果不在，则说明该线程还不具备竞争锁的资格，则继续等待
+     * 直到检测到此节点在同步队列上
+     */
+    while (!isOnSyncQueue(node)) {
+        // 线程挂起
         LockSupport.park(this);
-        //如果已经中断了，则退出
-        if ((interruptMode = checkInterruptWhileWaiting(node)) != 0) break;
+        // 如果已经中断了，则退出
+        if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
+            break;
     }
-    //竞争同步状态
-    if (acquireQueued(node, savedState) && interruptMode != THROW_IE) interruptMode = REINTERRUPT;
+    // 竞争同步状态
+    if (acquireQueued(node, savedState) && interruptMode != THROW_IE)
+        interruptMode = REINTERRUPT;
     // 清理下条件队列中的不是在等待条件的节点
-    if (node.nextWaiter != null) // clean up if cancelled unlinkCancelledWaiters();
-    if (interruptMode != 0) reportInterruptAfterWait(interruptMode);
+    if (node.nextWaiter != null) // clean up if cancelled
+        unlinkCancelledWaiters();
+    if (interruptMode != 0)
+        reportInterruptAfterWait(interruptMode);
 }
 ```
 
@@ -130,18 +145,22 @@ public final void await() throws InterruptedException {
 
 ```java
 private Node addConditionWaiter() {
-    Node t = lastWaiter;
-    //尾节点 //Node的节点状态如果不为CONDITION，则表示该节点不处于等待状态，需要清除节点
+    Node t = lastWaiter; // 尾节点
+    // Node的节点状态如果不为CONDITION，则表示该节点不处于等待状态，需要清除节点
     if (t != null && t.waitStatus != Node.CONDITION) {
-
-        //清除条件队列中所有状态不为Condition的节点
+        // 清除条件队列中所有状态不为Condition的节点
         unlinkCancelledWaiters();
         t = lastWaiter;
     }
-    //当前线程新建节点，状态 CONDITION
+    // 当前线程新建节点，状态 CONDITION
     Node node = new Node(Thread.currentThread(), Node.CONDITION);
-    /** * 将该节点加入到条件队列中最后一个位置 */ if (t == null) firstWaiter = node;
-    else t.nextWaiter = node;
+    /**
+     * 将该节点加入到条件队列中最后一个位置
+     */
+    if (t == null)
+        firstWaiter = node;
+    else
+        t.nextWaiter = node;
     lastWaiter = node;
     return node;
 }
@@ -163,12 +182,10 @@ final long fullyRelease(Node node) {
         if (release(savedState)) {
             failed = false;
             return savedState;
-        }
-        else {
+        } else {
             throw new IllegalMonitorStateException();
         }
-    }
-    finally {
+    } finally {
         if (failed)
             node.waitStatus = Node.CANCELLED;
     }
@@ -186,9 +203,11 @@ final long fullyRelease(Node node) {
 ```java
 final boolean isOnSyncQueue(Node node) {
     // 状态为 Condition，获取前驱节点为 null ，返回 false
-    if (node.waitStatus == Node.CONDITION || node.prev == null) return false;
+    if (node.waitStatus == Node.CONDITION || node.prev == null)
+        return false;
     // 后继节点不为 null，肯定在 CLH 同步队列中
-    if (node.next != null) return true;
+    if (node.next != null)
+        return true;
     return findNodeFromTail(node);
 }
 ```

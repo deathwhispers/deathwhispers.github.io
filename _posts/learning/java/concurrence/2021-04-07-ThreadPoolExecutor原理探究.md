@@ -18,7 +18,7 @@ week: 2025-W48
 
 ## 类图结构
 
-![](/assets/images/learning/java/concurrence/java-thread-pool-executor-principle-pursuit/12.png)
+![ThreadPoolExecutor类图结构](/assets/images/learning/java/concurrence/java-thread-pool-executor-principle-pursuit/12.png)
 
 如图所示，Executors是个工具类，用来提供不同特性的线程池。ThreadPoolExecutor中的ctl是一个原子变量，用来记录线程池状态和线程池中的线程个数，类似于ReentrantReadWriteLock中使用一个变量来保存两种信息。
 
@@ -56,7 +56,6 @@ private static int ctlOf(int rs, int wc)
 {
     return rs | wc;
 }
-
 ```
 
 线程池的状态含义如下：
@@ -456,8 +455,7 @@ final void tryTerminate() {
         } finally {
             mainLock.unlock();
         }
-        //
-        else retry on failed CAS
+        // else retry on failed CAS
     }
 }
 ```

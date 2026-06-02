@@ -30,7 +30,7 @@ CyclicBarrier ，一个同步辅助类，在 AP I中是这么介绍的：
 
 java.util.concurrent.CyclicBarrier 的结构如下：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-cyclicbarrier/35ffa2077bbfa70399e96bdcacf633cc.jpg)
+![CyclicBarrier结构图](/assets/images/learning/java/concurrencecode/concurrent-source-code-cyclicbarrier/35ffa2077bbfa70399e96bdcacf633cc.jpg)
 
 通过上图，我们可以看到 CyclicBarrier 的内部是使用重入锁 ReentrantLock 和 Condition 。
 
@@ -84,11 +84,9 @@ public int await() throws InterruptedException, BrokenBarrierException {
 #await(long timeout, TimeUnit unit) 方法，在 #await() 的基础上，增加了等待超时的特性。代码如下：
 
 ```java
-public int await(long timeout, TimeUnit unit) throws InterruptedException, BrokenBarrierException, TimeoutException
-{
+public int await(long timeout, TimeUnit unit) throws InterruptedException, BrokenBarrierException, TimeoutException {
     return dowait(true, unit.toNanos(timeout));
 }
-
 ```
 
 - 内部调用 #dowait(boolean timed, long nanos) 方法，执行阻塞等待( timed=true )。详细解析，见 [「2.3 dowait」](https://www.iocoder.cn/JUC/sike/CyclicBarrier/#) 。
@@ -193,11 +191,9 @@ private int dowait(boolean timed, long nanos) throws InterruptedException, Broke
 Generation 是 CyclicBarrier 内部静态类，描述了 CyclicBarrier 的更新换代。**在CyclicBarrier中，同一批线程属于同一代**。当有 parties 个线程全部到达 barrier 时，generation 就会被更新换代。其中 broken 属性，标识该当前 CyclicBarrier 是否已经处于中断状态。代码如下：
 
 ```java
-private static class Generation
-{
+private static class Generation {
     boolean broken = false;
 }
-
 ```
 
 - 默认 barrier 是没有损坏的。
@@ -227,13 +223,11 @@ private void breakBarrier() {
 代码如下：
 
 ```java
-private void nextGeneration()
-{
+private void nextGeneration() {
     trip.signalAll();
     count = parties;
     generation = new Generation();
 }
-
 ```
 
 ## 2.7 reset

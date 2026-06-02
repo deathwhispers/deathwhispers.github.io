@@ -32,7 +32,7 @@ ReentrantLock 还提供了公平锁和非公平锁的选择，通过构造方法
 
 ReentrantLock 整体结构如下图：
 
-![](/assets/images/learning/java/concurrencecode/死磕java并发juc之重入锁reentrantlock/d63affa82d13f197547a6253b7c361cb.jpg)
+![ReentrantLock整体结构图](/assets/images/learning/java/concurrencecode/死磕java并发juc之重入锁reentrantlock/d63affa82d13f197547a6253b7c361cb.jpg)
 
 - ReentrantLock 实现 Lock 接口，基于内部的 Sync 实现。
 - Sync 实现 AQS ，提供了 FairSync 和 NonFairSync 两种实现。
@@ -45,11 +45,10 @@ Sync 是 ReentrantLock 的内部静态类，实现 AbstractQueuedSynchronizer �
 
 ```java
 /**
-* Performs {@link Lock#lock}.
-* The main reason for subclassing is to allow fast path for nonfair version.
-*/
+ * Performs {@link Lock#lock}.
+ * The main reason for subclassing is to allow fast path for nonfair version.
+ */
 abstract void lock();
-
 ```
 
 - 执行锁。抽象了该方法的原因是，允许子类实现快速获得非公平锁的逻辑。
@@ -111,32 +110,38 @@ protected final boolean tryRelease(int releases) {
 
 ```java
 // 是否当前线程独占
-@Override protected final boolean isHeldExclusively() {
+@Override
+protected final boolean isHeldExclusively() {
     // While we must in general read state before owner,
     // we don't need to do so to check if current thread is owner.
     return getExclusiveOwnerThread() == Thread.currentThread();
 }
+
 // 新生成条件
 final ConditionObject newCondition() {
     return new ConditionObject();
 }
+
 // Methods relayed from outer class
 final Thread getOwner() {
     return getState() == 0 ? null : getExclusiveOwnerThread();
 }
+
 // 获得当前线程持有锁的数量
 final int getHoldCount() {
     return isHeldExclusively() ? getState() : 0;
 }
+
 // 是否被锁定
 final boolean isLocked() {
     return getState() != 0;
 }
+
 /**
-* Reconstitutes the instance from a stream (that is, deserializes it).
-*/
+ * Reconstitutes the instance from a stream (that is, deserializes it).
+ */
 private void readObject(java.io.ObjectInputStream s)
-throws java.io.IOException, ClassNotFoundException {
+        throws java.io.IOException, ClassNotFoundException {
     s.defaultReadObject();
     setState(0);
 }
@@ -155,9 +160,12 @@ NonfairSync 是 ReentrantLock 的内部静态类，实现 Sync 抽象类，非�
 #lock() 实现方法，首先基于 AQS state 进行 CAS 操作，将 0 => 1 。若成功，则获取锁成功。若失败，执行 AQS 的正常的同步状态获取逻辑。代码如下：
 
 ```java
-@Override final void lock() {
-    if (compareAndSetState(0, 1)) setExclusiveOwnerThread(Thread.currentThread());
-    else acquire(1);
+@Override
+final void lock() {
+    if (compareAndSetState(0, 1))
+        setExclusiveOwnerThread(Thread.currentThread());
+    else
+        acquire(1);
 }
 ```
 
@@ -201,15 +209,14 @@ protected final boolean tryAcquire(int acquires) {
     int c = getState();
     if (c == 0) {
         if (!hasQueuedPredecessors() &&
-        // <1>
-        compareAndSetState(0, acquires)) {
+                compareAndSetState(0, acquires)) {
             setExclusiveOwnerThread(current);
             return true;
         }
-    }
-    else if (current == getExclusiveOwnerThread()) {
+    } else if (current == getExclusiveOwnerThread()) {
         int nextc = c + acquires;
-        if (nextc < 0) throw new Error("Maximum lock count exceeded");
+        if (nextc < 0)
+            throw new Error("Maximum lock count exceeded");
         setState(nextc);
         return true;
     }
@@ -217,25 +224,22 @@ protected final boolean tryAcquire(int acquires) {
 }
 ```
 
-比较非公平锁和公平锁获取同步状态的过程，会发现两者唯一的区别就在于，公平锁在获取同步状态时多了一个限制条件 <1> 处的 #hasQueuedPredecessors() 方法，是否有前序节点，即自己不是首个等待获取同步状态的节点。代码如下：
+比较非公平锁和公平锁获取同步状态的过程，会发现两者唯一的区别就在于，公平锁在获取同步状态时多了一个限制条件 #hasQueuedPredecessors() 方法，是否有前序节点，即自己不是首个等待获取同步状态的节点。代码如下：
 
 ```java
 // AbstractQueuedSynchronizer.java
 public final boolean hasQueuedPredecessors() {
-    Node t = tail;
-    //尾节点
-    Node h = head;
-
-    //头节点
+    Node t = tail; // 尾节点
+    Node h = head; // 头节点
     Node s;
-    //头节点 != 尾节点 //同步队列第一个节点不为null //当前线程是同步队列第一个节点
+    // 头节点 != 尾节点 //同步队列第一个节点不为null //当前线程是同步队列第一个节点
     return h != t && ((s = h.next) == null || s.thread != Thread.currentThread());
 }
 ```
 
 - 该方法主要做一件事情：主要是判断当前线程是否位于 CLH 同步队列中的第一个。如果是则返回 true ，否则返回 false 。
 
-# 3. Lock 接口
+# 4. Lock 接口
 
 java.util.concurrent.locks.Lock 接口，定义方法如下：
 
@@ -250,20 +254,21 @@ Condition newCondition();
 
 - 每个方法解释如下图：FROM 《Java并发编程的艺术》的 「5.1 Lock 接口」 章节。
 
-![](/assets/images/learning/java/concurrencecode/死磕java并发juc之重入锁reentrantlock/0fa440407492b43e0781b5b014fef158.png)
+![Lock接口方法说明](/assets/images/learning/java/concurrencecode/死磕java并发juc之重入锁reentrantlock/0fa440407492b43e0781b5b014fef158.png)
 
-# 4. ReentrantLock
+# 5. ReentrantLock
 
 java.util.concurrent.locks.ReentrantLock ，实现 Lock 接口，重入锁。
 
 ReentrantLock 的实现方法，基本是对 Sync 的调用。
 
-## 4.1 构造方法
+## 5.1 构造方法
 
 ```java
 public ReentrantLock() {
     sync = new NonfairSync();
 }
+
 public ReentrantLock(boolean fair) {
     sync = fair ? new FairSync() : new NonfairSync();
 }
@@ -271,60 +276,90 @@ public ReentrantLock(boolean fair) {
 
 - 基于 fair 参数，创建 FairSync 还是 NonfairSync 对象。
 
-## 4.2 lock
+## 5.2 lock
 
 ```java
-@Override public void lock() {
+@Override
+public void lock() {
     sync.lock();
 }
 ```
 
-## 4.3 lockInterruptibly
+## 5.3 lockInterruptibly
 
 ```java
-@Override public void lockInterruptibly() throws InterruptedException {
+@Override
+public void lockInterruptibly() throws InterruptedException {
     sync.acquireInterruptibly(1);
 }
 ```
 
-**4.4 tryLock**
+## 5.4 tryLock
 
-/** * Acquires the lock only if it is not held by another thread at the time * of invocation. * *
-
-Acquires the lock if it is not held by another thread and * returns immediately with the value {@code true}, setting the * lock hold count to one. Even when this lock has been set to use a * fair ordering policy, a call to {@code tryLock()} *will* * immediately acquire the lock if it is available, whether or not * other threads are currently waiting for the lock. * This "barging" behavior can be useful in certain * circumstances, even though it breaks fairness. If you want to honor * the fairness setting for this lock, then use * {@link #tryLock(long, TimeUnit) tryLock(0, TimeUnit.SECONDS) } * which is almost equivalent (it also detects interruption). * *
-
-If the current thread already holds this lock then the hold * count is incremented by one and the method returns {@code true}. * *
-
-If the lock is held by another thread then this method will return * immediately with the value {@code false}. * * @return {@code true} if the lock was free and was acquired by the * current thread, or the lock was already held by the current * thread; and {@code false} otherwise */ @Override public boolean tryLock() { return sync.nonfairTryAcquire(1); }
+```java
+/**
+ * Acquires the lock only if it is not held by another thread at the time
+ * of invocation.
+ *
+ * <p>Acquires the lock if it is not held by another thread and
+ * returns immediately with the value {@code true}, setting the
+ * lock hold count to one. Even when this lock has been set to use a
+ * fair ordering policy, a call to {@code tryLock()} <em>will</em>
+ * immediately acquire the lock if it is available, whether or not
+ * other threads are currently waiting for the lock.
+ * This "barging" behavior can be useful in certain
+ * circumstances, even though it breaks fairness. If you want to honor
+ * the fairness setting for this lock, then use
+ * {@link #tryLock(long, TimeUnit) tryLock(0, TimeUnit.SECONDS) }
+ * which is almost equivalent (it also detects interruption).
+ *
+ * <p>If the current thread already holds this lock then the hold
+ * count is incremented by one and the method returns {@code true}.
+ *
+ * <p>If the lock is held by another thread then this method will return
+ * immediately with the value {@code false}.
+ *
+ * @return {@code true} if the lock was free and was acquired by the
+ *         current thread, or the lock was already held by the current
+ *         thread; and {@code false} otherwise
+ */
+@Override
+public boolean tryLock() {
+    return sync.nonfairTryAcquire(1);
+}
+```
 
 - 详细的说明，胖友可以看上面的英文注释。
 - 老艿艿的简单理解是：
 
-## 4.5 tryLock
+## 5.5 tryLock
 
 ```java
-@Override public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException {
+@Override
+public boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException {
     return sync.tryAcquireNanos(1, unit.toNanos(timeout));
 }
 ```
 
-## 4.6 unlock
+## 5.6 unlock
 
 ```java
-@Override public void unlock() {
+@Override
+public void unlock() {
     sync.release(1);
 }
 ```
 
-## 4.7 newCondition
+## 5.7 newCondition
 
 ```java
-@Override public Condition newCondition() {
+@Override
+public Condition newCondition() {
     return sync.newCondition();
 }
 ```
 
-## 4.8 其他实现方法
+## 5.8 其他实现方法
 
 其他实现方法比较简单，胖友自己看。
 
@@ -332,48 +367,62 @@ If the lock is held by another thread then this method will return * immediately
 public int getHoldCount() {
     return sync.getHoldCount();
 }
+
 public boolean isHeldByCurrentThread() {
     return sync.isHeldExclusively();
 }
+
 public boolean isLocked() {
     return sync.isLocked();
 }
+
 public final boolean isFair() {
     return sync instanceof FairSync;
 }
+
 protected Thread getOwner() {
     return sync.getOwner();
 }
+
 public final boolean hasQueuedThreads() {
     return sync.hasQueuedThreads();
 }
+
 public final boolean hasQueuedThread(Thread thread) {
     return sync.isQueued(thread);
 }
+
 public final int getQueueLength() {
     return sync.getQueueLength();
 }
-protected Collection getQueuedThreads() {
+
+protected Collection<Thread> getQueuedThreads() {
     return sync.getQueuedThreads();
 }
+
 public boolean hasWaiters(Condition condition) {
     if (condition == null) throw new NullPointerException();
-    if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) throw new IllegalArgumentException("not owner");
-    return sync.hasWaiters((AbstractQueuedSynchronizer.ConditionObject)condition);
+    if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
+        throw new IllegalArgumentException("not owner");
+    return sync.hasWaiters((AbstractQueuedSynchronizer.ConditionObject) condition);
 }
+
 public int getWaitQueueLength(Condition condition) {
     if (condition == null) throw new NullPointerException();
-    if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) throw new IllegalArgumentException("not owner");
-    return sync.getWaitQueueLength((AbstractQueuedSynchronizer.ConditionObject)condition);
+    if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
+        throw new IllegalArgumentException("not owner");
+    return sync.getWaitQueueLength((AbstractQueuedSynchronizer.ConditionObject) condition);
 }
-protected Collection getWaitingThreads(Condition condition) {
+
+protected Collection<Thread> getWaitingThreads(Condition condition) {
     if (condition == null) throw new NullPointerException();
-    if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject)) throw new IllegalArgumentException("not owner");
-    return sync.getWaitingThreads((AbstractQueuedSynchronizer.ConditionObject)condition);
+    if (!(condition instanceof AbstractQueuedSynchronizer.ConditionObject))
+        throw new IllegalArgumentException("not owner");
+    return sync.getWaitingThreads((AbstractQueuedSynchronizer.ConditionObject) condition);
 }
 ```
 
-# 5. ReentrantLock 与 synchronized 的区别
+# 6. ReentrantLock 与 synchronized 的区别
 
 前面提到 ReentrantLock 提供了比 synchronized 更加灵活和强大的锁机制，那么它的灵活和强大之处在哪里呢？他们之间又有什么相异之处呢？
 

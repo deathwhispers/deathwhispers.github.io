@@ -36,7 +36,7 @@ happens-before 原则【定义】如下：
 
 ```text
 1. 如果一个操作 happens-before 另一个操作，那么第一个操作的执行结果，将对第二个操作可见，而且第一个操作的执行顺序，排在第二个操作之前。
-1. 两个操作之间存在 happens-before 关系，并不意味着一定要按照 happens-before 原则制定的顺序来执行。如果重排序之后的执行结果与按照 happens-before 关系来执行的结果一致，那么这种重排序并不非法。
+2. 两个操作之间存在 happens-before 关系，并不意味着一定要按照 happens-before 原则制定的顺序来执行。如果重排序之后的执行结果与按照 happens-before 关系来执行的结果一致，那么这种重排序并不非法。
 ```
 
 # 2. 规则
@@ -74,11 +74,11 @@ public int read() {
 
 就这段简单的代码，我们来基于 happens-before 的规则做一次分析：
 
-7. 由于两个方法是由不同的线程调用，所以肯定不满足程序次序规则。
-8. 两个方法都没有使用锁，所以不满足锁定规则。
-9. 变量 i 不是用volatile修饰的，所以 volatile 变量规则不满足。
-10. 传递规则肯定不满足。
-11. 规则 5、6、7、8 + 推导的 6 条可以忽略，因为他们和这段代码毫无关系。
+1. 由于两个方法是由不同的线程调用，所以肯定不满足程序次序规则。
+2. 两个方法都没有使用锁，所以不满足锁定规则。
+3. 变量 i 不是用volatile修饰的，所以 volatile 变量规则不满足。
+4. 传递规则肯定不满足。
+5. 规则 5、6、7、8 + 推导的 6 条可以忽略，因为他们和这段代码毫无关系。
 
 所以，我们无法通过 happens-before 原则，推导出线程 A happens-before 线程 B 。虽然，可以确认在时间上，线程 A 优先于线程 B 执行，但是就是无法确认线程B获得的结果是什么，所以这段代码不是线程安全的。
 
@@ -92,17 +92,17 @@ happen-before原则是JMM中非常重要的原则，它是判断数据是否存�
 
 FROM 《Java并发编程的艺术》
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-happens-before/3980ff20799e41ead84e6efd2bee64c1.jpg)
+![happens-before与JMM关系图](/assets/images/learning/java/concurrencecode/concurrent-source-code-happens-before/3980ff20799e41ead84e6efd2bee64c1.jpg)
 
 # 参考资料
 
-12. 周志明：《深入理解Java虚拟机》
-13. 方腾飞：《Java并发编程的艺术》
+1. 周志明：《深入理解Java虚拟机》
+2. 方腾飞：《Java并发编程的艺术》
 
 # 666. 彩蛋
 
 整理本小节，简单脑图如下：
 
-![](/assets/images/learning/java/concurrencecode/concurrent-source-code-happens-before/020a0135b5ac53f71f8cd3d2f1cfac3e.png)
+![happens-before脑图](/assets/images/learning/java/concurrencecode/concurrent-source-code-happens-before/020a0135b5ac53f71f8cd3d2f1cfac3e.png)
 
 如果你对 Java 并发感兴趣，欢迎加入我的知识星球一起交流。
