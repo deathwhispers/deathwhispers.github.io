@@ -24,9 +24,7 @@ updated: 2022-05-20 18:33
 
 另外通过注册中心可灵活改变授权方式，而不需修改或升级提供者。
 
-![](/assets/images/learning/dubbo/dubbo-filter-token/b8b5e1985b34f89b62a2e499df5694d8.png)
-
-认证流程
+![认证流程](/assets/images/learning/dubbo/dubbo-filter-token/b8b5e1985b34f89b62a2e499df5694d8.png)
 
 - 官方文档写的很全，胖友请点击链接看完哈。
 
@@ -36,8 +34,15 @@ So ，可能和大多数胖友（包括我），一开始理解和期望的不�
 
 在 ServiceConfig 的 #doExportUrlsFor1Protocol(protocolConfig, registryURLs) 方法中，随机生成 Token ：
 
-```plain text
-plain // token ，参见《令牌校验》http://dubbo.apache.org/zh-cn/docs/user/demos/token-authorization.html if (!ConfigUtils.isEmpty(token)) {     if (ConfigUtils.isDefault(token)) { // true || default 时，UUID 随机生成         map.put("token", UUID.randomUUID().toString());     } else {         map.put("token", token);     } }
+```java
+// token ，参见《令牌校验》http://dubbo.apache.org/zh-cn/docs/user/demos/token-authorization.html
+if (!ConfigUtils.isEmpty(token)) {
+    if (ConfigUtils.isDefault(token)) { // true || default 时，UUID 随机生成
+        map.put("token", UUID.randomUUID().toString());
+    } else {
+        map.put("token", token);
+    }
+}
 ```
 
 ---
@@ -50,16 +55,34 @@ plain // token ，参见《令牌校验》http://dubbo.apache.org/zh-cn/docs/use
 
 RpcInvocation 在创建时，"**自动**"带上 Token ，如下图所示：
 
-![](/assets/images/learning/dubbo/dubbo-filter-token/51c7e2508e80c68647ca1eb34398d566.png)
-
-RpcInvocation
+![RpcInvocation](/assets/images/learning/dubbo/dubbo-filter-token/51c7e2508e80c68647ca1eb34398d566.png)
 
 # 4.【服务提供者】认证 Token
 
 com.alibaba.dubbo.rpc.filter.TokenFilter ，实现 Filter 接口，**令牌验证** Filter 实现类。代码如下：
 
-```plain text
-plain @Activate(group = Constants.PROVIDER, value = Constants.TOKEN_KEY) public class TokenFilter implements Filter {      @Override     public Result invoke(Invoker<?> invoker, Invocation inv) throws RpcException {         // 获得服务提供者配置的 Token 值         String token = invoker.getUrl().getParameter(Constants.TOKEN_KEY);         if (ConfigUtils.isNotEmpty(token)) {             // 从隐式参数中，获得 Token 值。             Class<?> serviceType = invoker.getInterface();             Map<String, String> attachments = inv.getAttachments();             String remoteToken = attachments == null ? null : attachments.get(Constants.TOKEN_KEY);             // 对比，若不一致，抛出 RpcException 异常             if (!token.equals(remoteToken)) {                 throw new RpcException("Invalid token! Forbid invoke remote service " + serviceType + " method " + inv.getMethodName() + "() from consumer " + RpcContext.getContext().getRemoteHost() + " to provider " + RpcContext.getContext().getLocalHost());             }         }         // 服务调用         return invoker.invoke(inv);     }  }
+```java
+@Activate(group = Constants.PROVIDER, value = Constants.TOKEN_KEY)
+public class TokenFilter implements Filter {
+
+    @Override
+    public Result invoke(Invoker<?> invoker, Invocation inv) throws RpcException {
+        // 获得服务提供者配置的 Token 值
+        String token = invoker.getUrl().getParameter(Constants.TOKEN_KEY);
+        if (ConfigUtils.isNotEmpty(token)) {
+            // 从隐式参数中，获得 Token 值。
+            Class<?> serviceType = invoker.getInterface();
+            Map<String, String> attachments = inv.getAttachments();
+            String remoteToken = attachments == null ? null : attachments.get(Constants.TOKEN_KEY);
+            // 对比，若不一致，抛出 RpcException 异常
+            if (!token.equals(remoteToken)) {
+                throw new RpcException("Invalid token! Forbid invoke remote service " + serviceType + " method " + inv.getMethodName() + "() from consumer " + RpcContext.getContext().getRemoteHost() + " to provider " + RpcContext.getContext().getLocalHost());
+            }
+        }
+        // 服务调用
+        return invoker.invoke(inv);
+    }
+}
 ```
 
 ---
