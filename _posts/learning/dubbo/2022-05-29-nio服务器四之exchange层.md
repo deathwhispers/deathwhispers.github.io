@@ -35,13 +35,13 @@ updated: 2022-05-29 18:33
 
 胖友在看下面这张图，是否就亲切多了 ：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-exchange/560ea52f313f12fe4d284b496572df56.png)
+![协议图](/assets/images/learning/dubbo/dubbo-nio-server-exchange/560ea52f313f12fe4d284b496572df56.png)
 
 类图
 
 所以，exchange 包，很多的代码，是在 Header 的处理。OK ，下面我们来看下这个包的**类图**：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-exchange/52573eca8be7ed14452ca33b22b94ad1.png)
+![类图](/assets/images/learning/dubbo/dubbo-nio-server-exchange/52573eca8be7ed14452ca33b22b94ad1.png)
 
 类图
 
@@ -60,8 +60,16 @@ exchange
 
 com.alibaba.dubbo.remoting.exchange.ExchangeChannel ，继承 Channel 接口，**信息交换通道**接口。方法如下：
 
-```plain text
-plain // 发送请求 ResponseFuture request(Object request) throws RemotingException; ResponseFuture request(Object request, int timeout) throws RemotingException;  // 获得信息交换处理器 ExchangeHandler getExchangeHandler();  // 优雅关闭 void close(int timeout);
+```java
+// 发送请求
+ResponseFuture request(Object request) throws RemotingException;
+ResponseFuture request(Object request, int timeout) throws RemotingException;
+
+// 获得信息交换处理器
+ExchangeHandler getExchangeHandler();
+
+// 优雅关闭
+void close(int timeout);
 ```
 
 ---
@@ -72,8 +80,24 @@ com.alibaba.dubbo.remoting.exchange.support.header.HeaderExchangeChannel ，实�
 
 ### 2.1.1 构造方法
 
-```plain text
-plain private static final String CHANNEL_KEY = HeaderExchangeChannel.class.getName() + ".CHANNEL";  /**  * 通道  */ private final Channel channel; /**  * 是否关闭  */ private volatile boolean closed = false;  HeaderExchangeChannel(Channel channel) {     if (channel == null) {         throw new IllegalArgumentException("channel == null");     }     this.channel = channel; }
+```java
+private static final String CHANNEL_KEY = HeaderExchangeChannel.class.getName() + ".CHANNEL";
+
+/**
+ * 通道
+ */
+private final Channel channel;
+/**
+ * 是否关闭
+ */
+private volatile boolean closed = false;
+
+HeaderExchangeChannel(Channel channel) {
+    if (channel == null) {
+        throw new IllegalArgumentException("channel == null");
+    }
+    this.channel = channel;
+}
 ```
 
 ---

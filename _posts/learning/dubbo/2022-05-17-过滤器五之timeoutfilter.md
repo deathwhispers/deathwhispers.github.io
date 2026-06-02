@@ -24,8 +24,32 @@ updated: 2022-05-17 18:33
 
 com.alibaba.dubbo.rpc.filter.TimeoutFilter ，实现 Filter 接口，超时过滤器。如果服务调用**超时**，记录**告警**日志，**不干涉**服务的运行。代码如下：
 
-```plain text
-plain 1: @Activate(group = Constants.PROVIDER)  2: public class TimeoutFilter implements Filter {  3:   4:     private static final Logger logger = LoggerFactory.getLogger(TimeoutFilter.class);  5:   6:     @Override  7:     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {  8:         long start = System.currentTimeMillis();  9:         // 服务调用 10:         Result result = invoker.invoke(invocation); 11:         // 计算调用时长 12:         long elapsed = System.currentTimeMillis() - start; 13:         // 超过时长，打印告警日志 14:         if (invoker.getUrl() != null 15:                 && elapsed > invoker.getUrl().getMethodParameter(invocation.getMethodName(), "timeout", Integer.MAX_VALUE)) { 16:             if (logger.isWarnEnabled()) { 17:                 logger.warn("invoke time out. method: " + invocation.getMethodName() 18:                         + " arguments: " + Arrays.toString(invocation.getArguments()) + " , url is " 19:                         + invoker.getUrl() + ", invoke elapsed " + elapsed + " ms."); 20:             } 21:         } 22:         return result; 23:     } 24:  25: }
+```java
+@Activate(group = Constants.PROVIDER)
+public class TimeoutFilter implements Filter {
+
+    private static final Logger logger = LoggerFactory.getLogger(TimeoutFilter.class);
+
+    @Override
+    public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        long start = System.currentTimeMillis();
+        // 服务调用
+        Result result = invoker.invoke(invocation);
+        // 计算调用时长
+        long elapsed = System.currentTimeMillis() - start;
+        // 超过时长，打印告警日志
+        if (invoker.getUrl() != null
+                && elapsed > invoker.getUrl().getMethodParameter(invocation.getMethodName(), "timeout", Integer.MAX_VALUE)) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("invoke time out. method: " + invocation.getMethodName()
+                        + " arguments: " + Arrays.toString(invocation.getArguments()) + " , url is "
+                        + invoker.getUrl() + ", invoke elapsed " + elapsed + " ms.");
+            }
+        }
+        return result;
+    }
+
+}
 ```
 
 ---

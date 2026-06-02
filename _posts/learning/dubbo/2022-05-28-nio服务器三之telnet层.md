@@ -43,7 +43,7 @@ updated: 2022-05-28 18:33
 
 艿艿对 telnet server 不熟悉，如果有错误，还请包涵。本文主要起到抛砖的作用。
 
-[com.alibaba.dubbo.remoting.telnet.codec.TelnetCodec](http://svip.iocoder.cn/Dubbo/remoting-api-telnet/TODO) ，实现 TransportCodec 类，Telnet 命令编解码器。
+[com.alibaba.dubbo.remoting.telnet.codec.TelnetCodec](https://github.com/apache/incubator-dubbo/blob/bb8884e04433677d6abc6f05c6ad9d39e3dcf236/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/telnet/codec/TelnetCodec.java) ，实现 TransportCodec 类，Telnet 命令编解码器。
 
 **解码**
 
