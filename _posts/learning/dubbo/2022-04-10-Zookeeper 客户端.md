@@ -55,7 +55,27 @@ dubbo-remoting-zookeeper 的整体类图如下：
 com.alibaba.dubbo.remoting.zookeeper.StateListener ，状态监听器接口，代码如下：
 
 ```java
-plain public interface StateListener {      /**      * 状态 - 已断开      */     int DISCONNECTED = 0;     /**      * 状态 - 已连接      */     int CONNECTED = 1;     /**      * 状态 - 已重连      */     int RECONNECTED = 2;      /**      * 状态变更回调      *      * @param connected 状态      */     void stateChanged(int connected);  }
+public interface StateListener {
+    /**
+     * 状态 - 已断开
+     */
+    int DISCONNECTED = 0;
+    /**
+     * 状态 - 已连接
+     */
+    int CONNECTED = 1;
+    /**
+     * 状态 - 已重连
+     */
+    int RECONNECTED = 2;
+
+    /**
+     * 状态变更回调
+     *
+     * @param connected 状态
+     */
+    void stateChanged(int connected);
+}
 ```
 
 ---
@@ -65,7 +85,15 @@ plain public interface StateListener {      /**      * 状态 - 已断开      *
 com.alibaba.dubbo.remoting.zookeeper.StateListener ，节点监听器接口，代码如下：
 
 ```java
-plain public interface ChildListener {      /**      * 子节点发生变化的回调      *      * @param path 节点      * @param children 最新的子节点列表      */     void childChanged(String path, List<String> children);  }
+public interface ChildListener {
+    /**
+     * 子节点发生变化的回调
+     *
+     * @param path 节点
+     * @param children 最新的子节点列表
+     */
+    void childChanged(String path, List<String> children);
+}
 ```
 
 ---
@@ -75,7 +103,70 @@ plain public interface ChildListener {      /**      * 子节点发生变化的�
 com.alibaba.dubbo.remoting.zookeeper.ZookeeperClient ，Zookeeper 客户端接口，代码如下：
 
 ```java
-plain public interface ZookeeperClient {      /**      * 创建节点      *      * @param path 节点路径      * @param ephemeral 是否临时节点      */     void create(String path, boolean ephemeral);      /**      * 删除节点      *      * @param path 节点路径      */     void delete(String path);      List<String> getChildren(String path);      /**      * 添加 ChildListener      *      * @param path 节点路径      * @param listener 监听器      * @return 子节点列表      */     List<String> addChildListener(String path, ChildListener listener);      /**      * 移除 ChildListener      *      * @param path 节点路径      * @param listener 监听器      */     void removeChildListener(String path, ChildListener listener);      /**      * 添加 StateListener      *      * @param listener 监听器      */     void addStateListener(StateListener listener);      /**      * 移除 StateListener      *      * @param listener 监听器      */     void removeStateListener(StateListener listener);      /**      * @return 是否连接      */     boolean isConnected();      /**      * 关闭      */     void close();      /**      * @return 获得注册中心 URL      */     URL getUrl();  }
+public interface ZookeeperClient {
+    /**
+     * 创建节点
+     *
+     * @param path 节点路径
+     * @param ephemeral 是否临时节点
+     */
+    void create(String path, boolean ephemeral);
+
+    /**
+     * 删除节点
+     *
+     * @param path 节点路径
+     */
+    void delete(String path);
+
+    List<String> getChildren(String path);
+
+    /**
+     * 添加 ChildListener
+     *
+     * @param path 节点路径
+     * @param listener 监听器
+     * @return 子节点列表
+     */
+    List<String> addChildListener(String path, ChildListener listener);
+
+    /**
+     * 移除 ChildListener
+     *
+     * @param path 节点路径
+     * @param listener 监听器
+     */
+    void removeChildListener(String path, ChildListener listener);
+
+    /**
+     * 添加 StateListener
+     *
+     * @param listener 监听器
+     */
+    void addStateListener(StateListener listener);
+
+    /**
+     * 移除 StateListener
+     *
+     * @param listener 监听器
+     */
+    void removeStateListener(StateListener listener);
+
+    /**
+     * @return 是否连接
+     */
+    boolean isConnected();
+
+    /**
+     * 关闭
+     */
+    void close();
+
+    /**
+     * @return 获得注册中心 URL
+     */
+    URL getUrl();
+}
 ```
 
 ---
@@ -101,7 +192,40 @@ com.alibaba.dubbo.remoting.zookeeper.support.AbstractZookeeperClient ，实现 Z
 ### 2.4.1 属性
 
 ```java
-plain public abstract class AbstractZookeeperClient<TargetChildListener> implements ZookeeperClient {      /**      * 注册中心 URL      */     private final URL url;     /**      * StateListener 集合      */     private final Set<StateListener> stateListeners = new CopyOnWriteArraySet<StateListener>();     /**      * ChildListener 集合      *      * key1：节点路径      * key2：ChildListener 对象      * value ：监听器具体对象。不同 Zookeeper 客户端，实现会不同。      */     private final ConcurrentMap<String, ConcurrentMap<ChildListener, TargetChildListener>> childListeners = new ConcurrentHashMap<String, ConcurrentMap<ChildListener, TargetChildListener>>();     /**      * 是否关闭      */     private volatile boolean closed = false;      public AbstractZookeeperClient(URL url) {         this.url = url;     }      @Override     public URL getUrl() {         return url;     }          // ... 省略其他方法      }
+public abstract class AbstractZookeeperClient<TargetChildListener> implements ZookeeperClient {
+
+    /**
+     * 注册中心 URL
+     */
+    private final URL url;
+    /**
+     * StateListener 集合
+     */
+    private final Set<StateListener> stateListeners = new CopyOnWriteArraySet<StateListener>();
+    /**
+     * ChildListener 集合
+     *
+     * key1：节点路径
+     * key2：ChildListener 对象
+     * value ：监听器具体对象。不同 Zookeeper 客户端，实现会不同。
+     */
+    private final ConcurrentMap<String, ConcurrentMap<ChildListener, TargetChildListener>> childListeners = new ConcurrentHashMap<String, ConcurrentMap<ChildListener, TargetChildListener>>();
+    /**
+     * 是否关闭
+     */
+    private volatile boolean closed = false;
+
+    public AbstractZookeeperClient(URL url) {
+        this.url = url;
+    }
+
+    @Override
+    public URL getUrl() {
+        return url;
+    }
+
+    // ... 省略其他方法
+}
 ```
 
 ---
@@ -111,7 +235,24 @@ plain public abstract class AbstractZookeeperClient<TargetChildListener> impleme
 ### 2.4.2 create
 
 ```java
-plain @Override public void create(String path, boolean ephemeral) {     // 循环创建父路径     int i = path.lastIndexOf('/');     if (i > 0) {         String parentPath = path.substring(0, i);         if (!checkExists(parentPath)) {             create(parentPath, false);         }     }     // 创建临时节点     if (ephemeral) {         createEphemeral(path);     // 创建持久节点     } else {         createPersistent(path);     } }
+@Override
+public void create(String path, boolean ephemeral) {
+    // 循环创建父路径
+    int i = path.lastIndexOf('/');
+    if (i > 0) {
+        String parentPath = path.substring(0, i);
+        if (!checkExists(parentPath)) {
+            create(parentPath, false);
+        }
+    }
+    // 创建临时节点
+    if (ephemeral) {
+        createEphemeral(path);
+    // 创建持久节点
+    } else {
+        createPersistent(path);
+    }
+}
 ```
 
 ---
@@ -120,7 +261,7 @@ plain @Override public void create(String path, boolean ephemeral) {     // 循�
 方法，节点是否存在。代码如下：
 
 ```java
-plain protected abstract boolean checkExists(String path);
+protected abstract boolean checkExists(String path);
 ```
 
 ---
@@ -129,7 +270,7 @@ plain protected abstract boolean checkExists(String path);
 方法，创建临时节点。代码如下：
 
 ```java
-plain protected abstract void createPersistent(String path);
+protected abstract void createPersistent(String path);
 ```
 
 ---
@@ -138,7 +279,7 @@ plain protected abstract void createPersistent(String path);
 方法，创建持久节点。代码如下：
 
 ```java
-plain protected abstract void createEphemeral(String path);
+protected abstract void createEphemeral(String path);
 ```
 
 ---
@@ -146,7 +287,30 @@ plain protected abstract void createEphemeral(String path);
 ### 2.4.3 StateListener 相关方法
 
 ```java
-plain @Override public void addStateListener(StateListener listener) {     stateListeners.add(listener); }  @Override public void removeStateListener(StateListener listener) {     stateListeners.remove(listener); }  public Set<StateListener> getSessionListeners() {     return stateListeners; }  /**  * StateListener 数组，回调  *  * @param state 状态  */ protected void stateChanged(int state) {     for (StateListener sessionListener : getSessionListeners()) {         sessionListener.stateChanged(state);     } }
+@Override
+public void addStateListener(StateListener listener) {
+    stateListeners.add(listener);
+}
+
+@Override
+public void removeStateListener(StateListener listener) {
+    stateListeners.remove(listener);
+}
+
+public Set<StateListener> getSessionListeners() {
+    return stateListeners;
+}
+
+/**
+ * StateListener 数组，回调
+ *
+ * @param state 状态
+ */
+protected void stateChanged(int state) {
+    for (StateListener sessionListener : getSessionListeners()) {
+        sessionListener.stateChanged(state);
+    }
+}
 ```
 
 ---
@@ -154,7 +318,36 @@ plain @Override public void addStateListener(StateListener listener) {     state
 ### 2.4.4 ChildListener 相关方法
 
 ```java
-plain @Override public List<String> addChildListener(String path, final ChildListener listener) {     // 获得路径下的监听器数组     ConcurrentMap<ChildListener, TargetChildListener> listeners = childListeners.get(path);     if (listeners == null) {         childListeners.putIfAbsent(path, new ConcurrentHashMap<ChildListener, TargetChildListener>());         listeners = childListeners.get(path);     }     // 获得是否已经有该监听器     TargetChildListener targetListener = listeners.get(listener);     // 监听器不存在，进行创建     if (targetListener == null) {         listeners.putIfAbsent(listener, createTargetChildListener(path, listener));         targetListener = listeners.get(listener);     }     // 向 Zookeeper ，真正发起订阅     return addTargetChildListener(path, targetListener); }  @Override public void removeChildListener(String path, ChildListener listener) {     ConcurrentMap<ChildListener, TargetChildListener> listeners = childListeners.get(path);     if (listeners != null) {         TargetChildListener targetListener = listeners.remove(listener);         if (targetListener != null) {             // 向 Zookeeper ，真正发起取消订阅             removeTargetChildListener(path, targetListener);         }     } }
+@Override
+public List<String> addChildListener(String path, final ChildListener listener) {
+    // 获得路径下的监听器数组
+    ConcurrentMap<ChildListener, TargetChildListener> listeners = childListeners.get(path);
+    if (listeners == null) {
+        childListeners.putIfAbsent(path, new ConcurrentHashMap<ChildListener, TargetChildListener>());
+        listeners = childListeners.get(path);
+    }
+    // 获得是否已经有该监听器
+    TargetChildListener targetListener = listeners.get(listener);
+    // 监听器不存在，进行创建
+    if (targetListener == null) {
+        listeners.putIfAbsent(listener, createTargetChildListener(path, listener));
+        targetListener = listeners.get(listener);
+    }
+    // 向 Zookeeper ，真正发起订阅
+    return addTargetChildListener(path, targetListener);
+}
+
+@Override
+public void removeChildListener(String path, ChildListener listener) {
+    ConcurrentMap<ChildListener, TargetChildListener> listeners = childListeners.get(path);
+    if (listeners != null) {
+        TargetChildListener targetListener = listeners.remove(listener);
+        if (targetListener != null) {
+            // 向 Zookeeper ，真正发起取消订阅
+            removeTargetChildListener(path, targetListener);
+        }
+    }
+}
 ```
 
 ---
@@ -163,7 +356,7 @@ plain @Override public List<String> addChildListener(String path, final ChildLis
 方法，创建真正的 ChildListener 对象。因为，每个 Zookeeper 的库，实现不同。代码如下：
 
 ```java
-plain protected abstract TargetChildListener createTargetChildListener(String path, ChildListener listener);
+protected abstract TargetChildListener createTargetChildListener(String path, ChildListener listener);
 ```
 
 ---
@@ -172,7 +365,7 @@ plain protected abstract TargetChildListener createTargetChildListener(String pa
 方法，向 Zookeeper ，真正发起订阅。代码如下：
 
 ```java
-plain protected abstract List<String> addTargetChildListener(String path, TargetChildListener listener);
+protected abstract List<String> addTargetChildListener(String path, TargetChildListener listener);
 ```
 
 ---
@@ -181,7 +374,7 @@ plain protected abstract List<String> addTargetChildListener(String path, Target
 方法，向 Zookeeper ，真正发起取消订阅。代码如下：
 
 ```java
-plain protected abstract void removeTargetChildListener(String path, TargetChildListener listener);
+protected abstract void removeTargetChildListener(String path, TargetChildListener listener);
 ```
 
 ---
@@ -189,7 +382,18 @@ plain protected abstract void removeTargetChildListener(String path, TargetChild
 ### 2.4.5 close
 
 ```java
-plain @Override public void close() {     if (closed) {         return;     }     closed = true;     try {         doClose();     } catch (Throwable t) {         logger.warn(t.getMessage(), t);     } }
+@Override
+public void close() {
+    if (closed) {
+        return;
+    }
+    closed = true;
+    try {
+        doClose();
+    } catch (Throwable t) {
+        logger.warn(t.getMessage(), t);
+    }
+}
 ```
 
 ---
@@ -198,7 +402,7 @@ plain @Override public void close() {     if (closed) {         return;     }   
 方法，关闭 Zookeeper 连接。代码如下：
 
 ```java
-plain protected abstract void doClose();
+protected abstract void doClose();
 ```
 
 ---
@@ -208,7 +412,19 @@ plain protected abstract void doClose();
 com.alibaba.dubbo.remoting.zookeeper.ZookeeperTransporter ，Zookeeper 工厂接口，代码如下：
 
 ```java
-plain @SPI("curator") public interface ZookeeperTransporter {      /**      * 连接创建 ZookeeperClient 对象      *      * @param url 注册中心地址      * @return ZookeeperClient 对象      */     @Adaptive({Constants.CLIENT_KEY, Constants.TRANSPORTER_KEY})     ZookeeperClient connect(URL url);  }
+@SPI("curator")
+public interface ZookeeperTransporter {
+
+    /**
+     * 连接创建 ZookeeperClient 对象
+     *
+     * @param url 注册中心地址
+     * @return ZookeeperClient 对象
+     */
+    @Adaptive({Constants.CLIENT_KEY, Constants.TRANSPORTER_KEY})
+    ZookeeperClient connect(URL url);
+
+}
 ```
 
 ---
@@ -235,7 +451,42 @@ com.alibaba.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient ，实现 Zo
 ### 3.1.1 属性
 
 ```java
-plain /**  * client 对象  */ private final CuratorFramework client;  public CuratorZookeeperClient(URL url) {     super(url);     try {         // 创建 client 对象         CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()                 .connectString(url.getBackupAddress()) // 连接地址                 .retryPolicy(new RetryNTimes(1, 1000)) // 重试策略，1 次，间隔 1000 ms                 .connectionTimeoutMs(5000); // 连接超时时间         String authority = url.getAuthority();         if (authority != null && authority.length() > 0) {             builder = builder.authorization("digest", authority.getBytes());         }         client = builder.build();         // 添加连接监听器         client.getConnectionStateListenable().addListener(new ConnectionStateListener() {             public void stateChanged(CuratorFramework client, ConnectionState state) {                 if (state == ConnectionState.LOST) {                     CuratorZookeeperClient.this.stateChanged(StateListener.DISCONNECTED);                 } else if (state == ConnectionState.CONNECTED) {                     CuratorZookeeperClient.this.stateChanged(StateListener.CONNECTED);                 } else if (state == ConnectionState.RECONNECTED) {                     CuratorZookeeperClient.this.stateChanged(StateListener.RECONNECTED);                 }             }         });         // 启动 client         client.start();     } catch (Exception e) {         throw new IllegalStateException(e.getMessage(), e);     } }
+/**
+ * client 对象
+ */
+private final CuratorFramework client;
+
+public CuratorZookeeperClient(URL url) {
+    super(url);
+    try {
+        // 创建 client 对象
+        CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
+                .connectString(url.getBackupAddress()) // 连接地址
+                .retryPolicy(new RetryNTimes(1, 1000)) // 重试策略，1 次，间隔 1000 ms
+                .connectionTimeoutMs(5000); // 连接超时时间
+        String authority = url.getAuthority();
+        if (authority != null && authority.length() > 0) {
+            builder = builder.authorization("digest", authority.getBytes());
+        }
+        client = builder.build();
+        // 添加连接监听器
+        client.getConnectionStateListenable().addListener(new ConnectionStateListener() {
+            public void stateChanged(CuratorFramework client, ConnectionState state) {
+                if (state == ConnectionState.LOST) {
+                    CuratorZookeeperClient.this.stateChanged(StateListener.DISCONNECTED);
+                } else if (state == ConnectionState.CONNECTED) {
+                    CuratorZookeeperClient.this.stateChanged(StateListener.CONNECTED);
+                } else if (state == ConnectionState.RECONNECTED) {
+                    CuratorZookeeperClient.this.stateChanged(StateListener.RECONNECTED);
+                }
+            }
+        });
+        // 启动 client
+        client.start();
+    } catch (Exception e) {
+        throw new IllegalStateException(e.getMessage(), e);
+    }
+}
 ```
 
 ---
@@ -253,7 +504,50 @@ plain /**  * client 对象  */ private final CuratorFramework client;  public Cu
 ### 3.1.3 ChildListener 相关方法
 
 ```java
-plain public CuratorWatcher createTargetChildListener(String path, ChildListener listener) {     return new CuratorWatcherImpl(listener); }  public List<String> addTargetChildListener(String path, CuratorWatcher listener) {     try {         return client.getChildren().usingWatcher(listener).forPath(path);     } catch (NoNodeException e) {         return null;     } catch (Exception e) {         throw new IllegalStateException(e.getMessage(), e);     } }  public void removeTargetChildListener(String path, CuratorWatcher listener) {     ((CuratorWatcherImpl) listener).unwatch(); }  private class CuratorWatcherImpl implements CuratorWatcher {      private volatile ChildListener listener;      public CuratorWatcherImpl(ChildListener listener) {         this.listener = listener;     }      public void unwatch() {         this.listener = null;     }      @Override     public void process(WatchedEvent event) throws Exception {         if (listener != null) {             String path = event.getPath() == null ? "" : event.getPath();             listener.childChanged(path,                     // if path is null, curator using watcher will throw NullPointerException.                     // if client connect or disconnect to server, zookeeper will queue                     // watched event(Watcher.Event.EventType.None, .., path = null).                     StringUtils.isNotEmpty(path)                             ? client.getChildren().usingWatcher(this).forPath(path) // 重新发起连接，并传入最新的子节点列表                             : Collections.<String>emptyList()); //         }     } }
+public CuratorWatcher createTargetChildListener(String path, ChildListener listener) {
+    return new CuratorWatcherImpl(listener);
+}
+
+public List<String> addTargetChildListener(String path, CuratorWatcher listener) {
+    try {
+        return client.getChildren().usingWatcher(listener).forPath(path);
+    } catch (NoNodeException e) {
+        return null;
+    } catch (Exception e) {
+        throw new IllegalStateException(e.getMessage(), e);
+    }
+}
+
+public void removeTargetChildListener(String path, CuratorWatcher listener) {
+    ((CuratorWatcherImpl) listener).unwatch();
+}
+
+private class CuratorWatcherImpl implements CuratorWatcher {
+
+    private volatile ChildListener listener;
+
+    public CuratorWatcherImpl(ChildListener listener) {
+        this.listener = listener;
+    }
+
+    public void unwatch() {
+        this.listener = null;
+    }
+
+    @Override
+    public void process(WatchedEvent event) throws Exception {
+        if (listener != null) {
+            String path = event.getPath() == null ? "" : event.getPath();
+            listener.childChanged(path,
+                    // if path is null, curator using watcher will throw NullPointerException.
+                    // if client connect or disconnect to server, zookeeper will queue
+                    // watched event(Watcher.Event.EventType.None, .., path = null).
+                    StringUtils.isNotEmpty(path)
+                            ? client.getChildren().usingWatcher(this).forPath(path) // 重新发起连接，并传入最新的子节点列表
+                            : Collections.<String>emptyList()); //
+        }
+    }
+}
 ```
 
 ---
@@ -265,7 +559,15 @@ plain public CuratorWatcher createTargetChildListener(String path, ChildListener
 ### 3.1.5 delete
 
 ```java
-plain @Override public void delete(String path) {     try {         client.delete().forPath(path);     } catch (NoNodeException e) {     } catch (Exception e) {         throw new IllegalStateException(e.getMessage(), e);     } }
+@Override
+public void delete(String path) {
+    try {
+        client.delete().forPath(path);
+    } catch (NoNodeException e) {
+    } catch (Exception e) {
+        throw new IllegalStateException(e.getMessage(), e);
+    }
+}
 ```
 
 ---
@@ -275,7 +577,16 @@ plain @Override public void delete(String path) {     try {         client.delet
 ### 3.1.6 getChildren
 
 ```java
-plain @Override public List<String> getChildren(String path) {     try {         return client.getChildren().forPath(path);     } catch (NoNodeException e) {         return null;     } catch (Exception e) {         throw new IllegalStateException(e.getMessage(), e);     } }
+@Override
+public List<String> getChildren(String path) {
+    try {
+        return client.getChildren().forPath(path);
+    } catch (NoNodeException e) {
+        return null;
+    } catch (Exception e) {
+        throw new IllegalStateException(e.getMessage(), e);
+    }
+}
 ```
 
 ---
@@ -285,7 +596,13 @@ plain @Override public List<String> getChildren(String path) {     try {        
 com.alibaba.dubbo.remoting.zookeeper.curator.CuratorZookeeperTransporter ，实现 ZookeeperTransporter 接口，CuratorZookeeper 工厂实现类。
 
 ```java
-plain public class CuratorZookeeperTransporter implements ZookeeperTransporter {      public ZookeeperClient connect(URL url) {         return new CuratorZookeeperClient(url);     }  }
+public class CuratorZookeeperTransporter implements ZookeeperTransporter {
+
+    public ZookeeperClient connect(URL url) {
+        return new CuratorZookeeperClient(url);
+    }
+
+}
 ```
 
 ---
