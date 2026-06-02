@@ -70,9 +70,9 @@ provider-sample
 
 方法，Provider 就启动完成了。输出日志如下图：
 
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/c85f2a85daebe799228f917e20077cd3.jpg)
+![Provider 启动日志](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/c85f2a85daebe799228f917e20077cd3.jpg)
 
-日志
+Provider 启动日志
 
 这个示例比较有意思的是，提供了 EmbeddedZooKeeper 类，用于启动**内嵌**的 Zookeeper 。
 
@@ -92,9 +92,9 @@ consumer-sample
 
 方法，Consumer 就启动完成了。输出日志如下图：
 
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/fc37bde66f0babcc87dd70e23e074235.jpg)
+![Consumer 启动日志](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/fc37bde66f0babcc87dd70e23e074235.jpg)
 
-日志
+Consumer 启动日志
 
 因为 DubboRegistryZooKeeperConsumerBootstrap 的 Spring Boot 启动调用如下：
 
@@ -120,7 +120,7 @@ public static void main(String[] args) {
 
 本文主要分享 incubator-dubbo-spring-boot-project 的 **项目结构**。希望通过本文能让胖友对 incubator-dubbo-spring-boot-project 的整体项目有个简单的了解。
 
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/78a80ac1a864f5148231210cf32e1a62.jpg)
+![项目结构一览](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/78a80ac1a864f5148231210cf32e1a62.jpg)
 
 项目结构一览
 
@@ -130,7 +130,7 @@ public static void main(String[] args) {
 
 **第一种方式**，使用 [IDEA Statistic](https://plugins.jetbrains.com/plugin/4509-statistic) 插件，统计整体代码量。
 
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/34052c198f80df47b68d362fba5aeeac.jpg)
+![Statistic 统计代码量](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/34052c198f80df47b68d362fba5aeeac.jpg)
 
 Statistic 统计代码量
 
