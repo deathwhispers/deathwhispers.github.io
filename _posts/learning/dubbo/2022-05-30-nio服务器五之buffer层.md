@@ -22,18 +22,13 @@ updated: 2022-05-30 18:33
 
 Buffer 在 NIO 框架中，扮演非常重要的角色，基本每个库都提供了自己的 Buffer 实现，例如：
 
-- Java NIO 的
-java.nio.ByteBuffer
-- Mina 的
-org.apache.mina.core.buffer.IoBuffer
-- Netty4 的
-io.netty.buffer.ByteBuf
+- Java NIO 的 `java.nio.ByteBuffer`
+- Mina 的 `org.apache.mina.core.buffer.IoBuffer`
+- Netty4 的 `io.netty.buffer.ByteBuf`
 
 在 dubbo-remoting-api 的 buffer 包中，一方面定义了 ChannelBuffer 和 ChannelBufferFactory 的接口，同时提供了多种默认的实现。整体类图如下：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-buffer/27a08710500bf505fbd380dec59153e0.png)
-
-类图
+![Buffer类图](/assets/images/learning/dubbo/dubbo-nio-server-buffer/27a08710500bf505fbd380dec59153e0.png)
 
 - 其中，红框部分，是 Netty3 和 Netty4 ，实现的自定义的 ChannelBuffer 和 ChannelBufferFactory 类。
 
@@ -46,19 +41,23 @@ ChannelBuffer 在接口方法的定义上，主要参考了 Netty 的 ByteBuf �
 - 英文：[《Netty4.1 ByteBuf API》](https://netty.io/4.1/api/io/netty/buffer/ByteBuf.html)
 - 中文：[《深入研究Netty框架之ByteBuf功能原理及源码分析》](https://my.oschina.net/7001/blog/742236)
 
-独有的接口方法 #factory() 方法，用于逻辑中，需要创建 ChannelBuffer 的情况。
+独有的接口方法 `#factory()` 方法，用于逻辑中，需要创建 ChannelBuffer 的情况。
 
 - 代码如下：
 
-```plain text
-plain /**  * Returns the factory which creates a {@link ChannelBuffer} whose type and  * default {@link java.nio.ByteOrder} are same with this buffer.  */ ChannelBufferFactory factory()
+```java
+/**
+ * Returns the factory which creates a {@link ChannelBuffer} whose type and
+ * default {@link java.nio.ByteOrder} are same with this buffer.
+ */
+ChannelBufferFactory factory();
 ```
 
 ---
 
 - 调用方如下：
-![](/assets/images/learning/dubbo/dubbo-nio-server-buffer/7e43836aa5e5b53458be26b838eff209.png)
-调用方
+
+![factory方法调用方](/assets/images/learning/dubbo/dubbo-nio-server-buffer/7e43836aa5e5b53458be26b838eff209.png)
 
 ## 2.1 AbstractChannelBuffer
 
@@ -66,52 +65,67 @@ plain /**  * Returns the factory which creates a {@link ChannelBuffer} whose typ
 
 **构造方法**
 
-```plain text
-plain /**  * 读取位置  */ private int readerIndex; /**  * 写入位置  */ private int writerIndex; /**  * 标记的读取位置  */ private int markedReaderIndex; /**  * 标记的写入位置  */ private int markedWriterIndex;
+```java
+/**
+ * 读取位置
+ */
+private int readerIndex;
+/**
+ * 写入位置
+ */
+private int writerIndex;
+/**
+ * 标记的读取位置
+ */
+private int markedReaderIndex;
+/**
+ * 标记的写入位置
+ */
+private int markedWriterIndex;
 ```
 
 ---
 
 FROM [《netty的ByteBuf》](https://blog.csdn.net/zhxdick/article/details/51187362)
 
-writerIndex 和 readerIndex
+`writerIndex` 和 `readerIndex`
 
 - 初始状态：
-![](/assets/images/learning/dubbo/dubbo-nio-server-buffer/4ce7a3c5b07afcc3ecf52a72e452b08d.png)
-- 当写入5个字节后：
-![](/assets/images/learning/dubbo/dubbo-nio-server-buffer/a535780b9b1ffbd12f2174ba16d6d492.png)
 
-这时，writerIndex 为 5，这时如果开始读取，那么这个 writerIndex 可以作为上面ByteBuffer flip 之后的 limit。
+![初始状态](/assets/images/learning/dubbo/dubbo-nio-server-buffer/4ce7a3c5b07afcc3ecf52a72e452b08d.png)
+
+- 当写入5个字节后：
+
+![写入5个字节后](/assets/images/learning/dubbo/dubbo-nio-server-buffer/a535780b9b1ffbd12f2174ba16d6d492.png)
+
+这时，`writerIndex` 为 5，这时如果开始读取，那么这个 `writerIndex` 可以作为上面ByteBuffer flip 之后的 limit。
 
 - 当读取3个字节后：
-![](/assets/images/learning/dubbo/dubbo-nio-server-buffer/0ee07d1256c27e3e4550d17a9e5a2d87.png)
+
+![读取3个字节后](/assets/images/learning/dubbo/dubbo-nio-server-buffer/0ee07d1256c27e3e4550d17a9e5a2d87.png)
 
 **实现方法**
 
-在 AbstractChannelBuffer 实现的方法，都是**重载**的方法，真正**实质**的方法，需要子类来实现。以 #getBytes(…) 方法，举例子：
+在 AbstractChannelBuffer 实现的方法，都是**重载**的方法，真正**实质**的方法，需要子类来实现。以 `#getBytes(…)` 方法，举例子：
 
-```plain text
-plain @Override public void getBytes(int index, ChannelBuffer dst, int length) {     if (length > dst.writableBytes()) {         throw new IndexOutOfBoundsException();     }     getBytes(index, dst, dst.writerIndex(), length);     dst.writerIndex(dst.writerIndex() + length); }
+```java
+@Override
+public void getBytes(int index, ChannelBuffer dst, int length) {
+    if (length > dst.writableBytes()) {
+        throw new IndexOutOfBoundsException();
+    }
+    getBytes(index, dst, dst.writerIndex(), length);
+    dst.writerIndex(dst.writerIndex() + length);
+}
 ```
 
 ---
 
-- 方法中调用的 **为啥呢实质实现形式**
-#getBytes(index, ds, dstIndex, length)
-方法，并未实现。
-？
-的方法，涉及到字节数组的
-。
+- 方法中调用的 **实质实现** `#getBytes(index, ds, dstIndex, length)` 方法，并未实现。涉及到字节数组的方法，都是如此。
 
-如下是所有
+如下是所有**未实现**的方法：
 
-**未实现**
-
-的方法：
-
-![](/assets/images/learning/dubbo/dubbo-nio-server-buffer/4ae0e76b793e3eb45cedcd11ea5b77e9.png)
-
-未实现方法
+![未实现方法](/assets/images/learning/dubbo/dubbo-nio-server-buffer/4ae0e76b793e3eb45cedcd11ea5b77e9.png)
 
 ## 2.2 ByteBufferBackedChannelBuffer
 
@@ -119,21 +133,57 @@ plain @Override public void getBytes(int index, ChannelBuffer dst, int length) {
 
 **构造方法**
 
-```plain text
-plain /**  * buffer  * java.nio.ByteBuffer  */ private final ByteBuffer buffer; /**  * 容量  */ private final int capacity;  public ByteBufferBackedChannelBuffer(ByteBuffer buffer) {     if (buffer == null) {         throw new NullPointerException("buffer");     }     // buffer     this.buffer = buffer.slice();     // 容量     capacity = buffer.remaining();     // 设置 `writerIndex`     writerIndex(capacity); }  public ByteBufferBackedChannelBuffer(ByteBufferBackedChannelBuffer buffer) {     // buffer     this.buffer = buffer.buffer;     // 容量     capacity = buffer.capacity;     // 设置 `writerIndex` `readerIndex`     setIndex(buffer.readerIndex(), buffer.writerIndex()); }
+```java
+/**
+ * buffer
+ * java.nio.ByteBuffer
+ */
+private final ByteBuffer buffer;
+/**
+ * 容量
+ */
+private final int capacity;
+
+public ByteBufferBackedChannelBuffer(ByteBuffer buffer) {
+    if (buffer == null) {
+        throw new NullPointerException("buffer");
+    }
+    // buffer
+    this.buffer = buffer.slice();
+    // 容量
+    capacity = buffer.remaining();
+    // 设置 `writerIndex`
+    writerIndex(capacity);
+}
+
+public ByteBufferBackedChannelBuffer(ByteBufferBackedChannelBuffer buffer) {
+    // buffer
+    this.buffer = buffer.buffer;
+    // 容量
+    capacity = buffer.capacity;
+    // 设置 `writerIndex` `readerIndex`
+    setIndex(buffer.readerIndex(), buffer.writerIndex());
+}
 ```
 
 ---
 
 **工厂**
 
-```plain text
-plain @Override public ChannelBufferFactory factory() {     if (buffer.isDirect()) {         return DirectChannelBufferFactory.getInstance();     } else {         return HeapChannelBufferFactory.getInstance();     } }
+```java
+@Override
+public ChannelBufferFactory factory() {
+    if (buffer.isDirect()) {
+        return DirectChannelBufferFactory.getInstance();
+    } else {
+        return HeapChannelBufferFactory.getInstance();
+    }
+}
 ```
 
 ---
 
-- 对应的工厂是 DirectChannelBufferFactory 或 HeapChannelBufferFactory 。
+- 对应的工厂是 DirectChannelBufferFactory 或 HeapChannelBufferFactory。
 
 **实现方法**
 
@@ -145,21 +195,44 @@ plain @Override public ChannelBufferFactory factory() {     if (buffer.isDirect(
 
 **构造方法**
 
-```plain text
-plain /**  * The underlying heap byte array that this buffer is wrapping.  * 字节数组  */ protected final byte[] array;  public HeapChannelBuffer(int length) {     this(new byte[length], 0, 0); }  public HeapChannelBuffer(byte[] array) {     this(array, 0, array.length); }  protected HeapChannelBuffer(byte[] array, int readerIndex, int writerIndex) {     if (array == null) {         throw new NullPointerException("array");     }     this.array = array;     setIndex(readerIndex, writerIndex); }
+```java
+/**
+ * The underlying heap byte array that this buffer is wrapping.
+ * 字节数组
+ */
+protected final byte[] array;
+
+public HeapChannelBuffer(int length) {
+    this(new byte[length], 0, 0);
+}
+
+public HeapChannelBuffer(byte[] array) {
+    this(array, 0, array.length);
+}
+
+protected HeapChannelBuffer(byte[] array, int readerIndex, int writerIndex) {
+    if (array == null) {
+        throw new NullPointerException("array");
+    }
+    this.array = array;
+    setIndex(readerIndex, writerIndex);
+}
 ```
 
 ---
 
 **工厂**
 
-```plain text
-plain @Override public ChannelBufferFactory factory() {     return HeapChannelBufferFactory.getInstance(); }
+```java
+@Override
+public ChannelBufferFactory factory() {
+    return HeapChannelBufferFactory.getInstance();
+}
 ```
 
 ---
 
-- 对应的工厂是 HeapChannelBufferFactory 。
+- 对应的工厂是 HeapChannelBufferFactory。
 
 **实现方法**
 
@@ -171,16 +244,43 @@ plain @Override public ChannelBufferFactory factory() {     return HeapChannelBu
 
 **构造方法**
 
-```plain text
-plain /**  * 工厂  */ private final ChannelBufferFactory factory; /**  * Buffer  */ private ChannelBuffer buffer;  public DynamicChannelBuffer(int estimatedLength) {     this(estimatedLength, HeapChannelBufferFactory.getInstance()); // 默认 HeapChannelBufferFactory }  public DynamicChannelBuffer(int estimatedLength, ChannelBufferFactory factory) {     if (estimatedLength < 0) {         throw new IllegalArgumentException("estimatedLength: " + estimatedLength);     }     if (factory == null) {         throw new NullPointerException("factory");     }     // 设置 `factory`     this.factory = factory;     // 创建 `buffer`     buffer = factory.getBuffer(estimatedLength); }
+```java
+/**
+ * 工厂
+ */
+private final ChannelBufferFactory factory;
+/**
+ * Buffer
+ */
+private ChannelBuffer buffer;
+
+public DynamicChannelBuffer(int estimatedLength) {
+    this(estimatedLength, HeapChannelBufferFactory.getInstance()); // 默认 HeapChannelBufferFactory
+}
+
+public DynamicChannelBuffer(int estimatedLength, ChannelBufferFactory factory) {
+    if (estimatedLength < 0) {
+        throw new IllegalArgumentException("estimatedLength: " + estimatedLength);
+    }
+    if (factory == null) {
+        throw new NullPointerException("factory");
+    }
+    // 设置 `factory`
+    this.factory = factory;
+    // 创建 `buffer`
+    buffer = factory.getBuffer(estimatedLength);
+}
 ```
 
 ---
 
 **工厂**
 
-```plain text
-plain @Override public ChannelBufferFactory factory() {     return factory; }
+```java
+@Override
+public ChannelBufferFactory factory() {
+    return factory;
+}
 ```
 
 ---
@@ -191,24 +291,18 @@ plain @Override public ChannelBufferFactory factory() {     return factory; }
 
 # 3. ChannelBuffers
 
-[com.alibaba.dubbo.remoting.buffer.ChannelBuffers](https://github.com/YunaiV/dubbo/blob/master/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/buffer/ChannelBuffers.java)
+[com.alibaba.dubbo.remoting.buffer.ChannelBuffers](https://github.com/YunaiV/dubbo/blob/master/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/buffer/ChannelBuffers.java) ，Buffer **工具类**，提供创建、比较 ChannelBuffer 等公用方法。如下图所示：
 
-，Buffer
-
-**工具类**
-
-，提供创建、比较 ChannelBuffer 等公用方法。如下图所示：
-
-![](/assets/images/learning/dubbo/dubbo-nio-server-buffer/edccf2f8d577f7bca943034e840ef26e.png)
-
-ChannelBuffers
+![ChannelBuffers工具类](/assets/images/learning/dubbo/dubbo-nio-server-buffer/edccf2f8d577f7bca943034e840ef26e.png)
 
 # 4. ChannelBufferFactory
 
-com.alibaba.dubbo.remoting.buffer.ChannelBufferFactory ，**通道 Buffer 工厂**接口。方法如下：
+`com.alibaba.dubbo.remoting.buffer.ChannelBufferFactory` ，**通道 Buffer 工厂**接口。方法如下：
 
-```plain text
-plain ChannelBuffer getBuffer(int capacity); ChannelBuffer getBuffer(byte[] array, int offset, int length); ChannelBuffer getBuffer(ByteBuffer nioBuffer); // java.nio.ByteBuffer
+```java
+ChannelBuffer getBuffer(int capacity);
+ChannelBuffer getBuffer(byte[] array, int offset, int length);
+ChannelBuffer getBuffer(ByteBuffer nioBuffer); // java.nio.ByteBuffer
 ```
 
 ---
@@ -229,8 +323,11 @@ plain ChannelBuffer getBuffer(int capacity); ChannelBuffer getBuffer(byte[] arra
 
 实际 IO 操作，是基于 InputStream 和 OutputStream ，例如我们在前文看到的 Serialization 序列化和反序列化，方法如下：
 
-```plain text
-plain // ... 省略其他方法 ObjectOutput serialize(URL url, OutputStream output) throws IOException;  ObjectInput deserialize(URL url, InputStream input) throws IOException;
+```java
+// ... 省略其他方法
+ObjectOutput serialize(URL url, OutputStream output) throws IOException;
+
+ObjectInput deserialize(URL url, InputStream input) throws IOException;
 ```
 
 ---
@@ -241,8 +338,16 @@ plain // ... 省略其他方法 ObjectOutput serialize(URL url, OutputStream out
 
 另外，我们在回过头来看看 Codec 和 Codec2 接口，方法如下：
 
-```plain text
-plain // Codec.java void encode(Channel channel, OutputStream output, Object message) throws IOException; // Codec2.java void encode(Channel channel, ChannelBuffer buffer, Object message) throws IOException;  // Codec.java Object decode(Channel channel, InputStream input) throws IOException; // Codec2.java Object decode(Channel channel, ChannelBuffer buffer) throws IOException
+```java
+// Codec.java
+void encode(Channel channel, OutputStream output, Object message) throws IOException;
+// Codec2.java
+void encode(Channel channel, ChannelBuffer buffer, Object message) throws IOException;
+
+// Codec.java
+Object decode(Channel channel, InputStream input) throws IOException;
+// Codec2.java
+Object decode(Channel channel, ChannelBuffer buffer) throws IOException
 ```
 
 ---
@@ -253,8 +358,42 @@ plain // Codec.java void encode(Channel channel, OutputStream output, Object mes
 
 [com.alibaba.dubbo.remoting.buffer.ChannelBufferInputStream](https://github.com/YunaiV/dubbo/blob/master/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/buffer/ChannelBufferInputStream.java) ，实现 InputStream 接口，代码如下：
 
-```plain text
-plain public class ChannelBufferInputStream extends InputStream {      private final ChannelBuffer buffer;     /**      * 开始位置      */     private final int startIndex;     /**      * 结束位置      */     private final int endIndex;      public ChannelBufferInputStream(ChannelBuffer buffer) {         this(buffer, buffer.readableBytes());     }      public ChannelBufferInputStream(ChannelBuffer buffer, int length) {         if (buffer == null) {             throw new NullPointerException("buffer");         }         if (length < 0) {             throw new IllegalArgumentException("length: " + length);         }         if (length > buffer.readableBytes()) {             throw new IndexOutOfBoundsException();         }          this.buffer = buffer;         startIndex = buffer.readerIndex();         endIndex = startIndex + length;         buffer.markReaderIndex();     }          // ... 省略从 buffer 读取的方法，胖友，自己查看。 }
+```java
+public class ChannelBufferInputStream extends InputStream {
+
+    private final ChannelBuffer buffer;
+    /**
+     * 开始位置
+     */
+    private final int startIndex;
+    /**
+     * 结束位置
+     */
+    private final int endIndex;
+
+    public ChannelBufferInputStream(ChannelBuffer buffer) {
+        this(buffer, buffer.readableBytes());
+    }
+
+    public ChannelBufferInputStream(ChannelBuffer buffer, int length) {
+        if (buffer == null) {
+            throw new NullPointerException("buffer");
+        }
+        if (length < 0) {
+            throw new IllegalArgumentException("length: " + length);
+        }
+        if (length > buffer.readableBytes()) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        this.buffer = buffer;
+        startIndex = buffer.readerIndex();
+        endIndex = startIndex + length;
+        buffer.markReaderIndex();
+    }
+
+    // ... 省略从 buffer 读取的方法，胖友，自己查看。
+}
 ```
 
 ---
@@ -263,8 +402,25 @@ plain public class ChannelBufferInputStream extends InputStream {      private f
 
 [com.alibaba.dubbo.remoting.buffer.ChannelBufferOutputStream](https://github.com/YunaiV/dubbo/blob/master/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/buffer/ChannelBufferOutputStream.java) ，实现 OutputStream 接口，代码如下：
 
-```plain text
-plain public class ChannelBufferOutputStream extends OutputStream {      private final ChannelBuffer buffer;     /**      * 开始位置      */     private final int startIndex;      public ChannelBufferOutputStream(ChannelBuffer buffer) {         if (buffer == null) {             throw new NullPointerException("buffer");         }         this.buffer = buffer;         startIndex = buffer.writerIndex();     }      // ... 省略向 buffer 写入的方法，胖友，自己查看。  }
+```java
+public class ChannelBufferOutputStream extends OutputStream {
+
+    private final ChannelBuffer buffer;
+    /**
+     * 开始位置
+     */
+    private final int startIndex;
+
+    public ChannelBufferOutputStream(ChannelBuffer buffer) {
+        if (buffer == null) {
+            throw new NullPointerException("buffer");
+        }
+        this.buffer = buffer;
+        startIndex = buffer.writerIndex();
+    }
+
+    // ... 省略向 buffer 写入的方法，胖友，自己查看。
+}
 ```
 
 ---

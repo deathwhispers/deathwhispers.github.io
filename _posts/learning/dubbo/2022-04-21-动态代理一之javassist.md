@@ -43,7 +43,7 @@ updated: 2022-04-26 18:33
 - [《动态代理方案性能对比》](http://javatar.iteye.com/blog/814426)
 - 来自老徐的某篇文章
 
-![](/assets/images/learning/dubbo/dubbo-proxy-javassist/e9441892fb76cb2ed55fc158fead14fb.png)
+![动态代理性能对比](/assets/images/learning/dubbo/dubbo-proxy-javassist/e9441892fb76cb2ed55fc158fead14fb.png)
 
 菜逼老徐
 
@@ -51,7 +51,7 @@ updated: 2022-04-26 18:33
 
 瞎比比了这么多，我们开始进入正题了。相信很多胖友对**动态代理**的概念已经理解（如果暂时不理解，请 Google 下），那么 Dubbo 对它们使用在哪呢？见下图：
 
-![](/assets/images/learning/dubbo/dubbo-proxy-javassist/3fef1864364a3d1de123abc101d5b313.png)
+![Dubbo动态代理流程图](/assets/images/learning/dubbo/dubbo-proxy-javassist/3fef1864364a3d1de123abc101d5b313.png)
 
 菜逼老王
 
@@ -246,7 +246,7 @@ public class Wrapper1
 
 在 [《精尽 Dubbo 源码分析 —— 核心流程一览》](http://svip.iocoder.cn/Dubbo/implementation-intro/) 的 [「4.5 ProxyFactory」](http://svip.iocoder.cn/Dubbo/proxy-javassist/#)，已经分享，胖友点击查看。
 
-![](/assets/images/learning/dubbo/dubbo-proxy-javassist/ba26b5cb5afa1805cd4acd0a2ea8785a.png)
+![ProxyFactory子类图](/assets/images/learning/dubbo/dubbo-proxy-javassist/ba26b5cb5afa1805cd4acd0a2ea8785a.png)
 
 ProxyFactory 子类
 
@@ -863,7 +863,7 @@ public class DemoServiceImpl implements DemoService {
 
 # 666. 彩蛋
 
-![](/assets/images/learning/dubbo/dubbo-proxy-javassist/96ca62e95e06bbe2fa74153d2158bc13.png)
+![知识星球](/assets/images/learning/dubbo/dubbo-proxy-javassist/96ca62e95e06bbe2fa74153d2158bc13.png)
 
 知识星球
 
