@@ -22,9 +22,7 @@ updated: 2022-06-06 18:33
 
 LoadBalance 子类如下图：
 
-![](/assets/images/learning/dubbo/dubbo-cluster-fault-tolerance-loadbalance-impl/6a06cef8ac4d8d3f3e2f297c143242e0.png)
-
-LoadBalance 子类
+![LoadBalance子类](/assets/images/learning/dubbo/dubbo-cluster-fault-tolerance-loadbalance-impl/6a06cef8ac4d8d3f3e2f297c143242e0.png)
 
 我们可以看到，目前一共有四个子类，意味着**内置**了四种负载均衡的选择算法。
 
@@ -34,8 +32,7 @@ LoadBalance 子类
 
 com.alibaba.dubbo.rpc.cluster.LoadBalance ， LoadBalance **接口**。代码如下：
 
-```plain text
-plain @SPI(RandomLoadBalance.NAME) public interface LoadBalance {      /**      * select one invoker in list.      *      * 从 Invoker 集合中，选择一个      *      * @param invokers   invokers.      * @param url        refer url      * @param invocation invocation.      * @return selected invoker.      */     @Adaptive("loadbalance")     <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException;  }
+```java @SPI(RandomLoadBalance.NAME) public interface LoadBalance {      /**      * select one invoker in list.      *      * 从 Invoker 集合中，选择一个      *      * @param invokers   invokers.      * @param url        refer url      * @param invocation invocation.      * @return selected invoker.      */     @Adaptive("loadbalance")     <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException;  }
 ```
 
 ---
@@ -61,8 +58,7 @@ com.alibaba.dubbo.rpc.cluster.loadbalance.AbstractLoadBalance ，实现 LoadBala
 
 #select(List<Invoker>, URL, Invocation)**实现**方法，默认只有一个 Invoker 时，直接选择返回。代码如下：
 
-```plain text
-plain @Override public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) {     if (invokers == null || invokers.isEmpty()) {         return null;     }     if (invokers.size() == 1) {         return invokers.get(0);     }     return doSelect(invokers, url, invocation); }
+```java @Override public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) {     if (invokers == null || invokers.isEmpty()) {         return null;     }     if (invokers.size() == 1) {         return invokers.get(0);     }     return doSelect(invokers, url, invocation); }
 ```
 
 ---
@@ -71,16 +67,14 @@ plain @Override public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url,
 #doSelect(List<Invoker>, URL, Invocation)
 方法，提供自定义的负载均衡策略。
 
-```plain text
-plain protected abstract <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation);
+```java protected abstract <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation);
 ```
 
 ---
 
 ## 3.2 getWeight
 
-```plain text
-plain protected int getWeight(Invoker<?> invoker, Invocation invocation) {     // 获得 weight 配置，即服务权重。默认为 100     int weight = invoker.getUrl().getMethodParameter(invocation.getMethodName(), Constants.WEIGHT_KEY, Constants.DEFAULT_WEIGHT);     if (weight > 0) {         long timestamp = invoker.getUrl().getParameter(Constants.REMOTE_TIMESTAMP_KEY, 0L);         if (timestamp > 0L) {             // 获得启动总时长             int uptime = (int) (System.currentTimeMillis() - timestamp);             // 获得预热需要总时长。默认为 10 * 60 * 1000 = 10 分钟             int warmup = invoker.getUrl().getParameter(Constants.WARMUP_KEY, Constants.DEFAULT_WARMUP);             // 处于预热中，计算当前的权重             if (uptime > 0 && uptime < warmup) {                 weight = calculateWarmupWeight(uptime, warmup, weight);             }         }     }     return weight; }
+```java protected int getWeight(Invoker<?> invoker, Invocation invocation) {     // 获得 weight 配置，即服务权重。默认为 100     int weight = invoker.getUrl().getMethodParameter(invocation.getMethodName(), Constants.WEIGHT_KEY, Constants.DEFAULT_WEIGHT);     if (weight > 0) {         long timestamp = invoker.getUrl().getParameter(Constants.REMOTE_TIMESTAMP_KEY, 0L);         if (timestamp > 0L) {             // 获得启动总时长             int uptime = (int) (System.currentTimeMillis() - timestamp);             // 获得预热需要总时长。默认为 10 * 60 * 1000 = 10 分钟             int warmup = invoker.getUrl().getParameter(Constants.WARMUP_KEY, Constants.DEFAULT_WARMUP);             // 处于预热中，计算当前的权重             if (uptime > 0 && uptime < warmup) {                 weight = calculateWarmupWeight(uptime, warmup, weight);             }         }     }     return weight; }
 ```
 
 ---
@@ -91,13 +85,12 @@ plain protected int getWeight(Invoker<?> invoker, Invocation invocation) {     /
 #calculateWarmupWeight(uptime, warmup, weight)
 方法，代码如下：
 
-```plain text
-plain static int calculateWarmupWeight(int uptime, int warmup, int weight) {     // 计算权重     int ww = (int) ((float) uptime / ((float) warmup / (float) weight));     // 权重范围为 [0, weight] 之间     return ww < 1 ? 1 : (ww > weight ? weight : ww); }
+```java static int calculateWarmupWeight(int uptime, int warmup, int weight) {     // 计算权重     int ww = (int) ((float) uptime / ((float) warmup / (float) weight));     // 权重范围为 [0, weight] 之间     return ww < 1 ? 1 : (ww > weight ? weight : ww); }
 ```
 
 ---
 
-```plain text
+```java
 - <font style="color:rgb(51, 51, 51);">计算权重的代码这么写看起来比较"绕"，我们来修改成 </font><font style="color:rgb(51, 51, 51);">(uptime / warmup) * weight</font><font style="color:rgb(51, 51, 51);"> ，是否就好理解多了，相当于</font>**<font style="color:rgb(51, 51, 51);">进度百分比 * 权重</font>**<font style="color:rgb(51, 51, 51);">。</font>
 - <font style="color:rgb(51, 51, 51);">如下是我飞哥举的一个例子，感觉非常赞。</font><font style="color:rgb(51, 51, 51);">根据calculateWarmupWeight()方法实现可知，随着provider的启动时间越来越长，慢慢提升权重直到weight，且权重最小值为1，所以：</font>
     * <font style="color:rgb(51, 51, 51);">如果 provider 运行了 1 分钟，那么 weight 为 10，即只有最终需要承担的 10% 流量；</font>
@@ -116,8 +109,7 @@ com.alibaba.dubbo.rpc.cluster.loadbalance.RandomLoadBalance ，实现 AbstractLo
 
 在一个截面上碰撞的概率高，但调用量越大分布越均匀，而且按概率使用权重后也比较均匀，有利于动态调整提供者权重。
 
-```plain text
-plain 1: public class RandomLoadBalance extends AbstractLoadBalance {  2:   3:     public static final String NAME = "random";  4:   5:     private final Random random = new Random();  6:   7:     @Override  8:     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {  9:         int length = invokers.size(); // Number of invokers 10:         int totalWeight = 0; // The sum of weights 11:         boolean sameWeight = true; // Every invoker has the same weight? 12:         // 计算总权限 13:         for (int i = 0; i < length; i++) { 14:             int weight = getWeight(invokers.get(i), invocation); // 获得权重 15:             totalWeight += weight; // Sum 16:             if (sameWeight && i > 0 && weight != getWeight(invokers.get(i - 1), invocation)) { 17:                 sameWeight = false; 18:             } 19:         } 20:         // 权重不相等，随机后，判断在哪个 Invoker 的权重区间中 21:         if (totalWeight > 0 && !sameWeight) { 22:             // 随机 23:             // If (not every invoker has the same weight & at least one invoker's weight>0), select randomly based on totalWeight. 24:             int offset = random.nextInt(totalWeight); 25:             // Return a invoker based on the random value. 26:             // 区间判断 27:             for (Invoker<T> invoker : invokers) { 28:                 offset -= getWeight(invoker, invocation); 29:                 if (offset < 0) { 30:                     return invoker; 31:                 } 32:             } 33:         } 34:         // 权重相等，平均随机 35:         // If all invokers have the same weight value or totalWeight=0, return evenly. 36:         return invokers.get(random.nextInt(length)); 37:     } 38:  39: }
+```java 1: public class RandomLoadBalance extends AbstractLoadBalance {  2:   3:     public static final String NAME = "random";  4:   5:     private final Random random = new Random();  6:   7:     @Override  8:     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {  9:         int length = invokers.size(); // Number of invokers 10:         int totalWeight = 0; // The sum of weights 11:         boolean sameWeight = true; // Every invoker has the same weight? 12:         // 计算总权限 13:         for (int i = 0; i < length; i++) { 14:             int weight = getWeight(invokers.get(i), invocation); // 获得权重 15:             totalWeight += weight; // Sum 16:             if (sameWeight && i > 0 && weight != getWeight(invokers.get(i - 1), invocation)) { 17:                 sameWeight = false; 18:             } 19:         } 20:         // 权重不相等，随机后，判断在哪个 Invoker 的权重区间中 21:         if (totalWeight > 0 && !sameWeight) { 22:             // 随机 23:             // If (not every invoker has the same weight & at least one invoker's weight>0), select randomly based on totalWeight. 24:             int offset = random.nextInt(totalWeight); 25:             // Return a invoker based on the random value. 26:             // 区间判断 27:             for (Invoker<T> invoker : invokers) { 28:                 offset -= getWeight(invoker, invocation); 29:                 if (offset < 0) { 30:                     return invoker; 31:                 } 32:             } 33:         } 34:         // 权重相等，平均随机 35:         // If all invokers have the same weight value or totalWeight=0, return evenly. 36:         return invokers.get(random.nextInt(length)); 37:     } 38:  39: }
 ```
 
 ---
@@ -156,8 +148,7 @@ com.alibaba.dubbo.rpc.cluster.loadbalance.RoundRobinLoadBalance ，实现 Abstra
 
 存在慢的提供者累积请求的问题，比如：第二台机器很慢，但没挂，当请求调到第二台时就卡在那，久而久之，所有请求都卡在调到第二台上。
 
-```plain text
-plain 1: public class RoundRobinLoadBalance extends AbstractLoadBalance {  2:   3:     public static final String NAME = "roundrobin";  4:   5:     /**  6:      * 服务方法与计数器的映射  7:      *  8:      * KEY：serviceKey + "." + methodName  9:      */ 10:     private final ConcurrentMap<String, AtomicPositiveInteger> sequences = new ConcurrentHashMap<String, AtomicPositiveInteger>(); 11:  12:     @Override 13:     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) { 14:         String key = invokers.get(0).getUrl().getServiceKey() + "." + invocation.getMethodName(); 15:         int length = invokers.size(); // Number of invokers 16:         int maxWeight = 0; // The maximum weight 17:         int minWeight = Integer.MAX_VALUE; // The minimum weight 18:         final LinkedHashMap<Invoker<T>, IntegerWrapper> invokerToWeightMap = new LinkedHashMap<Invoker<T>, IntegerWrapper>(); 19:         int weightSum = 0; 20:         // 计算最小、最大权重，总的权重和。 21:         for (int i = 0; i < length; i++) { 22:             int weight = getWeight(invokers.get(i), invocation); 23:             maxWeight = Math.max(maxWeight, weight); // Choose the maximum weight 24:             minWeight = Math.min(minWeight, weight); // Choose the minimum weight 25:             if (weight > 0) { 26:                 invokerToWeightMap.put(invokers.get(i), new IntegerWrapper(weight)); 27:                 weightSum += weight; 28:             } 29:         } 30:         // 获得 AtomicPositiveInteger 对象 31:         AtomicPositiveInteger sequence = sequences.get(key); 32:         if (sequence == null) { 33:             sequences.putIfAbsent(key, new AtomicPositiveInteger()); 34:             sequence = sequences.get(key); 35:         } 36:         // 获得当前顺序号，并递增 + 1 37:         int currentSequence = sequence.getAndIncrement(); 38:         // 权重不相等，顺序根据权重分配 39:         if (maxWeight > 0 && minWeight < maxWeight) { 40:             int mod = currentSequence % weightSum; // 剩余权重 41:             for (int i = 0; i < maxWeight; i++) { // 循环最大权重 42:                 for (Map.Entry<Invoker<T>, IntegerWrapper> each : invokerToWeightMap.entrySet()) { // 循环 Invoker 集合 43:                     final Invoker<T> k = each.getKey(); 44:                     final IntegerWrapper v = each.getValue(); 45:                     // 剩余权重归 0 ，当前 Invoker 还有剩余权重，返回该 Invoker 对象 46:                     if (mod == 0 && v.getValue() > 0) { 47:                         return k; 48:                     } 49:                     // 若 Invoker 还有权重值，扣除它( value )和剩余权重( mod )。 50:                     if (v.getValue() > 0) { 51:                         v.decrement(); 52:                         mod--; 53:                     } 54:                 } 55:             } 56:         } 57:         // 权重相等，平均顺序获得 58:         // Round robin 59:         return invokers.get(currentSequence % length); 60:     } 61:      62: }
+```java 1: public class RoundRobinLoadBalance extends AbstractLoadBalance {  2:   3:     public static final String NAME = "roundrobin";  4:   5:     /**  6:      * 服务方法与计数器的映射  7:      *  8:      * KEY：serviceKey + "." + methodName  9:      */ 10:     private final ConcurrentMap<String, AtomicPositiveInteger> sequences = new ConcurrentHashMap<String, AtomicPositiveInteger>(); 11:  12:     @Override 13:     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) { 14:         String key = invokers.get(0).getUrl().getServiceKey() + "." + invocation.getMethodName(); 15:         int length = invokers.size(); // Number of invokers 16:         int maxWeight = 0; // The maximum weight 17:         int minWeight = Integer.MAX_VALUE; // The minimum weight 18:         final LinkedHashMap<Invoker<T>, IntegerWrapper> invokerToWeightMap = new LinkedHashMap<Invoker<T>, IntegerWrapper>(); 19:         int weightSum = 0; 20:         // 计算最小、最大权重，总的权重和。 21:         for (int i = 0; i < length; i++) { 22:             int weight = getWeight(invokers.get(i), invocation); 23:             maxWeight = Math.max(maxWeight, weight); // Choose the maximum weight 24:             minWeight = Math.min(minWeight, weight); // Choose the minimum weight 25:             if (weight > 0) { 26:                 invokerToWeightMap.put(invokers.get(i), new IntegerWrapper(weight)); 27:                 weightSum += weight; 28:             } 29:         } 30:         // 获得 AtomicPositiveInteger 对象 31:         AtomicPositiveInteger sequence = sequences.get(key); 32:         if (sequence == null) { 33:             sequences.putIfAbsent(key, new AtomicPositiveInteger()); 34:             sequence = sequences.get(key); 35:         } 36:         // 获得当前顺序号，并递增 + 1 37:         int currentSequence = sequence.getAndIncrement(); 38:         // 权重不相等，顺序根据权重分配 39:         if (maxWeight > 0 && minWeight < maxWeight) { 40:             int mod = currentSequence % weightSum; // 剩余权重 41:             for (int i = 0; i < maxWeight; i++) { // 循环最大权重 42:                 for (Map.Entry<Invoker<T>, IntegerWrapper> each : invokerToWeightMap.entrySet()) { // 循环 Invoker 集合 43:                     final Invoker<T> k = each.getKey(); 44:                     final IntegerWrapper v = each.getValue(); 45:                     // 剩余权重归 0 ，当前 Invoker 还有剩余权重，返回该 Invoker 对象 46:                     if (mod == 0 && v.getValue() > 0) { 47:                         return k; 48:                     } 49:                     // 若 Invoker 还有权重值，扣除它( value )和剩余权重( mod )。 50:                     if (v.getValue() > 0) { 51:                         v.decrement(); 52:                         mod--; 53:                     } 54:                 } 55:             } 56:         } 57:         // 权重相等，平均顺序获得 58:         // Round robin 59:         return invokers.get(currentSequence % length); 60:     } 61:      62: }
 ```
 
 ---
@@ -166,8 +157,7 @@ plain 1: public class RoundRobinLoadBalance extends AbstractLoadBalance {  2:   
 invokerToWeightMap
 变量，Invoker 与其权重的映射。其中，IntegerWrapper 为 RoundRobinLoadBalance 的内部类。代码如下：
 
-```plain text
-plain private static final class IntegerWrapper {      // 权重值     private int value;      // ... 省略 构造 / getting / setting 方法      // 扣除一     public void decrement() {         this.value--;     }  }
+```java private static final class IntegerWrapper {      // 权重值     private int value;      // ... 省略 构造 / getting / setting 方法      // 扣除一     public void decrement() {         this.value--;     }  }
 ```
 
 ---
@@ -231,8 +221,7 @@ com.alibaba.dubbo.rpc.cluster.loadbalance.LeastActiveLoadBalance ，实现 Abstr
 
 相比来说，LeastActiveLoadBalance 是 RandomLoadBalance 的**加强版**，基**于最少活跃调用数**。
 
-```plain text
-plain 1: public class LeastActiveLoadBalance extends AbstractLoadBalance {  2:   3:     public static final String NAME = "leastactive";  4:   5:     private final Random random = new Random();  6:   7:     @Override  8:     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {  9:         int length = invokers.size(); // 总个数 10:         int leastActive = -1; // 最小的活跃数 11:         int leastCount = 0; // 相同最小活跃数的个数 12:         int[] leastIndexes = new int[length]; // 相同最小活跃数的下标 13:         int totalWeight = 0; // 总权重 14:         int firstWeight = 0; // 第一个权重，用于于计算是否相同 15:         boolean sameWeight = true; // 是否所有权重相同 16:         // 计算获得相同最小活跃数的数组和个数 17:         for (int i = 0; i < length; i++) { 18:             Invoker<T> invoker = invokers.get(i); 19:             int active = RpcStatus.getStatus(invoker.getUrl(), invocation.getMethodName()).getActive(); // 活跃数 20:             int weight = invoker.getUrl().getMethodParameter(invocation.getMethodName(), Constants.WEIGHT_KEY, Constants.DEFAULT_WEIGHT); // 权重 21:             if (leastActive == -1 || active < leastActive) { // 发现更小的活跃数，重新开始 22:                 leastActive = active; // 记录最小活跃数 23:                 leastCount = 1; // 重新统计相同最小活跃数的个数 24:                 leastIndexes[0] = i; // 重新记录最小活跃数下标 25:                 totalWeight = weight; // 重新累计总权重 26:                 firstWeight = weight; // 记录第一个权重 27:                 sameWeight = true; // 还原权重相同标识 28:             } else if (active == leastActive) { // 累计相同最小的活跃数 29:                 leastIndexes[leastCount++] = i; // 累计相同最小活跃数下标 30:                 totalWeight += weight; // 累计总权重 31:                 // 判断所有权重是否一样 32:                 if (sameWeight && weight != firstWeight) { 33:                     sameWeight = false; 34:                 } 35:             } 36:         } 37:         // assert(leastCount > 0) 38:         if (leastCount == 1) { 39:             // 如果只有一个最小则直接返回 40:             return invokers.get(leastIndexes[0]); 41:         } 42:         if (!sameWeight && totalWeight > 0) { 43:             // 如果权重不相同且权重大于0则按总权重数随机 44:             int offsetWeight = random.nextInt(totalWeight); 45:             // 并确定随机值落在哪个片断上 46:             for (int i = 0; i < leastCount; i++) { 47:                 int leastIndex = leastIndexes[i]; 48:                 offsetWeight -= getWeight(invokers.get(leastIndex), invocation); 49:                 if (offsetWeight <= 0) { 50:                     return invokers.get(leastIndex); 51:                 } 52:             } 53:         } 54:         // 如果权重相同或权重为0则均等随机 55:         return invokers.get(leastIndexes[random.nextInt(leastCount)]); 56:     } 57:  58: }
+```java 1: public class LeastActiveLoadBalance extends AbstractLoadBalance {  2:   3:     public static final String NAME = "leastactive";  4:   5:     private final Random random = new Random();  6:   7:     @Override  8:     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {  9:         int length = invokers.size(); // 总个数 10:         int leastActive = -1; // 最小的活跃数 11:         int leastCount = 0; // 相同最小活跃数的个数 12:         int[] leastIndexes = new int[length]; // 相同最小活跃数的下标 13:         int totalWeight = 0; // 总权重 14:         int firstWeight = 0; // 第一个权重，用于于计算是否相同 15:         boolean sameWeight = true; // 是否所有权重相同 16:         // 计算获得相同最小活跃数的数组和个数 17:         for (int i = 0; i < length; i++) { 18:             Invoker<T> invoker = invokers.get(i); 19:             int active = RpcStatus.getStatus(invoker.getUrl(), invocation.getMethodName()).getActive(); // 活跃数 20:             int weight = invoker.getUrl().getMethodParameter(invocation.getMethodName(), Constants.WEIGHT_KEY, Constants.DEFAULT_WEIGHT); // 权重 21:             if (leastActive == -1 || active < leastActive) { // 发现更小的活跃数，重新开始 22:                 leastActive = active; // 记录最小活跃数 23:                 leastCount = 1; // 重新统计相同最小活跃数的个数 24:                 leastIndexes[0] = i; // 重新记录最小活跃数下标 25:                 totalWeight = weight; // 重新累计总权重 26:                 firstWeight = weight; // 记录第一个权重 27:                 sameWeight = true; // 还原权重相同标识 28:             } else if (active == leastActive) { // 累计相同最小的活跃数 29:                 leastIndexes[leastCount++] = i; // 累计相同最小活跃数下标 30:                 totalWeight += weight; // 累计总权重 31:                 // 判断所有权重是否一样 32:                 if (sameWeight && weight != firstWeight) { 33:                     sameWeight = false; 34:                 } 35:             } 36:         } 37:         // assert(leastCount > 0) 38:         if (leastCount == 1) { 39:             // 如果只有一个最小则直接返回 40:             return invokers.get(leastIndexes[0]); 41:         } 42:         if (!sameWeight && totalWeight > 0) { 43:             // 如果权重不相同且权重大于0则按总权重数随机 44:             int offsetWeight = random.nextInt(totalWeight); 45:             // 并确定随机值落在哪个片断上 46:             for (int i = 0; i < leastCount; i++) { 47:                 int leastIndex = leastIndexes[i]; 48:                 offsetWeight -= getWeight(invokers.get(leastIndex), invocation); 49:                 if (offsetWeight <= 0) { 50:                     return invokers.get(leastIndex); 51:                 } 52:             } 53:         } 54:         // 如果权重相同或权重为0则均等随机 55:         return invokers.get(leastIndexes[random.nextInt(leastCount)]); 56:     } 57:  58: }
 ```
 
 ---
@@ -291,8 +280,7 @@ com.alibaba.dubbo.rpc.cluster.loadbalance.ConsistentHashLoadBalance ，实现 Ab
 
 当某一台提供者挂时，原本发往该提供者的请求，基于虚拟节点，平摊到其它提供者，不会引起剧烈变动。
 
-```plain text
-plain 1: public class ConsistentHashLoadBalance extends AbstractLoadBalance {  2:   3:     /**  4:      * 服务方法与一致性哈希选择器的映射  5:      *  6:      * KEY：serviceKey + "." + methodName  7:      */  8:     private final ConcurrentMap<String, ConsistentHashSelector<?>> selectors = new ConcurrentHashMap<String, ConsistentHashSelector<?>>();  9:  10:     @SuppressWarnings("unchecked") 11:     @Override 12:     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) { 13:         String key = invokers.get(0).getUrl().getServiceKey() + "." + invocation.getMethodName(); 14:         // 基于 invokers 集合，根据对象内存地址来计算定义哈希值 15:         int identityHashCode = System.identityHashCode(invokers); 16:         // 获得 ConsistentHashSelector 对象。若为空，或者定义哈希值变更（说明 invokers 集合发生变化），进行创建新的 ConsistentHashSelector 对象 17:         ConsistentHashSelector<T> selector = (ConsistentHashSelector<T>) selectors.get(key); 18:         if (selector == null || selector.identityHashCode != identityHashCode) { 19:             selectors.put(key, new ConsistentHashSelector<T>(invokers, invocation.getMethodName(), identityHashCode)); 20:             selector = (ConsistentHashSelector<T>) selectors.get(key); 21:         } 22:         return selector.select(invocation); 23:     } 24: }
+```java 1: public class ConsistentHashLoadBalance extends AbstractLoadBalance {  2:   3:     /**  4:      * 服务方法与一致性哈希选择器的映射  5:      *  6:      * KEY：serviceKey + "." + methodName  7:      */  8:     private final ConcurrentMap<String, ConsistentHashSelector<?>> selectors = new ConcurrentHashMap<String, ConsistentHashSelector<?>>();  9:  10:     @SuppressWarnings("unchecked") 11:     @Override 12:     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) { 13:         String key = invokers.get(0).getUrl().getServiceKey() + "." + invocation.getMethodName(); 14:         // 基于 invokers 集合，根据对象内存地址来计算定义哈希值 15:         int identityHashCode = System.identityHashCode(invokers); 16:         // 获得 ConsistentHashSelector 对象。若为空，或者定义哈希值变更（说明 invokers 集合发生变化），进行创建新的 ConsistentHashSelector 对象 17:         ConsistentHashSelector<T> selector = (ConsistentHashSelector<T>) selectors.get(key); 18:         if (selector == null || selector.identityHashCode != identityHashCode) { 19:             selectors.put(key, new ConsistentHashSelector<T>(invokers, invocation.getMethodName(), identityHashCode)); 20:             selector = (ConsistentHashSelector<T>) selectors.get(key); 21:         } 22:         return selector.select(invocation); 23:     } 24: }
 ```
 
 ---
@@ -318,8 +306,7 @@ ConsistentHashSelector ，是 ConsistentHashLoadBalance 的**内部类**，一�
 
 ### 7.1.1 构造方法
 
-```plain text
-plain /**  * 虚拟节点与 Invoker 的映射关系  */ private final TreeMap<Long, Invoker<T>> virtualInvokers; /**  * 每个Invoker 对应的虚拟节点数  */ private final int replicaNumber; /**  * 定义哈希值  */ private final int identityHashCode; /**  * 取值参数位置数组  */ private final int[] argumentIndex;    1: ConsistentHashSelector(List<Invoker<T>> invokers, String methodName, int identityHashCode) {   2:     this.virtualInvokers = new TreeMap<Long, Invoker<T>>();   3:     // 设置 identityHashCode   4:     this.identityHashCode = identityHashCode;   5:     URL url = invokers.get(0).getUrl();   6:     // 初始化 replicaNumber   7:     this.replicaNumber = url.getMethodParameter(methodName, "hash.nodes", 160);   8:     // 初始化 argumentIndex   9:     String[] index = Constants.COMMA_SPLIT_PATTERN.split(url.getMethodParameter(methodName, "hash.arguments", "0"));  10:     argumentIndex = new int[index.length];  11:     for (int i = 0; i < index.length; i++) {  12:         argumentIndex[i] = Integer.parseInt(index[i]);  13:     }  14:     // 初始化 virtualInvokers  15:     for (Invoker<T> invoker : invokers) {  16:         String address = invoker.getUrl().getAddress();  17:         // 每四个虚拟结点为一组，为什么这样？下面会说到  18:         for (int i = 0; i < replicaNumber / 4; i++) {  19:             // 这组虚拟结点得到惟一名称  20:             byte[] digest = md5(address + i);  21:             // Md5是一个16字节长度的数组，将16字节的数组每四个字节一组，分别对应一个虚拟结点，这就是为什么上面把虚拟结点四个划分一组的原因  22:             for (int h = 0; h < 4; h++) {  23:                 // 对于每四个字节，组成一个long值数值，做为这个虚拟节点的在环中的惟一key  24:                 long m = hash(digest, h);  25:                 virtualInvokers.put(m, invoker);  26:             }  27:         }  28:     }  29: }
+```java /**  * 虚拟节点与 Invoker 的映射关系  */ private final TreeMap<Long, Invoker<T>> virtualInvokers; /**  * 每个Invoker 对应的虚拟节点数  */ private final int replicaNumber; /**  * 定义哈希值  */ private final int identityHashCode; /**  * 取值参数位置数组  */ private final int[] argumentIndex;    1: ConsistentHashSelector(List<Invoker<T>> invokers, String methodName, int identityHashCode) {   2:     this.virtualInvokers = new TreeMap<Long, Invoker<T>>();   3:     // 设置 identityHashCode   4:     this.identityHashCode = identityHashCode;   5:     URL url = invokers.get(0).getUrl();   6:     // 初始化 replicaNumber   7:     this.replicaNumber = url.getMethodParameter(methodName, "hash.nodes", 160);   8:     // 初始化 argumentIndex   9:     String[] index = Constants.COMMA_SPLIT_PATTERN.split(url.getMethodParameter(methodName, "hash.arguments", "0"));  10:     argumentIndex = new int[index.length];  11:     for (int i = 0; i < index.length; i++) {  12:         argumentIndex[i] = Integer.parseInt(index[i]);  13:     }  14:     // 初始化 virtualInvokers  15:     for (Invoker<T> invoker : invokers) {  16:         String address = invoker.getUrl().getAddress();  17:         // 每四个虚拟结点为一组，为什么这样？下面会说到  18:         for (int i = 0; i < replicaNumber / 4; i++) {  19:             // 这组虚拟结点得到惟一名称  20:             byte[] digest = md5(address + i);  21:             // Md5是一个16字节长度的数组，将16字节的数组每四个字节一组，分别对应一个虚拟结点，这就是为什么上面把虚拟结点四个划分一组的原因  22:             for (int h = 0; h < 4; h++) {  23:                 // 对于每四个字节，组成一个long值数值，做为这个虚拟节点的在环中的惟一key  24:                 long m = hash(digest, h);  25:                 virtualInvokers.put(m, invoker);  26:             }  27:         }  28:     }  29: }
 ```
 
 ---
@@ -351,33 +338,30 @@ address + i
 #md5(value)
 方法，计算 MD5 。代码如下：
 
-```plain text
-plain private byte[] md5(String value) {     MessageDigest md5;     try {         md5 = MessageDigest.getInstance("MD5");     } catch (NoSuchAlgorithmException e) {         throw new IllegalStateException(e.getMessage(), e);     }     md5.reset();     byte[] bytes;     try {         bytes = value.getBytes("UTF-8");     } catch (UnsupportedEncodingException e) {         throw new IllegalStateException(e.getMessage(), e);     }     md5.update(bytes);     return md5.digest(); }
+```java private byte[] md5(String value) {     MessageDigest md5;     try {         md5 = MessageDigest.getInstance("MD5");     } catch (NoSuchAlgorithmException e) {         throw new IllegalStateException(e.getMessage(), e);     }     md5.reset();     byte[] bytes;     try {         bytes = value.getBytes("UTF-8");     } catch (UnsupportedEncodingException e) {         throw new IllegalStateException(e.getMessage(), e);     }     md5.update(bytes);     return md5.digest(); }
 ```
 
 ---
 
-```plain text
+```java
     * **<font style="color:rgb(51, 51, 51);">MD5 是一个 16 字节长度的数组，将 16 字节的数组每四个字节一组，分别对应一个虚拟结点，这就是为什么上面把虚拟结点四个划分一组的原因</font>**
 - <font style="color:rgb(51, 51, 51);">第 22 行：顺序</font>**<font style="color:rgb(51, 51, 51);">循环</font>**<font style="color:rgb(51, 51, 51);">每四个字节。</font>
 - <font style="color:rgb(51, 51, 51);">第 24 行：调用 </font><font style="color:rgb(51, 51, 51);">#hash(byte[] digest, int number)</font><font style="color:rgb(51, 51, 51);"> 方法，对于</font>**<font style="color:rgb(51, 51, 51);">每四个字节</font>**<font style="color:rgb(51, 51, 51);">，组成一个 Long 值数值，做为这个虚拟节点的在环中的</font>**<font style="color:rgb(51, 51, 51);">惟一 KEY</font>**<font style="color:rgb(51, 51, 51);"> 。代码如下：</font>
 ```
 
-```plain text
-plain private long hash(byte[] digest, int number) {     return (((long) (digest[3 + number * 4] & 0xFF) << 24)             | ((long) (digest[2 + number * 4] & 0xFF) << 16)             | ((long) (digest[1 + number * 4] & 0xFF) << 8)             | (digest[number * 4] & 0xFF))             & 0xFFFFFFFFL; }
+```java private long hash(byte[] digest, int number) {     return (((long) (digest[3 + number * 4] & 0xFF) << 24)             | ((long) (digest[2 + number * 4] & 0xFF) << 16)             | ((long) (digest[1 + number * 4] & 0xFF) << 8)             | (digest[number * 4] & 0xFF))             & 0xFFFFFFFFL; }
 ```
 
 ---
 
-```plain text
+```java
     * <font style="color:rgb(51, 51, 51);">x</font>
 - <font style="color:rgb(51, 51, 51);">第 25 行：添加 Invoker 到 </font><font style="color:rgb(51, 51, 51);">virtualInvokers</font><font style="color:rgb(51, 51, 51);"> 中。</font>
 ```
 
 ### 7.1.2 select
 
-```plain text
-plain public Invoker<T> select(Invocation invocation) {     // 基于方法参数，获得 KEY     String key = toKey(invocation.getArguments());     // 计算 MD5 值     byte[] digest = md5(key);     // 计算 KEY 值     return selectForKey(hash(digest, 0)); }
+```java public Invoker<T> select(Invocation invocation) {     // 基于方法参数，获得 KEY     String key = toKey(invocation.getArguments());     // 计算 MD5 值     byte[] digest = md5(key);     // 计算 KEY 值     return selectForKey(hash(digest, 0)); }
 ```
 
 ---
@@ -387,8 +371,7 @@ plain public Invoker<T> select(Invocation invocation) {     // 基于方法参�
 方法，基于
 ，获得 KEY 。代码如下：
 
-```plain text
-plain private String toKey(Object[] args) {     StringBuilder buf = new StringBuilder();     for (int i : argumentIndex) {         if (i >= 0 && i < args.length) {             buf.append(args[i]);         }     }     return buf.toString(); }
+```java private String toKey(Object[] args) {     StringBuilder buf = new StringBuilder();     for (int i : argumentIndex) {         if (i >= 0 && i < args.length) {             buf.append(args[i]);         }     }     return buf.toString(); }
 ```
 
 ---
@@ -403,13 +386,12 @@ plain private String toKey(Object[] args) {     StringBuilder buf = new StringBu
 #selectForKey(hash)
 方法，选一个 Invoker 对象。代码如下：
 
-```plain text
-plain private Invoker<T> selectForKey(long hash) {     // 得到大于当前 key 的那个子 Map ，然后从中取出第一个 key ，就是大于且离它最近的那个 key     Map.Entry<Long, Invoker<T>> entry = virtualInvokers.tailMap(hash, true).firstEntry();     // 不存在，则取 virtualInvokers 第一个     if (entry == null) {        entry = virtualInvokers.firstEntry();   }   // 存在，则返回   return entry.getValue(); }
+```java private Invoker<T> selectForKey(long hash) {     // 得到大于当前 key 的那个子 Map ，然后从中取出第一个 key ，就是大于且离它最近的那个 key     Map.Entry<Long, Invoker<T>> entry = virtualInvokers.tailMap(hash, true).firstEntry();     // 不存在，则取 virtualInvokers 第一个     if (entry == null) {        entry = virtualInvokers.firstEntry();   }   // 存在，则返回   return entry.getValue(); }
 ```
 
 ---
 
-```plain text
+```java
 # 666. 彩蛋
 
 ![知识星球](/assets/images/learning/dubbo/dubbo-cluster-fault-tolerance-loadbalance-impl/bc731b76c0f29a2da507bf1185566bfa.png)
