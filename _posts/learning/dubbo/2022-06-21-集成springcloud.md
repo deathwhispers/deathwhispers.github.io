@@ -50,7 +50,7 @@ test
 
 测试目录下，如下图所示：
 
-![](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/436c928a486b1c09e7325f33e361add3.jpg)
+![示例项目](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/436c928a486b1c09e7325f33e361add3.jpg)
 
 示例项目
 
@@ -70,8 +70,35 @@ test
 
 ### 2.4.1 bootstrap.yaml
 
-```plain text
-plain spring:   application:     name: spring-cloud-alibaba-dubbo   cloud:     nacos:       discovery:         server-addr: 127.0.0.1:8848       config:         server-addr: 127.0.0.1:8848  eureka:   client:     enabled: false  --- spring:   profiles: eureka   cloud:     nacos:       discovery:         enabled: false         register-enabled: false  eureka:   client:     enabled: true     service-url:       defaultZone: http://127.0.0.1:8761/eureka/
+```yaml
+spring:
+  application:
+    name: spring-cloud-alibaba-dubbo
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+
+eureka:
+  client:
+    enabled: false
+
+---
+spring:
+  profiles: eureka
+  cloud:
+    nacos:
+      discovery:
+        enabled: false
+        register-enabled: false
+
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
 ```
 
 ---
@@ -86,8 +113,26 @@ plain spring:   application:     name: spring-cloud-alibaba-dubbo   cloud:     n
 
 ### 2.4.2 application.yaml
 
-```plain text
-plain dubbo:   scan:     base-packages: org.springframework.cloud.alibaba.dubbo.service # 扫描指定包，生成对应的 @Service 和 @Reference Bean 对象   protocols:     dubbo:       name: dubbo # Dubbo 协议       port: 12345 # Dubbo 协议的端口     rest:       name: rest # REST 协议       port: 9090 # REST 协议的端口       server: netty # 使用 Netty 作为 HTTP Server   registry:     address: spring-cloud://nacos # Dubbo 注册中心  feign:   hystrix:     enabled: true # 开启 Hystrix 功能，可以熔断落  server:   port: 8080 # HTTP API 端口
+```yaml
+dubbo:
+  scan:
+    base-packages: org.springframework.cloud.alibaba.dubbo.service # 扫描指定包，生成对应的 @Service 和 @Reference Bean 对象
+  protocols:
+    dubbo:
+      name: dubbo # Dubbo 协议
+      port: 12345 # Dubbo 协议的端口
+    rest:
+      name: rest # REST 协议
+      port: 9090 # REST 协议的端口
+      server: netty # 使用 Netty 作为 HTTP Server
+  registry:
+    address: spring-cloud://nacos # Dubbo 注册中心
+
+feign:
+  hystrix:
+    enabled: true # 开启 Hystrix 功能，可以熔断落
+server:
+  port: 8080 # HTTP API 端口
 ```
 
 ---
@@ -98,8 +143,15 @@ plain dubbo:   scan:     base-packages: org.springframework.cloud.alibaba.dubbo.
 
 org.springframework.cloud.alibaba.dubbo.service.EchoService ，EchoService 接口。代码如下：
 
-```plain text
-plain // EchoService.java  public interface EchoService {      String echo(String message);      String plus(int a, int b);  }
+```java
+// EchoService.java
+public interface EchoService {
+
+    String echo(String message);
+
+    String plus(int a, int b);
+
+}
 ```
 
 ---
@@ -110,8 +162,34 @@ plain // EchoService.java  public interface EchoService {      String echo(Strin
 
 org.springframework.cloud.alibaba.dubbo.service.DefaultEchoService ，实现 EchoService 接口，默认的 EchoService 实现者，服务提供者。代码如下：
 
-```plain text
-plain // DefaultEchoService.java  @Service(version = "1.0.0", protocol = {"dubbo", "rest"}) @RestController @Path("/") public class DefaultEchoService implements EchoService {      @Override     @GetMapping(value = "/echo" //            consumes = MediaType.APPLICATION_JSON_VALUE, //            produces = MediaType.APPLICATION_JSON_UTF8_VALUE     )     @Path("/echo")     @GET //    @Consumes("application/json") //    @Produces("application/json;charset=UTF-8")     public String echo(@RequestParam @QueryParam("message") String message) {         System.out.println(message);         return RpcContext.getContext().getUrl() + " [echo] : " + message;     }      @Override     @PostMapping("/plus")     @Path("/plus")     @POST     public String plus(@RequestParam @QueryParam("a") int a, @RequestParam @QueryParam("b") int b) {         return null;     }  }
+```java
+// DefaultEchoService.java
+@Service(version = "1.0.0", protocol = {"dubbo", "rest"})
+@RestController
+@Path("/")
+public class DefaultEchoService implements EchoService {
+
+    @Override
+    @GetMapping(value = "/echo" //            consumes = MediaType.APPLICATION_JSON_VALUE, //            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    @Path("/echo")
+    @GET
+//    @Consumes("application/json")
+//    @Produces("application/json;charset=UTF-8")
+    public String echo(@RequestParam @QueryParam("message") String message) {
+        System.out.println(message);
+        return RpcContext.getContext().getUrl() + " [echo] : " + message;
+    }
+
+    @Override
+    @PostMapping("/plus")
+    @Path("/plus")
+    @POST
+    public String plus(@RequestParam @QueryParam("a") int a, @RequestParam @QueryParam("b") int b) {
+        return null;
+    }
+
+}
 ```
 
 ---
@@ -123,8 +201,30 @@ plain // DefaultEchoService.java  @Service(version = "1.0.0", protocol = {"dubbo
 
 org.springframework.cloud.alibaba.dubbo.bootstrap.DubboSpringCloudBootstrap ，示例的 Spring Boot 启动器。代码如下：
 
-```plain text
-plain // DubboSpringCloudBootstrap.java  @EnableDiscoveryClient // 开启注册发现 @EnableAutoConfiguration // 开启自动配置 @EnableFeignClients // 开启 Feign Client @RestController public class DubboSpringCloudBootstrap {      @Reference(version = "1.0.0")     private EchoService echoService;      @Autowired     @Lazy     private FeignEchoService feignEchoService;      @Autowired     @Lazy     private DubboFeignEchoService dubboFeignEchoService;      public static void main(String[] args) {         new SpringApplicationBuilder(DubboSpringCloudBootstrap.class)                 .run(args);     }  }
+```java
+// DubboSpringCloudBootstrap.java
+@EnableDiscoveryClient // 开启注册发现
+@EnableAutoConfiguration // 开启自动配置
+@EnableFeignClients // 开启 Feign Client
+@RestController
+public class DubboSpringCloudBootstrap {
+
+    @Reference(version = "1.0.0")
+    private EchoService echoService;
+
+    @Autowired
+    @Lazy
+    private FeignEchoService feignEchoService;
+
+    @Autowired
+    @Lazy
+    private DubboFeignEchoService dubboFeignEchoService;
+
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(DubboSpringCloudBootstrap.class)
+                .run(args);
+    }
+}
 ```
 
 ---
@@ -146,8 +246,15 @@ spring-cloud-alibaba-dubbo
 - feignEchoService
 属性，使用标准的 Feign Client 作为服务消费者，它使用 RestTemplate 调用的是 Dubbo 提供的 Rest 接口。代码如下：
 
-```plain text
-plain // DubboSpringCloudBootstrap.java  @FeignClient("spring-cloud-alibaba-dubbo") public interface FeignEchoService {      @GetMapping(value = "/echo")     String echo(@RequestParam("message") String message);  }
+```java
+// DubboSpringCloudBootstrap.java
+@FeignClient("spring-cloud-alibaba-dubbo")
+public interface FeignEchoService {
+
+    @GetMapping(value = "/echo")
+    String echo(@RequestParam("message") String message);
+
+}
 ```
 
 ---
@@ -155,8 +262,16 @@ plain // DubboSpringCloudBootstrap.java  @FeignClient("spring-cloud-alibaba-dubb
 - dubboFeignEchoService
 属性，也使用标准的 Feign Client 作为服务消费者，它调用 Dubbo 调用的是 Dubbo 提供的 Dubbo 接口。代码如下：
 
-```plain text
-plain // DubboSpringCloudBootstrap.java  @FeignClient("spring-cloud-alibaba-dubbo") public interface DubboFeignEchoService {      @GetMapping(value = "/echo")     @DubboTransported     String echo(@RequestParam("message") String message);  }
+```java
+// DubboSpringCloudBootstrap.java
+@FeignClient("spring-cloud-alibaba-dubbo")
+public interface DubboFeignEchoService {
+
+    @GetMapping(value = "/echo")
+    @DubboTransported
+    String echo(@RequestParam("message") String message);
+
+}
 ```
 
 ---
@@ -168,8 +283,19 @@ plain // DubboSpringCloudBootstrap.java  @FeignClient("spring-cloud-alibaba-dubb
 
 ---
 
-```plain text
-plain // DubboSpringCloudBootstrap.java  @Bean public ApplicationRunner applicationRunner() {     return arguments -> {         // Dubbo Service call         System.out.println(echoService.echo("mercyblitz"));         // Spring Cloud Open Feign REST Call         System.out.println(feignEchoService.echo("mercyblitz"));         // Spring Cloud Open Feign REST Call (Dubbo Transported)         System.out.println(dubboFeignEchoService.echo("mercyblitz"));     }; }
+```java
+// DubboSpringCloudBootstrap.java
+@Bean
+public ApplicationRunner applicationRunner() {
+    return arguments -> {
+        // Dubbo Service call
+        System.out.println(echoService.echo("mercyblitz"));
+        // Spring Cloud Open Feign REST Call
+        System.out.println(feignEchoService.echo("mercyblitz"));
+        // Spring Cloud Open Feign REST Call (Dubbo Transported)
+        System.out.println(dubboFeignEchoService.echo("mercyblitz"));
+    };
+}
 ```
 
 ---
@@ -178,8 +304,22 @@ plain // DubboSpringCloudBootstrap.java  @Bean public ApplicationRunner applicat
 
 ---
 
-```plain text
-plain // DubboSpringCloudBootstrap.java  @GetMapping(value = "/dubbo/call/echo") public String dubboEcho(@RequestParam("message") String message) {     return echoService.echo(message); }  @GetMapping(value = "/feign/call/echo") public String feignEcho(@RequestParam("message") String message) {     return feignEchoService.echo(message); }  @GetMapping(value = "/feign-dubbo/call/echo") public String feignDubboEcho(@RequestParam("message") String message) {     return dubboFeignEchoService.echo(message); }
+```java
+// DubboSpringCloudBootstrap.java
+@GetMapping(value = "/dubbo/call/echo")
+public String dubboEcho(@RequestParam("message") String message) {
+    return echoService.echo(message);
+}
+
+@GetMapping(value = "/feign/call/echo")
+public String feignEcho(@RequestParam("message") String message) {
+    return feignEchoService.echo(message);
+}
+
+@GetMapping(value = "/feign-dubbo/call/echo")
+public String feignDubboEcho(@RequestParam("message") String message) {
+    return dubboFeignEchoService.echo(message);
+}
 ```
 
 ---
@@ -197,7 +337,7 @@ server.port=8080
 
 本文主要分享 spring-cloud-alibaba-dubbo 的 **项目结构**。希望通过本文能让胖友对 spring-cloud-alibaba-dubbo 的整体项目有个简单的了解。
 
-![](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/8f4ff33aa74bfa4767ceb36ba7fdabd0.jpg)
+![项目结构一览](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/8f4ff33aa74bfa4767ceb36ba7fdabd0.jpg)
 
 项目结构一览
 
@@ -207,7 +347,7 @@ server.port=8080
 
 **第一种方式**，使用 [IDEA Statistic](https://plugins.jetbrains.com/plugin/4509-statistic) 插件，统计整体代码量。
 
-![](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/4bda762c7cf4cb78f049ecdd94b67abd.jpg)
+![Statistic统计代码量](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/4bda762c7cf4cb78f049ecdd94b67abd.jpg)
 
 Statistic 统计代码量
 
@@ -222,7 +362,7 @@ spring-cloud-alibaba-dubbo
 
 当然，考虑到准确性，胖友需要手动 cd 到每个 Maven 项目的 src/main/java 目录下，以达到排除单元测试的代码量。
 
-![](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/efd42e35fa614326851f15781807add3.jpg)
+![Shell脚本统计代码量](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/efd42e35fa614326851f15781807add3.jpg)
 
 Shell 脚本统计代码量
 
@@ -260,8 +400,52 @@ emm~哈哈哈，等会看具体代码，会更加明白。
 
 org.springframework.cloud.alibaba.dubbo.annotation.@DubboTransported 注解，表名调用时，使用 Dubbo 作为底层 RPC 调用。代码如下：
 
-```plain text
-plain // DubboTransported.java  /**  * {@link DubboTransported @DubboTransported} annotation indicates that the traditional Spring Cloud Service-to-Service call is transported  * by Dubbo under the hood, there are two main scenarios:  * <ol>  * <li>{@link FeignClient @FeignClient} annotated classes:  * <ul>  * If {@link DubboTransported @DubboTransported} annotated classes, the invocation of all methods of  * {@link FeignClient @FeignClient} annotated classes.  * </ul>  * <ul>  * If {@link DubboTransported @DubboTransported} annotated methods of {@link FeignClient @FeignClient} annotated classes.  * </ul>  * </li>  * <li>{@link LoadBalanced @LoadBalanced} {@link RestTemplate} annotated field, method and parameters</li>  * </ol>  * <p>  *  * @see FeignClient  * @see LoadBalanced  */ @Retention(RetentionPolicy.RUNTIME) @Target(value = {ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER}) // 支持类、方法 @Documented public @interface DubboTransported {      /**      * The protocol of Dubbo transport whose value could be used the placeholder "dubbo.transport.protocol"      *      * 使用的 Dubbo 协议，默认为 "dubbo"      *      * @return the default protocol is "dubbo"      */     String protocol() default "${dubbo.transport.protocol:dubbo}";      /**      * The cluster of Dubbo transport whose value could be used the placeholder "dubbo.transport.cluster"      *      * 使用的集群容错方式，默认为 "failover"      *      * @return the default protocol is "failover"      */     String cluster() default "${dubbo.transport.cluster:failover}";  }
+```java
+// DubboTransported.java
+/**
+ * {@link DubboTransported @DubboTransported} annotation indicates that the traditional Spring Cloud Service-to-Service call is transported
+ * by Dubbo under the hood, there are two main scenarios:
+ * <ol>
+ * <li>{@link FeignClient @FeignClient} annotated classes:
+ * <ul>
+ * If {@link DubboTransported @DubboTransported} annotated classes, the invocation of all methods of
+ * {@link FeignClient @FeignClient} annotated classes.
+ * </ul>
+ * <ul>
+ * If {@link DubboTransported @DubboTransported} annotated methods of {@link FeignClient @FeignClient} annotated classes.
+ * </ul>
+ * </li>
+ * <li>{@link LoadBalanced @LoadBalanced} {@link RestTemplate} annotated field, method and parameters</li>
+ * </ol>
+ * <p>
+ *
+ * @see FeignClient
+ * @see LoadBalanced
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(value = {ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER}) // 支持类、方法
+@Documented
+public @interface DubboTransported {
+
+    /**
+     * The protocol of Dubbo transport whose value could be used the placeholder "dubbo.transport.protocol"
+     *
+     * 使用的 Dubbo 协议，默认为 "dubbo"
+     *
+     * @return the default protocol is "dubbo"
+     */
+    String protocol() default "${dubbo.transport.protocol:dubbo}";
+
+    /**
+     * The cluster of Dubbo transport whose value could be used the placeholder "dubbo.transport.cluster"
+     *
+     * 使用的集群容错方式，默认为 "failover"
+     *
+     * @return the default protocol is "failover"
+     */
+    String cluster() default "${dubbo.transport.cluster:failover}";
+
+}
 ```
 
 ---
@@ -280,8 +464,11 @@ plain // DubboTransported.java  /**  * {@link DubboTransported @DubboTransported
 
 在 META-INF/spring.factories 文件中，声明了三个自动配置类。代码如下：
 
-```plain text
-plain org.springframework.boot.autoconfigure.EnableAutoConfiguration=\   org.springframework.cloud.alibaba.dubbo.autoconfigure.DubboMetadataAutoConfiguration,\   org.springframework.cloud.alibaba.dubbo.autoconfigure.DubboOpenFeignAutoConfiguration,\   org.springframework.cloud.alibaba.dubbo.autoconfigure.DubboRestMetadataRegistrationAutoConfiguration
+```text
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.springframework.cloud.alibaba.dubbo.autoconfigure.DubboMetadataAutoConfiguration,\
+  org.springframework.cloud.alibaba.dubbo.autoconfigure.DubboOpenFeignAutoConfiguration,\
+  org.springframework.cloud.alibaba.dubbo.autoconfigure.DubboRestMetadataRegistrationAutoConfiguration
 ```
 
 ---
@@ -292,8 +479,19 @@ plain org.springframework.boot.autoconfigure.EnableAutoConfiguration=\   org.spr
 
 org.springframework.cloud.alibaba.dubbo.autoconfigure.DubboMetadataAutoConfiguration ，Dubbo 元数据（Metadata）相关 Bean 的自动配置类。代码如下：
 
-```plain text
-plain // DubboMetadataAutoConfiguration.java  @Configuration @Import(DubboServiceMetadataRepository.class) // 创建了 DubboServiceMetadataRepository Bean 对象 public class DubboMetadataAutoConfiguration {      @Bean // 创建了 NacosMetadataConfigService Bean 对象     @ConditionalOnBean(NacosConfigProperties.class)     public MetadataConfigService metadataConfigService() {         return new NacosMetadataConfigService();     }  }
+```java
+// DubboMetadataAutoConfiguration.java
+@Configuration
+@Import(DubboServiceMetadataRepository.class) // 创建了 DubboServiceMetadataRepository Bean 对象
+public class DubboMetadataAutoConfiguration {
+
+    @Bean // 创建了 NacosMetadataConfigService Bean 对象
+    @ConditionalOnBean(NacosConfigProperties.class)
+    public MetadataConfigService metadataConfigService() {
+        return new NacosMetadataConfigService();
+    }
+
+}
 ```
 
 ---
@@ -310,8 +508,29 @@ plain // DubboMetadataAutoConfiguration.java  @Configuration @Import(DubboServic
 
 org.springframework.cloud.alibaba.dubbo.autoconfigure.DubboOpenFeignAutoConfiguration ，Dubbo OpenFeign 相关 Bean 的自动配置类。代码如下：
 
-```plain text
-plain // DubboOpenFeignAutoConfiguration.java  @ConditionalOnClass(value = Feign.class) // 存在 Feign 类的时候，即存在 feign 依赖 @AutoConfigureAfter(FeignAutoConfiguration.class) // 在 FeignAutoConfiguration 配置类之后初始化 @Configuration public class DubboOpenFeignAutoConfiguration {      @Value("${spring.application.name}")     private String currentApplicationName;      @Bean // 创建 DubboServiceBeanMetadataResolver 对象     @ConditionalOnMissingBean     public MetadataResolver metadataJsonResolver(ObjectProvider<Contract> contract) {         return new DubboServiceBeanMetadataResolver(currentApplicationName, contract);     }      @Bean // 创建 TargeterBeanPostProcessor 对象     public TargeterBeanPostProcessor targeterBeanPostProcessor(Environment environment,                                                                DubboServiceMetadataRepository dubboServiceMetadataRepository) {         return new TargeterBeanPostProcessor(environment, dubboServiceMetadataRepository);     }  }
+```java
+// DubboOpenFeignAutoConfiguration.java
+@ConditionalOnClass(value = Feign.class) // 存在 Feign 类的时候，即存在 feign 依赖
+@AutoConfigureAfter(FeignAutoConfiguration.class) // 在 FeignAutoConfiguration 配置类之后初始化
+@Configuration
+public class DubboOpenFeignAutoConfiguration {
+
+    @Value("${spring.application.name}")
+    private String currentApplicationName;
+
+    @Bean // 创建 DubboServiceBeanMetadataResolver 对象
+    @ConditionalOnMissingBean
+    public MetadataResolver metadataJsonResolver(ObjectProvider<Contract> contract) {
+        return new DubboServiceBeanMetadataResolver(currentApplicationName, contract);
+    }
+
+    @Bean // 创建 TargeterBeanPostProcessor 对象
+    public TargeterBeanPostProcessor targeterBeanPostProcessor(Environment environment,
+                                                               DubboServiceMetadataRepository dubboServiceMetadataRepository) {
+        return new TargeterBeanPostProcessor(environment, dubboServiceMetadataRepository);
+    }
+
+}
 ```
 
 ---
@@ -327,8 +546,52 @@ plain // DubboOpenFeignAutoConfiguration.java  @ConditionalOnClass(value = Feign
 
 org.springframework.cloud.alibaba.dubbo.autoconfigure.DubboRestMetadataRegistrationAutoConfiguration ，自动配置两个 Spring 事件监听器，将 Dubbo Rest 元数据（Metadata）注册到配置中心。代码如下：
 
-```plain text
-plain // DubboRestMetadataRegistrationAutoConfiguration.java  @ConditionalOnProperty(value = "spring.cloud.service-registry.auto-registration.enabled", matchIfMissing = true) // 要求有 "spring.cloud.service-registry.auto-registration.enabled=true" ，或者不配置。 @ConditionalOnBean(value = { // 要求存在 MetadataResolver、MetadataConfigService Bean 对象         MetadataResolver.class,         MetadataConfigService.class }) @AutoConfigureAfter(value = {DubboMetadataAutoConfiguration.class}) // 在 DubboMetadataAutoConfiguration 配置类之后初始化 @Configuration public class DubboRestMetadataRegistrationAutoConfiguration {      /**      * A Map to store REST metadata temporary, its' key is the special service name for a Dubbo service,      * the value is a JSON content of JAX-RS or Spring MVC REST metadata from the annotated methods.      *      * Dubbo Rest Service 方法的元数据（Metadata）集合      */     private final Set<ServiceRestMetadata> serviceRestMetadata = new LinkedHashSet<>();      @Autowired // 默认情况下，来自 DubboOpenFeignAutoConfiguration 注册的 DubboServiceBeanMetadataResolver Bean 对象     private MetadataResolver metadataResolver;      @Autowired // 默认情况下，来自 DubboMetadataAutoConfiguration 注册的 NacosMetadataConfigService Bean 对象     private MetadataConfigService metadataConfigService;      @EventListener(ServiceBeanExportedEvent.class)     public void recordRestMetadata(ServiceBeanExportedEvent event) throws JsonProcessingException {         ServiceBean serviceBean = event.getServiceBean();         serviceRestMetadata.addAll(metadataResolver.resolveServiceRestMetadata(serviceBean));     }      /**      * Pre-handle Spring Cloud application service registered:      * <p>      * Put <code>restMetadata</code> with the JSON format into      * {@link Registration#getMetadata() service instances' metadata}      * <p>      *      * @param event {@link InstancePreRegisteredEvent} instance      */     @EventListener(InstancePreRegisteredEvent.class)     public void registerRestMetadata(InstancePreRegisteredEvent event) throws Exception {         Registration registration = event.getRegistration();         metadataConfigService.publishServiceRestMetadata(registration.getServiceId(), serviceRestMetadata);     }  }
+```java
+// DubboRestMetadataRegistrationAutoConfiguration.java
+@ConditionalOnProperty(value = "spring.cloud.service-registry.auto-registration.enabled", matchIfMissing = true) // 要求有 "spring.cloud.service-registry.auto-registration.enabled=true" ，或者不配置。
+@ConditionalOnBean(value = { // 要求存在 MetadataResolver、MetadataConfigService Bean 对象
+        MetadataResolver.class,
+        MetadataConfigService.class })
+@AutoConfigureAfter(value = {DubboMetadataAutoConfiguration.class}) // 在 DubboMetadataAutoConfiguration 配置类之后初始化
+@Configuration
+public class DubboRestMetadataRegistrationAutoConfiguration {
+
+    /**
+     * A Map to store REST metadata temporary, its' key is the special service name for a Dubbo service,
+     * the value is a JSON content of JAX-RS or Spring MVC REST metadata from the annotated methods.
+     *
+     * Dubbo Rest Service 方法的元数据（Metadata）集合
+     */
+    private final Set<ServiceRestMetadata> serviceRestMetadata = new LinkedHashSet<>();
+
+    @Autowired // 默认情况下，来自 DubboOpenFeignAutoConfiguration 注册的 DubboServiceBeanMetadataResolver Bean 对象
+    private MetadataResolver metadataResolver;
+
+    @Autowired // 默认情况下，来自 DubboMetadataAutoConfiguration 注册的 NacosMetadataConfigService Bean 对象
+    private MetadataConfigService metadataConfigService;
+
+    @EventListener(ServiceBeanExportedEvent.class)
+    public void recordRestMetadata(ServiceBeanExportedEvent event) throws JsonProcessingException {
+        ServiceBean serviceBean = event.getServiceBean();
+        serviceRestMetadata.addAll(metadataResolver.resolveServiceRestMetadata(serviceBean));
+    }
+
+    /**
+     * Pre-handle Spring Cloud application service registered:
+     * <p>
+     * Put <code>restMetadata</code> with the JSON format into
+     * {@link Registration#getMetadata() service instances' metadata}
+     * <p>
+     *
+     * @param event {@link InstancePreRegisteredEvent} instance
+     */
+    @EventListener(InstancePreRegisteredEvent.class)
+    public void registerRestMetadata(InstancePreRegisteredEvent event) throws Exception {
+        Registration registration = event.getRegistration();
+        metadataConfigService.publishServiceRestMetadata(registration.getServiceId(), serviceRestMetadata);
+    }
+
+}
 ```
 
 ---
@@ -384,7 +647,7 @@ plain // SpringCloudRegistryFactory.java  /**  * The Dubbo services will be regi
 
 在看具体代码之前，我们先在 Nacos 的配置中心界面，看看什么是 Dubbo Metadata 。如下图所示：
 
-![](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/3a506fda54fc3b7a7f2687b3aaf407b8.jpg)
+![Dubbo Metadata](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/3a506fda54fc3b7a7f2687b3aaf407b8.jpg)
 
 Dubbo Metadata
 
@@ -568,7 +831,7 @@ plain // DubboServiceBeanMetadataResolver.java  /**  * Select feign contract met
 处，调用
 Contract#parseAndValidatateMetadata()
 方法，返回目标类型的 Feign MethodMetadata 数组。这块代码属于 Feign 的，我们先不细调，看一个结果的示例。如下图：
-![](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/2f1a20456b2528e21b5e00b6d8f19c97.jpg)
+![结果示例](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/2f1a20456b2528e21b5e00b6d8f19c97.jpg)
 结果
     - 这里有一点要注意，因为
 CONTRACT_CLASS_NAMES
@@ -839,7 +1102,7 @@ plain // TargeterInvocationHandler.java  class TargeterInvocationHandler impleme
 ---
 
 - 为了让胖友更加好理解，我们来看下这个方法被调用时的截图：
-![](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/1261f836abcb3afa56682544552de7b7.jpg)
+![调用图](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/1261f836abcb3afa56682544552de7b7.jpg)
 调用图
 - <1>
 处，先调用原有
@@ -1011,7 +1274,7 @@ org.springframework.cloud.alibaba.nacos.registry.NacosServiceRegistry
 org.springframework.cloud.alibaba.nacos.NacosDiscoveryClient
 对象。
 - 上述两个变量，如下图所示：
-![](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/60f5da7bb593bde85b6b884d8136b4a7.jpg)
+![变量示意图](/assets/images/learning/dubbo/dubbo-integration-spring-cloud/60f5da7bb593bde85b6b884d8136b4a7.jpg)
 变量
 - <3>[「9.3 SpringCloudRegistry」](http://svip.iocoder.cn/Dubbo/spring-cloud-integration/#)
 处，创建 SpringCloudRegistry 对象。详细解析，见
