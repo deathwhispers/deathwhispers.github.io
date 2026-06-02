@@ -24,16 +24,11 @@ updated: 2022-05-26 18:33
 
 涉及的类图如下：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-transport/773e08aa9257ced848b427d8f982ea06.png)
-
-类图
+![](/assets/images/learning/dubbo/dubbo-nio-server-transport/773e08aa9257ced848b427d8f982ea06.png "类图")
 
 - 白色部分，为通用接口。
-- 蓝色部分，为
-transport
-包下的类。
-- 整个类图，我们分成**六个**
-部分：
+- 蓝色部分，为 `transport` 包下的类。
+- 整个类图，我们分成**六个**部分：
     - Client
     - Server
     - Channel
@@ -62,8 +57,39 @@ transport
 
 **构造方法**
 
-```plain text
-plain 1: /**  2:  * 通道处理器  3:  */  4: private final ChannelHandler handler;  5: /**  6:  * URL  7:  */  8: private volatile URL url;  9: /** 10:  * 正在关闭 11:  * 12:  * {@link #startClose()} 13:  */ 14: // closing closed means the process is being closed and close is finished 15: private volatile boolean closing; 16: /** 17:  * 关闭完成 18:  * 19:  * {@link #close()} 20:  */ 21: private volatile boolean closed; 22:  23: public AbstractPeer(URL url, ChannelHandler handler) { 24:     if (url == null) { 25:         throw new IllegalArgumentException("url == null"); 26:     } 27:     if (handler == null) { 28:         throw new IllegalArgumentException("handler == null"); 29:     } 30:     this.url = url; 31:     this.handler = handler; 32: }
+```java
+/**
+ * 通道处理器
+ */
+private final ChannelHandler handler;
+/**
+ * URL
+ */
+private volatile URL url;
+/**
+ * 正在关闭
+ *
+ * {@link #startClose()}
+ */
+// closing closed means the process is being closed and close is finished
+private volatile boolean closing;
+/**
+ * 关闭完成
+ *
+ * {@link #close()}
+ */
+private volatile boolean closed;
+
+public AbstractPeer(URL url, ChannelHandler handler) {
+    if (url == null) {
+        throw new IllegalArgumentException("url == null");
+    }
+    if (handler == null) {
+        throw new IllegalArgumentException("handler == null");
+    }
+    this.url = url;
+    this.handler = handler;
+}
 ```
 
 ---

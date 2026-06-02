@@ -37,9 +37,7 @@ updated: 2022-05-05 18:33
 
 本文涉及类图（红圈部分）如下：
 
-![](/assets/images/learning/dubbo/dubbo-invocation-webservice/37ab7032cc3d71169218f05e54918c08.png)
-
-类图
+![类图](/assets/images/learning/dubbo/dubbo-invocation-webservice/37ab7032cc3d71169218f05e54918c08.png)
 
 旁白君：整体实现和 dubbo-rpc-http 一致，所以内容上和 [《精尽 Dubbo 源码分析 —— 服务调用（三）之远程调用（HTTP）》](http://svip.iocoder.cn/Dubbo/rpc-http/?self=) 差不多。
 
