@@ -221,7 +221,6 @@ consumerUrl
 Registry#subscribe(url, NotifyListener)
 方法，向注册中心，发起订阅。
 
-![](角度1: doRefer)
 
 服务消费者，再引用服务时，会创建 RegistryDirectory 对象，并发起**1）服务提供者 + 2）路由规则 + 3）配置规则**的数据订阅。如下图：
 
@@ -246,7 +245,51 @@ AbstractRegistry#notify(URL url, NotifyListener, List urls)
 
 #notify(List urls)**实现**方法，代码如下：
 
-```java 1: @Override  2: public synchronized void notify(List<URL> urls) {  3:     // 根据 URL 的分类或协议，分组成三个集合 。  4:     List<URL> invokerUrls = new ArrayList<URL>(); // 服务提供者 URL 集合  5:     List<URL> routerUrls = new ArrayList<URL>();  6:     List<URL> configuratorUrls = new ArrayList<URL>();  7:     for (URL url : urls) {  8:         String protocol = url.getProtocol();  9:         String category = url.getParameter(Constants.CATEGORY_KEY, Constants.DEFAULT_CATEGORY); 10:         if (Constants.ROUTERS_CATEGORY.equals(category) || Constants.ROUTE_PROTOCOL.equals(protocol)) { 11:             routerUrls.add(url); 12:         } else if (Constants.CONFIGURATORS_CATEGORY.equals(category) || Constants.OVERRIDE_PROTOCOL.equals(protocol)) { 13:             configuratorUrls.add(url); 14:         } else if (Constants.PROVIDERS_CATEGORY.equals(category)) { 15:             invokerUrls.add(url); 16:         } else { 17:             logger.warn("Unsupported category " + category + " in notified url: " + url + " from registry " + getUrl().getAddress() + " to consumer " + NetUtils.getLocalHost()); 18:         } 19:     } 20:     // 处理配置规则 URL 集合 21:     // configurators 22:     if (!configuratorUrls.isEmpty()) { 23:         this.configurators = toConfigurators(configuratorUrls); 24:     } 25:     // 处理路由规则 URL 集合 26:     // routers 27:     if (!routerUrls.isEmpty()) { 28:         List<Router> routers = toRouters(routerUrls); 29:         if (routers != null) { // null - do nothing 30:             setRouters(routers); 31:         } 32:     } 33:     // 合并配置规则，到 `directoryUrl` 中，形成 `overrideDirectoryUrl` 变量。 34:     List<Configurator> localConfigurators = this.configurators; // local reference 35:     // merge override parameters 36:     this.overrideDirectoryUrl = directoryUrl; 37:     if (localConfigurators != null && !localConfigurators.isEmpty()) { 38:         for (Configurator configurator : localConfigurators) { 39:             this.overrideDirectoryUrl = configurator.configure(overrideDirectoryUrl); 40:         } 41:     } 42:     // 处理服务提供者 URL 集合 43:     refreshInvoker(invokerUrls); 44: }
+```java
+@Override
+public synchronized void notify(List<URL> urls) {
+    // 根据 URL 的分类或协议，分组成三个集合。
+    List<URL> invokerUrls = new ArrayList<URL>(); // 服务提供者 URL 集合
+    List<URL> routerUrls = new ArrayList<URL>();
+    List<URL> configuratorUrls = new ArrayList<URL>();
+    for (URL url : urls) {
+        String protocol = url.getProtocol();
+        String category = url.getParameter(Constants.CATEGORY_KEY, Constants.DEFAULT_CATEGORY);
+        if (Constants.ROUTERS_CATEGORY.equals(category) || Constants.ROUTE_PROTOCOL.equals(protocol)) {
+            routerUrls.add(url);
+        } else if (Constants.CONFIGURATORS_CATEGORY.equals(category) || Constants.OVERRIDE_PROTOCOL.equals(protocol)) {
+            configuratorUrls.add(url);
+        } else if (Constants.PROVIDERS_CATEGORY.equals(category)) {
+            invokerUrls.add(url);
+        } else {
+            logger.warn("Unsupported category " + category + " in notified url: " + url + " from registry " + getUrl().getAddress() + " to consumer " + NetUtils.getLocalHost());
+        }
+    }
+    // 处理配置规则 URL 集合
+    // configurators
+    if (!configuratorUrls.isEmpty()) {
+        this.configurators = toConfigurators(configuratorUrls);
+    }
+    // 处理路由规则 URL 集合
+    // routers
+    if (!routerUrls.isEmpty()) {
+        List<Router> routers = toRouters(routerUrls);
+        if (routers != null) { // null - do nothing
+            setRouters(routers);
+        }
+    }
+    // 合并配置规则，到 `directoryUrl` 中，形成 `overrideDirectoryUrl` 变量。
+    List<Configurator> localConfigurators = this.configurators; // local reference
+    // merge override parameters
+    this.overrideDirectoryUrl = directoryUrl;
+    if (localConfigurators != null && !localConfigurators.isEmpty()) {
+        for (Configurator configurator : localConfigurators) {
+            this.overrideDirectoryUrl = configurator.configure(overrideDirectoryUrl);
+        }
+    }
+    // 处理服务提供者 URL 集合
+    refreshInvoker(invokerUrls);
+}
 ```
 
 ---
@@ -327,7 +370,54 @@ InvokerComparator ，实现 Comparator 接口，Invoker 排序器实现类，**�
 5. 如果传入的 invokerUrl 列表是空，则表示只是下发的 override 规则或 route 规则，需要重新交叉对比，决定是否需要重新引用。
 - 是不是看起来有点点懵逼？淡定，我们来看看代码。
 
-```java 1: private void refreshInvoker(List<URL> invokerUrls) {  2:     if (invokerUrls != null && invokerUrls.size() == 1 && invokerUrls.get(0) != null  3:             && Constants.EMPTY_PROTOCOL.equals(invokerUrls.get(0).getProtocol())) {  4:         // 设置禁止访问  5:         this.forbidden = true; // Forbid to access  6:         // methodInvokerMap 置空  7:         this.methodInvokerMap = null; // Set the method invoker map to null  8:         // 销毁所有 Invoker 集合  9:         destroyAllInvokers(); // Close all invokers 10:     } else { 11:         // 设置允许访问 12:         this.forbidden = false; // Allow to access 13:         // 引用老的 urlInvokerMap 14:         Map<String, Invoker<T>> oldUrlInvokerMap = this.urlInvokerMap; // local reference 15:         // 传入的 invokerUrls 为空，说明是路由规则或配置规则发生改变，此时 invokerUrls 是空的，直接使用 cachedInvokerUrls 。 16:         if (invokerUrls.isEmpty() && this.cachedInvokerUrls != null) { 17:             invokerUrls.addAll(this.cachedInvokerUrls); 18:         // 传入的 invokerUrls 非空，更新 cachedInvokerUrls 。 19:         } else { 20:             this.cachedInvokerUrls = new HashSet<URL>(); 21:             this.cachedInvokerUrls.addAll(invokerUrls); //Cached invoker urls, convenient for comparison //缓存invokerUrls列表，便于交叉对比 22:         } 23:         // 忽略，若无 invokerUrls 24:         if (invokerUrls.isEmpty()) { 25:             return; 26:         } 27:         // 将传入的 invokerUrls ，转成新的 urlInvokerMap 28:         Map<String, Invoker<T>> newUrlInvokerMap = toInvokers(invokerUrls);// Translate url list to Invoker map 29:         // 转换出新的 methodInvokerMap 30:         Map<String, List<Invoker<T>>> newMethodInvokerMap = toMethodInvokers(newUrlInvokerMap); // Change method name to map Invoker Map 31:         // state change 32:         // If the calculation is wrong, it is not processed. 如果计算错误，则不进行处理. 33:         if (newUrlInvokerMap == null || newUrlInvokerMap.size() == 0) { 34:             logger.error(new IllegalStateException("urls to invokers error .invokerUrls.size :" + invokerUrls.size() + ", invoker.size :0. urls :" + invokerUrls.toString())); 35:             return; 36:         } 37:         // 若服务引用多 group ，则按照 method + group 聚合 Invoker 集合 38:         this.methodInvokerMap = multiGroup ? toMergeMethodInvokerMap(newMethodInvokerMap) : newMethodInvokerMap; 39:         this.urlInvokerMap = newUrlInvokerMap; 40:         // 销毁不再使用的 Invoker 集合 41:         try { 42:             destroyUnusedInvokers(oldUrlInvokerMap, newUrlInvokerMap); // Close the unused Invoker 43:         } catch (Exception e) { 44:             logger.warn("destroyUnusedInvokers error. ", e); 45:         } 46:     } 47: }
+```java
+private void refreshInvoker(List<URL> invokerUrls) {
+    if (invokerUrls != null && invokerUrls.size() == 1 && invokerUrls.get(0) != null
+            && Constants.EMPTY_PROTOCOL.equals(invokerUrls.get(0).getProtocol())) {
+        // 设置禁止访问
+        this.forbidden = true; // Forbid to access
+        // methodInvokerMap 置空
+        this.methodInvokerMap = null; // Set the method invoker map to null
+        // 销毁所有 Invoker 集合
+        destroyAllInvokers(); // Close all invokers
+    } else {
+        // 设置允许访问
+        this.forbidden = false; // Allow to access
+        // 引用老的 urlInvokerMap
+        Map<String, Invoker<T>> oldUrlInvokerMap = this.urlInvokerMap; // local reference
+        // 传入的 invokerUrls 为空，说明是路由规则或配置规则发生改变，此时 invokerUrls 是空的，直接使用 cachedInvokerUrls。
+        if (invokerUrls.isEmpty() && this.cachedInvokerUrls != null) {
+            invokerUrls.addAll(this.cachedInvokerUrls);
+        // 传入的 invokerUrls 非空，更新 cachedInvokerUrls。
+        } else {
+            this.cachedInvokerUrls = new HashSet<URL>();
+            this.cachedInvokerUrls.addAll(invokerUrls); //Cached invoker urls, convenient for comparison //缓存invokerUrls列表，便于交叉对比
+        }
+        // 忽略，若无 invokerUrls
+        if (invokerUrls.isEmpty()) {
+            return;
+        }
+        // 将传入的 invokerUrls ，转成新的 urlInvokerMap
+        Map<String, Invoker<T>> newUrlInvokerMap = toInvokers(invokerUrls);// Translate url list to Invoker map
+        // 转换出新的 methodInvokerMap
+        Map<String, List<Invoker<T>>> newMethodInvokerMap = toMethodInvokers(newUrlInvokerMap); // Change method name to map Invoker Map
+        // state change
+        // If the calculation is wrong, it is not processed. 如果计算错误，则不进行处理.
+        if (newUrlInvokerMap == null || newUrlInvokerMap.size() == 0) {
+            logger.error(new IllegalStateException("urls to invokers error .invokerUrls.size :" + invokerUrls.size() + ", invoker.size :0. urls :" + invokerUrls.toString()));
+            return;
+        }
+        // 若服务引用多 group ，则按照 method + group 聚合 Invoker 集合
+        this.methodInvokerMap = multiGroup ? toMergeMethodInvokerMap(newMethodInvokerMap) : newMethodInvokerMap;
+        this.urlInvokerMap = newUrlInvokerMap;
+        // 销毁不再使用的 Invoker 集合
+        try {
+            destroyUnusedInvokers(oldUrlInvokerMap, newUrlInvokerMap); // Close the unused Invoker
+        } catch (Exception e) {
+            logger.warn("destroyUnusedInvokers error. ", e);
+        }
+    }
+}
 ```
 
 ---
@@ -415,7 +505,87 @@ urlInvokerMap
 
 #toInvokers(List urls) 方法，
 
-```java 1: private Map<String, Invoker<T>> toInvokers(List<URL> urls) {  2:     // 新的 `newUrlInvokerMap`  3:     Map<String, Invoker<T>> newUrlInvokerMap = new HashMap<String, Invoker<T>>();  4:     // 若为空，直接返回  5:     if (urls == null || urls.isEmpty()) {  6:         return newUrlInvokerMap;  7:     }  8:     // 已初始化的服务器提供 URL 集合  9:     Set<String> keys = new HashSet<String>(); 10:     // 获得引用服务的协议 11:     String queryProtocols = this.queryMap.get(Constants.PROTOCOL_KEY); 12:     // 循环服务提供者 URL 集合，转成 Invoker 集合 13:     for (URL providerUrl : urls) { 14:         // If protocol is configured at the reference side, only the matching protocol is selected 15:         // 如果 reference 端配置了 protocol ，则只选择匹配的 protocol 16:         if (queryProtocols != null && queryProtocols.length() > 0) { 17:             boolean accept = false; 18:             String[] acceptProtocols = queryProtocols.split(","); // 可配置多个协议 19:             for (String acceptProtocol : acceptProtocols) { 20:                 if (providerUrl.getProtocol().equals(acceptProtocol)) { 21:                     accept = true; 22:                     break; 23:                 } 24:             } 25:             if (!accept) { 26:                 continue; 27:             } 28:         } 29:         // 忽略，若为 `empty://` 协议 30:         if (Constants.EMPTY_PROTOCOL.equals(providerUrl.getProtocol())) { 31:             continue; 32:         } 33:         // 忽略，若应用程序不支持该协议 34:         if (!ExtensionLoader.getExtensionLoader(Protocol.class).hasExtension(providerUrl.getProtocol())) { 35:             logger.error(new IllegalStateException("Unsupported protocol " + providerUrl.getProtocol() + " in notified url: " + providerUrl + " from registry " + getUrl().getAddress() + " to consumer " + NetUtils.getLocalHost() 36:                     + ", supported protocol: " + ExtensionLoader.getExtensionLoader(Protocol.class).getSupportedExtensions())); 37:             continue; 38:         } 39:         // 合并 URL 参数 40:         URL url = mergeUrl(providerUrl); 41:         // 忽略，若已经初始化 42:         String key = url.toFullString(); // The parameter urls are sorted 43:         if (keys.contains(key)) { // Repeated url 44:             continue; 45:         } 46:         // 添加到 `keys` 中 47:         keys.add(key); 48:         // Cache key is url that does not merge with consumer side parameters, regardless of how the consumer combines parameters, if the server url changes, then refer again 49:         // 如果服务端 URL 发生变化，则重新 refer 引用 50:         Map<String, Invoker<T>> localUrlInvokerMap = this.urlInvokerMap; // local reference 51:         Invoker<T> invoker = localUrlInvokerMap == null ? null : localUrlInvokerMap.get(key); 52:         if (invoker == null) { // Not in the cache, refer again 未在缓存中，重新引用 53:             try { 54:                 // 判断是否开启 55:                 boolean enabled; 56:                 if (url.hasParameter(Constants.DISABLED_KEY)) { 57:                     enabled = !url.getParameter(Constants.DISABLED_KEY, false); 58:                 } else { 59:                     enabled = url.getParameter(Constants.ENABLED_KEY, true); 60:                 } 61:                 // 若开启，创建 Invoker 对象 62:                 if (enabled) { 63:                     // 注意，引用服务 64:                     invoker = new InvokerDelegate<T>(protocol.refer(serviceType, url), url, providerUrl); 65:                 } 66:             } catch (Throwable t) { 67:                 logger.error("Failed to refer invoker for interface:" + serviceType + ",url:(" + url + ")" + t.getMessage(), t); 68:             } 69:             // 添加到 newUrlInvokerMap 中 70:             if (invoker != null) { // Put new invoker in cache 71:                 newUrlInvokerMap.put(key, invoker); 72:             } 73:         } else { // 在缓存中，直接使用缓存的 Invoker 对象，添加到 newUrlInvokerMap 中 74:             newUrlInvokerMap.put(key, invoker); 75:         } 76:     } 77:     // 清空 keys 78:     keys.clear(); 79:     return newUrlInvokerMap; 80: }
+```java
+private Map<String, Invoker<T>> toInvokers(List<URL> urls) {
+    // 新的 `newUrlInvokerMap`
+    Map<String, Invoker<T>> newUrlInvokerMap = new HashMap<String, Invoker<T>>();
+    // 若为空，直接返回
+    if (urls == null || urls.isEmpty()) {
+        return newUrlInvokerMap;
+    }
+    // 已初始化的服务器提供 URL 集合
+    Set<String> keys = new HashSet<String>();
+    // 获得引用服务的协议
+    String queryProtocols = this.queryMap.get(Constants.PROTOCOL_KEY);
+    // 循环服务提供者 URL 集合，转成 Invoker 集合
+    for (URL providerUrl : urls) {
+        // If protocol is configured at the reference side, only the matching protocol is selected
+        // 如果 reference 端配置了 protocol ，则只选择匹配的 protocol
+        if (queryProtocols != null && queryProtocols.length() > 0) {
+            boolean accept = false;
+            String[] acceptProtocols = queryProtocols.split(","); // 可配置多个协议
+            for (String acceptProtocol : acceptProtocols) {
+                if (providerUrl.getProtocol().equals(acceptProtocol)) {
+                    accept = true;
+                    break;
+                }
+            }
+            if (!accept) {
+                continue;
+            }
+        }
+        // 忽略，若为 `empty://` 协议
+        if (Constants.EMPTY_PROTOCOL.equals(providerUrl.getProtocol())) {
+            continue;
+        }
+        // 忽略，若应用程序不支持该协议
+        if (!ExtensionLoader.getExtensionLoader(Protocol.class).hasExtension(providerUrl.getProtocol())) {
+            logger.error(new IllegalStateException("Unsupported protocol " + providerUrl.getProtocol() + " in notified url: " + providerUrl + " from registry " + getUrl().getAddress() + " to consumer " + NetUtils.getLocalHost()
+                    + ", supported protocol: " + ExtensionLoader.getExtensionLoader(Protocol.class).getSupportedExtensions()));
+            continue;
+        }
+        // 合并 URL 参数
+        URL url = mergeUrl(providerUrl);
+        // 忽略，若已经初始化
+        String key = url.toFullString(); // The parameter urls are sorted
+        if (keys.contains(key)) { // Repeated url
+            continue;
+        }
+        // 添加到 `keys` 中
+        keys.add(key);
+        // Cache key is url that does not merge with consumer side parameters, regardless of how the consumer combines parameters, if the server url changes, then refer again
+        // 如果服务端 URL 发生变化，则重新 refer 引用
+        Map<String, Invoker<T>> localUrlInvokerMap = this.urlInvokerMap; // local reference
+        Invoker<T> invoker = localUrlInvokerMap == null ? null : localUrlInvokerMap.get(key);
+        if (invoker == null) { // Not in the cache, refer again 未在缓存中，重新引用
+            try {
+                // 判断是否开启
+                boolean enabled;
+                if (url.hasParameter(Constants.DISABLED_KEY)) {
+                    enabled = !url.getParameter(Constants.DISABLED_KEY, false);
+                } else {
+                    enabled = url.getParameter(Constants.ENABLED_KEY, true);
+                }
+                // 若开启，创建 Invoker 对象
+                if (enabled) {
+                    // 注意，引用服务
+                    invoker = new InvokerDelegate<T>(protocol.refer(serviceType, url), url, providerUrl);
+                }
+            } catch (Throwable t) {
+                logger.error("Failed to refer invoker for interface:" + serviceType + ",url:(" + url + ")" + t.getMessage(), t);
+            }
+            // 添加到 newUrlInvokerMap 中
+            if (invoker != null) { // Put new invoker in cache
+                newUrlInvokerMap.put(key, invoker);
+            }
+        } else { // 在缓存中，直接使用缓存的 Invoker 对象，添加到 newUrlInvokerMap 中
+            newUrlInvokerMap.put(key, invoker);
+        }
+    }
+    // 清空 keys
+    keys.clear();
+    return newUrlInvokerMap;
+}
 ```
 
 ---
