@@ -75,20 +75,18 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
-* @author Levin
-* @since 2018/6/6 0006
-*/
+ * @author Levin
+ * @since 2018/6/6 0006
+ */
 @Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
 @Constraint(validatedBy = DateTimeValidator.class)
 public @interface DateTime {
     String message() default "格式错误";
     String format() default "yyyy-MM-dd";
-    Class<?>[] groups() default {}
-    Class<? extends Payload>[] payload() default {}
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
 }
-
-
 ```
 
 ## 具体验证
@@ -112,12 +110,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
-* 日期格式验证
-*
-* @author Levin
-* @version 1.0.0
-* @since 2018-06-06
-*/
+ * 日期格式验证
+ *
+ * @author Levin
+ * @version 1.0.0
+ * @since 2018-06-06
+ */
 public class DateTimeValidator implements ConstraintValidator<DateTime, String> {
     private DateTime dateTime;
 
@@ -158,25 +156,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
-* 参数校验
-*
-* @author Levin
-* @since 2018/6/04 0031
-*/
+ * 参数校验
+ *
+ * @author Levin
+ * @since 2018/6/04 0031
+ */
 @Validated
 @RestController
 public class ValidateController {
     @GetMapping("/test")
-    public String test(@DateTime(message = "您输入的格式错误，正确的格式为：
-    {
-        format;
-    }
-    ", format = "yyyy-MM-dd HH:mm") String date) {
+    public String test(@DateTime(message = "您输入的格式错误，正确的格式为：{format}", format = "yyyy-MM-dd HH:mm") String date) {
         return "success";
     }
 }
-
-
 ```
 
 # 分组验证
@@ -195,17 +187,15 @@ public class ValidateController {
 package com.battcn.groups;
 
 /**
-* 验证组
-*
-* @author Levin
-* @since 2018/6/7 0007
-*/
+ * 验证组
+ *
+ * @author Levin
+ * @since 2018/6/7 0007
+ */
 public class Groups {
-    public interface Update { }
-    public interface Default { }
+    public interface Update {}
+    public interface Default {}
 }
-
-
 ```
 
 ## 实体类
@@ -221,9 +211,9 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
-* @author Levin
-* @since 2018/6/7 0005
-*/
+ * @author Levin
+ * @since 2018/6/7 0005
+ */
 public class Book {
     @NotNull(message = "id 不能为空", groups = Groups.Update.class)
     private Integer id;
@@ -233,7 +223,6 @@ public class Book {
     private BigDecimal price;
     // 省略 GET SET …
 }
-
 ```
 
 ## 控制层
@@ -250,11 +239,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
-* 参数校验
-*
-* @author Levin
-* @since 2018/6/06 0031
-*/
+ * 参数校验
+ *
+ * @author Levin
+ * @since 2018/6/06 0031
+ */
 @RestController
 public class ValidateController {
     @GetMapping("/insert")
@@ -263,14 +252,8 @@ public class ValidateController {
     }
 
     @GetMapping("/update")
-    public String update(@Validated(value =
-    {
-        Groups.Default.class, Groups.Update.class;
-    }
-    ) Book book) {
+    public String update(@Validated(value = {Groups.Default.class, Groups.Update.class}) Book book) {
         return "update";
     }
 }
-
-
 ```

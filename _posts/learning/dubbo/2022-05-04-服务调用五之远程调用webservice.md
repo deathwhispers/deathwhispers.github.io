@@ -47,7 +47,7 @@ updated: 2022-05-05 18:33
 
 ## 2.1 构造方法
 
-```plain text
+```text
 plain /**  * 默认服务器端口  */ public static final int DEFAULT_PORT = 80; /**  * Http 服务器集合  *  * key：ip:port  */ private final Map<String, HttpServer> serverMap = new ConcurrentHashMap<String, HttpServer>(); /**  * 《我眼中的CXF之Bus》http://jnn.iteye.com/blog/94746  * 《CXF BUS》https://blog.csdn.net/chen_fly2011/article/details/56664908  */ private final ExtensionManagerBus bus = new ExtensionManagerBus(); /**  *  */ private final HTTPTransportFactory transportFactory = new HTTPTransportFactory(); /**  * HttpBinder$Adaptive 对象  */ private HttpBinder httpBinder;  public WebServiceProtocol() {     super(Fault.class);     bus.setExtension(new ServletDestinationFactory(), HttpDestinationFactory.class); }  public void setHttpBinder(HttpBinder httpBinder) {     this.httpBinder = httpBinder; }
 ```
 
@@ -60,7 +60,7 @@ ip:port
 #getAddr(url)
 方法，计算。代码如下：
 
-```plain text
+```text
 plain // AbstractProxyProtocol.java protected String getAddr(URL url) {     String bindIp = url.getParameter(Constants.BIND_IP_KEY, url.getHost());     if (url.getParameter(Constants.ANYHOST_KEY, false)) {         bindIp = Constants.ANYHOST_VALUE;     }     return NetUtils.getIpByHost(bindIp) + ":" + url.getParameter(Constants.BIND_PORT_KEY, url.getPort()); }
 ```
 
@@ -88,7 +88,7 @@ transportFactory
 
 ## 2.2 doExport
 
-```plain text
+```text
 plain 1: @Override  2: protected <T> Runnable doExport(T impl, Class<T> type, URL url) throws RpcException {  3:     // 获得服务器地址  4:     String addr = getAddr(url);  5:     // 获得 HttpServer 对象。若不存在，进行创建。  6:     HttpServer httpServer = serverMap.get(addr);  7:     if (httpServer == null) {  8:         httpServer = httpBinder.bind(url, new WebServiceHandler()); // WebServiceHandler  9:         serverMap.put(addr, httpServer); 10:     } 11:     // 创建 ServerFactoryBean 对象 12:     final ServerFactoryBean serverFactoryBean = new ServerFactoryBean(); 13:     serverFactoryBean.setAddress(url.getAbsolutePath()); 14:     serverFactoryBean.setServiceClass(type); 15:     serverFactoryBean.setServiceBean(impl); 16:     serverFactoryBean.setBus(bus); 17:     serverFactoryBean.setDestinationFactory(transportFactory); 18:     serverFactoryBean.create(); 19:     // 返回取消暴露的回调 Runnable 20:     return new Runnable() { 21:         public void run() { 22:             serverFactoryBean.destroy(); 23:         } 24:     }; 25: }
 ```
 
@@ -111,7 +111,7 @@ HttpBinder#bind(url, handler)
 
 ### 2.2.1 WebServiceHandler
 
-```plain text
+```text
 plain private class WebServiceHandler implements HttpHandler {      private volatile ServletController servletController;      @Override     public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {         // 创建 ServletController 对象，设置使用 DispatcherServlet 。         if (servletController == null) {             HttpServlet httpServlet = DispatcherServlet.getInstance();             if (httpServlet == null) {                 response.sendError(500, "No such DispatcherServlet instance.");                 return;             }             synchronized (this) {                 if (servletController == null) {                     servletController = new ServletController(transportFactory.getRegistry(), httpServlet.getServletConfig(), httpServlet);                 }             }         }         // 设置调用方地址         RpcContext.getContext().setRemoteAddress(request.getRemoteAddr(), request.getRemotePort());         // 执行调用         servletController.invoke(request, response);     }  }
 ```
 
@@ -119,7 +119,7 @@ plain private class WebServiceHandler implements HttpHandler {      private vola
 
 ## 2.3 doRefer
 
-```plain text
+```text
 plain 1: @Override  2: @SuppressWarnings("unchecked")  3: protected <T> T doRefer(final Class<T> serviceType, final URL url) throws RpcException {  4:     // 创建 ClientProxyFactoryBean 对象  5:     ClientProxyFactoryBean proxyFactoryBean = new ClientProxyFactoryBean();  6:     proxyFactoryBean.setAddress(url.setProtocol("http").toIdentityString());  7:     proxyFactoryBean.setServiceClass(serviceType);  8:     proxyFactoryBean.setBus(bus);  9:     // 创建 Service Proxy 对象 10:     T ref = (T) proxyFactoryBean.create(); 11:     // 设置超时相关属性 12:     Client proxy = ClientProxy.getClient(ref); 13:     HTTPConduit conduit = (HTTPConduit) proxy.getConduit(); 14:     HTTPClientPolicy policy = new HTTPClientPolicy(); 15:     policy.setConnectionTimeout(url.getParameter(Constants.CONNECT_TIMEOUT_KEY, Constants.DEFAULT_CONNECT_TIMEOUT)); 16:     policy.setReceiveTimeout(url.getParameter(Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT)); 17:     conduit.setClient(policy); 18:     return ref; 19: }
 ```
 
@@ -132,7 +132,7 @@ plain 1: @Override  2: @SuppressWarnings("unchecked")  3: protected <T> T doRefe
 
 ### 2.3.1 getErrorCode
 
-```plain text
+```text
 plain @Override protected int getErrorCode(Throwable e) {     if (e instanceof Fault) {         e = e.getCause();     }     if (e instanceof SocketTimeoutException) {         return RpcException.TIMEOUT_EXCEPTION;     } else if (e instanceof IOException) {         return RpcException.NETWORK_EXCEPTION;     }     return super.getErrorCode(e); }
 ```
 
@@ -142,7 +142,7 @@ plain @Override protected int getErrorCode(Throwable e) {     if (e instanceof F
 
 # 666. 彩蛋
 
-![](/assets/images/learning/dubbo/dubbo-invocation-webservice/96ca62e95e06bbe2fa74153d2158bc13.png)
+![知识星球](/assets/images/learning/dubbo/dubbo-invocation-webservice/96ca62e95e06bbe2fa74153d2158bc13.png)
 
 知识星球
 

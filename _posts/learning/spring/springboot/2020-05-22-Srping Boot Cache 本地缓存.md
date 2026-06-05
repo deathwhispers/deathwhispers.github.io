@@ -90,7 +90,12 @@ Spring Boot会检查class path里的类，发现合适的（比如caffeine）就
 application.properties
 
 ```yaml
-spring:  cache:    type: mqttTokenCache    cache-names: mqttTokenCache    caffeine:        spec: maximumSize=1,expireAfterAccess=15s
+spring:
+  cache:
+    type: mqttTokenCache
+    cache-names: mqttTokenCache
+    caffeine:
+      spec: maximumSize=1,expireAfterAccess=15s
 ```
 
 Spring Boot 2已经不支持Guava作为Cache（用户代码内部还是可以使用，只是Spring框架的Cache不支持），代替Guava是的Caffeine，用法跟Guava类似，迁移成本很低
@@ -99,4 +104,6 @@ Spring Boot 2已经不支持Guava作为Cache（用户代码内部还是可以使
 
 - 如果classpath有多个缓存组件，可以通过配置指定使用的缓存组件
 
+```properties
 spring.cache.type=caffeine
+```

@@ -91,11 +91,7 @@ com.alibaba.dubbo.rpc.cluster.loadbalance.AbstractLoadBalance ，实现 LoadBala
 ---
 
 ```java
-- <font style="color:rgb(51, 51, 51);">计算权重的代码这么写看起来比较"绕"，我们来修改成 </font><font style="color:rgb(51, 51, 51);">(uptime / warmup) * weight</font><font style="color:rgb(51, 51, 51);"> ，是否就好理解多了，相当于</font>**<font style="color:rgb(51, 51, 51);">进度百分比 * 权重</font>**<font style="color:rgb(51, 51, 51);">。</font>
-- <font style="color:rgb(51, 51, 51);">如下是我飞哥举的一个例子，感觉非常赞。</font><font style="color:rgb(51, 51, 51);">根据calculateWarmupWeight()方法实现可知，随着provider的启动时间越来越长，慢慢提升权重直到weight，且权重最小值为1，所以：</font>
-    * <font style="color:rgb(51, 51, 51);">如果 provider 运行了 1 分钟，那么 weight 为 10，即只有最终需要承担的 10% 流量；</font>
-    * <font style="color:rgb(51, 51, 51);">如果 provider 运行了 2 分钟，那么 weight 为 20，即只有最终需要承担的 20% 流量；</font>
-    * <font style="color:rgb(51, 51, 51);">如果 provider 运行了 5 分钟，那么 weight 为 50，即只有最终需要承担的 50% 流量；
+- 计算权重的代码这么写看起来比较"绕"，我们来修改成 </font>(uptime / warmup) * weight</font> ，是否就好理解多了，相当于</font>**进度百分比 * 权重</font>**。- 如下是我飞哥举的一个例子，感觉非常赞。</font>根据calculateWarmupWeight()方法实现可知，随着provider的启动时间越来越长，慢慢提升权重直到weight，且权重最小值为1，所以：    * 如果 provider 运行了 1 分钟，那么 weight 为 10，即只有最终需要承担的 10% 流量；    * 如果 provider 运行了 2 分钟，那么 weight 为 20，即只有最终需要承担的 20% 流量；    * 如果 provider 运行了 5 分钟，那么 weight 为 50，即只有最终需要承担的 50% 流量；
 ```
 
 … …
@@ -573,10 +569,8 @@ address + i
 ---
 
 ```java
-    * **<font style="color:rgb(51, 51, 51);">MD5 是一个 16 字节长度的数组，将 16 字节的数组每四个字节一组，分别对应一个虚拟结点，这就是为什么上面把虚拟结点四个划分一组的原因</font>**
-- <font style="color:rgb(51, 51, 51);">第 22 行：顺序</font>**<font style="color:rgb(51, 51, 51);">循环</font>**<font style="color:rgb(51, 51, 51);">每四个字节。</font>
-- <font style="color:rgb(51, 51, 51);">第 24 行：调用 </font><font style="color:rgb(51, 51, 51);">#hash(byte[] digest, int number)</font><font style="color:rgb(51, 51, 51);"> 方法，对于</font>**<font style="color:rgb(51, 51, 51);">每四个字节</font>**<font style="color:rgb(51, 51, 51);">，组成一个 Long 值数值，做为这个虚拟节点的在环中的</font>**<font style="color:rgb(51, 51, 51);">惟一 KEY</font>**<font style="color:rgb(51, 51, 51);"> 。代码如下：</font>
-```
+    * **MD5 是一个 16 字节长度的数组，将 16 字节的数组每四个字节一组，分别对应一个虚拟结点，这就是为什么上面把虚拟结点四个划分一组的原因</font>**
+- 第 22 行：顺序</font>**循环</font>**每四个字节。- 第 24 行：调用 </font>#hash(byte[] digest, int number)</font> 方法，对于</font>**每四个字节</font>**，组成一个 Long 值数值，做为这个虚拟节点的在环中的</font>**惟一 KEY</font>** 。代码如下：```
 
 ```java private long hash(byte[] digest, int number) {     return (((long) (digest[3 + number * 4] & 0xFF) << 24)             | ((long) (digest[2 + number * 4] & 0xFF) << 16)             | ((long) (digest[1 + number * 4] & 0xFF) << 8)             | (digest[number * 4] & 0xFF))             & 0xFFFFFFFFL; }
 ```
@@ -584,9 +578,7 @@ address + i
 ---
 
 ```java
-    * <font style="color:rgb(51, 51, 51);">x</font>
-- <font style="color:rgb(51, 51, 51);">第 25 行：添加 Invoker 到 </font><font style="color:rgb(51, 51, 51);">virtualInvokers</font><font style="color:rgb(51, 51, 51);"> 中。</font>
-```
+    * x- 第 25 行：添加 Invoker 到 </font>virtualInvokers</font> 中。```
 
 ### 7.1.2 select
 

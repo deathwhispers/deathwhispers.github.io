@@ -70,7 +70,7 @@ public class YoungMan {
 
 诚然，作为婚介公司的 IoC 帮我们省略了找女朋友的繁杂过程，将原来的主动寻找变成了现在的被动接受，更加简洁轻便。你想啊，原来你还得鞍马前后，各种巴结，什么东西都需要自己去亲力亲为，现在好了，直接有人把现成的送过来，多么美妙的事情啊。所以，简单点说，IoC 的理念就是**让别人为你服务**，如下图（摘自Spring揭秘）：
 
-![a9c6a574b85de4723729b674cb51436f](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/a9c6a574b85de4723729b674cb51436f.png)
+![IoC服务提供者示意图](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/a9c6a574b85de4723729b674cb51436f.png)
 
 在没有引入 IoC 的时候，被注入的对象直接依赖于被依赖的对象，有了 IoC 后，两者及其他们的关系都是通过 Ioc Service Provider 来统一管理维护的。被注入的对象需要什么，直接跟 IoC Service Provider 打声招呼，后者就会把相应的被依赖对象注入到被注入的对象中，从而达到 IoC Service Provider 为被注入对象服务的目的。**所以 IoC 就是这么简单！原来是需要什么东西自己去拿，现在是需要什么东西让别人（IoC Service Provider）送过来**
 
@@ -142,19 +142,19 @@ public class YoungMan {
 
 先看下图（摘自:[http://singleant.iteye.com/blog/1177358）](http://singleant.iteye.com/blog/1177358%EF%BC%89)
 
-![b12d2b0775b788c80247c9a7363011b6](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/b12d2b0775b788c80247c9a7363011b6.jpeg)
+![ClassPathXmlApplicationContext类继承体系结构](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/b12d2b0775b788c80247c9a7363011b6.jpeg)
 
 组件类图
 
-该图为 `<font style="color:rgb(51, 51, 51);">ClassPathXmlApplicationContext</font>` 的类继承体系结构，虽然只有一部分，但是它基本上包含了 IoC 体系中大部分的核心类和接口。
+该图为 `ClassPathXmlApplicationContext` 的类继承体系结构，虽然只有一部分，但是它基本上包含了 IoC 体系中大部分的核心类和接口。
 
 下面我们就针对这个图进行简单的拆分和补充说明。
 
 ## 2.1 Resource 体系
 
-`<font style="color:rgb(51, 51, 51);">org.springframework.core.io.Resource</font>`，对资源的抽象。它的每一个实现类都代表了一种资源的访问策略，如 `<font style="color:rgb(51, 51, 51);">ClassPathResource</font>`、`<font style="color:rgb(51, 51, 51);">RLResource</font>`、`<font style="color:rgb(51, 51, 51);">FileSystemResource</font>` 等。
+`org.springframework.core.io.Resource`，对资源的抽象。它的每一个实现类都代表了一种资源的访问策略，如 `ClassPathResource`、`RLResource`、`FileSystemResource` 等。
 
-![143162657d5f8c7cb7712d0996bf2a38](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/143162657d5f8c7cb7712d0996bf2a38.jpeg)
+![Resource类图](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/143162657d5f8c7cb7712d0996bf2a38.jpeg)
 
 Resource 类图
 
@@ -162,7 +162,7 @@ Resource 类图
 
 有了资源，就应该有资源加载，Spring 利用 org.springframework.core.io.ResourceLoader 来进行统一资源加载，类图如下：
 
-![2446cc9fba90605b691ea250cf340ebb](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/2446cc9fba90605b691ea250cf340ebb.png)
+![ResourceLoader类图](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/2446cc9fba90605b691ea250cf340ebb.png)
 
 ResourceLoader 类图
 
@@ -172,7 +172,7 @@ ResourceLoader 类图
 
 org.springframework.beans.factory.BeanFactory，是一个非常纯粹的 bean 容器，它是 IoC 必备的数据结构，其中 BeanDefinition 是它的基本结构。BeanFactory 内部维护着一个BeanDefinition map ，并可根据 BeanDefinition 的描述进行 bean 的创建和管理。
 
-![4a0a9d810fad631a5f0263bc411e6606](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/4a0a9d810fad631a5f0263bc411e6606.png)
+![BeanFactory类图](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/4a0a9d810fad631a5f0263bc411e6606.png)
 
 BeanFactory 类图
 
@@ -181,9 +181,9 @@ BeanFactory 类图
 
 ## 2.3 BeanDefinition 体系
 
-`<font style="color:rgb(51, 51, 51);">org.springframework.beans.factory.config.BeanDefinition</font>` ，用来描述 Spring 中的 Bean 对象。
+`org.springframework.beans.factory.config.BeanDefinition` ，用来描述 Spring 中的 Bean 对象。
 
-![0e80d7996e6a8642b66873b0f0a31680](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/0e80d7996e6a8642b66873b0f0a31680.png)
+![BeanDefinition类图](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/0e80d7996e6a8642b66873b0f0a31680.png)
 
 BeanDefinition 类图
 
@@ -191,7 +191,7 @@ BeanDefinition 类图
 
 org.springframework.beans.factory.support.BeanDefinitionReader 的作用是读取 Spring 的配置文件的内容，并将其转换成 Ioc 容器内部的数据结构 ：BeanDefinition 。
 
-![8560e3437ba97621cffb794d629d4928](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/8560e3437ba97621cffb794d629d4928.png)
+![BeanDefinitionReader类图](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/8560e3437ba97621cffb794d629d4928.png)
 
 BeanDefinitionReader 类图
 
@@ -218,7 +218,7 @@ org.springframework.context.ApplicationEventPublisher
 
 下图来源：[https://blog.csdn.net/yujin753/article/details/47043143](https://blog.csdn.net/yujin753/article/details/47043143)
 
-![bfdcd6b07c6f5434ba01895efd174cdc](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/bfdcd6b07c6f5434ba01895efd174cdc.png)
+![ApplicationContext类图](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-spring-ioc/bfdcd6b07c6f5434ba01895efd174cdc.png)
 
 ApplicationContext 类图
 

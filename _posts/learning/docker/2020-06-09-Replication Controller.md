@@ -41,14 +41,14 @@ apiVersion: v1kind: ReplicationControllermetadata:  name: nginxspec:  replicas: 
 
 下载示例文件然后运行：
 
-```plain text
+```shell
 $ kubectl create -f ./replication.yaml
 replicationcontroller "nginx" created
 ```
 
 检查ReplicationController状态：
 
-```plain text
+```text
 $ kubectl describe replicationcontrollers/nginx
 Name:        nginx
 Namespace:   default
@@ -67,13 +67,13 @@ Events:
 
 创建了三个pod
 
-```plain text
+```text
 Pods Status:    3 Running / 0 Waiting / 0 Succeeded / 0 Failed
 ```
 
 列出属于ReplicationController的所有pod：
 
-```plain text
+```shell
 $ pods=$(kubectl get pods --selector=app=nginx --output=jsonpath={.items..metadata.name})
 echo $pods
 nginx-3ntk0 nginx-4ok8v nginx-qrm3m

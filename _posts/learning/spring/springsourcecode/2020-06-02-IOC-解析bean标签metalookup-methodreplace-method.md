@@ -169,13 +169,13 @@ XML 配置内容如下：
 
 运行结果为：
 
-```plain text
+```text
 我是 hongqi
 ```
 
 如果将 bean="hognqi" 替换为 bean="bmw"，则运行结果变成：
 
-```plain text
+```text
 我是 BMW
 ```
 
@@ -243,7 +243,7 @@ public static void main(String[] args) {
 
 则运行结果为：
 
-```plain text
+```text
 我是原始方法
 ```
 
@@ -258,7 +258,7 @@ public static void main(String[] args) {
 
 运行结果为：
 
-```plain text
+```text
 我是替换方法
 ```
 

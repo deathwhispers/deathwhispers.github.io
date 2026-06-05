@@ -36,14 +36,14 @@ updated: 2020-11-17 18:00
 
 首先我们定义四个 Properties 文件，如下：
 
-![4530d3fd7cb77a4f48bc3a9c765d776e](/assets/images/learning/spring/springsourcecode/ioc-propertyplaceholderconfigurer-application/4530d3fd7cb77a4f48bc3a9c765d776e.jpg)
+![多环境配置文件列表](/assets/images/learning/spring/springsourcecode/ioc-propertyplaceholderconfigurer-application/4530d3fd7cb77a4f48bc3a9c765d776e.jpg)
 
 配置内容如下：
 
 - application-dev.properties
 文件，如下：
 
-```plain text
+```text
 plain student.name=chenssy-dev
 ```
 
@@ -52,7 +52,7 @@ plain student.name=chenssy-dev
 - application-test.properties
 文件，如下：
 
-```plain text
+```text
 plain student.name=chenssy-test
 ```
 
@@ -61,7 +61,7 @@ plain student.name=chenssy-test
 - application-prod.properties
 文件，如下：
 
-```plain text
+```text
 plain student.name=chenssy-prod
 ```
 
@@ -69,7 +69,7 @@ plain student.name=chenssy-prod
 
 然后实现一个类，该类继承 PropertyPlaceholderConfigurer，实现 #loadProperties(Properties props) 方法，根据环境的不同加载不同的配置文件，代码如下：
 
-```plain text
+```text
 java public class CustomPropertyConfig extends PropertyPlaceholderConfigurer {      private Resource[] locations;      private PropertiesPersister propertiesPersister = new DefaultPropertiesPersister();      @Override     public void setLocations(Resource[] locations) {         this.locations = locations;     }      @Override     public void setLocalOverride(boolean localOverride) {         this.localOverride = localOverride;     }      /**      * 覆盖这个方法，根据启动参数，动态读取配置文件      * @param props      * @throws IOException      */     @Override     protected void loadProperties(Properties props) throws IOException {         if (locations != null) {             // locations 里面就已经包含了那三个定义的文件             for (Resource location : this.locations) {                 InputStream is = null;                 try {                     String filename = location.getFilename();                     String env = "application-" + System.getProperty("spring.profiles.active", "dev") + ".properties";                      // 找到我们需要的文件，加载                     if (filename.contains(env)) {                         logger.info("Loading properties file from " + location);                         is = location.getInputStream();                         this.propertiesPersister.load(props, is);                      }                 } catch (IOException ex) {                     logger.info("读取配置文件失败.....");                     throw ex;                 } finally {                     if (is != null) {                         is.close();                     }                 }             }         }     } }
 ```
 
@@ -77,7 +77,7 @@ java public class CustomPropertyConfig extends PropertyPlaceholderConfigurer {  
 
 配置文件：
 
-```plain text
+```text
 xml <bean id="PropertyPlaceholderConfigurer" class="org.springframework.core.custom.CustomPropertyConfig">   <property name="locations">     <list>       <value>classpath:config/application-dev.properties</value>       <value>classpath:config/application-test.properties</value>       <value>classpath:config/application-prod.properties</value>     </list>   </property> </bean>  <bean id="studentService" class="org.springframework.core.service.StudentService">   <property name="name" value="${student.name}"/> </bean>
 ```
 
@@ -85,7 +85,7 @@ xml <bean id="PropertyPlaceholderConfigurer" class="org.springframework.core.cus
 
 在 idea 的 VM options 里面增加 -Dspring.profiles.active=dev，标志当前环境为 dev 环境。测试代码如下：
 
-```plain text
+```text
 java ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");  StudentService studentService = (StudentService) context.getBean("studentService"); System.out.println("student name:" + studentService.getName());
 ```
 
@@ -93,7 +93,7 @@ java ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml
 
 运行结果：
 
-```plain text
+```text
 plain student name:chenssy-dev
 ```
 

@@ -109,27 +109,27 @@ channel
 ，每个实现的方法，都会调用
 channel
 。如下是该属性的一个例子：
-![](/assets/images/learning/dubbo/dubbo-nio-server-exchange/e6b64a0a49f676cf5460fb565cdf57ae.png)
+![channel属性示例](/assets/images/learning/dubbo/dubbo-nio-server-exchange/e6b64a0a49f676cf5460fb565cdf57ae.png)
 `channel`
 - #getOrAddChannel(Channel)**静态**
 方法，创建 HeaderExchangeChannel 对象。代码如下：
 
-```plain text
+```text
 plain static HeaderExchangeChannel getOrAddChannel(Channel ch) {     if (ch == null) {         return null;     }     HeaderExchangeChannel ret = (HeaderExchangeChannel) ch.getAttribute(CHANNEL_KEY);     if (ret == null) {         ret = new HeaderExchangeChannel(ch);         if (ch.isConnected()) { // 已连接             ch.setAttribute(CHANNEL_KEY, ret);         }     }     return ret; }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">传入的 </font><font style="color:rgb(51, 51, 51);">ch</font><font style="color:rgb(51, 51, 51);"> 属性，实际就是 </font><font style="color:rgb(51, 51, 51);">HeaderExchangeChanel.channel</font><font style="color:rgb(51, 51, 51);"> 属性。</font>
-- <font style="color:rgb(51, 51, 51);">通过 </font><font style="color:rgb(51, 51, 51);">ch.attribute</font><font style="color:rgb(51, 51, 51);"> 的 </font><font style="color:rgb(51, 51, 51);">CHANNEL_KEY</font><font style="color:rgb(51, 51, 51);"> 键值，保证有且仅有为 </font><font style="color:rgb(51, 51, 51);">ch</font><font style="color:rgb(51, 51, 51);"> 属性，创建唯一的 HeaderExchangeChannel 对象。</font>
-- <font style="color:rgb(51, 51, 51);">要求</font>**<font style="color:rgb(51, 51, 51);">已连接</font>**<font style="color:rgb(51, 51, 51);">。</font>
+```text
+- 传入的 `ch` 属性，实际就是 `HeaderExchangeChanel.channel` 属性。
+- 通过 `ch.attribute` 的 `CHANNEL_KEY` 键值，保证有且仅有为 `ch` 属性，创建唯一的 HeaderExchangeChannel 对象。
+- 要求**已连接**。
 ```
 
 - #removeChannelIfDisconnected(ch)**静态方法**
 ，移除 HeaderExchangeChannel 对象。代码如下：
 
-```plain text
+```text
 plain static void removeChannelIfDisconnected(Channel ch) {     if (ch != null && !ch.isConnected()) { // 未连接         ch.removeAttribute(CHANNEL_KEY);     } }
 ```
 
@@ -137,7 +137,7 @@ plain static void removeChannelIfDisconnected(Channel ch) {     if (ch != null &
 
 ### 2.1.2 发送请求
 
-```plain text
+```text
 plain 1: @Override  2: public ResponseFuture request(Object request, int timeout) throws RemotingException {  3:     if (closed) {  4:         throw new RemotingException(this.getLocalAddress(), null, "Failed to send request " + request + ", cause: The channel " + this + " is closed!");  5:     }  6:     // create request. 创建请求  7:     Request req = new Request();  8:     req.setVersion("2.0.0");  9:     req.setTwoWay(true); // 需要响应 10:     req.setData(request); 11:     // 创建 DefaultFuture 对象 12:     DefaultFuture future = new DefaultFuture(channel, req, timeout); 13:     try { 14:         // 发送请求 15:         channel.send(req); 16:     } catch (RemotingException e) { // 发生异常，取消 DefaultFuture 17:         future.cancel(); 18:         throw e; 19:     } 20:     // 返回 DefaultFuture 对象 21:     return future; 22: }
 ```
 
@@ -160,7 +160,7 @@ DefaultFuture#cancel()
 
 ### 2.1.3 优雅关闭
 
-```plain text
+```text
 plain 1: @Override  2: public void close(int timeout) {  3:     if (closed) {  4:         return;  5:     }  6:     closed = true;  7:     // 等待请求完成  8:     if (timeout > 0) {  9:         long start = System.currentTimeMillis(); 10:         while (DefaultFuture.hasFuture(channel) && System.currentTimeMillis() - start < timeout) { 11:             try { 12:                 Thread.sleep(10); 13:             } catch (InterruptedException e) { 14:                 logger.warn(e.getMessage(), e); 15:             } 16:         } 17:     } 18:     // 关闭通道 19:     close(); 20: }
 ```
 
@@ -192,7 +192,7 @@ com.alibaba.dubbo.remoting.exchange.support.header.HeaderExchangeClient ，实�
 
 **构造方法**
 
-```plain text
+```text
 plain 1: /**  2:  * 定时器线程池  3:  */  4: private static final ScheduledThreadPoolExecutor scheduled = new ScheduledThreadPoolExecutor(2, new NamedThreadFactory("dubbo-remoting-client-heartbeat", true));  5: /**  6:  * 客户端  7:  */  8: private final Client client;  9: /** 10:  * 信息交换通道 11:  */ 12: private final ExchangeChannel channel; 13: // heartbeat timer 14: /** 15:  * 心跳定时器 16:  */ 17: private ScheduledFuture<?> heartbeatTimer; 18: /** 19:  * 是否心跳 20:  */ 21: private int heartbeat; 22: // heartbeat timeout (ms), default value is 0 , won't execute a heartbeat. 23: /** 24:  * 心跳间隔，单位：毫秒 25:  */ 26: private int heartbeatTimeout; 27:  28: public HeaderExchangeClient(Client client, boolean needHeartbeat) { 29:     if (client == null) { 30:         throw new IllegalArgumentException("client == null"); 31:     } 32:     this.client = client; 33:     // 创建 HeaderExchangeChannel 对象 34:     this.channel = new HeaderExchangeChannel(client); 35:     // 读取心跳相关配置 36:     String dubbo = client.getUrl().getParameter(Constants.DUBBO_VERSION_KEY); 37:     this.heartbeat = client.getUrl().getParameter(Constants.HEARTBEAT_KEY, dubbo != null && dubbo.startsWith("1.0.") ? Constants.DEFAULT_HEARTBEAT : 0); 38:     this.heartbeatTimeout = client.getUrl().getParameter(Constants.HEARTBEAT_TIMEOUT_KEY, heartbeat * 3); 39:     if (heartbeatTimeout < heartbeat * 2) { // 避免间隔太短 40:         throw new IllegalStateException("heartbeatTimeout < heartbeatInterval * 2"); 41:     } 42:     // 发起心跳定时器 43:     if (needHeartbeat) { 44:         startHeatbeatTimer(); 45:     } 46: }
 ```
 
@@ -200,7 +200,7 @@ plain 1: /**  2:  * 定时器线程池  3:  */  4: private static final Schedule
 
 - client
 属性，客户端。如下是该属性的一个例子：
-![](/assets/images/learning/dubbo/dubbo-nio-server-exchange/f0d59c0fc01a3415f9f1f02a1434dcd2.png)
+![client属性示例](/assets/images/learning/dubbo/dubbo-nio-server-exchange/f0d59c0fc01a3415f9f1f02a1434dcd2.png)
 `client`
 - 第 34 行：使用传入的
 client
@@ -215,7 +215,7 @@ FROM
 
 **发起心跳定时器**
 
-```plain text
+```text
 plain 1: private void startHeatbeatTimer() {  2:     // 停止原有定时任务  3:     stopHeartbeatTimer();  4:     // 发起新的定时任务  5:     if (heartbeat > 0) {  6:         heartbeatTimer = scheduled.scheduleWithFixedDelay(  7:                 new HeartBeatTask(new HeartBeatTask.ChannelProvider() {  8:                     public Collection<Channel> getChannels() {  9:                         return Collections.<Channel>singletonList(HeaderExchangeClient.this); 10:                     } 11:                 }, heartbeat, heartbeatTimeout), 12:                 heartbeat, heartbeat, TimeUnit.MILLISECONDS); 13:     } 14: }
 ```
 
@@ -234,7 +234,7 @@ plain 1: private void startHeatbeatTimer() {  2:     // 停止原有定时任务
 
 com.alibaba.dubbo.remoting.exchange.ExchangeServer ，继承 Server 接口，**信息交换服务器**接口。方法如下：
 
-```plain text
+```text
 plain // 获得通道数组 Collection<ExchangeChannel> getExchangeChannels(); ExchangeChannel getExchangeChannel(InetSocketAddress remoteAddress);
 ```
 
@@ -250,7 +250,7 @@ com.alibaba.dubbo.remoting.exchange.support.header.HeaderExchangeServer ，实�
 
 代码实现上，和 HeaderExchangeClient 的类似。
 
-```plain text
+```text
 plain /**  * 定时器线程池  */ private final ScheduledExecutorService scheduled = Executors.newScheduledThreadPool(1, new NamedThreadFactory("dubbo-remoting-server-heartbeat", true)); /**  * 服务器  */ private final Server server; // heartbeat timer /**  * 心跳定时器  */ private ScheduledFuture<?> heatbeatTimer; /**  * 是否心跳  */ // heartbeat timeout (ms), default value is 0 , won't execute a heartbeat. private int heartbeat; /**  * 心跳间隔，单位：毫秒  */ private int heartbeatTimeout; /**  * 是否关闭  */ private AtomicBoolean closed = new AtomicBoolean(false);  public HeaderExchangeServer(Server server) {     if (server == null) {         throw new IllegalArgumentException("server == null");     }     // 读取心跳相关配置     this.server = server;     this.heartbeat = server.getUrl().getParameter(Constants.HEARTBEAT_KEY, 0);     this.heartbeatTimeout = server.getUrl().getParameter(Constants.HEARTBEAT_TIMEOUT_KEY, heartbeat * 3);     if (heartbeatTimeout < heartbeat * 2) {         throw new IllegalStateException("heartbeatTimeout < heartbeatInterval * 2");     }     // 发起心跳定时器     startHeatbeatTimer(); }
 ```
 
@@ -260,7 +260,7 @@ plain /**  * 定时器线程池  */ private final ScheduledExecutorService sched
 
 代码实现上，和 HeaderExchangeClient 的类似。
 
-```plain text
+```text
 plain private void startHeatbeatTimer() {     // 停止原有定时任务     stopHeartbeatTimer();     // 发起新的定时任务     if (heartbeat > 0) {         heatbeatTimer = scheduled.scheduleWithFixedDelay(                 new HeartBeatTask(new HeartBeatTask.ChannelProvider() {                     public Collection<Channel> getChannels() {                         return Collections.unmodifiableCollection(HeaderExchangeServer.this.getChannels());                     }                 }, heartbeat, heartbeatTimeout),                 heartbeat, heartbeat, TimeUnit.MILLISECONDS);     } }
 ```
 
@@ -272,7 +272,7 @@ Client 连接的 Channel ，所以通过 ChannelProvider 返回的是
 
 ### 4.1.3 重置属性
 
-```plain text
+```text
 plain @Override public void reset(URL url) {     // 重置服务器     server.reset(url);     try {         if (url.hasParameter(Constants.HEARTBEAT_KEY)                 || url.hasParameter(Constants.HEARTBEAT_TIMEOUT_KEY)) {             int h = url.getParameter(Constants.HEARTBEAT_KEY, heartbeat);             int t = url.getParameter(Constants.HEARTBEAT_TIMEOUT_KEY, h * 3);             if (t < h * 2) {                 throw new IllegalStateException("heartbeatTimeout < heartbeatInterval * 2");             }             // 重置定时任务             if (h != heartbeat || t != heartbeatTimeout) {                 heartbeat = h;                 heartbeatTimeout = t;                 startHeatbeatTimer();             }         }     } catch (Throwable t) {         logger.error(t.getMessage(), t);     } }
 ```
 
@@ -282,7 +282,7 @@ plain @Override public void reset(URL url) {     // 重置服务器     server.r
 
 代码实现上，和 HeaderExchangeChannel 的类似，且复杂一些。
 
-```plain text
+```text
 plain 1: @Override  2: public void close(final int timeout) {  3:     // 关闭  4:     startClose();  5:     if (timeout > 0) {  6:         final long max = (long) timeout;  7:         final long start = System.currentTimeMillis();  8:         // 发送 READONLY 事件给所有 Client ，表示 Server 不可读了。  9:         if (getUrl().getParameter(Constants.CHANNEL_SEND_READONLYEVENT_KEY, true)) { 10:             sendChannelReadOnlyEvent(); 11:         } 12:         // 等待请求完成 13:         while (HeaderExchangeServer.this.isRunning() && System.currentTimeMillis() - start < max) { 14:             try { 15:                 Thread.sleep(10); 16:             } catch (InterruptedException e) { 17:                 logger.warn(e.getMessage(), e); 18:             } 19:         } 20:     } 21:     // 关闭心跳定时器 22:     doClose(); 23:     // 关闭服务器 24:     server.close(timeout); 25: }
 ```
 
@@ -294,7 +294,7 @@ plain 1: @Override  2: public void close(final int timeout) {  3:     // 关闭 
 #startClose()
 方法，标记正在关闭。代码如下：
 
-```plain text
+```text
 plain @Override public void startClose() {     server.startClose(); }  // AbstractPeer.java @Override public void startClose() {     if (isClosed()) {         return;     }     closing = true; }
 ```
 
@@ -306,20 +306,20 @@ plain @Override public void startClose() {     server.startClose(); }  // Abstra
 #isAvailable()
 方法，代码如下：
 
-```plain text
+```text
 plain @Override public boolean isAvailable() {     if (!super.isAvailable())         return false;     for (ExchangeClient client : clients) {         if (client.isConnected() && !client.hasAttribute(Constants.CHANNEL_ATTRIBUTE_READONLY_KEY)) { // 只读判断             //cannot write == not Available ?             return true;         }     }     return false; }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">即使 </font><font style="color:rgb(51, 51, 51);">client</font><font style="color:rgb(51, 51, 51);"> 处于</font>**<font style="color:rgb(51, 51, 51);">连接中</font>**<font style="color:rgb(51, 51, 51);">，但是 Server 处于</font>**<font style="color:rgb(51, 51, 51);">正在关闭中</font>**<font style="color:rgb(51, 51, 51);">，也算</font>**<font style="color:rgb(51, 51, 51);">不可用</font>**<font style="color:rgb(51, 51, 51);">，不进行发送请求( 消息 )。</font>
+```text
+- 即使 `client` 处于**连接中**，但是 Server 处于**正在关闭中**，也算**不可用**，不进行发送请求( 消息 )。
 ```
 
 - #sendChannelReadOnlyEvent()
 方法，广播客户端，READONLY_EVENT 事件。代码如下：
 
-```plain text
+```text
 plain private void sendChannelReadOnlyEvent() {     // 创建 READONLY_EVENT 请求     Request request = new Request();     request.setEvent(Request.READONLY_EVENT);     request.setTwoWay(false); // 无需响应     request.setVersion(Version.getVersion());      // 发送给所有 Client     Collection<Channel> channels = getChannels();     for (Channel channel : channels) {         try {             if (channel.isConnected())                 channel.send(request, getUrl().getParameter(Constants.CHANNEL_READONLYEVENT_SENT_KEY, true));         } catch (RemotingException e) {             logger.warn("send connot write messge error.", e);         }     } }
 ```
 
@@ -329,7 +329,7 @@ plain private void sendChannelReadOnlyEvent() {     // 创建 READONLY_EVENT 请
 #oClose()
 方法，关闭心跳定时器。代码如下：
 
-```plain text
+```text
 plain private void doClose() {     if (!closed.compareAndSet(false, true)) {         return;     }     stopHeartbeatTimer();     try {         scheduled.shutdown();     } catch (Throwable t) {         logger.warn(t.getMessage(), t);     } }
 ```
 
@@ -350,7 +350,7 @@ plain private void doClose() {     if (!closed.compareAndSet(false, true)) {    
 
 com.alibaba.dubbo.remoting.exchange.Request ，请求。代码如下：
 
-```plain text
+```text
 plain /**  * 事件 - 心跳  */ public static final String HEARTBEAT_EVENT = null; /**  * 事件 - 只读  */ public static final String READONLY_EVENT = "R";  /**  * 请求编号自增序列  */ private static final AtomicLong INVOKE_ID = new AtomicLong(0);  /**  * 请求编号  */ private final long mId; /**  * Dubbo 版本  */ private String mVersion; /**  * 是否需要响应  *  * true-需要  * false-不需要  */ private boolean mTwoWay = true; /**  * 是否是事件。例如，心跳事件。  */ private boolean mEvent = false; /**  * 是否异常的请求。  *  * 在消息解析的时候，会出现。  */ private boolean mBroken = false; /**  * 数据  */ private Object mData;
 ```
 
@@ -368,7 +368,7 @@ null
 INVOKE_ID
 属性生成，JVM 进程内唯一。生成代码如下：
 
-```plain text
+```text
 plain private static long newId() {     // getAndIncrement() When it grows to MAX_VALUE, it will grow to MIN_VALUE, and the negative can be used as ID     return INVOKE_ID.getAndIncrement(); }
 ```
 
@@ -390,7 +390,7 @@ plain private static long newId() {     // getAndIncrement() When it grows to MA
 
 com.alibaba.dubbo.remoting.exchange.Response ，响应。代码如下：
 
-```plain text
+```text
 plain /**  * 响应编号  *  * 一个 {@link Request#mId} 和 {@link Response#mId} 一一对应。  */ private long mId = 0; /**  * 版本  */ private String mVersion; /**  * 状态  */ private byte mStatus = OK; /**  * 是否事件  */ private boolean mEvent = false; /**  * 错误消息  */ private String mErrorMsg; /**  * 结果  */ private Object mResult;
 ```
 
@@ -414,7 +414,7 @@ READONLY_EVENT
 
 com.alibaba.dubbo.remoting.exchange.ResponseFuture ，响应 Future **接口**。方法如下：
 
-```plain text
+```text
 plain // 获得值 Object get() throws RemotingException; Object get(int timeoutInMillis) throws RemotingException;  // 设置回调 void setCallback(ResponseCallback callback);  // 是否完成 boolean isDone();
 ```
 
@@ -426,7 +426,7 @@ plain // 获得值 Object get() throws RemotingException; Object get(int timeout
 
 com.alibaba.dubbo.remoting.exchange.ResponseCallback ，响应回调**接口**。方法如下：
 
-```plain text
+```text
 plain // 处理执行完成 void done(Object response);  // 处理发生异常 void caught(Throwable exception);
 ```
 
@@ -440,7 +440,7 @@ com.alibaba.dubbo.remoting.exchange.support.DefaultFuture ，实现 ResponseFutu
 
 **构造方法**
 
-```plain text
+```text
 plain /**  * 通道集合  *  * key：请求编号  */ private static final Map<Long, Channel> CHANNELS = new ConcurrentHashMap<Long, Channel>(); /**  * Future 集合  *  * key：请求编号  */ private static final Map<Long, DefaultFuture> FUTURES = new ConcurrentHashMap<Long, DefaultFuture>();  /**  * 请求编号  */ // invoke id. private final long id; /**  * 通道  */ private final Channel channel; /**  * 请求  */ private final Request request; /**  * 超时  */ private final int timeout; /**  * 创建开始时间  */ private final long start = System.currentTimeMillis(); /**  * 发送请求时间  */ private volatile long sent; /**  * 响应  */ private volatile Response response; /**  * 回调  */ private volatile ResponseCallback callback;  public DefaultFuture(Channel channel, Request request, int timeout) {     this.channel = channel;     this.request = request;     this.id = request.getId();     this.timeout = timeout > 0 ? timeout : channel.getUrl().getPositiveParameter(Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT);     // put into waiting map.     FUTURES.put(id, this);     CHANNELS.put(id, channel); }
 ```
 
@@ -451,7 +451,7 @@ plain /**  * 通道集合  *  * key：请求编号  */ private static final Map<
 #hasFuture(channel)
 方法，判断通道是否有未结束的请求。代码如下：
 
-```plain text
+```text
 plain public static boolean hasFuture(Channel channel) {     return CHANNELS.containsValue(channel); }
 ```
 
@@ -466,7 +466,7 @@ ChannelHandler#sent(channel, message)
 DefaultFuture#sent(channel, request)
 ，代码如下：
 
-```plain text
+```text
 plain public static void sent(Channel channel, Request request) {     DefaultFuture future = FUTURES.get(request.getId());     if (future != null) {         future.doSent();     } }  private void doSent() {     sent = System.currentTimeMillis(); }
 ```
 
@@ -479,7 +479,7 @@ plain public static void sent(Channel channel, Request request) {     DefaultFut
 
 **获得值**
 
-```plain text
+```text
 plain /**  * 锁  */ private final Lock lock = new ReentrantLock(); /**  * 完成 Condition  */ private final Condition done = lock.newCondition();    1: @Override   2: public Object get(int timeout) throws RemotingException {   3:     if (timeout <= 0) {   4:         timeout = Constants.DEFAULT_TIMEOUT;   5:     }   6:     // 若未完成，等待   7:     if (!isDone()) {   8:         long start = System.currentTimeMillis();   9:         lock.lock();  10:         try {  11:             // 等待完成或超时  12:             while (!isDone()) {  13:                 done.await(timeout, TimeUnit.MILLISECONDS);  14:                 if (isDone() || System.currentTimeMillis() - start > timeout) {  15:                     break;  16:                 }  17:             }  18:         } catch (InterruptedException e) {  19:             throw new RuntimeException(e);  20:         } finally {  21:             lock.unlock();  22:         }  23:         // 未完成，抛出超时异常 TimeoutException  24:         if (!isDone()) {  25:             throw new TimeoutException(sent > 0, channel, getTimeoutMessage(false));  26:         }  27:     }  28:     // 返回响应  29:     return returnFromResponse();  30: }
 ```
 
@@ -530,7 +530,7 @@ sent > 0
 #returnFromResponse()
 方法，返回响应( Response )。代码如下：
 
-```plain text
+```text
 plain private Object returnFromResponse() throws RemotingException {     Response res = response;     if (res == null) {         throw new IllegalStateException("response cannot be null");     }     // 正常，返回结果     if (res.getStatus() == Response.OK) {         return res.getResult();     }     // 超时，抛出 TimeoutException 异常     if (res.getStatus() == Response.CLIENT_TIMEOUT || res.getStatus() == Response.SERVER_TIMEOUT) {         throw new TimeoutException(res.getStatus() == Response.SERVER_TIMEOUT, channel, res.getErrorMessage());     }     // 其他，抛出 RemotingException 异常     throw new RemotingException(channel, res.getErrorMessage()); }
 ```
 
@@ -538,14 +538,14 @@ plain private Object returnFromResponse() throws RemotingException {     Respons
 
 **响应结果**
 
-```plain text
+```text
 plain 1: public static void received(Channel channel, Response response) {  2:     try {  3:         // 移除 FUTURES  4:         DefaultFuture future = FUTURES.remove(response.getId());  5:         // 接收结果  6:         if (future != null) {  7:             future.doReceived(response);  8:         } else {  9:             logger.warn("The timeout response finally returned at " 10:                     + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date())) 11:                     + ", response " + response 12:                     + (channel == null ? "" : ", channel: " + channel.getLocalAddress() 13:                     + " -> " + channel.getRemoteAddress())); 14:         } 15:     // 移除 CHANNELS 16:     } finally { 17:         CHANNELS.remove(response.getId()); 18:     } 19: }
 ```
 
 ---
 
 - 该方法有两处被调用，如下图所示：
-![](/assets/images/learning/dubbo/dubbo-nio-server-exchange/03fdf57816e34daed595731c43e3507c.png)
+![received方法调用](/assets/images/learning/dubbo/dubbo-nio-server-exchange/03fdf57816e34daed595731c43e3507c.png)
 调用
 - 第 4 行：移除
 FUTURES
@@ -554,18 +554,18 @@ FUTURES
 DefaultFuture#doReceived(response)
 方法，响应结果。代码如下：
 
-```plain text
+```text
 plain 1: private void doReceived(Response res) {  2:     // 锁定  3:     lock.lock();  4:     try {  5:         // 设置结果  6:         response = res;  7:         // 通知，唤醒等待  8:         if (done != null) {  9:             done.signal(); 10:         } 11:     } finally { 12:         // 释放锁定 13:         lock.unlock(); 14:     } 15:     // 调用回调 16:     if (callback != null) { 17:         invokeCallback(callback); 18:     } 19: }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">第 3 行：获得锁。</font>
-- <font style="color:rgb(51, 51, 51);">第 6 行：设置响应 </font><font style="color:rgb(51, 51, 51);">response</font><font style="color:rgb(51, 51, 51);"> 。</font>
-- <font style="color:rgb(51, 51, 51);">第 8 至 10 行：调用 </font><font style="color:rgb(51, 51, 51);">Condition#signal()</font><font style="color:rgb(51, 51, 51);"> 方法，通知，</font>**<font style="color:rgb(51, 51, 51);">唤醒</font>**<font style="color:rgb(51, 51, 51);">DefaultFuture#get(..)</font><font style="color:rgb(51, 51, 51);"> 方法的等待。</font>
-- <font style="color:rgb(51, 51, 51);">第 13 行：释放锁。</font>
-- <font style="color:rgb(51, 51, 51);">第 16 至 18 行：调用 </font><font style="color:rgb(51, 51, 51);">#invokeCallback(callback)</font><font style="color:rgb(51, 51, 51);"> 方法，执行回调方法。</font>
+```text
+- 第 3 行：获得锁。
+- 第 6 行：设置响应 `response` 。
+- 第 8 至 10 行：调用 `Condition#signal()` 方法，通知，**唤醒** `DefaultFuture#get(..)` 方法的等待。
+- 第 13 行：释放锁。
+- 第 16 至 18 行：调用 `#invokeCallback(callback)` 方法，执行回调方法。
 ```
 
 - 第 8 至 14 行：超时情况，打印**告警**
@@ -576,7 +576,7 @@ CHANNELS
 
 **设置回调**
 
-```plain text
+```text
 plain 1: @Override  2: public void setCallback(ResponseCallback callback) {  3:     // 已完成，调用回调  4:     if (isDone()) {  5:         invokeCallback(callback);  6:     } else {  7:         boolean isdone = false;  8:         // 获得锁  9:         lock.lock(); 10:         try { 11:             // 未完成，设置回调 12:             if (!isDone()) { 13:                 this.callback = callback; 14:             } else { 15:                 isdone = true; 16:             } 17:         // 释放锁 18:         } finally { 19:             lock.unlock(); 20:         } 21:         // 已完成，调用回调 22:         if (isdone) { 23:             invokeCallback(callback); 24:         } 25:     } 26: }
 ```
 
@@ -601,7 +601,7 @@ callback
 
 **调用回调**
 
-```plain text
+```text
 plain 1: private void invokeCallback(ResponseCallback c) {  2:     ResponseCallback callbackCopy = c;  3:     if (callbackCopy == null) {  4:         throw new NullPointerException("callback cannot be null.");  5:     }  6:     Response res = response;  7:     if (res == null) {  8:         throw new IllegalStateException("response cannot be null. url:" + channel.getUrl());  9:     } 10:  11:     // 正常，处理结果 12:     if (res.getStatus() == Response.OK) { 13:         try { 14:             callbackCopy.done(res.getResult()); 15:         } catch (Exception e) { 16:             logger.error("callback invoke error .reasult:" + res.getResult() + ",url:" + channel.getUrl(), e); 17:         } 18:     // 超时，处理 TimeoutException 异常 19:     } else if (res.getStatus() == Response.CLIENT_TIMEOUT || res.getStatus() == Response.SERVER_TIMEOUT) { 20:         try { 21:             TimeoutException te = new TimeoutException(res.getStatus() == Response.SERVER_TIMEOUT, channel, res.getErrorMessage()); 22:             callbackCopy.caught(te); 23:         } catch (Exception e) { 24:             logger.error("callback invoke error ,url:" + channel.getUrl(), e); 25:         } 26:     // 其他，处理 RemotingException 异常 27:     } else { 28:         try { 29:             RuntimeException re = new RuntimeException(res.getErrorMessage()); 30:             callbackCopy.caught(re); 31:         } catch (Exception e) { 32:             logger.error("callback invoke error ,url:" + channel.getUrl(), e); 33:         } 34:     } 35: }
 ```
 
@@ -620,7 +620,7 @@ ResponseCallback#caught(e)
 
 **后台扫描调用超时任务**
 
-```plain text
+```text
 plain static {     Thread th = new Thread(new RemotingInvocationTimeoutScan(), "DubboResponseTimeoutScanTimer");     th.setDaemon(true);     th.start(); }  private static class RemotingInvocationTimeoutScan implements Runnable {      public void run() {         while (true) {             try {                 for (DefaultFuture future : FUTURES.values()) {                     // 已完成，跳过                     if (future == null || future.isDone()) {                         continue;                     }                     // 超时                     if (System.currentTimeMillis() - future.getStartTimestamp() > future.getTimeout()) {                         // 创建超时 Response                         // create exception response.                         Response timeoutResponse = new Response(future.getId());                         // set timeout status.                         timeoutResponse.setStatus(future.isSent() ? Response.SERVER_TIMEOUT : Response.CLIENT_TIMEOUT);                         timeoutResponse.setErrorMessage(future.getTimeoutMessage(true));                         // 响应结果                         // handle response.                         DefaultFuture.received(future.getChannel(), timeoutResponse);                     }                 }                 // 30 ms                 Thread.sleep(30);             } catch (Throwable e) {                 logger.error("Exception when scan the timeout invocation of remoting.", e);             }         }     } }
 ```
 
@@ -642,7 +642,7 @@ plain static {     Thread th = new Thread(new RemotingInvocationTimeoutScan(), "
 
 com.alibaba.dubbo.remoting.exchange.support.MultiMessage ，实现 Iterable 接口，多消息的封装。代码如下：
 
-```plain text
+```text
 plain public final class MultiMessage implements Iterable {      private final List messages = new ArrayList();          // ... 省略方法 }
 ```
 
@@ -666,7 +666,7 @@ com.alibaba.dubbo.remoting.exchange.support.header.HeartBeatTask ，实现 Runna
 
 **构造方法**
 
-```plain text
+```text
 plain private ChannelProvider channelProvider; /**  * 心跳间隔，单位：毫秒  */ private int heartbeat; /**  * 心跳超时时间，单位：毫秒  */ private int heartbeatTimeout;
 ```
 
@@ -675,7 +675,7 @@ plain private ChannelProvider channelProvider; /**  * 心跳间隔，单位：�
 - channelProvider
 属性，用于查询获得需要心跳的通道数组。ChannelProvider 接口，代码如下：
 
-```plain text
+```text
 plain interface ChannelProvider {     Collection<Channel> getChannels(); }
 ```
 
@@ -683,7 +683,7 @@ plain interface ChannelProvider {     Collection<Channel> getChannels(); }
 
 **执行任务**
 
-```plain text
+```text
 plain 1: @Override  2: public void run() {  3:     try {  4:         long now = System.currentTimeMillis();  5:         for (Channel channel : channelProvider.getChannels()) {  6:             if (channel.isClosed()) {  7:                 continue;  8:             }  9:             try { 10:                 Long lastRead = (Long) channel.getAttribute(HeaderExchangeHandler.KEY_READ_TIMESTAMP); 11:                 Long lastWrite = (Long) channel.getAttribute(HeaderExchangeHandler.KEY_WRITE_TIMESTAMP); 12:                 // 最后读写的时间，任一超过心跳间隔，发送心跳 13:                 if ((lastRead != null && now - lastRead > heartbeat) 14:                         || (lastWrite != null && now - lastWrite > heartbeat)) { 15:                     Request req = new Request(); 16:                     req.setVersion("2.0.0"); 17:                     req.setTwoWay(true); // 需要响应 18:                     req.setEvent(Request.HEARTBEAT_EVENT); 19:                     channel.send(req); 20:                     if (logger.isDebugEnabled()) { 21:                         logger.debug("Send heartbeat to remote channel " + channel.getRemoteAddress() 22:                                 + ", cause: The channel has no data-transmission exceeds a heartbeat period: " + heartbeat + "ms"); 23:                     } 24:                 } 25:                 // 最后读的时间，超过心跳超时时间 26:                 if (lastRead != null && now - lastRead > heartbeatTimeout) { 27:                     logger.warn("Close channel " + channel 28:                             + ", because heartbeat read idle time out: " + heartbeatTimeout + "ms"); 29:                     // 客户端侧，重新连接服务端 30:                     if (channel instanceof Client) { 31:                         try { 32:                             ((Client) channel).reconnect(); 33:                         } catch (Exception e) { 34:                             //do nothing 35:                         } 36:                     // 服务端侧，关闭客户端连接 37:                     } else { 38:                         channel.close(); 39:                     } 40:                 } 41:             } catch (Throwable t) { 42:                 logger.warn("Exception when heartbeat to remote channel " + channel.getRemoteAddress(), t); 43:             } 44:         } 45:     } catch (Throwable t) { 46:         logger.warn("Unhandled exception when heartbeat, cause: " + t.getMessage(), t); 47:     } 48: }
 ```
 
@@ -712,7 +712,7 @@ heartbeatTimeout
 
 **接收消息**
 
-```plain text
+```text
 plain 1: @Override  2: public void received(Channel channel, Object message) throws RemotingException {  3:     // 设置最后的读时间  4:     channel.setAttribute(KEY_READ_TIMESTAMP, System.currentTimeMillis());  5:     // 创建 ExchangeChannel 对象  6:     ExchangeChannel exchangeChannel = HeaderExchangeChannel.getOrAddChannel(channel);  7:     try {  8:         // 处理请求( Request )  9:         if (message instanceof Request) { 10:             // handle request. 11:             Request request = (Request) message; 12:             // 处理事件请求 13:             if (request.isEvent()) { 14:                 handlerEvent(channel, request); 15:             } else { 16:                 // 处理普通请求 17:                 if (request.isTwoWay()) { 18:                     Response response = handleRequest(exchangeChannel, request); 19:                     channel.send(response); 20:                 // 提交给装饰的 `handler`，继续处理 21:                 } else { 22:                     handler.received(exchangeChannel, request.getData()); 23:                 } 24:             } 25:         // 处理响应( Response ) 26:         } else if (message instanceof Response) { 27:             handleResponse(channel, (Response) message); 28:         // 处理 String 29:         } else if (message instanceof String) { 30:             // 客户端侧，不支持 String 31:             if (isClientSide(channel)) { 32:                 Exception e = new Exception("Dubbo client can not supported string message: " + message + " in channel: " + channel + ", url: " + channel.getUrl()); 33:                 logger.error(e.getMessage(), e); 34:             // 服务端侧，目前是 telnet 命令 35:             } else { 36:                 String echo = handler.telnet(channel, (String) message); 37:                 if (echo != null && echo.length() > 0) { 38:                     channel.send(echo); 39:                 } 40:             } 41:             // 提交给装饰的 `handler`，继续处理 42:         } else { 43:             handler.received(exchangeChannel, message); 44:         } 45:     } finally { 46:         // 移除 ExchangeChannel 对象，若已断开 47:         HeaderExchangeChannel.removeChannelIfDisconnected(channel); 48:     } 49: }
 ```
 
@@ -747,55 +747,55 @@ ChannelHandler#received(channel, message)
 - #handlerEvent(channel, request)
 方法，代码如下：
 
-```plain text
+```text
 plain void handlerEvent(Channel channel, Request req) {     if (req.getData() != null && req.getData().equals(Request.READONLY_EVENT)) {         channel.setAttribute(Constants.CHANNEL_ATTRIBUTE_READONLY_KEY, Boolean.TRUE);     } }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">客户端接收到 READONLY_EVENT 事件请求，进行记录到通道。后续，不再向该服务器，</font>**<font style="color:rgb(51, 51, 51);">发送新的请求</font>**<font style="color:rgb(51, 51, 51);">。</font>
+```text
+- 客户端接收到 READONLY_EVENT 事件请求，进行记录到通道。后续，不再向该服务器，**发送新的请求**。
 ```
 
 - #handleRequest(channel, request)
 方法，代码如下：
 
-```plain text
+```text
 plain 1: Response handleRequest(ExchangeChannel channel, Request req) {  2:     Response res = new Response(req.getId(), req.getVersion());  3:     // 请求无法解析，返回 BAD_REQUEST 响应  4:     if (req.isBroken()) {  5:         Object data = req.getData();  6:         String msg; // 请求数据，转成 msg  7:         if (data == null) {  8:             msg = null;  9:         } else if (data instanceof Throwable) { 10:             msg = StringUtils.toString((Throwable) data); 11:         } else { 12:             msg = data.toString(); 13:         } 14:         res.setErrorMessage("Fail to decode request due to: " + msg); 15:         res.setStatus(Response.BAD_REQUEST); 16:         return res; 17:     } 18:     // 使用 ExchangeHandler 处理，并返回响应 19:     // find handler by message class. 20:     Object msg = req.getData(); 21:     try { 22:         // handle data. 23:         Object result = handler.reply(channel, msg); 24:         res.setStatus(Response.OK); 25:         res.setResult(result); 26:     } catch (Throwable e) { 27:         res.setStatus(Response.SERVICE_ERROR); 28:         res.setErrorMessage(StringUtils.toString(e)); 29:     } 30:     return res; 31: }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">第 3 至 17 行：请求</font>**<font style="color:rgb(51, 51, 51);">无法解析</font>**<font style="color:rgb(51, 51, 51);">，返回 BAD_REQUEST 响应。下面 ExchangeCodec ，我们将看到具体发生的代码。</font>
-- <font style="color:rgb(51, 51, 51);">第 18 至 30 行：调用 </font><font style="color:rgb(51, 51, 51);">ExchangeHandler#reply(channel, message)</font><font style="color:rgb(51, 51, 51);"> 方法，返回结果，并设置到响应( Response) 最终返回。</font>
+```text
+- 第 3 至 17 行：请求**无法解析**，返回 BAD_REQUEST 响应。下面 ExchangeCodec ，我们将看到具体发生的代码。
+- 第 18 至 30 行：调用 `ExchangeHandler#reply(channel, message)` 方法，返回结果，并设置到响应( Response) 最终返回。
 ```
 
 - #handleResponse(channel, response)
 方法，代码如下：
 
-```plain text
+```text
 plain static void handleResponse(Channel channel, Response response) {     if (response != null && !response.isHeartbeat()) {         DefaultFuture.received(channel, response);     } }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">非心跳事件响应，调用 </font><font style="color:rgb(51, 51, 51);">DefaultFuture#received(channel, response)</font><font style="color:rgb(51, 51, 51);"> 方法，唤醒等待请求结果的线程。</font>
+```text
+- 非心跳事件响应，调用 `DefaultFuture#received(channel, response)` 方法，唤醒等待请求结果的线程。
 ```
 
 比较繁杂，胖友耐心的看一看哟。
 
 **发生异常**
 
-```plain text
+```text
 plain 1: @Override  2: public void caught(Channel channel, Throwable exception) throws RemotingException {  3:     // 当发生 ExecutionException 异常，返回异常响应( Response )  4:     if (exception instanceof ExecutionException) {  5:         ExecutionException e = (ExecutionException) exception;  6:         Object msg = e.getRequest();  7:         if (msg instanceof Request) {  8:             Request req = (Request) msg;  9:             if (req.isTwoWay() && !req.isHeartbeat()) { // 需要响应，并且非心跳时间 10:                 Response res = new Response(req.getId(), req.getVersion()); 11:                 res.setStatus(Response.SERVER_ERROR); 12:                 res.setErrorMessage(StringUtils.toString(e)); 13:                 channel.send(res); 14:                 return; 15:             } 16:         } 17:     } 18:     // 创建 ExchangeChannel 对象 19:     ExchangeChannel exchangeChannel = HeaderExchangeChannel.getOrAddChannel(channel); 20:     try { 21:         // 提交给装饰的 `handler`，继续处理 22:         handler.caught(exchangeChannel, exception); 23:     } finally { 24:         // 移除 ExchangeChannel 对象，若已断开 25:         HeaderExchangeChannel.removeChannelIfDisconnected(channel); 26:     } 27: }
 ```
 
 ---
 
 - 第 3 至 17 行：当发生 ExecutionException 异常，返回异常响应( Response )。目前会发生 ExecutionException 的情况，并且符合提交，如下图所示：
-![](/assets/images/learning/dubbo/dubbo-nio-server-exchange/37db3a91094dc90d601faf3ea1a78884.png)
+![ExecutionException触发位置](/assets/images/learning/dubbo/dubbo-nio-server-exchange/37db3a91094dc90d601faf3ea1a78884.png)
 ExecutionException
 - 第 18 至 26 行：见注释。
 
@@ -803,7 +803,7 @@ ExecutionException
 
 com.alibaba.dubbo.remoting.exchange.ExchangeHandler ，继承 ChannelHandler 和 TelnetHandler 接口，信息交换处理器**接口**。方法如下：
 
-```plain text
+```text
 plain // 回复请求结果 Object reply(ExchangeChannel channel, Object request) throws RemotingException;
 ```
 
@@ -821,7 +821,7 @@ ExchangeHandler 是一个非常关键的接口。为什么这么说呢，点击 
 
 com.alibaba.dubbo.remoting.exchange.support.ExchangeHandlerAdapter ，实现 ExchangeHandler 接口，继承 TelnetHandlerAdapter 抽象类，信息交换处理器适配器**抽象类**。代码如下：
 
-```plain text
+```text
 plain @Override public Object reply(ExchangeChannel channel, Object msg) throws RemotingException {     return null; }
 ```
 
@@ -837,7 +837,7 @@ plain @Override public Object reply(ExchangeChannel channel, Object msg) throws 
 
 com.alibaba.dubbo.remoting.exchange.support.Replier ，回复者接口。代码如下：
 
-```plain text
+```text
 plain public interface Replier<T> {      // 回复请求结果     Object reply(ExchangeChannel channel, T request) throws RemotingException;  }
 ```
 
@@ -852,7 +852,7 @@ com.alibaba.dubbo.remoting.exchange.support.ReplierDispatcher ，实现 Replier 
 
 **构造方法**
 
-```plain text
+```text
 plain /**  * 默认回复者  */ private final Replier<?> defaultReplier; /**  * 回复者集合  *  * key：类  */ private final Map<Class<?>, Replier<?>> repliers = new ConcurrentHashMap<Class<?>, Replier<?>>();  public ReplierDispatcher() {     this(null, null); }  public ReplierDispatcher(Replier<?> defaultReplier) {     this(defaultReplier, null); }  public ReplierDispatcher(Replier<?> defaultReplier, Map<Class<?>, Replier<?>> repliers) {     // ... 省略 }
 ```
 
@@ -865,7 +865,7 @@ plain /**  * 默认回复者  */ private final Replier<?> defaultReplier; /**  *
 
 **回复请求结果**
 
-```plain text
+```text
 plain @Override @SuppressWarnings({"unchecked", "rawtypes"}) public Object reply(ExchangeChannel channel, Object request) throws RemotingException {     return ((Replier) getReplier(request.getClass())).reply(channel, request); }
 ```
 
@@ -881,7 +881,7 @@ Repiler#reply(channel, request)
 
 com.alibaba.dubbo.remoting.exchange.support.ExchangeHandlerDispatcher ，实现 ExchangeHandler 接口，信息交换处理器**调度器**实现类。代码如下：
 
-```plain text
+```text
 plain /**  * 回复者调度器  */ private final ReplierDispatcher replierDispatcher; /**  * 通道处理器集合  */ private final ChannelHandlerDispatcher handlerDispatcher; /**  * Telnet 命令处理器  */ private final TelnetHandler telnetHandler;  // ... 省略方法
 ```
 
@@ -894,7 +894,7 @@ plain /**  * 回复者调度器  */ private final ReplierDispatcher replierDispa
 #telnet(…)
 方法，举例子，代码如下：
 
-```plain text
+```text
 plain @Override @SuppressWarnings({"unchecked", "rawtypes"}) public Object reply(ExchangeChannel channel, Object request) throws RemotingException {     return replierDispatcher.reply(channel, request); }  @Override public void received(Channel channel, Object message) {     handlerDispatcher.received(channel, message); }  @Override public String telnet(Channel channel, String message) throws RemotingException {     return telnetHandler.telnet(channel, message); }
 ```
 
@@ -906,7 +906,7 @@ com.alibaba.dubbo.remoting.exchange.Exchanger ，**数据交换者**接口。方
 
 Exchanger 和 Transporter 类似。
 
-```plain text
+```text
 plain @SPI(HeaderExchanger.NAME) public interface Exchanger {      /**      * bind.      *      * 绑定一个服务器      *      * @param url server url      * @param handler 数据交换处理器      * @return message server 服务器      */     @Adaptive({Constants.EXCHANGER_KEY})     ExchangeServer bind(URL url, ExchangeHandler handler) throws RemotingException;      /**      * connect.      *      * 连接一个服务器，即创建一个客户端      *      * @param url server url 服务器地址      * @param handler 数据交换处理器      * @return message channel 客户端      */     @Adaptive({Constants.EXCHANGER_KEY})     ExchangeClient connect(URL url, ExchangeHandler handler) throws RemotingException;  }
 ```
 
@@ -930,7 +930,7 @@ URL.exchanger
 
 com.alibaba.dubbo.remoting.exchange.support.header.HeaderExchanger ，实现 Exchanger 接口，基于消息头部( Header )的**信息交换者**实现类。代码如下：
 
-```plain text
+```text
 plain public class HeaderExchanger implements Exchanger {      public static final String NAME = "header";      @Override     public ExchangeClient connect(URL url, ExchangeHandler handler) throws RemotingException {         return new HeaderExchangeClient(Transporters.connect(url, new DecodeHandler(new HeaderExchangeHandler(handler))), true);     }      @Override     public ExchangeServer bind(URL url, ExchangeHandler handler) throws RemotingException {         return new HeaderExchangeServer(Transporters.bind(url, new DecodeHandler(new HeaderExchangeHandler(handler))));     }  }
 ```
 
@@ -964,7 +964,7 @@ com.alibaba.dubbo.remoting.exchange.codec.ExchangeCodec ，继承 TelnetCodec �
 
 在看具体的编解码方法的代码时，我们来先看一幅图：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-exchange/9bc8327c20bb17075e0991a24bc32d25.png)
+![协议结构](/assets/images/learning/dubbo/dubbo-nio-server-exchange/9bc8327c20bb17075e0991a24bc32d25.png)
 
 协议
 
@@ -1005,7 +1005,7 @@ id
 
 **属性**
 
-```plain text
+```text
 plain // header length. protected static final int HEADER_LENGTH = 16; // magic header. protected static final short MAGIC = (short) 0xdabb; protected static final byte MAGIC_HIGH = Bytes.short2bytes(MAGIC)[0]; protected static final byte MAGIC_LOW = Bytes.short2bytes(MAGIC)[1]; // message flag. protected static final byte FLAG_REQUEST = (byte) 0x80; // 128 protected static final byte FLAG_TWOWAY = (byte) 0x40; // 64 protected static final byte FLAG_EVENT = (byte) 0x20; // 32 protected static final int SERIALIZATION_MASK = 0x1f; // 31
 ```
 
@@ -1018,7 +1018,7 @@ plain // header length. protected static final int HEADER_LENGTH = 16; // magic 
 
 **编码**
 
-```plain text
+```text
 plain 1: @Override  2: public void encode(Channel channel, ChannelBuffer buffer, Object msg) throws IOException {  3:     if (msg instanceof Request) { // 请求  4:         encodeRequest(channel, buffer, (Request) msg);  5:     } else if (msg instanceof Response) { // 响应  6:         encodeResponse(channel, buffer, (Response) msg);  7:     } else { // 提交给父类( Telnet ) 处理，目前是 Telnet 命令的结果。  8:         super.encode(channel, buffer, msg);  9:     } 10: }
 ```
 
@@ -1036,40 +1036,48 @@ TelnetCodec#encode(channel, buffer, msg)
 - #encodeRequest(channel, buffer, request)
 方法，代码如下：
 
-```plain text
+```text
 plain 1: protected void encodeRequest(Channel channel, ChannelBuffer buffer, Request req) throws IOException {  2:     Serialization serialization = getSerialization(channel);  3:     // `[0, 15]`：Magic Number  4:     // header.  5:     byte[] header = new byte[HEADER_LENGTH];  6:     // set magic number.  7:     Bytes.short2bytes(MAGIC, header);  8:   9:     // `[16, 20]`：Serialization 编号 && `[23]`：请求。 10:     // set request and serialization flag. 11:     header[2] = (byte) (FLAG_REQUEST | serialization.getContentTypeId()); 12:  13:     // `[21]`：`event` 是否为事件。 14:     if (req.isTwoWay()) header[2] |= FLAG_TWOWAY; 15:     // `[22]`：`twoWay` 是否需要响应。 16:     if (req.isEvent()) header[2] |= FLAG_EVENT; 17:  18:     // `[32 - 95]`：`id` 编号，Long 型。 19:     // set request id. 20:     Bytes.long2bytes(req.getId(), header, 4); 21:  22:     // 编码 `Request.data` 到 Body ，并写入到 Buffer 23:     // encode request data. 24:     int savedWriteIndex = buffer.writerIndex(); 25:     buffer.writerIndex(savedWriteIndex + HEADER_LENGTH); 26:     ChannelBufferOutputStream bos = new ChannelBufferOutputStream(buffer); 27:     ObjectOutput out = serialization.serialize(channel.getUrl(), bos); // 序列化 Output 28:     if (req.isEvent()) { 29:         encodeEventData(channel, out, req.getData()); 30:     } else { 31:         encodeRequestData(channel, out, req.getData()); 32:     } 33:     // 释放资源 34:     out.flushBuffer(); 35:     if (out instanceof Cleanable) { 36:         ((Cleanable) out).cleanup(); 37:     } 38:     bos.flush(); 39:     bos.close(); 40:     // 检查 Body 长度，是否超过消息上限。 41:     int len = bos.writtenBytes(); 42:     checkPayload(channel, len); 43:     // `[96 - 127]`：Body 的**长度**。 44:     Bytes.int2bytes(len, header, 12); 45:  46:     // 写入 Header 到 Buffer 47:     // write 48:     buffer.writerIndex(savedWriteIndex); 49:     buffer.writeBytes(header); // write header. 50:     buffer.writerIndex(savedWriteIndex + HEADER_LENGTH + len); 51: }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">Header 部分，先写入 </font><font style="color:rgb(51, 51, 51);">header</font><font style="color:rgb(51, 51, 51);"> 数组，再写入 Buffer 中。</font>
-- <font style="color:rgb(51, 51, 51);">Body 部分，使用 Serialization 序列化 </font><font style="color:rgb(51, 51, 51);">Request.data</font><font style="color:rgb(51, 51, 51);"> ，写入到 Buffer 中。</font>
-    * <font style="color:rgb(51, 51, 51);">#encodeEventData(Channel channel, ObjectOutput out, Object data)</font><font style="color:rgb(51, 51, 51);"> 方法，代码如下：</font>
+```text
+- Header 部分，先写入 `header` 数组，再写入 Buffer 中。
+- Body 部分，使用 Serialization 序列化 `Request.data` ，写入到 Buffer 中。
+    * `#encodeEventData(Channel channel, ObjectOutput out, Object data)` 方法，代码如下：
 ```
 
-```plain text
-plain private void encodeEventData(Channel channel, ObjectOutput out, Object data) throws IOException {     encodeEventData(out, data); }  private void encodeEventData(ObjectOutput out, Object data) throws IOException {     out.writeObject(data); }
-```
+```java
+private void encodeEventData(Channel channel, ObjectOutput out, Object data) throws IOException {
+    encodeEventData(out, data);
+}
 
----
-
-```plain text
-        + <font style="color:rgb(51, 51, 51);">x</font>
-    * <font style="color:rgb(51, 51, 51);">#encodeRequestData(Channel channel, ObjectOutput out, Object data)</font><font style="color:rgb(51, 51, 51);"> 方法，代码如下：</font>
-```
-
-```plain text
-plain protected void encodeRequestData(Channel channel, ObjectOutput out, Object data) throws IOException {     encodeRequestData(out, data); }  protected void encodeRequestData(ObjectOutput out, Object data) throws IOException {     out.writeObject(data); }
+private void encodeEventData(ObjectOutput out, Object data) throws IOException {
+    out.writeObject(data);
+}
 ```
 
 ---
 
-```plain text
-        + <font style="color:rgb(51, 51, 51);">#encodeEventData(...)</font><font style="color:rgb(51, 51, 51);"> 和 </font><font style="color:rgb(51, 51, 51);">#encodeRequestData(...)</font><font style="color:rgb(51, 51, 51);"> 两个方法是一致的。</font>
-- <font style="color:rgb(51, 51, 51);">第 42 行：会调用 </font><font style="color:rgb(51, 51, 51);">#checkPayload(channel, len)</font><font style="color:rgb(51, 51, 51);"> 方法，校验 Body 内容的长度。笔者在这块纠结了很久，如果过长而抛出 ExceedPayloadLimitException 异常，那么 ChannelBuffer 是否重置下写入位置。后来发现自己煞笔了，每次 ChannelBuffer 都是新创建的，所以无需重置。</font>
-- <font style="color:rgb(51, 51, 51);">为什么 Buffer 先写入了 Body ，再写入 Header 呢？因为 Header 中，里面 </font><font style="color:rgb(51, 51, 51);">[96 - 127]</font><font style="color:rgb(51, 51, 51);"> 的 Body 长度，需要序列化后才得到。</font>
+```text
+        + x    * `#encodeRequestData(Channel channel, ObjectOutput out, Object data)` 方法，代码如下：
 ```
+
+```java
+protected void encodeRequestData(Channel channel, ObjectOutput out, Object data) throws IOException {
+    encodeRequestData(out, data);
+}
+
+protected void encodeRequestData(ObjectOutput out, Object data) throws IOException {
+    out.writeObject(data);
+}
+```
+
+---
+
+```text
+        + #encodeEventData(...)</font> 和 </font>#encodeRequestData(...)</font> 两个方法是一致的。- 第 42 行：会调用 </font>#checkPayload(channel, len)</font> 方法，校验 Body 内容的长度。笔者在这块纠结了很久，如果过长而抛出 ExceedPayloadLimitException 异常，那么 ChannelBuffer 是否重置下写入位置。后来发现自己煞笔了，每次 ChannelBuffer 都是新创建的，所以无需重置。- 为什么 Buffer 先写入了 Body ，再写入 Header 呢？因为 Header 中，里面 </font>[96 - 127]</font> 的 Body 长度，需要序列化后才得到。```
 
 - [#encodeResponse(channel, buffer, response)](https://github.com/YunaiV/dubbo/blob/a89a569e608ee1282d1bce3fc2540860873629db/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/exchange/codec/ExchangeCodec.java#L292-L404)
 方法，和
@@ -1085,7 +1093,7 @@ status = BAD_RESPONSE
 
 **解码**
 
-```plain text
+```text
 plain 1: @Override  2: public Object decode(Channel channel, ChannelBuffer buffer) throws IOException {  3:     // 读取 Header 数组  4:     int readable = buffer.readableBytes();  5:     byte[] header = new byte[Math.min(readable, HEADER_LENGTH)];  6:     buffer.readBytes(header);  7:     // 解码  8:     return decode(channel, buffer, readable, header);  9: } 10:  11: @Override 12: protected Object decode(Channel channel, ChannelBuffer buffer, int readable, byte[] header) throws IOException { 13:     // 非 Dubbo 协议，目前是 Telnet 命令。 14:     // check magic number. 15:     if (readable > 0 && header[0] != MAGIC_HIGH || readable > 1 && header[1] != MAGIC_LOW) { 16:         // 将 buffer 完全复制到 `header` 数组中。因为，上面的 `#decode(channel, buffer)` 方法，可能未读全 17:         int length = header.length; 18:         if (header.length < readable) { 19:             header = Bytes.copyOf(header, readable); 20:             buffer.readBytes(header, length, readable - length); 21:         } 22:         // 【TODO 8026 】header[i] == MAGIC_HIGH && header[i + 1] == MAGIC_LOW ？ 23:         for (int i = 1; i < header.length - 1; i++) { 24:             if (header[i] == MAGIC_HIGH && header[i + 1] == MAGIC_LOW) { 25:                 buffer.readerIndex(buffer.readerIndex() - header.length + i); 26:                 header = Bytes.copyOf(header, i); 27:                 break; 28:             } 29:         } 30:         // 提交给父类( Telnet ) 处理，目前是 Telnet 命令。 31:         return super.decode(channel, buffer, readable, header); 32:     } 33:     // Header 长度不够，返回需要更多的输入 34:     // check length. 35:     if (readable < HEADER_LENGTH) { 36:         return DecodeResult.NEED_MORE_INPUT; 37:     } 38:  39:     // `[96 - 127]`：Body 的**长度**。通过该长度，读取 Body 。 40:     // get data length. 41:     int len = Bytes.bytes2int(header, 12); 42:     checkPayload(channel, len); 43:  44:     // 总长度不够，返回需要更多的输入 45:     int tt = len + HEADER_LENGTH; 46:     if (readable < tt) { 47:         return DecodeResult.NEED_MORE_INPUT; 48:     } 49:  50:     // 解析 Header + Body 51:     // limit input stream. 52:     ChannelBufferInputStream is = new ChannelBufferInputStream(buffer, len); 53:     try { 54:         return decodeBody(channel, is, header); 55:     } finally { 56:         // skip 未读完的流，并打印错误日志 57:         if (is.available() > 0) { 58:             try { 59:                 if (logger.isWarnEnabled()) { 60:                     logger.warn("Skip input stream " + is.available()); 61:                 } 62:                 StreamUtils.skipUnusedStream(is); 63:             } catch (IOException e) { 64:                 logger.warn(e.getMessage(), e); 65:             } 66:         } 67:     } 68: }
 ```
 

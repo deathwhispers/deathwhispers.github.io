@@ -21,11 +21,11 @@ updated: 2020-12-18 18:00
 
 ---
 
-上篇博客只是对 `<font style="color:rgb(51, 51, 51);">ApplicationContext</font>` 相关的接口做了一个简单的介绍，作为一个高富帅级别的 Spring 容器，它涉及的方法实在是太多了，全部介绍是不可能的，而且大部分功能都已经在前面系列博客中做了详细的介绍，所以这篇博问介绍 `<font style="color:rgb(51, 51, 51);">ApplicationContext</font>` 最重要的方法（小编认为的） ：#refresh()方法。
+上篇博客只是对 `ApplicationContext` 相关的接口做了一个简单的介绍，作为一个高富帅级别的 Spring 容器，它涉及的方法实在是太多了，全部介绍是不可能的，而且大部分功能都已经在前面系列博客中做了详细的介绍，所以这篇博问介绍 `ApplicationContext` 最重要的方法（小编认为的）：#refresh()方法。
 
-艿艿：我也这么认为，`<font style="color:rgb(51, 51, 51);">#refresh()</font>`方法是关键的关键！
+艿艿：我也这么认为，`#refresh()` 方法是关键的关键！
 
-`<font style="color:rgb(51, 51, 51);">#refresh()</font>`方法，是定义在 `<font style="color:rgb(51, 51, 51);">ConfigurableApplicationContext</font>` 类中的，如下：
+`#refresh()` 方法，是定义在 `ConfigurableApplicationContext` 类中的，如下：
 
 ```java
 // ConfigurableApplicationContext.java
@@ -42,7 +42,7 @@ void refresh() throws BeansException, IllegalStateException;
 - 作用就是：**刷新 Spring 的应用上下文**
 。
 
-其实现是在 `<font style="color:rgb(51, 51, 51);">AbstractApplicationContext</font>` 中实现。如下：
+其实现是在 `AbstractApplicationContext` 中实现。如下：
 
 ```java
 // AbstractApplicationContext.java
@@ -84,7 +84,7 @@ public void refresh() throws BeansException, IllegalStateException {
 
 # **1. prepareRefresh()**
 
-> 初始化上下文环境，对系统的环境变量或者系统属性进行准备和校验,如环境变量中必须设置某个值才能运行，否则不能运行，这个时候可以在这里加这个校验，重写 <font style="color:rgb(51, 51, 51);">initPropertySources</font> 方法就好了
+> 初始化上下文环境，对系统的环境变量或者系统属性进行准备和校验，如环境变量中必须设置某个值才能运行，否则不能运行，这个时候可以在这里加这个校验，重写 `initPropertySources` 方法就好了
 
 ```java
 // AbstractApplicationContext.java
@@ -107,17 +107,14 @@ void prepareRefresh() {
 
 该方法主要是做一些准备工作，如：
 
-1. 设置 `<font style="color:rgb(51, 51, 51);">context</font>`
-启动时间
-2. 设置 `<font style="color:rgb(51, 51, 51);">context</font>`
-的当前状态
-3. 初始化 `<font style="color:rgb(51, 51, 51);">context environment</font>`
-中占位符
+1. 设置 `context` 启动时间
+2. 设置 `context` 的当前状态
+3. 初始化 `context environment` 中占位符
 4. 对属性进行必要的验证
 
 # **2. obtainFreshBeanFactory()**
 
-创建并初始化 `<font style="color:rgb(51, 51, 51);">BeanFactory</font>`
+创建并初始化 `BeanFactory`
 
 ```java
 // AbstractApplicationContext.java
@@ -131,7 +128,7 @@ protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
 }
 ```
 
-核心方法就在`<font style="color:rgb(51, 51, 51);">#refreshBeanFactory()</font>`方法，该方法的核心任务就是创建 `<font style="color:rgb(51, 51, 51);">BeanFactory</font>` 并对其就行一番初始化。如下：
+核心方法就在 `#refreshBeanFactory()` 方法，该方法的核心任务就是创建 `BeanFactory` 并对其就行一番初始化。如下：
 
 ```java
 // AbstractRefreshableApplicationContext.java
@@ -158,20 +155,13 @@ protected final void refreshBeanFactory() throws BeansException {
 }
 ```
 
-5. 判断当前容器是否存在一个 `<font style="color:rgb(51, 51, 51);">BeanFactory</font>`
-，如果存在则对其进行销毁和关闭
-6. 调用`<font style="color:rgb(51, 51, 51);">#createBeanFactory()</font><font style="color:rgb(51, 51, 51);">BeanFactory</font><font style="color:rgb(51, 51, 51);">DefaultListableBeanFactory</font>`
-方法，创建一个
-实例，其实就是
-。
-7. 自定义 `<font style="color:rgb(51, 51, 51);">BeanFactory</font>`
-8. 加载 `<font style="color:rgb(51, 51, 51);">BeanDefinition</font>`
-。
-9. 将创建好的 `<font style="color:rgb(51, 51, 51);">bean</font><font style="color:rgb(51, 51, 51);">context</font>`
-工厂的引用交给的
-来管理
+5. 判断当前容器是否存在一个 `BeanFactory`，如果存在则对其进行销毁和关闭
+6. 调用 `#createBeanFactory()` 方法，创建一个 BeanFactory 实例，其实就是 DefaultListableBeanFactory。
+7. 自定义 `BeanFactory`
+8. 加载 `BeanDefinition`。
+9. 将创建好的 bean 工厂的引用交给的 context 来管理
 
-上面 5 个步骤，都是比较简单的，但是有必要讲解下第 4 步：加载 `<font style="color:rgb(51, 51, 51);">BeanDefinition</font>`。如果各位看过 【死磕 Spring】系列的话，在刚刚开始分析源码的时候，小编就是以`<font style="color:rgb(51, 51, 51);">BeanDefinitionReader#loadBeanDefinitions(Resource resource)</font>`方法，作为入口来分析的，示例如下：
+上面 5 个步骤，都是比较简单的，但是有必要讲解下第 4 步：加载 `BeanDefinition`。如果各位看过 【死磕 Spring】系列的话，在刚刚开始分析源码的时候，小编就是以 `BeanDefinitionReader#loadBeanDefinitions(Resource resource)` 方法，作为入口来分析的，示例如下：
 
 ```java
 // 示例代码ClassPathResource resource = new ClassPathResource("bean.xml");
@@ -236,15 +226,15 @@ IOException {
 }
 ```
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">到这里我们发现，其实内部依然是调用</font>`<font style="color:rgb(51, 51, 51);">BeanDefinitionReader#loadBeanDefinitionn()</font>`<font style="color:rgb(51, 51, 51);">进行 </font>`<font style="color:rgb(51, 51, 51);">BeanDefinition</font>`<font style="color:rgb(51, 51, 51);"> 的加载进程。</font>
+```text
+- 到这里我们发现，其实内部依然是调用 `BeanDefinitionReader#loadBeanDefinitionn()` 进行 `BeanDefinition` 的加载进程。
 ```
 
 # **3. prepareBeanFactory(beanFactory)**
 
-> 填充 <font style="color:rgb(51, 51, 51);">BeanFactory</font> 功能
+> 填充 `BeanFactory` 功能
 
-上面获取获取的 `<font style="color:rgb(51, 51, 51);">BeanFactory</font>` 除了加载了一些 `<font style="color:rgb(51, 51, 51);">BeanDefinition</font>` 就没有其他任何东西了，这个时候其实还不能投入生产，因为还少配置了一些东西，比如 `<font style="color:rgb(51, 51, 51);">context</font>`的 `<font style="color:rgb(51, 51, 51);">ClassLoader</font>` 和 后置处理器等等。
+上面获取获取的 `BeanFactory` 除了加载了一些 `BeanDefinition` 就没有其他任何东西了，这个时候其实还不能投入生产，因为还少配置了一些东西，比如 `context` 的 `ClassLoader` 和后置处理器等等。
 
 ```java
 // AbstractApplicationContext.java
@@ -286,11 +276,11 @@ void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 }
 ```
 
-看上面的源码知道这个就是对 `<font style="color:rgb(51, 51, 51);">BeanFactory</font>` 设置各种各种的功能。
+看上面的源码知道这个就是对 `BeanFactory` 设置各种各种的功能。
 
 # **4. postProcessBeanFactory()**
 
-> 提供子类覆盖的额外处理，即子类处理自定义的<font style="color:rgb(51, 51, 51);">BeanFactoryPostProcess</font>
+> 提供子类覆盖的额外处理，即子类处理自定义的 BeanFactoryPostProcess
 
 ```java
 // AbstractApplicationContext.java

@@ -404,7 +404,7 @@ public class HBaseUtilsTest {
 
 2.x 版本相比于 1.x 废弃了一部分方法，关于废弃的方法在源码中都会指明新的替代方法，比如，在 2.x 中创建表时：HTableDescriptor 和 HColumnDescriptor 等类都标识为废弃，取而代之的是使用 TableDescriptorBuilder 和 ColumnFamilyDescriptorBuilder 来定义表和列族。
 
-![](/assets/images/learning/bigdata/hbase/hbase-java-api-basic-usage/9975a2c30a0d1d2448780b5776c2b29f.png)
+![HBase 2.x 版本废弃方法提示](/assets/images/learning/bigdata/hbase/hbase-java-api-basic-usage/9975a2c30a0d1d2448780b5776c2b29f.png)
 
 以下为 HBase 2.x 版本 Java API 的使用示例：
 
@@ -703,11 +703,11 @@ meta
 - **HBase RegionServer**
 ：用于读、写数据。
 
-![](/assets/images/learning/bigdata/hbase/hbase-java-api-basic-usage/55381f2a88eebe3a4f55893b5a3ad7d4.png)
+![HBase 客户端连接架构](/assets/images/learning/bigdata/hbase/hbase-java-api-basic-usage/55381f2a88eebe3a4f55893b5a3ad7d4.png)
 
 Connection 对象和实际的 Socket 连接之间的对应关系如下图：
 
-![](/assets/images/learning/bigdata/hbase/hbase-java-api-basic-usage/2c7854eb41ee9ebff150000cc5763587.png)
+![Connection 与 Socket 连接对应关系](/assets/images/learning/bigdata/hbase/hbase-java-api-basic-usage/2c7854eb41ee9ebff150000cc5763587.png)
 
 上面两张图片引用自博客：[连接 HBase 的正确姿势](https://yq.aliyun.com/articles/581702?spm=a2c4e.11157919.spm-cont-list.1.146c27aeFxoMsN%20%E8%BF%9E%E6%8E%A5HBase%E7%9A%84%E6%AD%A3%E7%A1%AE%E5%A7%BF%E5%8A%BF)
 

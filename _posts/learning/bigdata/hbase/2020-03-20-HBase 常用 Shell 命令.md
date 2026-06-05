@@ -19,13 +19,13 @@ updated: 2025-03-12 18:25
 
 打开 Hbase Shell：
 
-```plain text
+```shell
 # hbase shell
 ```
 
 ### 1.1 获取帮助
 
-```plain text
+```shell
 # 获取帮助
 help
 # 获取命令的详细信息
@@ -34,13 +34,13 @@ help 'status'
 
 ### 1.2 查看服务器状态
 
-```plain text
+```shell
 status
 ```
 
 ### 1.3 查看版本信息
 
-```plain text
+```shell
 version
 ```
 
@@ -48,7 +48,7 @@ version
 
 ### 2.1 查看所有表
 
-```plain text
+```shell
 list
 ```
 
@@ -56,7 +56,7 @@ list
 
 **命令格式**： create '表名称', '列族名称 1','列族名称 2','列名称 N'
 
-```plain text
+```shell
 # 创建一张名为Student的表,包含基本信息（baseInfo）、学校信息（schoolInfo）两个列族
 create 'Student','baseInfo','schoolInfo'
 ```
@@ -65,7 +65,7 @@ create 'Student','baseInfo','schoolInfo'
 
 **命令格式**：desc '表名'
 
-```plain text
+```shell
 describe 'Student'
 ```
 
@@ -73,7 +73,7 @@ describe 'Student'
 
 enable 和 disable 可以启用/禁用这个表,is_enabled 和 is_disabled 来检查表是否被禁用
 
-```plain text
+```shell
 # 禁用表
 disable 'Student'
 # 检查表是否被禁用
@@ -86,13 +86,13 @@ is_enabled 'Student'
 
 ### 2.5 检查表是否存在
 
-```plain text
+```shell
 exists 'Student'
 ```
 
 ### 2.6 删除表
 
-```plain text
+```shell
 # 删除表前需要先禁用表
 disable 'Student'
 # 删除表
@@ -105,7 +105,7 @@ drop 'Student'
 
 **命令格式**： alter '表名', '列族名'
 
-```plain text
+```shell
 alter 'Student', 'teacherInfo'
 ```
 
@@ -113,7 +113,7 @@ alter 'Student', 'teacherInfo'
 
 **命令格式**：alter '表名', {NAME => '列族名', METHOD => 'delete'}
 
-```plain text
+```shell
 alter 'Student', {NAME => 'teacherInfo', METHOD => 'delete'}
 ```
 
@@ -121,7 +121,7 @@ alter 'Student', {NAME => 'teacherInfo', METHOD => 'delete'}
 
 默认情况下，列族只存储一个版本的数据，如果需要存储多个版本的数据，则需要修改列族的属性。修改后可通过 desc 命令查看。
 
-```plain text
+```shell
 alter 'Student',{NAME=>'baseInfo',VERSIONS=>3}
 ```
 
@@ -131,7 +131,7 @@ alter 'Student',{NAME=>'baseInfo',VERSIONS=>3}
 
 **注意：如果新增数据的行键值、列族名、列名与原有数据完全相同，则相当于更新操作**
 
-```plain text
+```shell
 put 'Student', 'rowkey1','baseInfo:name','tom'
 put 'Student', 'rowkey1','baseInfo:birthday','1990-01-09'
 put 'Student', 'rowkey1','baseInfo:age','29'
@@ -155,7 +155,7 @@ put 'Student', 'wrowkey4','baseInfo:name','maike-jack'
 
 ### 3.5 获取指定行、指定行中的列族、列的信息
 
-```plain text
+```shell
 # 获取指定行中所有列的数据信息
 get 'Student','rowkey3'
 # 获取指定行中指定列族下所有列的数据信息
@@ -166,7 +166,7 @@ get 'Student','rowkey3','baseInfo:name'
 
 ### 3.6 删除指定行、指定行中的列
 
-```plain text
+```shell
 # 删除指定行
 delete 'Student','rowkey3'
 # 删除指定行中指定列的数据
@@ -184,7 +184,7 @@ scan 可以设置 begin 和 end 参数来访问一个范围内所有的数据。
 
 ### 4.1Get查询
 
-```plain text
+```shell
 # 获取指定行中所有列的数据信息
 get 'Student','rowkey3'
 # 获取指定行中指定列族下所有列的数据信息
@@ -195,19 +195,19 @@ get 'Student','rowkey3','baseInfo:name'
 
 ### 4.2 查询整表数据
 
-```plain text
+```shell
 scan 'Student'
 ```
 
 ### 4.3 查询指定列簇的数据
 
-```plain text
+```shell
 scan 'Student', {COLUMN=>'baseInfo'}
 ```
 
 ### 4.4 条件查询
 
-```plain text
+```shell
 # 查询指定列的数据
 scan 'Student', {COLUMNS=> 'baseInfo:birthday'}
 ```
@@ -216,7 +216,7 @@ scan 'Student', {COLUMNS=> 'baseInfo:birthday'}
 
 如下代表从 rowkey2 这个 rowkey 开始，查找下两个行的最新 3 个版本的 name 列的数据：
 
-```plain text
+```shell
 scan 'Student', {COLUMNS=> 'baseInfo:name',STARTROW => 'rowkey2',STOPROW => 'wrowkey4',LIMIT=>2, VERSIONS=>3}
 ```
 
@@ -224,31 +224,31 @@ scan 'Student', {COLUMNS=> 'baseInfo:name',STARTROW => 'rowkey2',STOPROW => 'wro
 
 Filter 可以设定一系列条件来进行过滤。如我们要查询值等于 24 的所有数据：
 
-```plain text
+```shell
 scan 'Student', FILTER=>"ValueFilter(=,'binary:24')"
 ```
 
 值包含 yale 的所有数据：
 
-```plain text
+```shell
 scan 'Student', FILTER=>"ValueFilter(=,'substring:yale')"
 ```
 
 列名中的前缀为 birth 的：
 
-```plain text
+```shell
 scan 'Student', FILTER=>"ColumnPrefixFilter('birth')"
 ```
 
 FILTER 中支持多个过滤条件通过括号、AND 和 OR 进行组合：
 
-```plain text
+```shell
 # 列名中的前缀为birth且列值中包含1998的数据
 scan 'Student', FILTER=>"ColumnPrefixFilter('birth') AND ValueFilter ValueFilter(=,'substring:1998')"
 ```
 
 PrefixFilter 用于对 Rowkey 的前缀进行判断：
 
-```plain text
+```shell
 scan 'Student', FILTER=>"PrefixFilter('wr')"
 ```

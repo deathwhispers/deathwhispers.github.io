@@ -24,7 +24,7 @@ MapReduce 作业通过将输入的数据集拆分为独立的块，这些块由 
 对作为输出。输入和输出的 key 和 value
 都必须实现[Writable](http://hadoop.apache.org/docs/stable/api/org/apache/hadoop/io/Writable.html) 接口。
 
-```plain text
+```text
 (input) <k1, v1> -> map -> <k2, v2> -> combine -> <k2, v2> -> reduce -> <k3, v3> (output)
 ```
 
@@ -32,7 +32,7 @@ MapReduce 作业通过将输入的数据集拆分为独立的块，这些块由 
 
 这里以词频统计为例进行说明，MapReduce 处理的流程如下：
 
-![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/a5cb197b6969808a62074a2fa00e9926.png)
+![MapReduce 处理流程](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/a5cb197b6969808a62074a2fa00e9926.png)
 
 1. **input**
    : 读取文本文件；
@@ -76,7 +76,7 @@ MapReduce 这个称呼的来源。
 
 ## 三、combiner & partitioner
 
-![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/2d67bbd437c841b930c9f42ee5a132da.png)
+![Combiner 和 Partitioner 示意图](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/2d67bbd437c841b930c9f42ee5a132da.png)
 
 ### 3.1 InputFormat & RecordReaders
 
@@ -96,11 +96,11 @@ combiner，但是做平均值计算则不能使用 combiner。
 
 不使用 combiner 的情况：
 
-![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/150b162366f30be2932005cbb2085769.png)
+![不使用 Combiner 的情况](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/150b162366f30be2932005cbb2085769.png)
 
 使用 combiner 的情况：
 
-![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/89713531d5759d73d915d849b01380e2.png)
+![使用 Combiner 的情况](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/89713531d5759d73d915d849b01380e2.png)
 
 可以看到使用 combiner 的时候，需要传输到 reducer 中的数据由 12keys，降低到 10keys。降低的幅度取决于你 keys
 的重复率，下文词频统计案例会演示用 combiner 降低数百倍的传输量。
@@ -115,7 +115,7 @@ partitioner 可以理解成分类器，将 map 的输出按照 key 值的不同�
 
 这里给出一个经典的词频统计的案例：统计如下样本数据中每个单词出现的次数。
 
-```plain text
+```text
 Spark   HBase
 Hive    Flink   Storm   Hadoop  HBase   Spark
 Flink
@@ -171,7 +171,7 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritabl
 
 WordCountMapper 对应下图的 Mapping 操作：
 
-![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/b7665fa06514ac9df6d779aff2ced19b.png)
+![Mapping 操作示意图](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/b7665fa06514ac9df6d779aff2ced19b.png)
 
 WordCountMapper 继承自 Mapper 类，这是一个泛型类，定义如下：
 
@@ -237,7 +237,7 @@ public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritab
 
 如下图，shuffling 的输出是 reduce 的输入。这里的 key 是每个单词，values 是一个可迭代的数据类型，类似 (1,1,1,…)。
 
-![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/2b0993548bd34e64b85255d698730b2f.png)
+![Shuffling 输出作为 Reduce 输入](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/2b0993548bd34e64b85255d698730b2f.png)
 
 ### 4.4 WordCountApp
 
@@ -313,13 +313,13 @@ public class WordCountApp {
 在实际开发中，可以在本机配置 hadoop 开发环境，直接在 IDE 中启动进行测试。这里主要介绍一下打包提交到服务器运行。由于本项目没有使用除
 Hadoop 外的第三方依赖，直接打包即可：
 
-```plain text
+```shell
 # mvn clean package
 ```
 
 使用以下命令提交作业：
 
-```plain text
+```shell
 hadoop jar /usr/appjar/hadoop-word-count-1.0.jar \
 com.heibaiying.WordCountApp \
 /wordcount/input.txt /wordcount/output/WordCountApp
@@ -327,7 +327,7 @@ com.heibaiying.WordCountApp \
 
 作业完成后查看 HDFS 上生成目录：
 
-```plain text
+```shell
 # 查看目录
 hadoop fs -ls /wordcount/output/WordCountApp
 
@@ -335,7 +335,7 @@ hadoop fs -ls /wordcount/output/WordCountApp
 hadoop fs -cat /wordcount/output/WordCountApp/part-r-00000
 ```
 
-![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/bf3948a00a09c6c7f8f69b309eac7147.png)
+![HDFS 上生成目录](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/bf3948a00a09c6c7f8f69b309eac7147.png)
 
 ## 五、词频统计案例进阶之Combiner
 
@@ -354,11 +354,11 @@ job.setCombinerClass(WordCountReducer.class);
 
 没有加入 combiner 的打印日志：
 
-![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/5ddff8a247f71da323842c1206d54870.png)
+![没有加入 Combiner 的打印日志](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/5ddff8a247f71da323842c1206d54870.png)
 
 加入 combiner 后的打印日志如下：
 
-![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/262ade5977bc11eac2243802a59c8707.png)
+![加入 Combiner 后的打印日志](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/262ade5977bc11eac2243802a59c8707.png)
 
 这里我们只有一个输入文件并且小于 128M，所以只有一个 Map 进行处理。可以看到经过 combiner 后，records 由 3519 降低为 6(
 样本中单词种类就只有 6 种)，在这个用例中 combiner 就能极大地降低需要传输的数据量。
@@ -410,7 +410,7 @@ job.setNumReduceTasks(WordCountDataUtils.WORD_LIST.size());
 
 执行结果如下，分别生成 6 个文件，每个文件中为对应单词的统计结果：
 
-![](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/1d0fdcb7f78d6d4313bea56df75a9e85.png)
+![自定义 Partitioner 执行结果](/assets/images/learning/bigdata/hadoop/hadoop-distributed-computing-framework-mapreduce/1d0fdcb7f78d6d4313bea56df75a9e85.png)
 
 ## 参考资料
 

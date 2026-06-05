@@ -22,7 +22,7 @@ week: 2019-W29
 
 ## [啥是防抖](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
 
-![cd8cdbcfc0a2fb7c9ad497f98d4bbaea](/assets/images/learning/spring/springboot/spring-boot-debounce/cd8cdbcfc0a2fb7c9ad497f98d4bbaea.jpeg)
+![防抖概念示意图](/assets/images/learning/spring/springboot/spring-boot-debounce/cd8cdbcfc0a2fb7c9ad497f98d4bbaea.jpeg)
 
 > ❝
 > 所谓防抖，一是防用户手抖，二是防网络抖动。在Web系统中，表单提交是一个非常常见的功能，如果不加控制，容易因为用户的误操作或网络延迟导致同一请求被发送多次，进而生成重复的数据记录。要针对用户的误操作，前端通常会实现按钮的loading状态，阻止用户进行多次点击。而对于网络波动造成的请求重发问题，仅靠前端是不行的。为此，后端也应实施相应的防抖逻辑，确保在网络波动的情况下不会接收并处理同一请求多次。
@@ -58,13 +58,13 @@ week: 2019-W29
 
 流程图如下：
 
-![632ad6e66036b525efaf12f8b7e0a195](/assets/images/learning/spring/springboot/spring-boot-debounce/632ad6e66036b525efaf12f8b7e0a195.jpeg)
+![使用共享缓存流程图](/assets/images/learning/spring/springboot/spring-boot-debounce/632ad6e66036b525efaf12f8b7e0a195.jpeg)
 
 ### [使用分布式锁](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
 
 流程图如下：
 
-![05ae04729ca0efb7a15ac3cb5e21126e](/assets/images/learning/spring/springboot/spring-boot-debounce/05ae04729ca0efb7a15ac3cb5e21126e.jpeg)
+![使用分布式锁流程图](/assets/images/learning/spring/springboot/spring-boot-debounce/05ae04729ca0efb7a15ac3cb5e21126e.jpeg)
 
 > ❝
 > 常见的分布式组件有Redis、Zookeeper等，但结合实际业务来看，一般都会选择Redis，因为Redis一般都是Web系统必备的组件，不需要额外搭建。
@@ -116,7 +116,7 @@ public class AddReq {
 
 ## [请求锁](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
 
-根据上面的要求，我定了一个注解`<font style="color:rgb(30, 107, 184);">@RequestLock</font>`，使用方式很简单，把这个注解打在接口方法上即可。**RequestLock.java**
+根据上面的要求，我定了一个注解`@RequestLock`，使用方式很简单，把这个注解打在接口方法上即可。**RequestLock.java**
 
 ```java
 package com.summo.demo.model.request;
@@ -144,11 +144,9 @@ public class AddReq {
 ```
 
 > ❝
-> `<font style="color:rgb(30, 107, 184);">@RequestLock</font>`注解定义了几个基础的属性，redis锁前缀、redis锁时间、redis锁时间单位、key分隔符。其中前面三个参数比较好理解，都是一个锁的基本信息。key分隔符是用来将多个参数合并在一起的，比如userName是张三，userPhone是123456，那么完整的key就是"张三&123456"，最后再加上redis锁前缀，就组成了一个唯一key。
+> `@RequestLock`注解定义了几个基础的属性，redis锁前缀、redis锁时间、redis锁时间单位、key分隔符。其中前面三个参数比较好理解，都是一个锁的基本信息。key分隔符是用来将多个参数合并在一起的，比如userName是张三，userPhone是123456，那么完整的key就是"张三&123456"，最后再加上redis锁前缀，就组成了一个唯一key。
 
 ## [唯一key生成](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
-
-这里有些同学可能就要说了，直接拿参数来生成key不就行了吗？额，不是不行，但我想问一个问题：如果这个接口是文章发布的接口，你也打算把内容当做key吗？要知道，Redis的效率跟key的大小息息相关。所以，我的建议是`<font style="color:rgb(30, 107, 184);">选取合适的字段作为key就行了，没必要全都加上</font>`。
 
 要做到参数可选，那么用注解的方式最好了，注解如下**RequestKeyParam.java**
 
@@ -313,7 +311,7 @@ public class RedisRequestLockAspect {
 ```
 
 > ❝
-> 这里的核心代码是stringRedisTemplate.execute里面的内容，正如注释里面说的"使用RedisCallback接口执行set命令，设置锁键；设置额外选项：过期时间和SET_IF_ABSENT选项"，有些同学可能不太清楚`<font style="color:rgb(30, 107, 184);">SET_IF_ABSENT</font>`是个啥,这里我解释一下：`<font style="color:rgb(30, 107, 184);">SET_IF_ABSENT</font>`是 RedisStringCommands.SetOption 枚举类中的一个选项，用于在执行 SET 命令时设置键值对的时候，如果键不存在则进行设置，如果键已经存在，则不进行设置。
+> 这里的核心代码是stringRedisTemplate.execute里面的内容，正如注释里面说的"使用RedisCallback接口执行set命令，设置锁键；设置额外选项：过期时间和SET_IF_ABSENT选项"，有些同学可能不太清楚`SET_IF_ABSENT`是个啥,这里我解释一下：`SET_IF_ABSENT`是 RedisStringCommands.SetOption 枚举类中的一个选项，用于在执行 SET 命令时设置键值对的时候，如果键不存在则进行设置，如果键已经存在，则不进行设置。
 
 ### [Redisson分布式方式](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247576728&idx=1&sn=1298645b025eb51d9078e8c3de7b3c17&scene=21#wechat_redirect)
 
@@ -437,15 +435,15 @@ public class RedissonRequestLockAspect {
 
 - **第一次提交，"添加用户成功"**
 
-![d83a72fe220c105756705c06d058ff38](/assets/images/learning/spring/springboot/spring-boot-debounce/d83a72fe220c105756705c06d058ff38.jpeg)
+![第一次提交成功](/assets/images/learning/spring/springboot/spring-boot-debounce/d83a72fe220c105756705c06d058ff38.jpeg)
 
 - **短时间内重复提交，"BIZ-0001:您的操作太快了,请稍后重试"**
 
-![e94dd441b421cefc097243ba5aa07563](/assets/images/learning/spring/springboot/spring-boot-debounce/e94dd441b421cefc097243ba5aa07563.jpeg)
+![短时间内重复提交失败](/assets/images/learning/spring/springboot/spring-boot-debounce/e94dd441b421cefc097243ba5aa07563.jpeg)
 
 - **过几秒后再次提交，"添加用户成功"**
 
-![ebeb516566ec5fd089b1ae60f8655195](/assets/images/learning/spring/springboot/spring-boot-debounce/ebeb516566ec5fd089b1ae60f8655195.jpeg)
+![过几秒后再次提交成功](/assets/images/learning/spring/springboot/spring-boot-debounce/ebeb516566ec5fd089b1ae60f8655195.jpeg)
 
 > ❝
 > 从测试的结果上看，防抖是做到了，但是随着缓存消失、锁失效，还是可以发起同样的请求，所以要真正做到接口幂等性，还需要业务代码的判断、设置数据库表的UK索引等操作。我在文章里面说到生成唯一key的时候没有加用户相关的信息，比如用户ID、IP属地等，真实生产环境建议加上这些，可以更好地减少误判。

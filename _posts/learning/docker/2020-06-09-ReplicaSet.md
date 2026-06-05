@@ -37,17 +37,61 @@ ReplicaSet能确保运行指定数量的pod。然而，Deployment 是一个更�
 [frontend.yaml](https://raw.githubusercontent.com/kubernetes/kubernetes.github.io/master/docs/concepts/workloads/controllers/frontend.yaml)
 
 ```yaml
-apiVersion: extensions/v1beta1kind: ReplicaSetmetadata:  name: frontend  # these labels can be applied automatically  # from the labels in the pod template if not set  # labels:    # app: guestbook    # tier: frontendspec:  # this replicas value is default  # modify it according to your case  replicas: 3  # selector can be applied automatically  # from the labels in the pod template if not set,  # but we are specifying the selector here to  # demonstrate its usage.  selector:    matchLabels:      tier: frontend    matchExpressions:      - {key: tier, operator: In, values: [frontend]}  template:    metadata:      labels:        app: guestbook        tier: frontend    spec:      containers:      - name: php-redis        image: gcr.io/google_samples/gb-frontend:v3        resources:          requests:            cpu: 100m            memory: 100Mi        env:        - name: GET_HOSTS_FROM          value: dns          # If your cluster config does not include a dns service, then to          # instead access environment variables to find service host          # info, comment out the 'value: dns' line above, and uncomment the          # line below.          # value: env        ports:        - containerPort: 80
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  # these labels can be applied automatically
+  # from the labels in the pod template if not set
+  # labels:
+    # app: guestbook
+    # tier: frontend
+spec:
+  # this replicas value is default
+  # modify it according to your case
+  replicas: 3
+  # selector can be applied automatically
+  # from the labels in the pod template if not set,
+  # but we are specifying the selector here to
+  # demonstrate its usage.
+  selector:
+    matchLabels:
+      tier: frontend
+    matchExpressions:
+      - {key: tier, operator: In, values: [frontend]}
+  template:
+    metadata:
+      labels:
+        app: guestbook
+        tier: frontend
+    spec:
+      containers:
+      - name: php-redis
+        image: gcr.io/google_samples/gb-frontend:v3
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+          # If your cluster config does not include a dns service, then to
+          # instead access environment variables to find service host
+          # info, comment out the 'value: dns' line above, and uncomment the
+          # line below.
+          # value: env
+        ports:
+        - containerPort: 80
 ```
 
 将此配置保存到（frontend.yaml）并提交到Kubernetes集群时，将创建定义的ReplicaSet及其管理的pod。
 
-```plain text
+```shell
 $ kubectl create -f frontend.yaml
 replicaset "frontend" created
 ```
 
-```plain text
+```text
 $ kubectl describe rs/frontend
 
 Name:          frontend
@@ -77,8 +121,18 @@ ReplicaSet也可以作为 [Horizontal Pod Autoscalers (HPA)](https://kubernetes.
 
 [hpa-rs.yaml](https://raw.githubusercontent.com/kubernetes/kubernetes.github.io/master/docs/concepts/workloads/controllers/hpa-rs.yaml)
 
-![](../../../assets/images/learning/docker/replicaset/b6d54e217130858448902546cff85028.svg)
+![Horizontal Pod Autoscaler 示意图](../../../assets/images/learning/docker/replicaset/b6d54e217130858448902546cff85028.svg)
 
 ```yaml
-apiVersion: autoscaling/v1kind: HorizontalPodAutoscalermetadata:  name: frontend-scalerspec:  scaleTargetRef:    kind: ReplicaSet    name: frontend  minReplicas: 3  maxReplicas: 10  targetCPUUtilizationPercentage: 50
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-scaler
+spec:
+  scaleTargetRef:
+    kind: ReplicaSet
+    name: frontend
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
 ```

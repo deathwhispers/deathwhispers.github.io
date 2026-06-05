@@ -59,13 +59,11 @@ name
 application.properties
 ，内容如下：
 
-```plain text
+```text
 student.name = chenssy-PropertyOverrideConfigurer
 ```
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">指定 beanName 为</font><font style="color:rgb(51, 51, 51);">student</font><font style="color:rgb(51, 51, 51);">的 bean 的</font><font style="color:rgb(51, 51, 51);">name</font><font style="color:rgb(51, 51, 51);">属性值为</font><font style="color:rgb(51, 51, 51);">"chenssy-PropertyOverrideConfigurer"</font><font style="color:rgb(51, 51, 51);">。</font>
-```
+- 指定 beanName 为 `student` 的 bean 的 `name` 属性值为 `"chenssy-PropertyOverrideConfigurer"`。
 
 测试打印student中的name属性值，代码如下：
 
@@ -77,7 +75,7 @@ System.out.println("student name:"+ studentService.getName());
 
 运行结果为：
 
-![62128f26d31080cab514f600400d0c69](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-property-override-configurer/62128f26d31080cab514f600400d0c69.jpg)
+![PropertyOverrideConfigurer运行结果](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-property-override-configurer/62128f26d31080cab514f600400d0c69.jpg)
 
 从中可以看出 PropertyOverrideConfigurer 定义的文件取代了 bean 中默认的值。
 
@@ -111,7 +109,7 @@ xml 配置文件调整如下：
 application1.properties
 。配置文件如下：
 
-```plain text
+```text
 student.name = chenssy-PropertyOverrideConfigurer
 ```
 
@@ -119,7 +117,7 @@ student.name = chenssy-PropertyOverrideConfigurer
 application2.properties
 。配置文件如下：
 
-```plain text
+```text
 studentService.name = chenssy-PropertyPlaceholderConfigurer
 ```
 
@@ -132,7 +130,7 @@ ${studentService.name}
 
 测试程序依然是打印 name 属性值，运行结果如下：
 
-![9f5cf050657cc394b935e6d96d713932](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-property-override-configurer/9f5cf050657cc394b935e6d96d713932.jpg)
+![PropertyOverrideConfigurer与PropertyPlaceholderConfigurer对比运行结果](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-property-override-configurer/9f5cf050657cc394b935e6d96d713932.jpg)
 
 所以，上面的分析没有错。下面我们来分析**PropertyOverrideConfigurer 实现原理**。
 
@@ -142,7 +140,7 @@ ${studentService.name}
 
 UML 结构图如下：
 
-![d4dccff7735bc5956f95f4cede780d29](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-property-override-configurer/d4dccff7735bc5956f95f4cede780d29.png)
+![PropertyOverrideConfigurer UML结构图](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-property-override-configurer/d4dccff7735bc5956f95f4cede780d29.png)
 
 spring-201809231001
 
@@ -207,9 +205,7 @@ protected void processKey(ConfigurableListableBeanFactory factory, String key, S
 
 ```
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">获取分割符</font><font style="color:rgb(51, 51, 51);">"."</font><font style="color:rgb(51, 51, 51);">的索引位置，得到</font><font style="color:rgb(51, 51, 51);">beanName</font><font style="color:rgb(51, 51, 51);">以及相应的属性，然后调用</font><font style="color:rgb(51, 51, 51);">#applyPropertyValue(ConfigurableListableBeanFactory factory, String beanName, String property, String value)</font><font style="color:rgb(51, 51, 51);">方法，代码如下：</font>
-```
+- 获取分割符 `"."` 的索引位置，得到 `beanName` 以及相应的属性，然后调用 `#applyPropertyValue(ConfigurableListableBeanFactory factory, String beanName, String property, String value)` 方法，代码如下：
 
 ```java
 // PropertyOverrideConfigurer.java
@@ -232,9 +228,7 @@ String value) {
 
 ```
 
-```plain text
-    * <font style="color:rgb(51, 51, 51);">从容器中获取 BeanDefinition ，然后根据属性</font><font style="color:rgb(51, 51, 51);">property</font><font style="color:rgb(51, 51, 51);">和其值</font><font style="color:rgb(51, 51, 51);">value</font><font style="color:rgb(51, 51, 51);">构造成一个 PropertyValue 对象，最后调用</font><font style="color:rgb(51, 51, 51);">#addPropertyValue(PropertyValue pv )</font><font style="color:rgb(51, 51, 51);">方法。PropertyValue 是用于保存一组bean属性的信息和值的对像。代码如下：</font>
-```
+- 从容器中获取 BeanDefinition ，然后根据属性 `property` 和其值 `value` 构造成一个 PropertyValue 对象，最后调用 `#addPropertyValue(PropertyValue pv )` 方法。PropertyValue 是用于保存一组bean属性的信息和值的对像。代码如下：
 
 ```java
 // MutablePropertyValues.java
@@ -254,14 +248,12 @@ publicMutablePropertyValuesaddPropertyValue(PropertyValue pv) {
 
 ```
 
-```plain text
-        + <font style="color:rgb(51, 51, 51);">添加 PropertyValue 对象，替换或者合并相同的属性值。整个过程其实与上面猜测相差不是很大。</font>
-```
++ 添加 PropertyValue 对象，替换或者合并相同的属性值。整个过程其实与上面猜测相差不是很大。
 
 # **3. 小结**
 
 至此，PropertyOverrideConfigurer 到这里也就分析完毕了。最后看下 PropertyPlaceholderConfigurer 和 PropertyOverrideConfigurer 整体的结构图：
 
-![9dd34dad4a780dda61485542b6c219d8](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-property-override-configurer/9dd34dad4a780dda61485542b6c219d8.png)
+![PropertyPlaceholderConfigurer和PropertyOverrideConfigurer整体结构图](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-property-override-configurer/9dd34dad4a780dda61485542b6c219d8.png)
 
 spring-201809231002

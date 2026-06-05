@@ -27,13 +27,13 @@ IO时（不管是磁盘IO还是网络IO）的过程整体上看有两个操作�
 
 但深入追究的话该过程实际上相当复杂，概要图如下：
 
-![](/assets/images/learning/os/read-write-io/d88be0eded876e04fcb6f43dac3f870d.png)
+![IO过程概要图](/assets/images/learning/os/read-write-io/d88be0eded876e04fcb6f43dac3f870d.png)
 
 详见下文。
 
 读过程概要：
 
-![](/assets/images/learning/os/read-write-io/db3c5ecc411e3e4c87a467f052450c04.png)
+![读过程概要](/assets/images/learning/os/read-write-io/db3c5ecc411e3e4c87a467f052450c04.png)
 
 note：
 
@@ -58,7 +58,7 @@ OS支持多种文件系统，一个磁盘上可以有多个分区，每个分区
 
 为了便于理解问题，我们把c的代码也列出来：
 
-```plain text
+```c
 int main()
 {
     char    c;
@@ -76,7 +76,7 @@ int main()
 
 废话不多说，我们直接把Linux IO栈的一个简化版本画出来：（官方的IO栈参考这个
 
-![](/assets/images/learning/os/read-write-io/aae84700bc4c105887d747d7e7520bfe.png)
+![Linux硬盘IO栈](/assets/images/learning/os/read-write-io/aae84700bc4c105887d747d7e7520bfe.png)
 
 图1 Linux硬盘IO栈
 
@@ -165,7 +165,7 @@ const struct inode_operations ext4_file_inode_operations = {
 
 一个常见的扇区/段/页的大小对比如下图：
 
-![](/assets/images/learning/os/read-write-io/63f8b5cc66719577ae0bff11e4586b27.png)
+![页/段/扇区大小对比](/assets/images/learning/os/read-write-io/63f8b5cc66719577ae0bff11e4586b27.png)
 
 图2 Linux的页/段/扇区的关系示例
 
@@ -219,7 +219,7 @@ Linux内核中我们没有讲到的是还有一套复杂的预读取的策略。
 
 ### 写过程概要：
 
-![](/assets/images/learning/os/read-write-io/a82dd449ccd77d1c3dd98ae940e5c2c7.png)
+![写过程概要](/assets/images/learning/os/read-write-io/a82dd449ccd77d1c3dd98ae940e5c2c7.png)
 
 note：
 
@@ -229,7 +229,7 @@ note：
 
 脏页数据由内核Worker线程周期性地扫描，将符合条件（脏页数据的 比例达到阈值、总量达到阈值、存在时间达到阈值 至少一个，阈值可配置）的脏页数据持久化到磁盘，这才是真正的"写"。持久化的时机：
 
-```plain text
+```text
 数据会在如下三个时机下被真正发起写磁盘IO请求：
 第一种情况，如果write系统调用时，如果发现PageCache中脏页占比太多，超过了dirty_ratio或dirty_bytes，write就必须等待了。
 第二种情况，write写到PageCache就已经返回了。worker内核线程异步运行的时候，再次判断脏页占比，如果超过了dirty_background_ratio或dirty_background_bytes，也发起写回请求。
@@ -264,7 +264,7 @@ int main()
 
 我花了不短的时候跟踪write写到ext4文件系统时的各种调用和返回，大致理出来了一个交互图。当然为了突出重点，我抛弃了不少细节，比如DIRECT IO、ext4日志记录啥的都没有体现出来，只抽取出来了一些我认为关键的调用。
 
-![](/assets/images/learning/os/read-write-io/4d239a81818231995c5e153875b8f285.png)
+![write函数内部实现](/assets/images/learning/os/read-write-io/4d239a81818231995c5e153875b8f285.png)
 
 图1 write函数内部实现
 
@@ -287,7 +287,7 @@ Linux这么搞也是有副作用的，如果接下来服务器发生掉电，内
 
 内核是什么时候真正把数据写到硬盘中呢？为了快速摸清楚全貌，我想到的办法是用systemtap工具，找到内核写IO过程中的一个关键函数，然后在其中把函数调用堆栈打出来。查了半天资料以后，我决定用do_writepages这个函数。
 
-```plain text
+```shell
 #!/usr/bin/stap
 probe kernel.function("do_writepages")
 {
@@ -299,7 +299,7 @@ probe kernel.function("do_writepages")
 
 systemtab跟踪以后，打印信息如下:
 
-```plain text
+```text
 0xffffffff8118efe0 : do_writepages+0x0/0x40 [kernel]
  0xffffffff8122d7d0 : __writeback_single_inode+0x40/0x220 [kernel]
  0xffffffff8122e414 : writeback_sb_inodes+0x1c4/0x490 [kernel]
@@ -314,14 +314,14 @@ systemtab跟踪以后，打印信息如下:
 
 从上面的输出我们可以看出，真正的写文件过程操作是由worker内核线程发出来的（和我们自己的应用程序进程没有半毛钱关系，此时我们的应用程序的write函数调用早就返回了）。这个worker线程写回是周期性执行的，它的周期取决于内核参数dirty_writeback_centisecs的设置，根据参数名也大概能看出来，它的单位是百分之一秒。
 
-```plain text
+```shell
 # cat /proc/sys/vm/dirty_writeback_centisecs
 500
 ```
 
 我查看到我的配置是500，就是说每5秒会周期性地来执行一遍。回顾我们的问题，我们最关心的问题的啥时候写入的，围绕这个思路不过多发散。于是沿着这个调用栈不断地跟踪，跳转，终于找到了下面的代码。如下代码里我们看到，如果是for_background模式，且over_bground_thresh判断成功，就会开始回写了。
 
-```plain text
+```c
 static long wb_writeback(struct bdi_writeback *wb,
                          struct wb_writeback_work *work)
 {
@@ -349,7 +349,7 @@ static long wb_check_background_flush(struct bdi_writeback *wb)
 
 在我的机器上的这两个参数配置如下，表示脏页比例超过10%就开始回写。
 
-```plain text
+```shell
 # cat /proc/sys/vm/dirty_background_bytes
 0
 # cat /proc/sys/vm/dirty_background_ratio
@@ -358,7 +358,7 @@ static long wb_check_background_flush(struct bdi_writeback *wb)
 
 那如果脏页一直都不超过这个比例怎么办呢，就不写了吗？ 不是的。在上面的wb_writeback函数中我们看到了，如果是for_kupdate模式，会记录一个过期标记到work->older_than_this，再往后面的代码中把符合这个过期条件的页面也写回了。dirty_expire_interval这个变量是从哪儿来的呢？ 在kernel/sysctl.c里，我们发现了蛛丝马迹。哦，原来它是来自/proc/sys/vm/dirty_expire_centisecs这个配置。
 
-```plain text
+```c
 1158         {
 1159                 .procname       = "dirty_expire_centisecs",
 1160                 .data           = &dirty_expire_interval,
@@ -371,7 +371,7 @@ static long wb_check_background_flush(struct bdi_writeback *wb)
 
 在我的机器上，它的值是3000。单位是百分之一秒，所以就是脏页过了30秒就会被内核线程认为需要写回到磁盘了。
 
-```plain text
+```shell
 # cat /proc/sys/vm/dirty_expire_centisecs
 3000
 ```

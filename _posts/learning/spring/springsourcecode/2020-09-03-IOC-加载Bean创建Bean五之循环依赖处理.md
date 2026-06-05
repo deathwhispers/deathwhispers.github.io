@@ -33,7 +33,7 @@ updated: 2020-09-03 18:00
 
 循环依赖，其实就是循环引用，就是两个或者两个以上的 bean 互相引用对方，最终形成一个闭环，如 A 依赖 B，B 依赖 C，C 依赖 A。如下图所示：
 
-![59c7b098a22c60ce2d7060a3609fd79e](/assets/images/learning/spring/springsourcecode/ioc-loop-dependency-resolution/59c7b098a22c60ce2d7060a3609fd79e.jpeg)
+![循环依赖示意图](/assets/images/learning/spring/springsourcecode/ioc-loop-dependency-resolution/59c7b098a22c60ce2d7060a3609fd79e.jpeg)
 
 循环依赖
 
@@ -58,8 +58,7 @@ Spring 循环依赖的**场景**有两种：
 
 在 #doGetBean(…) 方法中，首先会根据 beanName 从单例 bean 缓存中获取，**如果不为空则直接返回**。代码如下：
 
-```plain text
-java // AbstractBeanFactory.java  Object sharedInstance = getSingleton(beanName);
+```java // AbstractBeanFactory.java  Object sharedInstance = getSingleton(beanName);
 ```
 
 ---
@@ -68,27 +67,21 @@ java // AbstractBeanFactory.java  Object sharedInstance = getSingleton(beanName)
 #getSingleton(String beanName, boolean allowEarlyReference)
 方法，从单例缓存中获取。代码如下：
 
-```plain text
-java // DefaultSingletonBeanRegistry.java  @Nullable protected Object getSingleton(String beanName, boolean allowEarlyReference) {     // 从单例缓冲中加载 bean     Object singletonObject = this.singletonObjects.get(beanName);     // 缓存中的 bean 为空，且当前 bean 正在创建     if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {         // 加锁         synchronized (this.singletonObjects) {             // 从 earlySingletonObjects 获取             singletonObject = this.earlySingletonObjects.get(beanName);             // earlySingletonObjects 中没有，且允许提前创建             if (singletonObject == null && allowEarlyReference) {                 // 从 singletonFactories 中获取对应的 ObjectFactory                 ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);                 if (singletonFactory != null) {                     // 获得 bean                     singletonObject = singletonFactory.getObject();                     // 添加 bean 到 earlySingletonObjects 中                     this.earlySingletonObjects.put(beanName, singletonObject);                     // 从 singletonFactories 中移除对应的 ObjectFactory                     this.singletonFactories.remove(beanName);                 }             }         }     }     return singletonObject; }
+```java // DefaultSingletonBeanRegistry.java  @Nullable protected Object getSingleton(String beanName, boolean allowEarlyReference) {     // 从单例缓冲中加载 bean     Object singletonObject = this.singletonObjects.get(beanName);     // 缓存中的 bean 为空，且当前 bean 正在创建     if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {         // 加锁         synchronized (this.singletonObjects) {             // 从 earlySingletonObjects 获取             singletonObject = this.earlySingletonObjects.get(beanName);             // earlySingletonObjects 中没有，且允许提前创建             if (singletonObject == null && allowEarlyReference) {                 // 从 singletonFactories 中获取对应的 ObjectFactory                 ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);                 if (singletonFactory != null) {                     // 获得 bean                     singletonObject = singletonFactory.getObject();                     // 添加 bean 到 earlySingletonObjects 中                     this.earlySingletonObjects.put(beanName, singletonObject);                     // 从 singletonFactories 中移除对应的 ObjectFactory                     this.singletonFactories.remove(beanName);                 }             }         }     }     return singletonObject; }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">这个方法主要是从三个缓存中获取，分别是：</font><font style="color:rgb(51, 51, 51);">singletonObjects</font><font style="color:rgb(51, 51, 51);">、</font><font style="color:rgb(51, 51, 51);">earlySingletonObjects</font><font style="color:rgb(51, 51, 51);">、</font><font style="color:rgb(51, 51, 51);">singletonFactories</font><font style="color:rgb(51, 51, 51);"> 。三者定义如下：</font>
-```
+- 这个方法主要是从三个缓存中获取，分别是：`singletonObjects`、`earlySingletonObjects`、`singletonFactories`。三者定义如下：
 
-```plain text
-java // DefaultSingletonBeanRegistry.java  /**  * Cache of singleton objects: bean name to bean instance.  *  * 一级缓存，存放的是单例 bean 的映射。  *  * 注意，这里的 bean 是已经创建完成的。  *  * 对应关系为 bean name --> bean instance  */ private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);  /**  * Cache of early singleton objects: bean name to bean instance.  *  * 二级缓存，存放的是早期半成品（未初始化完）的 bean，对应关系也是 bean name --> bean instance。  *  * 它与 {@link #singletonObjects} 区别在于， 它自己存放的 bean 不一定是完整。  *  * 这个 Map 也是【循环依赖】的关键所在。  */ private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);  /**  * Cache of singleton factories: bean name to ObjectFactory.  *  * 三级缓存，存放的是 ObjectFactory，可以理解为创建早期半成品（未初始化完）的 bean 的 factory ，最终添加到二级缓存 {@link #earlySingletonObjects} 中  *  * 对应关系是 bean name --> ObjectFactory  *  * 这个 Map 也是【循环依赖】的关键所在。  */ private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
+```java // DefaultSingletonBeanRegistry.java  /**  * Cache of singleton objects: bean name to bean instance.  *  * 一级缓存，存放的是单例 bean 的映射。  *  * 注意，这里的 bean 是已经创建完成的。  *  * 对应关系为 bean name --> bean instance  */ private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);  /**  * Cache of early singleton objects: bean name to bean instance.  *  * 二级缓存，存放的是早期半成品（未初始化完）的 bean，对应关系也是 bean name --> bean instance。  *  * 它与 {@link #singletonObjects} 区别在于， 它自己存放的 bean 不一定是完整。  *  * 这个 Map 也是【循环依赖】的关键所在。  */ private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);  /**  * Cache of singleton factories: bean name to ObjectFactory.  *  * 三级缓存，存放的是 ObjectFactory，可以理解为创建早期半成品（未初始化完）的 bean 的 factory ，最终添加到二级缓存 {@link #earlySingletonObjects} 中  *  * 对应关系是 bean name --> ObjectFactory  *  * 这个 Map 也是【循环依赖】的关键所在。  */ private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 ```
 
 ---
 
-```plain text
-    * <font style="color:rgb(51, 51, 51);">singletonObjects</font><font style="color:rgb(51, 51, 51);"> ：单例对象的 Cache 。</font>
-    * <font style="color:rgb(51, 51, 51);">earlySingletonObjects</font><font style="color:rgb(51, 51, 51);"> ：</font>**<font style="color:rgb(51, 51, 51);">提前曝光</font>**<font style="color:rgb(51, 51, 51);">的单例对象的 Cache 。</font>
-    * <font style="color:rgb(51, 51, 51);">singletonFactories</font><font style="color:rgb(51, 51, 51);"> ： 单例对象工厂的 Cache 。</font>
-```
+- `singletonObjects` ：单例对象的 Cache 。
+- `earlySingletonObjects` ：**提前曝光**的单例对象的 Cache 。
+- `singletonFactories` ： 单例对象工厂的 Cache 。
 
 它们三，就是 Spring 解决 singleton bean 的关键因素所在，我称他们为**三级缓存**：
 
@@ -138,23 +131,19 @@ earlySingletonObjects
 singletonFactories
 删除。代码如下：
 
-```plain text
-java // DefaultSingletonBeanRegistry.java  singletonObject = singletonFactory.getObject(); this.earlySingletonObjects.put(beanName, singletonObject); this.singletonFactories.remove(beanName);
+```java // DefaultSingletonBeanRegistry.java  singletonObject = singletonFactory.getObject(); this.earlySingletonObjects.put(beanName, singletonObject); this.singletonFactories.remove(beanName);
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">这样，就从三级缓存</font>**<font style="color:rgb(51, 51, 51);">升级</font>**<font style="color:rgb(51, 51, 51);">到二级缓存了。</font>
-- <font style="color:rgb(51, 51, 51);"> 所以，二级缓存存在的</font>**<font style="color:rgb(51, 51, 51);">意义</font>**<font style="color:rgb(51, 51, 51);">，就是缓存三级缓存中的 ObjectFactory 的 </font><font style="color:rgb(51, 51, 51);">#getObject()</font><font style="color:rgb(51, 51, 51);"> 方法的执行结果，提早曝光的</font>**<font style="color:rgb(51, 51, 51);">单例</font>**<font style="color:rgb(51, 51, 51);"> Bean 对象。</font>
-```
+- 这样，就从三级缓存**升级**到二级缓存了。
+- 所以，二级缓存存在的**意义**，就是缓存三级缓存中的 ObjectFactory 的 `#getObject()` 方法的执行结果，提早曝光的**单例** Bean 对象。
 
 ## 2.2 addSingletonFactory
 
 上面是从缓存中获取，但是缓存中的数据从哪里添加进来的呢？一直往下跟会发现在 AbstractAutowireCapableBeanFactory 的 #doCreateBean(final String beanName, final RootBeanDefinition mbd, final Object[] args) 方法中，有这么一段代码：
 
-```plain text
-java // AbstractAutowireCapableBeanFactory.java  boolean earlySingletonExposure = (mbd.isSingleton() // 单例模式                                   && this.allowCircularReferences // 运行循环依赖                                   && isSingletonCurrentlyInCreation(beanName)); // 当前单例 bean 是否正在被创建 if (earlySingletonExposure) {     if (logger.isTraceEnabled()) {         logger.trace("Eagerly caching bean '" + beanName +                      "' to allow for resolving potential circular references");     }     // 提前将创建的 bean 实例加入到 singletonFactories 中     // <X> 这里是为了后期避免循环依赖     addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean)); }
+```java // AbstractAutowireCapableBeanFactory.java  boolean earlySingletonExposure = (mbd.isSingleton() // 单例模式                                   && this.allowCircularReferences // 运行循环依赖                                   && isSingletonCurrentlyInCreation(beanName)); // 当前单例 bean 是否正在被创建 if (earlySingletonExposure) {     if (logger.isTraceEnabled()) {         logger.trace("Eagerly caching bean '" + beanName +                      "' to allow for resolving potential circular references");     }     // 提前将创建的 bean 实例加入到 singletonFactories 中     // <X> 这里是为了后期避免循环依赖     addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean)); }
 ```
 
 ---
@@ -168,20 +157,16 @@ java // AbstractAutowireCapableBeanFactory.java  boolean earlySingletonExposure 
 - #addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory)
 方法，代码如下：
 
-```plain text
-java // DefaultSingletonBeanRegistry.java  protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {     Assert.notNull(singletonFactory, "Singleton factory must not be null");     synchronized (this.singletonObjects) {         if (!this.singletonObjects.containsKey(beanName)) {             this.singletonFactories.put(beanName, singletonFactory);             this.earlySingletonObjects.remove(beanName);             this.registeredSingletons.add(beanName);         }     } }
+```java // DefaultSingletonBeanRegistry.java  protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {     Assert.notNull(singletonFactory, "Singleton factory must not be null");     synchronized (this.singletonObjects) {         if (!this.singletonObjects.containsKey(beanName)) {             this.singletonFactories.put(beanName, singletonFactory);             this.earlySingletonObjects.remove(beanName);             this.registeredSingletons.add(beanName);         }     } }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">从这段代码我们可以看出，</font><font style="color:rgb(51, 51, 51);">singletonFactories</font><font style="color:rgb(51, 51, 51);"> 这个三级缓存才是解决 Spring Bean 循环依赖的诀窍所在。同时这段代码发生在 </font><font style="color:rgb(51, 51, 51);">#createBeanInstance(...)</font><font style="color:rgb(51, 51, 51);"> 方法之后，也就是说这个 bean 其实已经被创建出来了，</font>**<font style="color:rgb(51, 51, 51);">但是它还不是很完美（没有进行属性填充和初始化），但是对于其他依赖它的对象而言已经足够了（可以根据对象引用定位到堆中对象），能够被认出来了</font>**<font style="color:rgb(51, 51, 51);">。所以 Spring 在这个时候，选择将该对象提前曝光出来让大家认识认识。</font>
-```
+- 从这段代码我们可以看出，`singletonFactories` 这个三级缓存才是解决 Spring Bean 循环依赖的诀窍所在。同时这段代码发生在 `#createBeanInstance(...)` 方法之后，也就是说这个 bean 其实已经被创建出来了，**但是它还不是很完美（没有进行属性填充和初始化），但是对于其他依赖它的对象而言已经足够了（可以根据对象引用定位到堆中对象），能够被认出来了**。所以 Spring 在这个时候，选择将该对象提前曝光出来让大家认识认识。
 
 另外， 处的 #getEarlyBeanReference(String beanName, RootBeanDefinition mbd, Object bean) 方法也**非常重要**，这里会创建早期初始化 Bean 可能存在的 AOP 代理等等。代码如下：
 
-```plain text
-java // AbstractAutowireCapableBeanFactory.java  /**  * 对创建的早期半成品（未初始化）的 Bean 处理引用  *  * 例如说，AOP 就是在这里动态织入，创建其代理 Bean 返回  *  * Obtain a reference for early access to the specified bean,  * typically for the purpose of resolving a circular reference.  * @param beanName the name of the bean (for error handling purposes)  * @param mbd the merged bean definition for the bean  * @param bean the raw bean instance  * @return the object to expose as bean reference  */ protected Object getEarlyBeanReference(String beanName, RootBeanDefinition mbd, Object bean) {     Object exposedObject = bean;     if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {         for (BeanPostProcessor bp : getBeanPostProcessors()) {             if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {                 SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;                 exposedObject = ibp.getEarlyBeanReference(exposedObject, beanName);             }         }     }     return exposedObject; }
+```java // AbstractAutowireCapableBeanFactory.java  /**  * 对创建的早期半成品（未初始化）的 Bean 处理引用  *  * 例如说，AOP 就是在这里动态织入，创建其代理 Bean 返回  *  * Obtain a reference for early access to the specified bean,  * typically for the purpose of resolving a circular reference.  * @param beanName the name of the bean (for error handling purposes)  * @param mbd the merged bean definition for the bean  * @param bean the raw bean instance  * @return the object to expose as bean reference  */ protected Object getEarlyBeanReference(String beanName, RootBeanDefinition mbd, Object bean) {     Object exposedObject = bean;     if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {         for (BeanPostProcessor bp : getBeanPostProcessors()) {             if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {                 SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;                 exposedObject = ibp.getEarlyBeanReference(exposedObject, beanName);             }         }     }     return exposedObject; }
 ```
 
 ---
@@ -196,8 +181,7 @@ singletonFactories
 
 介绍到这里我们发现三级缓存 singletonFactories 和 二级缓存 earlySingletonObjects 中的值都有出处了，那一级缓存在哪里设置的呢？在类 DefaultSingletonBeanRegistry 中，可以发现这个 #addSingleton(String beanName, Object singletonObject) 方法，代码如下：
 
-```plain text
-java // DefaultSingletonBeanRegistry.java  protected void addSingleton(String beanName, Object singletonObject) {     synchronized (this.singletonObjects) {         this.singletonObjects.put(beanName, singletonObject);         this.singletonFactories.remove(beanName);         this.earlySingletonObjects.remove(beanName);         this.registeredSingletons.add(beanName);     } }
+```java // DefaultSingletonBeanRegistry.java  protected void addSingleton(String beanName, Object singletonObject) {     synchronized (this.singletonObjects) {         this.singletonObjects.put(beanName, singletonObject);         this.singletonFactories.remove(beanName);         this.earlySingletonObjects.remove(beanName);         this.registeredSingletons.add(beanName);     } }
 ```
 
 ---
@@ -208,7 +192,7 @@ java // DefaultSingletonBeanRegistry.java  protected void addSingleton(String be
 方法中，处理不同 scope 时，如果是 singleton，则调用
 #getSingleton(…)
 方法，如下图所示：
-![53747a8fe74b39b30e4e41b1f0c7b3dd](/assets/images/learning/spring/springsourcecode/ioc-loop-dependency-resolution/53747a8fe74b39b30e4e41b1f0c7b3dd.jpeg)
+![getSingleton方法调用位置](/assets/images/learning/spring/springsourcecode/ioc-loop-dependency-resolution/53747a8fe74b39b30e4e41b1f0c7b3dd.jpeg)
 getSingleton
 - 前面几篇博客已经分析了
 #createBean(…)
@@ -216,15 +200,12 @@ getSingleton
 #getSingleton(String beanName, ObjectFactory<?> singletonFactory)
 方法，代码如下：
 
-```plain text
-java // AbstractBeanFactory.java  public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {     Assert.notNull(beanName, "Bean name must not be null");     synchronized (this.singletonObjects) {         Object singletonObject = this.singletonObjects.get(beanName);         if (singletonObject == null) {             //....             try {                 singletonObject = singletonFactory.getObject();                 newSingleton = true;             }             //.....             if (newSingleton) {                 addSingleton(beanName, singletonObject);             }         }         return singletonObject;     } }
+```java // AbstractBeanFactory.java  public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {     Assert.notNull(beanName, "Bean name must not be null");     synchronized (this.singletonObjects) {         Object singletonObject = this.singletonObjects.get(beanName);         if (singletonObject == null) {             //....             try {                 singletonObject = singletonFactory.getObject();                 newSingleton = true;             }             //.....             if (newSingleton) {                 addSingleton(beanName, singletonObject);             }         }         return singletonObject;     } }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);"> 注意，此处的 </font><font style="color:rgb(51, 51, 51);">#getSingleton(String beanName, ObjectFactory<?> singletonFactory)</font><font style="color:rgb(51, 51, 51);"> 方法，在 AbstractBeanFactory 类中实现，和 </font>[「2.1 getSingleton」](http://svip.iocoder.cn/Spring/IoC-get-Bean-createBean-5/#)**<font style="color:rgb(51, 51, 51);">不同</font>**<font style="color:rgb(51, 51, 51);">。</font>
-```
+- 注意，此处的 `#getSingleton(String beanName, ObjectFactory<?> singletonFactory)` 方法，在 AbstractBeanFactory 类中实现，和 [「2.1 getSingleton」](http://svip.iocoder.cn/Spring/IoC-get-Bean-createBean-5/#)**不同**。
 
 # 3. 小结
 
@@ -257,6 +238,6 @@ ObjectFactory#getObject()
 
 如下是《Spring 源码深度解析》P114 页的一张图，非常有助于理解。
 
-![4ef660ab969d83c30f9c141fca289965](/assets/images/learning/spring/springsourcecode/ioc-loop-dependency-resolution/4ef660ab969d83c30f9c141fca289965.png)
+![处理依赖循环流程图](/assets/images/learning/spring/springsourcecode/ioc-loop-dependency-resolution/4ef660ab969d83c30f9c141fca289965.png)
 
 处理依赖循环

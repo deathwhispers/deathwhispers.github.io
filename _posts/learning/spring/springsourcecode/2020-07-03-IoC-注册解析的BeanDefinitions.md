@@ -249,7 +249,7 @@ public boolean hasAlias(String name, String alias) {
 }
 ```
 
-```plain text
+```text
 - 如果 name、alias 分别为 1 和 3 ，则构成 （1,3） 的映射。加入，此时集合中存在（A,1）、（3,A） 的映射，意味着出现循环指向的情况，则抛出 IllegalStateException 异常。
 ```
 

@@ -22,7 +22,7 @@ week: 2025-W48
 
 以实时流处理项目为例，由于采集的数据量可能存在峰值和峰谷，假设是一个电商项目，那么峰值通常出现在秒杀时，这时如果直接将 Flume 聚合后的数据输入到 Storm 等分布式计算框架中，可能就会超过集群的处理能力，这时采用 Kafka 就可以起到削峰的作用。Kafka 天生为大数据场景而设计，具有高吞吐的特性，能很好地抗住峰值数据的冲击。
 
-![](assets/images/learning/Flume整合Kafka/1698028736381-7d169b1b-9e0e-4ed8-9302-70312f6d10ab.png)
+![Flume 整合 Kafka 架构](assets/images/learning/Flume整合Kafka/1698028736381-7d169b1b-9e0e-4ed8-9302-70312f6d10ab.png)
 
 ## 二、整合流程
 
@@ -32,7 +32,7 @@ Flume 发送数据到 Kafka 上主要是通过 KafkaSink 来实现的，主要�
 
 这里启动一个单节点的 Kafka 作为测试：
 
-```plain text
+```shell
 # 启动Zookeeper
 zkServer.sh start
 
@@ -44,7 +44,7 @@ bin/kafka-server-start.sh config/server.properties
 
 创建一个主题 flume-kafka，之后 Flume 收集到的数据都会发到这个主题上：
 
-```plain text
+```shell
 # 创建主题
 bin/kafka-topics.sh --create \
 --zookeeper hadoop001:2181 \
@@ -59,7 +59,7 @@ bin/kafka-topics.sh --zookeeper hadoop001:2181 --list
 
 启动一个消费者，监听我们刚才创建的 flume-kafka 主题：
 
-```plain text
+```shell
 # bin/kafka-console-consumer.sh --bootstrap-server hadoop001:9092 --topic flume-kafka
 ```
 
@@ -67,7 +67,7 @@ bin/kafka-topics.sh --zookeeper hadoop001:2181 --list
 
 新建配置文件 exec-memory-kafka.properties，文件内容如下。这里我们监听一个名为 kafka.log 的文件，当文件内容有变化时，将新增加的内容发送到 Kafka 的 flume-kafka 主题上。
 
-```plain text
+```properties
 a1.sources = s1
 a1.channels = c1
 a1.sinks = k1
@@ -93,7 +93,7 @@ a1.channels.c1.transactionCapacity=100
 
 ### 5. 启动Flume
 
-```plain text
+```shell
 flume-ng agent \
 --conf conf \
 --conf-file /usr/app/apache-flume-1.6.0-cdh5.15.2-bin/examples/exec-memory-kafka.properties \
@@ -104,8 +104,8 @@ flume-ng agent \
 
 向监听的 /tmp/kafka.log 文件中追加内容，查看 Kafka 消费者的输出：
 
-![](assets/images/learning/Flume整合Kafka/1698028736556-fbffcfec-53e6-44ea-ad3b-e7882a39f9a2.png)
+![向文件追加内容](assets/images/learning/Flume整合Kafka/1698028736556-fbffcfec-53e6-44ea-ad3b-e7882a39f9a2.png)
 
 可以看到 flume-kafka 主题的消费端已经收到了对应的消息：
 
-![](assets/images/learning/Flume整合Kafka/1698028736636-0ac6df26-90b1-4e19-9274-6b5604e5e860.png)
+![Kafka 消费者收到消息](assets/images/learning/Flume整合Kafka/1698028736636-0ac6df26-90b1-4e19-9274-6b5604e5e860.png)

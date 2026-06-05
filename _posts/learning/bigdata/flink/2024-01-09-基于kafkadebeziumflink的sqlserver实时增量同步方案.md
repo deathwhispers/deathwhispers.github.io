@@ -19,37 +19,33 @@ updated: 2024-03-12 18:33
 
 下载链接
 
-```plain text
+```shell
 http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz?_ga=2.215682399.93673590.1629776859-1065619546.1629776859
-
-1
 ```
 
 解压
 
-```plain text
+```shell
 tar confluent-hub-client-latest.tar -C /opt/module/confluent-hub
-
-1
 ```
 
 配置环境变量
 
-```plain text
+```properties
 export CONN_HOME=/opt/module/confluent-hub
 export PATH=$CONN_HOME/bin:$PATH
 ```
 
 验证安装
 
-```plain text
+```shell
 source /etc/profile
 confluent-hub
 ```
 
 ### 安装Debezium的SQLServer连接器
 
-```plain text
+```shell
 confluent-hub install debezium/debezium-connector-sqlserver:0.9.4 \
  --component-dir /opt/module/kafka2/connect/ \
  --worker-configs /opt/module/kafka2/config/connect-distributed.properties
@@ -62,7 +58,7 @@ confluent-hub install debezium/debezium-connector-sqlserver:0.9.4 \
 
 ### 配置Kafka Connent
 
-```plain text
+```shell
 vi $KAFKA_HOME/config/connect-distributed.properties
 
 ##

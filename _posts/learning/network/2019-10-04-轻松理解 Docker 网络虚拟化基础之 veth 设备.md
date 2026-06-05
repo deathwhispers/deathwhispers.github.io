@@ -43,13 +43,13 @@ week: 2019-W44
 
 在 Linux 下，我们可以通过使用 ip 命令创建一对儿 veth。其中 link 表示 link layer的意思，即链路层。这个命令可以用于管理和查看网络接口，包括物理网络接口，也包括虚拟接口。
 
-```plain text
+```shell
 # ip link add veth0 type veth peer name veth1
 ```
 
 使用 ip link show 来进行查看。
 
-```plain text
+```shell
 # ip link add veth0 type veth peer name veth1
 # ip link show
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT
@@ -66,21 +66,21 @@ week: 2019-W44
 
 和 eth0、lo 等网络设备一样，veth 也需要为其配置上 ip 后才能够正常工作。我们为这对儿 veth 分别来配置上 IP。
 
-```plain text
+```shell
 # ip addr add 192.168.1.1/24 dev veth0
 # ip addr add 192.168.1.2/24 dev veth1
 ```
 
 接下来，我们把这两个设备启动起来。
 
-```plain text
+```shell
 # ip link set veth0 up
 # ip link set veth1 up
 ```
 
 当设备启动起来以后，我们通过我们熟悉的 ifconfig 就可以查看到它们了。
 
-```plain text
+```shell
 # ifconfig
 eth0: ......
 lo: ......
@@ -94,7 +94,7 @@ veth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 现在，一对儿虚拟设备已经建立起来了。不过我们需要做一点准备工作，它们之间才可以进行互相通信。首先要关闭反向过滤 rp_filter，该模块会检查 IP 包是否符合要求，否则可能会过滤掉。然后再打开 accept_local，接收本机 IP 数据包。详细准备过程如下：
 
-```plain text
+```shell
 # echo 0 > /proc/sys/net/ipv4/conf/all/rp_filter
 # echo 0 > /proc/sys/net/ipv4/conf/veth0/rp_filter
 # echo 0 > /proc/sys/net/ipv4/conf/veth1/rp_filter
@@ -104,7 +104,7 @@ veth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 好了，我们在 veth0 上来 ping 一下 veth1。这两个 veth 之间可以通信了，欧耶！
 
-```plain text
+```shell
 # ping 192.168.1.2 -I veth0
 PING 192.168.1.2 (192.168.1.2) from 192.168.1.1 veth0: 56(84) bytes of data.
 64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=0.019 ms
@@ -115,7 +115,7 @@ PING 192.168.1.2 (192.168.1.2) from 192.168.1.1 veth0: 56(84) bytes of data.
 
 我在另外一个控制台上，还启动了 tcpdump 抓包，抓到的结果如下。
 
-```plain text
+```shell
 # tcpdump -i veth0
 09:59:39.449247 ARP, Request who-has *** tell ***, length 28
 09:59:39.449259 ARP, Reply *** is-at 4e:ac:33:e5:eb:16 (oui Unknown), length 28
@@ -134,7 +134,7 @@ PING 192.168.1.2 (192.168.1.2) from 192.168.1.1 veth0: 56(84) bytes of data.
 
 Veth 相关源码位于 drivers/net/veth.c，其中初始化入口是 veth_init。
 
-```plain text
+```shell
 //file: drivers/net/veth.c
 static __init int veth_init(void)
 {
@@ -144,7 +144,7 @@ static __init int veth_init(void)
 
 在 veth_init 中注册了 veth_link_ops（veth 设备的操作方法），它包含了 veth 设备的创建、启动和删除等回调函数。
 
-```plain text
+```shell
 //file: drivers/net/veth.c
 static struct rtnl_link_ops veth_link_ops = {
  .kind  = DRV_NAME,
@@ -160,7 +160,7 @@ static struct rtnl_link_ops veth_link_ops = {
 
 我们先来看下 veth 设备的创建函数 veth_newlink，**这是理解 veth 的关键之处**。
 
-```plain text
+```shell
 //file: drivers/net/veth.c
 static int veth_newlink(struct net *src_net, struct net_device *dev,
     struct nlattr *tb[], struct nlattr *data[])
@@ -185,7 +185,7 @@ static int veth_newlink(struct net *src_net, struct net_device *dev,
 
 在 veth_newlink 中，我们看到它通过 register_netdevice 创建了 peer 和 dev 两个网络虚拟设备。接下来的 netdev_priv 函数返回的是网络设备的 private 数据，priv->peer 就是一个指针而已。
 
-```plain text
+```shell
 //file: drivers/net/veth.c
 struct veth_priv {
  struct net_device __rcu *peer;
@@ -197,7 +197,7 @@ struct veth_priv {
 
 接着我们再看下 veth 设备的启动过程。
 
-```plain text
+```shell
 //file: drivers/net/veth.c
 static void veth_setup(struct net_device *dev)
 {
@@ -210,7 +210,7 @@ static void veth_setup(struct net_device *dev)
 
 其中 dev->netdev_ops = &veth_netdev_ops 这行也比较关键。veth_netdev_ops 是 veth 设备的操作函数。例如发送过程中调用的函数指针 ndo_start_xmit，对于 veth 设备来说就会调用到 veth_xmit。这个在下一个小节里我们会用到。
 
-```plain text
+```shell
 //file: drivers/net/veth.c
 static const struct net_device_ops veth_netdev_ops = {
  .ndo_init            = veth_dev_init,
@@ -233,7 +233,7 @@ static const struct net_device_ops veth_netdev_ops = {
 
 网络设备层最后会通过 ops->ndo_start_xmit 来调用驱动进行真正的发送。
 
-```plain text
+```shell
 //file: net/core/dev.c
 int dev_hard_start_xmit(struct sk_buff *skb, struct net_device *dev,
    struct netdev_queue *txq)
@@ -249,7 +249,7 @@ int dev_hard_start_xmit(struct sk_buff *skb, struct net_device *dev,
 
 在[《127.0.0.1 之本机网络通信过程知多少 ?》](https://mp.weixin.qq.com/s?__biz=MjM5Njg5NDgwNA%3D%3D&mid=2247485270&idx=1&sn=503534e9f0560bfcfbd4539e028e0d57&scene=21#wechat_redirect)一文中，我们提到过对于回环设备 lo 来说 netdev_ops 是 loopback_ops。那么 ops->ndo_start_xmit 对应的就是 loopback_xmit。
 
-```plain text
+```shell
 //file:drivers/net/loopback.c
 static const struct net_device_ops loopback_ops = {
  .ndo_init      = loopback_dev_init,
@@ -260,7 +260,7 @@ static const struct net_device_ops loopback_ops = {
 
 回顾本文上一小节中，对于 veth 设备来说，它在启动的时候将 netdev_ops 设置成了 veth_netdev_ops。那 ops->ndo_start_xmit 对应的具体发送函数就是 veth_xmit。这就是在整个发送的过程中，唯一和 lo 设备不同的地方所在。我们来简单看一下这个发送函数的代码。
 
-```plain text
+```shell
 //file: drivers/net/veth.c
 static netdev_tx_t veth_xmit(struct sk_buff *skb, struct net_device *dev)
 {
@@ -277,7 +277,7 @@ static netdev_tx_t veth_xmit(struct sk_buff *skb, struct net_device *dev)
 
 在 veth_xmit 中主要就是获取一下当前 veth 设备，然后向对端把数据发送过去就行了。发送到对端设备的工作是由 dev_forward_skb 函数来处理的。
 
-```plain text
+```shell
 //file: net/core/dev.c
 int dev_forward_skb(struct net_device *dev, struct sk_buff *skb)
 {
@@ -289,7 +289,7 @@ int dev_forward_skb(struct net_device *dev, struct sk_buff *skb)
 
 先调用了 eth_type_trans 将 skb 的所属设备改为了刚刚取到的 veth 的对端设备 rcv。
 
-```plain text
+```shell
 //file: net/ethernet/eth.c
 __be16 eth_type_trans(struct sk_buff *skb, struct net_device *dev)
 {
@@ -300,7 +300,7 @@ __be16 eth_type_trans(struct sk_buff *skb, struct net_device *dev)
 
 接着调用 netif_rx，这块又和 lo 设备的操作一样了。在该方法中最终会执行到 enqueue_to_backlog 中（netif_rx -> netif_rx_internal -> enqueue_to_backlog）。在这里将要发送的 skb 插入 softnet_data->input_pkt_queue 队列中并调用 ____napi_schedule 来触发软中断，见下面的代码。
 
-```plain text
+```shell
 //file: net/core/dev.c
 static int enqueue_to_backlog(struct sk_buff *skb, int cpu,
          unsigned int *qtail)
@@ -313,7 +313,7 @@ static int enqueue_to_backlog(struct sk_buff *skb, int cpu,
 }
 ```
 
-```plain text
+```shell
 //file:net/core/dev.c
 
 static inline void ____napi_schedule(struct softnet_data *sd,
@@ -326,7 +326,7 @@ static inline void ____napi_schedule(struct softnet_data *sd,
 
 当数据发送完唤起软中断后，veth 对端的设备开始接收。和发送过程不同的是，所有的虚拟设备的收包 poll 函数都是一样的，都是在设备层被初始化成了 process_backlog。
 
-```plain text
+```shell
 //file:net/core/dev.c
 static int __init net_dev_init(void)
 {
@@ -338,7 +338,7 @@ static int __init net_dev_init(void)
 
 所以 veth 设备的接收过程和 lo 设备完全一样。想再看看这块过程的同学就请参考[《127.0.0.1 之本机网络通信过程知多少 ?》](https://mp.weixin.qq.com/s?__biz=MjM5Njg5NDgwNA%3D%3D&mid=2247485270&idx=1&sn=503534e9f0560bfcfbd4539e028e0d57&scene=21#wechat_redirect)一文中的第三节吧。大致流程是 net_rx_action 执行到 deliver_skb，然后送到协议栈中。
 
-```plain text
+```shell
 |--->net_rx_action()
     |--->process_backlog()
         |--->__netif_receive_skb()

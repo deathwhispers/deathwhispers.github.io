@@ -97,7 +97,7 @@ week: 2019-W21
 
 考虑到胖友可能不会或者不愿意写前端代码，所以我们直接使用 [WEBSOCKET 在线测试工具](http://www.easyswoole.com/wstool.html) 。测试 WebSocket 连接，如下图：
 
-![6e46fd3db4d177bb59b2967b733f7b4d](/assets/images/learning/spring/springboot/spring-boot-websocket-getting-started/6e46fd3db4d177bb59b2967b733f7b4d.png)
+![WebSocket在线测试工具](/assets/images/learning/spring/springboot/spring-boot-websocket-getting-started/6e46fd3db4d177bb59b2967b733f7b4d.png)
 
 至此，最简单的一个 WebSocket 项目的骨架，我们已经搭建完成。下面，我们开始改造，把相应的逻辑补全。
 
@@ -263,7 +263,7 @@ week: 2019-W21
 
 然后，逐个点击「开启连接」按钮，进行 WebSocket 连接。最终效果如下图：
 
-![](/assets/images/learning/spring/springboot/spring-boot-websocket-getting-started/2411d3fe4b4b7dae1f862b07c50f15bc.png)
+![WebSocket连接测试结果](/assets/images/learning/spring/springboot/spring-boot-websocket-getting-started/2411d3fe4b4b7dae1f862b07c50f15bc.png)
 
 - 在红圈中，可以看到 AuthResponse 的消息。
 - 在黄圈中，可以看到 UserJoinNoticeRequest 的消息。
@@ -280,7 +280,7 @@ week: 2019-W21
 
 // WebsocketServerEndpoint.java private Class<? extends Message> getMessageClass(MessageHandler handler) { // 获得 Bean 对应的 Class 类名。因为有可能被 AOP 代理过。 Class<?> targetClass = AopProxyUtils.ultimateTargetClass(handler); // 获得接口的 Type 数组 Type[] interfaces = targetClass.getGenericInterfaces(); Class<?> superclass = targetClass.getSuperclass(); while ((Objects.isNull(interfaces) || 0 == interfaces.length) && Objects.nonNull(superclass)) { // 此处，是以父类的接口为准 interfaces = superclass.getGenericInterfaces(); superclass = targetClass.getSuperclass(); } if (Objects.nonNull(interfaces)) { // 遍历 interfaces 数组 for (Type type : interfaces) { // 要求 type 是泛型参数 if (type instanceof ParameterizedType) { ParameterizedType parameterizedType = (ParameterizedType) type; // 要求是 MessageHandler 接口 if (Objects.equals(parameterizedType.getRawType(), MessageHandler.class)) { Type[] actualTypeArguments = parameterizedType.getActualTypeArguments(); // 取首个元素 if (Objects.nonNull(actualTypeArguments) && actualTypeArguments.length > 0) { return (Class) actualTypeArguments[0]; } else { throw new IllegalStateException(String.format("类型(%s) 获得不到消息类型", handler)); } } } } } throw new IllegalStateException(String.format("类型(%s) 获得不到消息类型", handler)); }
 
-```plain text
+```text
 - 这是参考 [rocketmq-spring](https://github.com/apache/rocketmq-spring/) 项目的 [DefaultRocketMQListenerContainer#getMessageType()](https://github.com/apache/rocketmq-spring/blob/8b2426ea89d704d61c00497a1320b9b9ccd5a61e/rocketmq-spring-boot/src/main/java/org/apache/rocketmq/spring/support/DefaultRocketMQListenerContainer.java#L408-L435) 方法，进行略微修改。
 - 如果胖友对 Java 的泛型机制没有做过一点了解，可能略微有点硬核。可以先暂时跳过，知道意图即可。
 ```
@@ -302,7 +302,7 @@ week: 2019-W21
 
 最终结果如下图：
 
-![38b3b4be941b55c467df3b8f00a29322](/assets/images/learning/spring/springboot/spring-boot-websocket-getting-started/38b3b4be941b55c467df3b8f00a29322.png)
+![WebSocket消息发送测试结果](/assets/images/learning/spring/springboot/spring-boot-websocket-getting-started/38b3b4be941b55c467df3b8f00a29322.png)
 
 - 在红圈中，可以看到一条 SendToUserRequest 的消息，仅有第二个浏览器（番茄）收到。
 - 在黄圈中，可以看到三条 SendToUserRequest 的消息，所有浏览器都收到。

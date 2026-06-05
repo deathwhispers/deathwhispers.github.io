@@ -276,10 +276,8 @@ public interface DubboFeignEchoService {
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">相比 </font><font style="color:rgb(51, 51, 51);">echoService</font><font style="color:rgb(51, 51, 51);"> 属性，它在方法上，增加了 </font><font style="color:rgb(51, 51, 51);">org.springframework.cloud.alibaba.dubbo.annotation.@DubboTransported</font><font style="color:rgb(51, 51, 51);"> 注解。</font>
-- <font style="color:rgb(51, 51, 51);">可能会有胖友好奇，具体是如何实现的呢？本文我们一起来揭晓~</font>
-```
+```text
+- 相比 </font>echoService</font> 属性，它在方法上，增加了 </font>org.springframework.cloud.alibaba.dubbo.annotation.@DubboTransported</font> 注解。- 可能会有胖友好奇，具体是如何实现的呢？本文我们一起来揭晓~```
 
 ---
 
@@ -600,9 +598,7 @@ public class DubboRestMetadataRegistrationAutoConfiguration {
 属性，Dubbo Rest Service 方法的元数据（Metadata）集合。
 - #recordRestMetadata(ServiceBeanExportedEvent)
 方法，监听 ServiceBeanExportedEvent 事件。
-    - 在每个 Dubbo 服务暴露后，会发布 ServiceBeanExportedEvent 事件。在 [《精尽 Dubbo 源码分析 —— 注解配置》](http://www.iocoder.cn/Dubbo/good-collection/)[「5.3.3 onApplicationEvent」](http://svip.iocoder.cn/Dubbo/spring-cloud-integration/#)
-的
-中，我们有过详细解析。
+    - 在每个 Dubbo 服务暴露后，会发布 ServiceBeanExportedEvent 事件。在 [《精尽 Dubbo 源码分析 —— 注解配置》](http://www.iocoder.cn/Dubbo/good-collection/) 的 [「5.3.3 onApplicationEvent」](http://svip.iocoder.cn/Dubbo/spring-cloud-integration/#) 中，我们有过详细解析。
     - 在接收到 ServiceBeanExportedEvent 事件，该方法会调用 [「7.5 DubboServiceBeanMetadataResolver」](http://svip.iocoder.cn/Dubbo/spring-cloud-integration/#)
 MetadataResolver#resolveServiceRestMetadata(ServiceBean serviceBean)
 方法，获得该 ServiceBean 的 ServiceRestMetadata 集合，添加到
@@ -627,7 +623,7 @@ MetadataConfigService#publishServiceRestMetadata(String serviceName, Set service
 
 在 META-INF/spring.factories 文件中，声明了三个自动配置类。代码如下：
 
-```plain text
+```text
 plain org.springframework.context.ApplicationContextInitializer=\   org.springframework.cloud.alibaba.dubbo.context.DubboServiceRegistrationApplicationContextInitializer
 ```
 
@@ -637,7 +633,7 @@ plain org.springframework.context.ApplicationContextInitializer=\   org.springfr
 
 org.springframework.cloud.alibaba.dubbo.context.DubboServiceRegistrationApplicationContextInitializer ，实现 ApplicationContextInitializer 接口，将 applicationContext 设置到 SpringCloudRegistryFactory.applicationContext 静态属性。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistryFactory.java  /**  * The Dubbo services will be registered as the specified Spring cloud applications that will not be considered  * normal ones, but only are used to Dubbo's service discovery even if it is based on Spring Cloud Commons abstraction.  * However, current application will be registered by other DiscoveryClientAutoConfiguration.  *  */ public class DubboServiceRegistrationApplicationContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {      @Override     public void initialize(ConfigurableApplicationContext applicationContext) {         // Set ApplicationContext into SpringCloudRegistryFactory before Dubbo Service Register         SpringCloudRegistryFactory.setApplicationContext(applicationContext);     }  }
 ```
 
@@ -653,7 +649,7 @@ Dubbo Metadata
 
 可能这样还是不够清理，我们来看一个 Dubbo Service Metadata 更具体的示例，如下 JSON 串：
 
-```plain text
+```text
 plain {   "name" : "providers:dubbo:org.springframework.cloud.alibaba.dubbo.service.EchoService:1.0.0", // dubbo 协议   "meta" : [ { // 一个 Dubbo 方法     "method" : { // 方法信息       "name" : "echo",       "returnType" : "java.lang.String",       "params" : [ {         "index" : 0,         "name" : "message",         "type" : "java.lang.String"       } ]     },     "request" : { // 请求信息       "method" : "GET",       "url" : "/echo",       "queries" : {         "message" : [ "{message}" ]       },       "headers" : { }     },     "indexToName" : {       "0" : [ "message" ]     }   }, { // 一个 Dubbo 方法     "method" : { // 方法信息       "name" : "plus",       "returnType" : "java.lang.String",       "params" : [ {         "index" : 0,         "name" : "a",         "type" : "int"       }, {         "index" : 1,         "name" : "b",         "type" : "int"       } ]     },     "request" : { // 请求信息       "method" : "POST",       "url" : "/plus",       "queries" : {         "a" : [ "{a}" ],         "b" : [ "{b}" ]       },       "headers" : { }     },     "indexToName" : {       "0" : [ "a" ],       "1" : [ "b" ]     }   } ] }
 ```
 
@@ -676,7 +672,7 @@ plain {   "name" : "providers:dubbo:org.springframework.cloud.alibaba.dubbo.serv
 
 org.springframework.cloud.alibaba.dubbo.metadata.ServiceRestMetadata ，Service Rest Metadata 。代码如下：
 
-```plain text
+```text
 plain // ServiceRestMetadata.java  public class ServiceRestMetadata {      /**      * 服务名      */     private String name;     /**      * Rest 方法元数据      */     private Set<RestMethodMetadata> meta;      // ... 省略 setting/getting 方法 }
 ```
 
@@ -686,7 +682,7 @@ plain // ServiceRestMetadata.java  public class ServiceRestMetadata {      /**  
 
 org.springframework.cloud.alibaba.dubbo.metadata.RestMethodMetadata ，Rest Method Metadata 。代码如下：
 
-```plain text
+```text
 plain // RestMethodMetadata.java  public class RestMethodMetadata {      /**      * 方法元数据      */     private MethodMetadata method;     /**      * 请求元数据      */     private RequestMetadata request;     /**      * TODO      */     private Map<Integer, Collection<String>> indexToName;      // ... 省略 setting/getting 方法 }
 ```
 
@@ -696,7 +692,7 @@ plain // RestMethodMetadata.java  public class RestMethodMetadata {      /**    
 
 org.springframework.cloud.alibaba.dubbo.metadata.MethodMetadata ，Method Metadata 。代码如下：
 
-```plain text
+```text
 plain // ServiceRestMetadata.java  public class MethodMetadata {      /**      * 方法名      */     private String name;     /**      * 返回类型      */     private String returnType;     /**      * 方法参数元数据的数组      */     private List<MethodParameterMetadata> params;     /**      * 方法      */     @JsonIgnore // 不存储到配置中心     private Method method;      public MethodMetadata() {         this.params = new LinkedList<>();     }      public MethodMetadata(Method method) {         this.name = method.getName();         // 获得返回类型         this.returnType = ClassUtils.getName(method.getReturnType());         // 初始化 params         this.params = initParameters(method);         this.method = method;     }      private List<MethodParameterMetadata> initParameters(Method method) {         // 获得参数数量         int parameterCount = method.getParameterCount();         // 如果参数不存在，则返回空数组         if (parameterCount < 1) {             return Collections.emptyList();         }         // 创建 MethodParameterMetadata 数组         List<MethodParameterMetadata> params = new ArrayList<>(parameterCount);         Parameter[] parameters = method.getParameters();         for (int i = 0; i < parameterCount; i++) {             // 获得 Parameter 对象             Parameter parameter = parameters[i];             // 转换成 MethodParameterMetadata 对象             MethodParameterMetadata param = toMethodParameterMetadata(i, parameter);             // 添加到 params 中             params.add(param);         }         return params;     }      private MethodParameterMetadata toMethodParameterMetadata(int index, Parameter parameter) {         // 创建 MethodParameterMetadata 对象         MethodParameterMetadata metadata = new MethodParameterMetadata();         metadata.setIndex(index); // 方法参数的位置         metadata.setName(parameter.getName()); // 方法参数的名字         metadata.setType(parameter.getType().getTypeName()); // 方法参数的类型         return metadata;     }      // ... 省略 setting/getting 方法 }
 ```
 
@@ -706,7 +702,7 @@ plain // ServiceRestMetadata.java  public class MethodMetadata {      /**      *
 
 org.springframework.cloud.alibaba.dubbo.metadata.MethodParameterMetadata ，Method Parameter Metadata 。代码如下：
 
-```plain text
+```text
 plain // MethodParameterMetadata.java  public class MethodParameterMetadata {      /**      * 方法参数的位置      */     private int index;     /**      * 方法参数的名字      */     private String name;     /**      * 方法参数的类型      */     private String type;      // ... 省略 setting/getting 方法 }
 ```
 
@@ -716,7 +712,7 @@ plain // MethodParameterMetadata.java  public class MethodParameterMetadata {   
 
 org.springframework.cloud.alibaba.dubbo.metadata.RequestMetadata ，Request Metadata 。代码如下：
 
-```plain text
+```text
 plain // RequestMetadata.java  public class RequestMetadata {      /**      * 方法名      */     private String method;     /**      * URL 路径      */     private String url;      private Map<String, Collection<String>> queries;      private Map<String, Collection<String>> headers;      public RequestMetadata() {     }      // 将 RequestTemplate 对象，转换成 RequestMetadata 对象     public RequestMetadata(RequestTemplate requestTemplate) {         this.method = requestTemplate.method();         this.url = requestTemplate.url();         this.queries = requestTemplate.queries();         this.headers = requestTemplate.headers();     }      // ... 省略 setting/getting 方法 }
 ```
 
@@ -726,7 +722,7 @@ plain // RequestMetadata.java  public class RequestMetadata {      /**      * �
 
 org.springframework.cloud.alibaba.dubbo.metadata.DubboTransportedMethodMetadata ，继承 MethodMetadata 类， @DubboTransported 注解对应的 MethodMetadata 对象。代码如下：
 
-```plain text
+```text
 plain // DubboTransportedMethodMetadata.java  public class DubboTransportedMethodMetadata extends MethodMetadata {      /**      * Dubbo 协议      */     private String protocol;     /**      * Dubbo 容错策略      */     private String cluster;      // ... 省略 setting/getting 方法 }
 ```
 
@@ -736,7 +732,7 @@ plain // DubboTransportedMethodMetadata.java  public class DubboTransportedMetho
 
 org.springframework.cloud.alibaba.dubbo.metadata.resolver.MetadataResolver ，Metadata Resolver 元数据解析器接口。代码如下：
 
-```plain text
+```text
 plain // MetadataResolver.java  /**  * The REST metadata resolver  */ public interface MetadataResolver {      /**      * Resolve the {@link ServiceRestMetadata} {@link Set set} from {@link ServiceBean}      *      * 解析指定 ServiceBean 的 ServiceRestMetadata 集合      *      * @param serviceBean {@link ServiceBean}      * @return non-null {@link Set}      */     Set<ServiceRestMetadata> resolveServiceRestMetadata(ServiceBean serviceBean);      /**      * Resolve {@link RestMethodMetadata} {@link Set set} from {@link Class target type}      *      * 解析指定类的 ServiceRestMetadata 集合      *      * @param targetType {@link Class target type}      * @return non-null {@link Set}      */     Set<RestMethodMetadata> resolveMethodRestMetadata(Class<?> targetType);  }
 ```
 
@@ -748,7 +744,7 @@ DubboServiceBeanMetadataResolver Bean 对象，在 [「5.2 DubboOpenFeignAutoCon
 
 org.springframework.cloud.alibaba.dubbo.metadata.resolver.DubboServiceBeanMetadataResolver ，实现 MetadataResolver、BeanClassLoaderAware、SmartInitializingSingleton 接口，基于 Dubbo ServiceBean 的 MetadataResolver 实现类。
 
-```plain text
+```text
 plain // DubboServiceBeanMetadataResolver.java  /**  * The metadata resolver for {@link Feign} for {@link ServiceBean Dubbo Service Bean} in the provider side.  */
 ```
 
@@ -756,7 +752,7 @@ plain // DubboServiceBeanMetadataResolver.java  /**  * The metadata resolver for
 
 ### 7.2.1.1 构造方法
 
-```plain text
+```text
 plain // DubboServiceBeanMetadataResolver.java  private static final String[] CONTRACT_CLASS_NAMES = {         "feign.jaxrs2.JAXRS2Contract",         "org.springframework.cloud.openfeign.support.SpringMvcContract", };  /**  * 当前应用名  *  * 不过，目前暂时并未用该参数  */ private final String currentApplicationName; /**  * 当前类加载器  */ private ClassLoader classLoader; private final ObjectProvider<Contract> contract;  /**  * Feign Contract 数组  *  * https://www.jianshu.com/p/6582f8319f72  */ private Collection<Contract> contracts;  public DubboServiceBeanMetadataResolver(String currentApplicationName, ObjectProvider<Contract> contract) {     this.currentApplicationName = currentApplicationName;     this.contract = contract; }
 ```
 
@@ -768,7 +764,7 @@ plain // DubboServiceBeanMetadataResolver.java  private static final String[] CO
 
 实现 #afterSingletonsInstantiated() 方法，初始化 contracts 属性。代码如下：
 
-```plain text
+```text
 plain // DubboServiceBeanMetadataResolver.java  @Override public void afterSingletonsInstantiated() {     // <1> 创建 Feign Contract 数组     LinkedList<Contract> contracts = new LinkedList<>();      // Add injected Contract if available, for example SpringMvcContract Bean under Spring Cloud Open Feign     // <2.1> 如果 contract 存在，则添加到 contracts 中     contract.ifAvailable(contracts::add);      // <2.2> 遍历 CONTRACT_CLASS_NAMES 数组，创建对应的 Contract 对象，添加到 contracts 中     Stream.of(CONTRACT_CLASS_NAMES)             .filter(this::isClassPresent) // filter the existed classes             .map(this::loadContractClass) // load Contract Class             .map(this::createContract)    // create instance by the specified class             .forEach(contracts::add);     // add the Contract instance into contracts      // <3> 赋值给 contracts 中     this.contracts = Collections.unmodifiableCollection(contracts); }
 ```
 
@@ -793,7 +789,7 @@ CONTRACT_CLASS_NAMES
 contracts
 中。一般来说，都会存在。涉及代码如下：
 
-```plain text
+```text
 plain // DubboServiceBeanMetadataResolver.java  // 判断指定 className 类是否存在 private boolean isClassPresent(String className) {     return ClassUtils.isPresent(className, classLoader); }  // 加载 contractClassName 对应的 Contract 实现类 private Class<?> loadContractClass(String contractClassName) {     return ClassUtils.resolveClassName(contractClassName, classLoader); }  // 创建 Contract 对象 private Contract createContract(Class<?> contractClassName) {     return (Contract) BeanUtils.instantiateClass(contractClassName); }
 ```
 
@@ -808,7 +804,7 @@ this.contracts
 
 实现 #resolveMethodRestMetadata(Class<?> targetType) 方法，解析指定类的 ServiceRestMetadata 集合。代码如下：
 
-```plain text
+```text
 plain // DubboServiceBeanMetadataResolver.java  @Override public Set<RestMethodMetadata> resolveMethodRestMetadata(Class<?> targetType) {     // <1> 获得 Method 集合     List<Method> feignContractMethods = selectFeignContractMethods(targetType);     // <2> 转换成 RestMethodMetadata 集合     return contracts.stream() // 遍历 contracts 数组             .map(contract -> contract.parseAndValidatateMetadata(targetType)) // <2.1> 返回目标类型的 Feign MethodMetadata 数组             .flatMap(Collection::stream)             .map(methodMetadata -> resolveMethodRestMetadata(methodMetadata, targetType, feignContractMethods)) // <2.2> 将 Feign MethodMetadata 转换成 RestMethodMetadata 对象             .collect(Collectors.toSet()); // 转换成 Set }
 ```
 
@@ -819,7 +815,7 @@ plain // DubboServiceBeanMetadataResolver.java  @Override public Set<RestMethodM
 #selectFeignContractMethods(Class<?> targetType)
 方法，获得 Method 集合。代码如下：
 
-```plain text
+```text
 plain // DubboServiceBeanMetadataResolver.java  /**  * Select feign contract methods  * <p>  * extract some code from {@link Contract.BaseContract#parseAndValidatateMetadata(java.lang.Class)}  *  * @param targetType  * @return non-null  */ private List<Method> selectFeignContractMethods(Class<?> targetType) {     List<Method> methods = new LinkedList<>();     // 遍历目标的方法     for (Method method : targetType.getMethods()) {         // 忽略         if (method.getDeclaringClass() == Object.class || // Object 声明的方法，例如说 equals 方法                 (method.getModifiers() & Modifier.STATIC) != 0 || // 静态方法                 Util.isDefault(method)) { // Feign 默认方法             continue;         }         methods.add(method);     }     return methods; }
 ```
 
@@ -837,36 +833,34 @@ Contract#parseAndValidatateMetadata()
 CONTRACT_CLASS_NAMES
 中，即有 JAXRS2Contract 类，又有 SpringMvcContract 类，所以要求添加 JSR311 的注解，也要添加 Spring MVC 的注解。举个例子：
 
-```plain text
+```text
 plain // DefaultEchoService.java  @Service(version = "1.0.0", protocol = {"dubbo", "rest"}) @RestController // Spring MVC 注解 @Path("/") // JSR311 注解 public class DefaultEchoService implements EchoService {      @Override     @GetMapping(value = "/echo" //            consumes = MediaType.APPLICATION_JSON_VALUE, //            produces = MediaType.APPLICATION_JSON_UTF8_VALUE     ) // Spring MVC 注解     @Path("/echo") // JSR311 注解     @GET // JSR311 注解 //    @Consumes("application/json") //    @Produces("application/json;charset=UTF-8")     public String echo(@RequestParam // Spring MVC 注解                        @QueryParam("message") String message) { // JSR311 注解         System.out.println(message);         return RpcContext.getContext().getUrl() + " [echo] : " + message;     } }
 ```
 
 ---
 
-```plain text
-    * <font style="color:rgb(51, 51, 51);">不过艿艿暂时不太理解，为什么这么设计。有知道的胖友，麻烦教育下，嘻嘻~</font>
-```
+```text
+    * 不过艿艿暂时不太理解，为什么这么设计。有知道的胖友，麻烦教育下，嘻嘻~```
 
 - <2.2>
 处，调用
 #resolveMethodRestMetadata(MethodMetadata methodMetadata, Class<?> targetType, List feignContractMethods)
 方法，将 Feign MethodMetadata 转换成 RestMethodMetadata 对象。代码如下：
 
-```plain text
+```text
 plain // DubboServiceBeanMetadataResolver.java  protected RestMethodMetadata resolveMethodRestMetadata(MethodMetadata methodMetadata, // Feign MethodMetadata                                                        Class<?> targetType,                                                        List<Method> feignContractMethods) {     // 获得 configKey 。例如说：DefaultEchoService#echo(String)     String configKey = methodMetadata.configKey();     // 获得匹配的 Method     Method feignContractMethod = getMatchedFeignContractMethod(targetType, feignContractMethods, configKey);     // 创建 RestMethodMetadata 对象，并设置其属性     RestMethodMetadata metadata = new RestMethodMetadata();     metadata.setRequest(new RequestMetadata(methodMetadata.template()));     metadata.setMethod(new org.springframework.cloud.alibaba.dubbo.metadata.MethodMetadata(feignContractMethod));     metadata.setIndexToName(methodMetadata.indexToName());     return metadata; }  private Method getMatchedFeignContractMethod(Class<?> targetType, List<Method> methods, String expectedConfigKey) {     Method matchedMethod = null;     // 遍历 Method 集合     for (Method method : methods) {         // 获得该方法的 configKey         String configKey = Feign.configKey(targetType, method);         // 如果相等，则进行返回。         if (expectedConfigKey.equals(configKey)) {             matchedMethod = method;             break;         }     }     return matchedMethod; }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">对象转换的代码，简单瞅瞅即可明白。</font>
-```
+```text
+- 对象转换的代码，简单瞅瞅即可明白。```
 
 ### 7.2.1.4 resolveServiceRestMetadata
 
 实现 #resolveServiceRestMetadata(ServiceBean serviceBean) 方法，解析指定 ServiceBean 的 ServiceRestMetadata 集合。代码如下：
 
-```plain text
+```text
 plain // DubboServiceBeanMetadataResolver.java  @Override public Set<ServiceRestMetadata> resolveServiceRestMetadata(ServiceBean serviceBean) {     // <1.1> 获得应用的 Bean 对象     Object bean = serviceBean.getRef();     // <1.2> 获得 Bean 类型     Class<?> beanType = bean.getClass();     // <1.3> 解析 Bean 类型对应的 RestMethodMetadata 集合     Set<RestMethodMetadata> methodRestMetadata = resolveMethodRestMetadata(beanType);      // <2.1> 创建 ServiceRestMetadata 数组     Set<ServiceRestMetadata> serviceRestMetadata = new LinkedHashSet<>();     // <2.2> 获得 ServiceBean 暴露的 URL 集合     List<URL> urls = serviceBean.getExportedUrls();     // <2.3> 遍历 URL 集合，将 RestMethodMetadata 集合，封装成 ServiceRestMetadata 对象，然后添加到 serviceRestMetadata 中，最后返回。     urls.stream()             .map(SpringCloudRegistry::getServiceName)             .forEach(serviceName -> {                 ServiceRestMetadata metadata = new ServiceRestMetadata();                 metadata.setName(serviceName);                 metadata.setMeta(methodRestMetadata);                 serviceRestMetadata.add(metadata);             });     return serviceRestMetadata; }
 ```
 
@@ -903,7 +897,7 @@ providers:dubbo:org.springframework.cloud.alibaba.dubbo.service.EchoService:1.0.
 
 org.springframework.cloud.alibaba.dubbo.metadata.resolver.DubboTransportedMethodMetadataResolver ，解析 @DubboTransported 注解的 MethodMetadata 数据。代码如下：
 
-```plain text
+```text
 plain // DubboTransportedMethodMetadataResolver.java  public Map<DubboTransportedMethodMetadata, RequestMetadata> resolve(Class<?> targetType) {     // <1> 获得指定类的 DubboTransportedMethodMetadata 集合     Set<DubboTransportedMethodMetadata> dubboTransportedMethodMetadataSet = resolveDubboTransportedMethodMetadataSet(targetType);     // <2> 获得指定类的 RequestMetadata 映射。其中，KEY 为 configKey     Map<String, RequestMetadata> requestMetadataMap = resolveRequestMetadataMap(targetType);     // <3> 转换成 DubboTransportedMethodMetadata 和 RequestMetadata 的映射     return dubboTransportedMethodMetadataSet             .stream()             .collect(Collectors.toMap(methodMetadata -> methodMetadata, methodMetadata ->                     requestMetadataMap.get(Feign.configKey(targetType, methodMetadata.getMethod()))             )); }
 ```
 
@@ -914,7 +908,7 @@ plain // DubboTransportedMethodMetadataResolver.java  public Map<DubboTransporte
 #resolveDubboTransportedMethodMetadataSet(Class<?> targetType)
 方法，获得指定类的 DubboTransportedMethodMetadata 集合。代码如下：
 
-```plain text
+```text
 plain // DubboTransportedMethodMetadataResolver.java  protected Set<DubboTransportedMethodMetadata> resolveDubboTransportedMethodMetadataSet(Class<?> targetType) {     // The public methods of target interface     Method[] methods = targetType.getMethods();     // 创建 DubboTransportedMethodMetadata 数组     Set<DubboTransportedMethodMetadata> methodMetadataSet = new LinkedHashSet<>();     // 遍历方法     for (Method method : methods) {         // 如果有 @DubboTransported 注解         DubboTransported dubboTransported = resolveDubboTransported(method); // ①         // 如果有，则创建成  DubboTransportedMethodMetadata 对象，并添加到 methodMetadataSet 中         if (dubboTransported != null) {             // 创建 ②             DubboTransportedMethodMetadata methodMetadata = createDubboTransportedMethodMetadata(method, dubboTransported);             // 添加             methodMetadataSet.add(methodMetadata);         }     }     return methodMetadataSet; }  // ① private DubboTransported resolveDubboTransported(Method method) {     // 先从方法上，获得 @DubboTransported 注解     DubboTransported dubboTransported = AnnotationUtils.findAnnotation(method, DUBBO_TRANSPORTED_CLASS);     // 如果获得不到，则从类上，获得 @DubboTransported 注解     if (dubboTransported == null) { // Attempt to find @DubboTransported in the declaring class         Class<?> declaringClass = method.getDeclaringClass();         dubboTransported = AnnotationUtils.findAnnotation(declaringClass, DUBBO_TRANSPORTED_CLASS);     }     return dubboTransported; }  // ② private DubboTransportedMethodMetadata createDubboTransportedMethodMetadata(Method method, DubboTransported dubboTransported) {     // 创建 DubboTransportedMethodMetadata 对象     DubboTransportedMethodMetadata methodMetadata = new DubboTransportedMethodMetadata(method);    // 解析属性，并设置到 methodMetadata 中     String protocol = propertyResolver.resolvePlaceholders(dubboTransported.protocol());     String cluster = propertyResolver.resolvePlaceholders(dubboTransported.cluster());     methodMetadata.setProtocol(protocol);     methodMetadata.setCluster(cluster);     return methodMetadata; }
 ```
 
@@ -927,7 +921,7 @@ plain // DubboTransportedMethodMetadataResolver.java  protected Set<DubboTranspo
 configKey
 。代码如下：
 
-```plain text
+```text
 plain // DubboTransportedMethodMetadataResolver.java  private Map<String, RequestMetadata> resolveRequestMetadataMap(Class<?> targetType) {     return contract.parseAndValidatateMetadata(targetType) // 获得指定类的 Feign MethodMetadata 集合             .stream().collect(Collectors.toMap(feign.MethodMetadata::configKey, this::requestMetadata)); // 创建 RequestMetadata 对象 }  private RequestMetadata requestMetadata(feign.MethodMetadata methodMetadata) {     return new RequestMetadata(methodMetadata.template()); }
 ```
 
@@ -944,7 +938,7 @@ plain // DubboTransportedMethodMetadataResolver.java  private Map<String, Reques
 
 org.springframework.cloud.alibaba.dubbo.metadata.service.MetadataConfigService ，元数据配置服务接口，即可以从配置中心，读取和写入元数据。代码如下：
 
-```plain text
+```text
 plain // MetadataConfigService.java  public interface MetadataConfigService {      /**      * 发布指定服务的 Rest 元数据      *      * @param serviceName 服务名      * @param serviceRestMetadata ServiceRestMetadata 集合      */     void publishServiceRestMetadata(String serviceName, Set<ServiceRestMetadata> serviceRestMetadata);      /**      * 获得指定服务的 Rest 元数据      *      * @param serviceName 服务名      * @return ServiceRestMetadata 集合      */     Set<ServiceRestMetadata> getServiceRestMetadata(String serviceName);  }
 ```
 
@@ -956,7 +950,7 @@ org.springframework.cloud.alibaba.dubbo.metadata.service.NacosMetadataConfigServ
 
 ### 7.4.1.1 构造方法
 
-```plain text
+```text
 plain // NacosMetadataConfigService.java  /**  * ObjectMapper ，使用 Jackson 序列化和反序列化  */ private final ObjectMapper objectMapper = new ObjectMapper();  /**  * NacosConfigProperties 对象，用于获得 {@link #configService}  */ @Autowired private NacosConfigProperties nacosConfigProperties;  private ConfigService configService;  @PostConstruct public void init() {     // 初始化 configService 属性     this.configService = nacosConfigProperties.configServiceInstance();     // 开启 JSON 格式化     this.objectMapper.enable(SerializationFeature.INDENT_OUTPUT); }
 ```
 
@@ -966,7 +960,7 @@ plain // NacosMetadataConfigService.java  /**  * ObjectMapper ，使用 Jackson 
 
 实现 #publishServiceRestMetadata(String serviceName, Set serviceRestMetadata) 方法，代码如下：
 
-```plain text
+```text
 plain // NacosMetadataConfigService.java  @Override public void publishServiceRestMetadata(String serviceName, Set<ServiceRestMetadata> serviceRestMetadata) {     // 获得 Nacos dataId ①     String dataId = getServiceRestMetadataDataId(serviceName);     // 将 ServiceRestMetadata 集合序列化成 json 字符串 ②     String json = writeValueAsString(serviceRestMetadata);     // 写入到 Nacos 配置中心     try {         configService.publishConfig(dataId, DEFAULT_GROUP, json);     } catch (NacosException e) {         throw new RuntimeException(e);     } }  /**  * Get the data Id of service rest metadata  */ private static String getServiceRestMetadataDataId(String serviceName) { // ①     return "metadata:rest:" + serviceName + ".json"; }  private String writeValueAsString(Object object) { // ②     String content;     try {         content = objectMapper.writeValueAsString(object);     } catch (JsonProcessingException e) {         throw new IllegalArgumentException(e);     }     return content; }
 ```
 
@@ -976,7 +970,7 @@ plain // NacosMetadataConfigService.java  @Override public void publishServiceRe
 
 实现 #getServiceRestMetadata(String serviceName) 方法，代码如下：
 
-```plain text
+```text
 plain // NacosMetadataConfigService.java  @Override public Set<ServiceRestMetadata> getServiceRestMetadata(String serviceName) {     Set<ServiceRestMetadata> metadata;     // 获得 Nacos dataId     String dataId = getServiceRestMetadataDataId(serviceName);     try {         // 从 Nacos 配置中心，读取 json 字符串         String json = configService.getConfig(dataId, DEFAULT_GROUP, 1000 * 3);         // 将 json 字符串，反序列化成 ServiceRestMetadata 集合         metadata = objectMapper.readValue(json, TypeFactory.defaultInstance().constructCollectionType(LinkedHashSet.class, ServiceRestMetadata.class));     } catch (Exception e) {         throw new RuntimeException(e);     }     return metadata; }
 ```
 
@@ -990,7 +984,7 @@ org.springframework.cloud.alibaba.dubbo.metadata.repository.DubboServiceMetadata
 
 ### 7.5.1 构造方法
 
-```plain text
+```text
 plain // DubboServiceMetadataRepository.java  /**  * RequestMetadata 和 ReferenceBean 的映射  *  * Key is application name  * Value is  Map<RequestMetadata, ReferenceBean<GenericService>>  */ private Map<String, Map<RequestMetadata, ReferenceBean<GenericService>>> referenceBeansRepository = new HashMap<>();  /**  * RequestMetadata 和 MethodMetadata 的映射  *  * Key is application name  */ private Map<String, Map<RequestMetadata, MethodMetadata>> methodMetadataRepository = new HashMap<>();  @Autowired private MetadataConfigService metadataConfigService;
 ```
 
@@ -1009,7 +1003,7 @@ Map<RequestMetadata, ReferenceBean
 
 #updateMetadata(String serviceName) 方法，初始化指定 serviceName 的元数据。代码如下：
 
-```plain text
+```text
 plain // DubboServiceMetadataRepository.java  public void updateMetadata(String serviceName) {     // <1.1> 获得 serviceName 对应的 RequestMetadata 和 ReferenceBean 的映射     Map<RequestMetadata, ReferenceBean<GenericService>> genericServicesMap = referenceBeansRepository.computeIfAbsent(serviceName, k -> new HashMap<>());     // <1.2> 获得 serviceName 对应的 RequestMetadata 和 MethodMetadata 的映射     Map<RequestMetadata, MethodMetadata> methodMetadataMap = methodMetadataRepository.computeIfAbsent(serviceName, k -> new HashMap<>());     // <1.3> 获得 serviceName 对应的  ServiceRestMetadata 集合     Set<ServiceRestMetadata> serviceRestMetadataSet = metadataConfigService.getServiceRestMetadata(serviceName);      // <2> 遍历 ServiceRestMetadata 集合，创建对应的 ReferenceBean ，获得对应的 MethodMetadata 对象     for (ServiceRestMetadata serviceRestMetadata : serviceRestMetadataSet) {         // <2.1> 创建对应的 ReferenceBean         ReferenceBean<GenericService> referenceBean = adaptReferenceBean(serviceRestMetadata);         // <2.2> 遍历 RestMethodMetadata 集合，添加到 genericServicesMap 和 methodMetadataMap 中，进行缓存         serviceRestMetadata.getMeta().forEach(restMethodMetadata -> {             RequestMetadata requestMetadata = restMethodMetadata.getRequest();             genericServicesMap.put(requestMetadata, referenceBean);             methodMetadataMap.put(requestMetadata, restMethodMetadata.getMethod());         });     } }
 ```
 
@@ -1029,22 +1023,20 @@ serviceName
 #adaptReferenceBean(ServiceRestMetadata serviceRestMetadata)
 方法，创建 ReferenceBean 对象。代码如下：
 
-```plain text
+```text
 plain // DubboServiceMetadataRepository.java  private ReferenceBean<GenericService> adaptReferenceBean(ServiceRestMetadata serviceRestMetadata) {     // 获得相应的属性     String dubboServiceName = serviceRestMetadata.getName();     String[] segments = SpringCloudRegistry.getServiceSegments(dubboServiceName);     String interfaceName = SpringCloudRegistry.getServiceInterface(segments);     String version = SpringCloudRegistry.getServiceVersion(segments);     String group = SpringCloudRegistry.getServiceGroup(segments);      // 创建 ReferenceBean 对象，并设置相关属性     ReferenceBean<GenericService> referenceBean = new ReferenceBean<GenericService>();     referenceBean.setGeneric(true);     referenceBean.setInterface(interfaceName);     referenceBean.setVersion(version);     referenceBean.setGroup(group);     return referenceBean; }
 ```
 
 ---
 
-```plain text
-    * <font style="color:rgb(51, 51, 51);">注意哦，此时创建的 ReferenceBean 是 Dubbo 的泛化引用。</font>
-- <font style="color:rgb(51, 51, 51);"><2.2></font><font style="color:rgb(51, 51, 51);"> 处，遍历 RestMethodMetadata 集合，添加到 </font><font style="color:rgb(51, 51, 51);">genericServicesMap</font><font style="color:rgb(51, 51, 51);"> 和 </font><font style="color:rgb(51, 51, 51);">methodMetadataMap</font><font style="color:rgb(51, 51, 51);"> 中，进行缓存。</font>
-```
+```text
+    * 注意哦，此时创建的 ReferenceBean 是 Dubbo 的泛化引用。- <2.2></font> 处，遍历 RestMethodMetadata 集合，添加到 </font>genericServicesMap</font> 和 </font>methodMetadataMap</font> 中，进行缓存。```
 
 ### 7.5.3 getReferenceBean
 
 #getReferenceBean(String serviceName, RequestMetadata requestMetadata) 方法，获得指定应用的指定 RequestMetadata 对应的 ReferenceBean 对象。代码如下：
 
-```plain text
+```text
 plain public ReferenceBean<GenericService> getReferenceBean(String serviceName, RequestMetadata requestMetadata) {     return getReferenceBeansMap(serviceName).get(requestMetadata); }  private Map<RequestMetadata, ReferenceBean<GenericService>> getReferenceBeansMap(String serviceName) {     return referenceBeansRepository.getOrDefault(serviceName, Collections.emptyMap()); }
 ```
 
@@ -1054,7 +1046,7 @@ plain public ReferenceBean<GenericService> getReferenceBean(String serviceName, 
 
 #getMethodMetadata(String serviceName, RequestMetadata requestMetadata) 方法，获得指定应用的指定 RequestMetadata 对应的 MethodMetadata 对象。代码如下：
 
-```plain text
+```text
 plain // DubboServiceMetadataRepository.java  public MethodMetadata getMethodMetadata(String serviceName, RequestMetadata requestMetadata) {     return getMethodMetadataMap(serviceName).get(requestMetadata); }  private Map<RequestMetadata, MethodMetadata> getMethodMetadataMap(String serviceName) {     return methodMetadataRepository.getOrDefault(serviceName, Collections.emptyMap()); }
 ```
 
@@ -1072,7 +1064,7 @@ plain // DubboServiceMetadataRepository.java  public MethodMetadata getMethodMet
 
 org.springframework.cloud.alibaba.dubbo.openfeign.TargeterBeanPostProcessor ，实现 BeanPostProcessor、BeanClassLoaderAware 接口，处理类型为 openfeign Targeter 的 Bean ，创建其动态代理，从而能够将 Dubbo 集成到 Openfeign 中。代码如下：
 
-```plain text
+```text
 plain // TargeterBeanPostProcessor.java  public class TargeterBeanPostProcessor implements BeanPostProcessor, BeanClassLoaderAware {      private static final String TARGETER_CLASS_NAME = "org.springframework.cloud.openfeign.Targeter";      private final Environment environment;      private final DubboServiceMetadataRepository dubboServiceMetadataRepository;      private ClassLoader classLoader;      public TargeterBeanPostProcessor(Environment environment, DubboServiceMetadataRepository dubboServiceMetadataRepository) {         this.environment = environment;         this.dubboServiceMetadataRepository = dubboServiceMetadataRepository;     }      @Override     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {         return bean;     }      @Override     public Object postProcessAfterInitialization(final Object bean, String beanName) throws BeansException {         // <1> 获得 Bean 的类         Class<?> beanClass = ClassUtils.getUserClass(bean.getClass());         // <2> 获得 openfeign Targeter 接口         Class<?> targetClass = ClassUtils.resolveClassName(TARGETER_CLASS_NAME, classLoader);         // <3> 如果实现 openfeign Targeter 接口，则创建动态代理         if (targetClass.isAssignableFrom(beanClass)) {             return Proxy.newProxyInstance(classLoader, new Class[]{targetClass},                     new TargeterInvocationHandler(bean, environment, dubboServiceMetadataRepository));         }         return bean;     }      @Override     public void setBeanClassLoader(ClassLoader classLoader) {         this.classLoader = classLoader;     }  }
 ```
 
@@ -1095,7 +1087,7 @@ org.springframework.cloud.alibaba.dubbo.openfeign.TargeterInvocationHandler ，�
 
 如果不理解 Targeter 的话，请再看下 [《Spring Cloud Alibaba Sentinel 整合 Feign 的设计实现》](https://cloud.tencent.com/developer/article/1378733) 的 [「Feign 的执行过程」](http://svip.iocoder.cn/Dubbo/spring-cloud-integration/#) 小节。
 
-```plain text
+```text
 plain // TargeterInvocationHandler.java  class TargeterInvocationHandler implements InvocationHandler {      private final Object bean;      private final Environment environment;      private final DubboServiceMetadataRepository dubboServiceMetadataRepository;      TargeterInvocationHandler(Object bean, Environment environment,                               DubboServiceMetadataRepository dubboServiceMetadataRepository) {         this.bean = bean;         this.environment = environment;         this.dubboServiceMetadataRepository = dubboServiceMetadataRepository;     }      @Override     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {         /**          * args[0]: FeignClientFactoryBean factory          * args[1]: Feign.Builder feign          * args[2]: FeignContext context          * args[3]: Target.HardCodedTarget<T> target          */         FeignContext feignContext = cast(args[2]);         Target.HardCodedTarget<?> target = cast(args[3]);          // <1> 先调用原有 target 方法，返回默认的代理对象         // Execute Targeter#target method first         method.setAccessible(true);         // Get the default proxy object         Object defaultProxy = method.invoke(bean, args);         // Create Dubbo Proxy if required         // 如果符合创建 Dubbo 代理对象，则创建 Dubbo 代理对象。         // 否则，使用默认的 defaultProxy 代理         return createDubboProxyIfRequired(feignContext, target, defaultProxy);     }      // ... 省略下面要讲解的方法 }
 ```
 
@@ -1120,7 +1112,7 @@ target
 
 #createDubboProxyIfRequiredcreateDubboProxyIfRequired(FeignContext feignContext, Target target, Object defaultProxy) 方法，根据条件，创建对应的代理对象。代码如下：
 
-```plain text
+```text
 plain // TargeterInvocationHandler.java  private Object createDubboProxyIfRequired(FeignContext feignContext, Target target, Object defaultProxy) {     // <1> 尝试创建 DubboInvocationHandler     DubboInvocationHandler dubboInvocationHandler = createDubboInvocationHandler(feignContext, target, defaultProxy);     // <2.1> 如果未创建成功，说明不符合条件，则返回默认的 defaultProxy 代理     if (dubboInvocationHandler == null) {         return defaultProxy;     }     // <2.2> 如果创建成功，说明符合条件，则创建使用 dubboInvocationHandler 的动态代理     return Proxy.newProxyInstance(target.type().getClassLoader(), new Class<?>[]{target.type()}, dubboInvocationHandler); }
 ```
 
@@ -1145,7 +1137,7 @@ dubboInvocationHandler
 
 未来这块的逻辑，会被抽取到 org.springframework.cloud.alibaba.dubbo.openfeign.DubboInvocationHandlerFactory 类中。
 
-```plain text
+```text
 plain // TargeterInvocationHandler.java  private DubboInvocationHandler createDubboInvocationHandler(FeignContext feignContext, Target target, Object defaultFeignClientProxy) {     // Service name equals @FeignClient.name()     String serviceName = target.name();     Class<?> targetType = target.type();      // Get Contract Bean from FeignContext     // <1.1> 获得 Feign Contract     Contract contract = feignContext.getInstance(serviceName, Contract.class);     // <1.2> 创建 DubboTransportedMethodMetadataResolver 对象     DubboTransportedMethodMetadataResolver resolver = new DubboTransportedMethodMetadataResolver(environment, contract);     // <1.3> 解析指定类，获得其 DubboTransportedMethodMetadata 和 RequestMetadata 的映射     Map<DubboTransportedMethodMetadata, RequestMetadata> methodRequestMetadataMap = resolver.resolve(targetType);     // <1.4> 如果为空，则返回，说明不符合条件     if (methodRequestMetadataMap.isEmpty()) { // @DubboTransported method was not found         return null;     }      // Update Metadata     // <2> 初始化指定 `serviceName` 的元数据。此处，会从配置中心，获得元数据     dubboServiceMetadataRepository.updateMetadata(serviceName);      Map<Method, org.springframework.cloud.alibaba.dubbo.metadata.MethodMetadata> methodMetadataMap = new HashMap<>();     Map<Method, GenericService> genericServicesMap = new HashMap<>();     // <3> 遍历 methodRequestMetadataMap 集合，初始化其 GenericService     methodRequestMetadataMap.forEach((dubboTransportedMethodMetadata, requestMetadata) -> {         // <3.1.1> 获得 ReferenceBean 对象，并初始化其属性         ReferenceBean<GenericService> referenceBean = dubboServiceMetadataRepository.getReferenceBean(serviceName, requestMetadata);         referenceBean.setProtocol(dubboTransportedMethodMetadata.getProtocol());         referenceBean.setCluster(dubboTransportedMethodMetadata.getCluster());         // <3.1.2> 添加到 genericServicesMap 中         genericServicesMap.put(dubboTransportedMethodMetadata.getMethod(), referenceBean.get());         // <3.2.1> 获得 MethodMetadata 对象         org.springframework.cloud.alibaba.dubbo.metadata.MethodMetadata methodMetadata = dubboServiceMetadataRepository.getMethodMetadata(serviceName, requestMetadata);         // <3.2.2> 添加到 methodMetadataMap 中         methodMetadataMap.put(dubboTransportedMethodMetadata.getMethod(), methodMetadata);     });      // <4.1> 获得默认的 defaultFeignClientProxy 中，默认的 InvocationHandler 对象     InvocationHandler defaultFeignClientInvocationHandler = Proxy.getInvocationHandler(defaultFeignClientProxy);     // <4.2> 创建 DubboInvocationHandler 对象     return new DubboInvocationHandler(genericServicesMap, methodMetadataMap, defaultFeignClientInvocationHandler); }
 ```
 
@@ -1204,7 +1196,7 @@ defaultFeignClientProxy
 
 org.springframework.cloud.alibaba.dubbo.openfeign.DubboInvocationHandler ，实现 InvocationHandler 接口，Dubbo InvocationHandler 实现类。代码如下：
 
-```plain text
+```text
 plain // DubboInvocationHandler.java  public class DubboInvocationHandler implements InvocationHandler {      private final Map<Method, GenericService> genericServicesMap;      private final Map<Method, MethodMetadata> methodMetadata;      private final InvocationHandler defaultInvocationHandler;      public DubboInvocationHandler(Map<Method, GenericService> genericServicesMap,                                   Map<Method, MethodMetadata> methodMetadata,                                   InvocationHandler defaultInvocationHandler) {         this.genericServicesMap = genericServicesMap;         this.methodMetadata = methodMetadata;         this.defaultInvocationHandler = defaultInvocationHandler;     }      @Override     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {         // 获得 GenericService 对象         GenericService genericService = genericServicesMap.get(method);         // 获得 MethodMetadata 对象         MethodMetadata methodMetadata = this.methodMetadata.get(method);          // <1> 情况一，如果任一不存在，使用默认的 defaultInvocationHandler         if (genericService == null || methodMetadata == null) {             return defaultInvocationHandler.invoke(proxy, method, args);         }          // 情况二，执行泛化调用         String methodName = methodMetadata.getName(); // 方法名         String[] parameterTypes = methodMetadata                 .getParams()                 .stream()                 .map(MethodParameterMetadata::getType)                 .toArray(String[]::new); // 参数类型         return genericService.$invoke(methodName, parameterTypes, args);     }  }
 ```
 
@@ -1235,7 +1227,7 @@ defaultInvocationHandler
 
 org.springframework.cloud.alibaba.dubbo.registry.DubboRegistration ，实现 Spring Cloud Registration 接口，Dubbo Registration 实现类。代码如下：
 
-```plain text
+```text
 plain // DubboRegistration.java  /**  * The {@link Registration} of Dubbo uses an external of {@link ServiceInstance} instance as the delegate.  */ class DubboRegistration implements Registration {      /**      * Spring Cloud ServiceInstance      */     private final ServiceInstance delegate;      public DubboRegistration(ServiceInstance delegate) {         this.delegate = delegate;     }      @Override     public String getServiceId() {         return delegate.getServiceId();     }      @Override     public String getHost() {         return delegate.getHost();     }      @Override     public int getPort() {         return delegate.getPort();     }      @Override     public boolean isSecure() {         return delegate.isSecure();     }      @Override     public URI getUri() {         return delegate.getUri();     }      @Override     public Map<String, String> getMetadata() {         return delegate.getMetadata();     }      @Override     public String getScheme() {         return delegate.getScheme();     }  }
 ```
 
@@ -1245,7 +1237,7 @@ plain // DubboRegistration.java  /**  * The {@link Registration} of Dubbo uses a
 
 在 com.alibaba.dubbo.registry.RegistryFactory 中，声明了一个 SpringCloudRegistryFactory 拓展。如下：
 
-```plain text
+```text
 plain spring-cloud=org.springframework.cloud.alibaba.dubbo.registry.SpringCloudRegistryFactory
 ```
 
@@ -1259,7 +1251,7 @@ dubbo.registry.address: spring-cloud://nacos
 
 org.springframework.cloud.alibaba.dubbo.registry.SpringCloudRegistryFactory ，实现 Dubbo RegistryFactory 接口，创建对 SpringCloudRegistry 注册中心。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistryFactory.java  public class SpringCloudRegistryFactory implements RegistryFactory {      private static ApplicationContext applicationContext;      @Override     public Registry getRegistry(URL url) {         // <1> 获得 ServiceRegistry 对象         ServiceRegistry<Registration> serviceRegistry = applicationContext.getBean(ServiceRegistry.class);         // <2> 获得 DiscoveryClient 对象         DiscoveryClient discoveryClient = applicationContext.getBean(DiscoveryClient.class);         // <3> 创建 SpringCloudRegistry 对象         return new SpringCloudRegistry(url, serviceRegistry, discoveryClient);     }      public static void setApplicationContext(ApplicationContext applicationContext) {         SpringCloudRegistryFactory.applicationContext = applicationContext;     }  }
 ```
 
@@ -1288,7 +1280,7 @@ org.springframework.cloud.alibaba.dubbo.registry.SpringCloudRegistry ，继承 D
 
 ### 9.3.1 构造方法
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  /**  * ServiceRegistry 对象  */ private final ServiceRegistry<Registration> serviceRegistry;  /**  * DiscoveryClient 对象  */ private final DiscoveryClient discoveryClient;  public SpringCloudRegistry(URL url, ServiceRegistry<Registration> serviceRegistry,                            DiscoveryClient discoveryClient) {     super(url);     this.serviceRegistry = serviceRegistry;     this.discoveryClient = discoveryClient; }
 ```
 
@@ -1298,7 +1290,7 @@ plain // SpringCloudRegistry.java  /**  * ServiceRegistry 对象  */ private fin
 
 实现 #doRegister(URL ur) 方法，执行注册。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  @Override protected void doRegister(URL url) {     // <1> 获得 serviceName     final String serviceName = getServiceName(url);     // <2> 创建 Registration 对象     final Registration registration = createRegistration(serviceName, url);     // <3> 注册到 serviceRegistry 中     serviceRegistry.register(registration); }
 ```
 
@@ -1311,7 +1303,7 @@ serviceName
 providers:dubbo:org.springframework.cloud.alibaba.dubbo.service.EchoService:1.0.0
 。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  public static String getServiceName(URL url) {     // 获得分类     String category = url.getParameter(Constants.CATEGORY_KEY, Constants.DEFAULT_CATEGORY);     // 获得 ServiceName     return getServiceName(url, category); }  private static void appendIfPresent(StringBuilder target, URL url, String parameterName) {     String parameterValue = url.getParameter(parameterName);     appendIfPresent(target, parameterValue); }  private static final String SERVICE_NAME_SEPARATOR = ":"; private static void appendIfPresent(StringBuilder target, String parameterValue) {     if (StringUtils.hasText(parameterValue)) {         target.append(SERVICE_NAME_SEPARATOR).append(parameterValue);     } }
 ```
 
@@ -1320,7 +1312,7 @@ plain // SpringCloudRegistry.java  public static String getServiceName(URL url) 
 - <2>
 处，创建 DubboRegistration 对象。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  private Registration createRegistration(String serviceName, URL url) {     return new DubboRegistration(createServiceInstance(serviceName, url)); }  private ServiceInstance createServiceInstance(String serviceName, URL url) {     // Append default category if absent     // 获得属性     String category = url.getParameter(Constants.CATEGORY_KEY, Constants.DEFAULT_CATEGORY);     URL newURL = url.addParameter(Constants.CATEGORY_KEY, category);     newURL = newURL.addParameter(Constants.PROTOCOL_KEY, url.getProtocol());     String ip = NetUtils.getLocalHost(); // IP     int port = newURL.getParameter(Constants.BIND_PORT_KEY, url.getPort()); // 端口     // 创建 DefaultServiceInstance 对象     DefaultServiceInstance serviceInstance = new DefaultServiceInstance(serviceName, ip, port, false);     serviceInstance.getMetadata().putAll(new LinkedHashMap<>(newURL.getParameters()));     return serviceInstance; }
 ```
 
@@ -1337,7 +1329,7 @@ serviceRegistry
 
 实现 #doUnregister(URL url) 方法，取消注册。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  @Override protected void doUnregister(URL url) {     // 获得 serviceName     final String serviceName = getServiceName(url);     // 创建 Registration 对象     final Registration registration = createRegistration(serviceName, url);     // 取消注册从 serviceRegistry 中     this.serviceRegistry.deregister(registration); }
 ```
 
@@ -1347,7 +1339,7 @@ plain // SpringCloudRegistry.java  @Override protected void doUnregister(URL url
 
 实现 #doSubscribe(URL url, NotifyListener listener) 方法，执行订阅。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  @Override protected void doSubscribe(URL url, NotifyListener listener) {     // <1> 获得 serviceName 数组     List<String> serviceNames = getServiceNames(url, listener);     // <2> 执行订阅     doSubscribe(url, listener, serviceNames); }
 ```
 
@@ -1356,7 +1348,7 @@ plain // SpringCloudRegistry.java  @Override protected void doSubscribe(URL url,
 - <1>
 处，获得 serviceName 数组。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  private List<String> getServiceNames(URL url, NotifyListener listener) {     // 管理端，暂时无视     if (isAdminProtocol(url)) {         scheduleServiceNamesLookup(url, listener);         return getServiceNamesForOps(url);     } else {         return doGetServiceNames(url);     } }  private List<String> doGetServiceNames(URL url) {     // 获得 category 数组     String[] categories = getCategories(url);     // 创建 serviceName 数组，并进行获得     List<String> serviceNames = new ArrayList<String>(categories.length);     for (String category : categories) {         final String serviceName = getServiceName(url, category);         serviceNames.add(serviceName);     }     return serviceNames; }
 ```
 
@@ -1367,23 +1359,20 @@ plain // SpringCloudRegistry.java  private List<String> getServiceNames(URL url,
 #doSubscribe(final URL url, final NotifyListener listener, final List serviceNames)
 方法，执行订阅。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  private void doSubscribe(final URL url, final NotifyListener listener, final List<String> serviceNames) {     for (String serviceName : serviceNames) {         // <2.1> 获得 ServiceInstance 数组         List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceName);         // <2.2> 通知订阅者         notifySubscriber(url, listener, serviceInstances);         // TODO Support Update notification event     } }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">遍历 </font><font style="color:rgb(51, 51, 51);">serviceNames</font><font style="color:rgb(51, 51, 51);"> 数组，逐个处理。</font>
-- <font style="color:rgb(51, 51, 51);"><2.1></font><font style="color:rgb(51, 51, 51);"> 处，调用 </font><font style="color:rgb(51, 51, 51);">DiscoveryClient#getInstances(String serviceId)</font><font style="color:rgb(51, 51, 51);"> 方法，获得 ServiceInstance 数组。</font>
-- <font style="color:rgb(51, 51, 51);"><2.2></font><font style="color:rgb(51, 51, 51);"> 处，调用 </font><font style="color:rgb(51, 51, 51);">#notifySubscriber(URL url, NotifyListener listener, List<ServiceInstance> serviceInstances)</font><font style="color:rgb(51, 51, 51);"> 方法，通知订阅者。详细解析，见 </font>[「notifySubscriber」](http://svip.iocoder.cn/Dubbo/spring-cloud-integration/#)<font style="color:rgb(51, 51, 51);"> 。</font>
-```
+```text
+- 遍历 </font>serviceNames</font> 数组，逐个处理。- <2.1></font> 处，调用 </font>DiscoveryClient#getInstances(String serviceId)</font> 方法，获得 ServiceInstance 数组。- <2.2></font> 处，调用 </font>#notifySubscriber(URL url, NotifyListener listener, List<ServiceInstance> serviceInstances)</font> 方法，通知订阅者。详细解析，见 </font>[「notifySubscriber」](http://svip.iocoder.cn/Dubbo/spring-cloud-integration/#) 。```
 
 ### 9.3.4.1 notifySubscriber
 
 #notifySubscriber(URL url, NotifyListener listener, List serviceInstances) 方法，通知订阅者。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  private void notifySubscriber(URL url, NotifyListener listener, List<ServiceInstance> serviceInstances) {     // <1> 过滤掉非健康的 Dubbo 服务     List<ServiceInstance> healthyInstances = new LinkedList<ServiceInstance>(serviceInstances);     // <1> Healthy Instances     filterHealthyInstances(healthyInstances);     // <2> 创建 URL 数组     List<URL> urls = buildURLs(url, healthyInstances);     // <3> 通知订阅者     this.notify(url, listener, urls); }
 ```
 
@@ -1394,22 +1383,21 @@ plain // SpringCloudRegistry.java  private void notifySubscriber(URL url, Notify
 #filterHealthyInstances(Collection instances)
 方法，过滤掉非健康的 Dubbo 服务。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  private void filterHealthyInstances(Collection<ServiceInstance> instances) {     filter(instances, new Filter<ServiceInstance>() {         @Override         public boolean accept(ServiceInstance data) {             // TODO check the details of status //                return serviceRegistry.getStatus(new DubboRegistration(data)) != null;             return true;         }     }); }  private <T> void filter(Collection<T> collection, Filter<T> filter) {     // remove if not accept     collection.removeIf(data -> !filter.accept(data)); }  private interface Filter<T> {      /**      * Tests whether or not the specified data should be accepted.      *      * @param data The data to be tested      * @return <code>true</code> if and only if <code>data</code>      * should be accepted      */     boolean accept(T data);  }
 ```
 
 ---
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">从 </font><font style="color:rgb(51, 51, 51);">TODO check the details of status</font><font style="color:rgb(51, 51, 51);"> 可以看出，目前暂时未实现。后续，可能会根据状态进行过滤。</font>
-```
+```text
+- 从 </font>TODO check the details of status</font> 可以看出，目前暂时未实现。后续，可能会根据状态进行过滤。```
 
 - <2>
 处，调用
 #buildURLs(URL consumerURL, Collection serviceInstances)
 方法，将 ServiceInstance 数组，转换成 URL 数组。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  private List<URL> buildURLs(URL consumerURL, Collection<ServiceInstance> serviceInstances) {     // serviceInstances 为空，返回空数组     if (serviceInstances.isEmpty()) {         return Collections.emptyList();     }     // serviceInstances 非空，则逐个构建对应的 URL 对象，添加到 urls 中进行返回     List<URL> urls = new LinkedList<>();     for (ServiceInstance serviceInstance : serviceInstances) {         // 构建 URL 对象         URL url = buildURL(serviceInstance);         if (UrlUtils.isMatch(consumerURL, url)) {             urls.add(url);         }     }     return urls; }  private URL buildURL(ServiceInstance serviceInstance) {     return new URL(serviceInstance.getMetadata().get(Constants.PROTOCOL_KEY),             serviceInstance.getHost(),             serviceInstance.getPort(),             serviceInstance.getMetadata()); }
 ```
 
@@ -1424,7 +1412,7 @@ plain // SpringCloudRegistry.java  private List<URL> buildURLs(URL consumerURL, 
 
 实现 #doUnsubscribe(URL url, NotifyListener listener) 方法，取消订阅。代码如下：
 
-```plain text
+```text
 plain // SpringCloudRegistry.java  @Override protected void doUnsubscribe(URL url, NotifyListener listener) {     // 忽略管理端     if (isAdminProtocol(url)) {         shutdownServiceNamesLookup();     } }
 ```
 

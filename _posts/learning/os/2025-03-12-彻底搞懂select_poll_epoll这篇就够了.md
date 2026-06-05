@@ -36,7 +36,7 @@ math: True
 
 按照我们的理解，select 管理多个 Socket 的模型如下图所示：
 
-![](C:%5CUsers%5Cguang%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220318141654034.png)
+![select管理多个Socket的模型](/assets/images/learning/os/select-poll-epoll/select-model.png)
 
 这里要注意一下内核态和用户态的交互，用户程序访问不了内核空间。
 
@@ -48,7 +48,7 @@ math: True
 
 其实每个 socket 有个属于自己的睡眠队列，select 会安排一个内应，即在被管理的 socket 的睡眠队列里面塞入一个 entry。
 
-![](C:%5CUsers%5Cguang%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220318141755093.png)
+![socket睡眠队列中的entry](/assets/images/learning/os/select-poll-epoll/socket-entry.png)
 
 当 socket 接收到网卡的数据后，就会去它的睡眠队列里遍历 entry，调用 entry 设置的 callback 方法，这个 callback 方法里就能唤醒 select ！
 
@@ -90,7 +90,7 @@ epoll 主要就是基于上面两点做了优化。
 
 如果你的 epoll 要新加一个 socket 来管理，那就调用 epoll_ctl，要删除一个 socket 也调用 epoll_ctl，通过不同的入参来控制增删改。
 
-![](C:%5CUsers%5Cguang%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220318141830023.png)
+![epoll的socket集合管理](/assets/images/learning/os/select-poll-epoll/epoll-socket-set.png)
 
 这样，在内核里面就维护了此 epoll 管理的 socket 集合，这样就不用每次调用的时候都得把所有管理的 fds 拷贝到内核了。
 

@@ -316,10 +316,7 @@ RegistryProtocol 通过向**注册中心**注册 OverrideListener 监听器，�
 ---
 
 ```java
-    * <font style="color:rgb(51, 51, 51);">x</font>
-- <font style="color:rgb(51, 51, 51);">第 34 至 36 行：创建 </font>**<font style="color:rgb(51, 51, 51);">OverrideListener</font>**<font style="color:rgb(51, 51, 51);"> 对象，并添加到 </font><font style="color:rgb(51, 51, 51);">overrideListeners</font><font style="color:rgb(51, 51, 51);"> 中。</font>
-- <font style="color:rgb(51, 51, 51);">第 38 行：调用 </font><font style="color:rgb(51, 51, 51);">Registry#subscribe(overrideSubscribeUrl, overrideSubscribeListener)</font><font style="color:rgb(51, 51, 51);"> 方法，向注册中心注册 </font>**<font style="color:rgb(51, 51, 51);">OverrideListener</font>**<font style="color:rgb(51, 51, 51);"> 监听器，订阅配置规则的变化。</font>
-```
+    * x- 第 34 至 36 行：创建 </font>**OverrideListener</font>** 对象，并添加到 </font>overrideListeners</font> 中。- 第 38 行：调用 </font>Registry#subscribe(overrideSubscribeUrl, overrideSubscribeListener)</font> 方法，向注册中心注册 </font>**OverrideListener</font>** 监听器，订阅配置规则的变化。```
 
 ### 4.2.2 OverrideListener
 
@@ -357,8 +354,7 @@ URL 集合。代码如下：
 ---
 
 ```java
-- <font style="color:rgb(51, 51, 51);">通过调用 </font><font style="color:rgb(51, 51, 51);">UrlUtils#isMatch(currentSubscribe, overrideUrl)</font><font style="color:rgb(51, 51, 51);"> 方法，进行判断</font>**<font style="color:rgb(51, 51, 51);">是否匹配</font>**<font style="color:rgb(51, 51, 51);">。该方法具体实现的逻辑，比较简单，所以判断自己查看。</font>
-```
+- 通过调用 </font>UrlUtils#isMatch(currentSubscribe, overrideUrl)</font> 方法，进行判断</font>**是否匹配</font>**。该方法具体实现的逻辑，比较简单，所以判断自己查看。```
 
 - 第 12 行：调用 **转换**
 RegistryDirectory#toConfigurators(matchedUrls)

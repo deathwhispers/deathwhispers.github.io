@@ -291,7 +291,7 @@ private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate deleg
         }
 ```
 
-```plain text
+```text
 - <font style="color:rgb(51, 51, 51);">详细的解析，见后续文章。</font>
 ```
 

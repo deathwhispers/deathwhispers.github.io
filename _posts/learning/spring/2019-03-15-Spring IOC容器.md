@@ -57,6 +57,6 @@ Jar包:[https://github.com/spring-projects/spring-framework/releases](https://gi
 
 控制反转IoC(Inversion of Control)，是一种设计思想，DI(依赖注入)是实现IoC的一种方法，也有人认为DI只是IoC的另一种说法。没有IoC的程序中我们使用面向对象编程对象的创建与对象间的依赖关系完全硬编码在程序中，对象的创建由程序自己控制，控制反转后将对象的创建转移给第三方，个人认为所谓控制反转就是：获得依赖对象的方式反转了。
 
-![6468de752cc9f1af6d25e3b61f56fa7b](../../../assets/images/6468de752cc9f1af6d25e3b61f56fa7b.bmp)
+![IoC控制反转示意图](../../../assets/images/6468de752cc9f1af6d25e3b61f56fa7b.bmp)
 
 使用xml配置bean时，需引入

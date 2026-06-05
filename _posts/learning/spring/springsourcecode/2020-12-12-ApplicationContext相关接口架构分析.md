@@ -21,22 +21,18 @@ updated: 2020-12-12 18:00
 
 ---
 
-在前面 40 篇博客中都是基于 `<font style="color:rgb(51, 51, 51);">BeanFactory</font>` 这个容器来进行分析的，`<font style="color:rgb(51, 51, 51);">BeanFactory</font>` 容器有点儿简单，它并不适用于我们生产环境，在生产环境我们通常会选择 `<font style="color:rgb(51, 51, 51);">ApplicationContext</font>` ，相对于大多数人而言，它才是正规军，相比于 BeanFactory 这个杂牌军而言，它由如下几个区别：
+在前面 40 篇博客中都是基于 `BeanFactory` 这个容器来进行分析的，`BeanFactory` 容器有点儿简单，它并不适用于我们生产环境，在生产环境我们通常会选择 `ApplicationContext`，相对于大多数人而言，它才是正规军，相比于 BeanFactory 这个杂牌军而言，它由如下几个区别：
 
-1. 继承 `<font style="color:rgb(51, 51, 51);">MessageSource</font>`
-，提供国际化的标准访问策略。
-2. 继承 `<font style="color:rgb(51, 51, 51);">ApplicationEventPublisher</font>`
-，提供强大的事件机制。
-3. 扩展 `<font style="color:rgb(51, 51, 51);">ResourceLoader</font><font style="color:rgb(51, 51, 51);">Resource</font>`
-，可以用来加载多个
-，可以灵活访问不同的资源。
+1. 继承 `MessageSource`，提供国际化的标准访问策略。
+2. 继承 `ApplicationEventPublisher`，提供强大的事件机制。
+3. 扩展 `ResourceLoader`，可以用来加载多个 Resource，可以灵活访问不同的资源。
 4. 对 Web 应用的支持。
 
 # **1. ApplicationContext**
 
-下图是 `<font style="color:rgb(51, 51, 51);">ApplicationContext</font>` 结构类图：
+下图是 `ApplicationContext` 结构类图：
 
-![3a0321713096156d42661f2df11a93c2](/assets/images/learning/spring/springsourcecode/applicationcontext-interface-architecture-analysis/3a0321713096156d42661f2df11a93c2.jpeg)
+![ApplicationContext结构类图](/assets/images/learning/spring/springsourcecode/applicationcontext-interface-architecture-analysis/3a0321713096156d42661f2df11a93c2.jpeg)
 
 ApplicationContext 结构类图
 
@@ -55,7 +51,7 @@ parentBeanFactory
 
 # **2. ApplicationContext 的子接口**
 
-`<font style="color:rgb(51, 51, 51);">ApplicationContext</font>` 有两个直接子类：`<font style="color:rgb(51, 51, 51);">WebApplicationContext</font>` 和 `<font style="color:rgb(51, 51, 51);">ConfigurableApplicationContext</font>` 。
+`ApplicationContext` 有两个直接子类：`WebApplicationContext` 和 `ConfigurableApplicationContext`。
 
 ## **2.1 WebApplicationContext**
 
@@ -66,7 +62,7 @@ public interface WebApplicationContext extends ApplicationContext {
 }
 ```
 
-该接口只有一个`<font style="color:rgb(51, 51, 51);">#getServletContext()</font>`方法，用于给 Servlet 提供上下文信息。
+该接口只有一个 `#getServletContext()` 方法，用于给 Servlet 提供上下文信息。
 
 ## **2.2 ConfigurableApplicationContext**
 
@@ -104,7 +100,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 }
 ```
 
-从上面代码可以看到 `<font style="color:rgb(51, 51, 51);">ConfigurableApplicationContext</font>` 接口提供的方法都是对 `<font style="color:rgb(51, 51, 51);">ApplicationContext</font>` 进行配置的，例如`<font style="color:rgb(51, 51, 51);">#setEnvironment(ConfigurableEnvironment environment)</font>`、`<font style="color:rgb(51, 51, 51);">#addBeanFactoryPostProcessor(BeanFactoryPostProcessor postProcessor)</font>`，同时它还继承了如下两个接口：
+从上面代码可以看到 `ConfigurableApplicationContext` 接口提供的方法都是对 `ApplicationContext` 进行配置的，例如 `#setEnvironment(ConfigurableEnvironment environment)`、`#addBeanFactoryPostProcessor(BeanFactoryPostProcessor postProcessor)`，同时它还继承了如下两个接口：
 
 - Lifecycle：对 context 生命周期的管理，它提供
 #start()
@@ -115,7 +111,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 
 ## **2.3 ConfigurableWebApplicationContext**
 
-`<font style="color:rgb(51, 51, 51);">WebApplicationContext</font>` 接口和 `<font style="color:rgb(51, 51, 51);">ConfigurableApplicationContext</font>` 接口有一个共同的子类接口 `<font style="color:rgb(51, 51, 51);">ConfigurableWebApplicationContext</font>`，该接口将这两个接口进行合并，提供了一个可配置、可管理、可关闭的 `<font style="color:rgb(51, 51, 51);">WebApplicationContext</font>` ，同时该接口还增加了`<font style="color:rgb(51, 51, 51);">#setServletContext(ServletContext servletContext)</font>`，`<font style="color:rgb(51, 51, 51);">setServletConfig(ServletConfig servletConfig)</font>`等方法，用于装配 `<font style="color:rgb(51, 51, 51);">WebApplicationContext</font>` 。代码如下：
+`WebApplicationContext` 接口和 `ConfigurableApplicationContext` 接口有一个共同的子类接口 `ConfigurableWebApplicationContext`，该接口将这两个接口进行合并，提供了一个可配置、可管理、可关闭的 `WebApplicationContext`，同时该接口还增加了 `#setServletContext(ServletContext servletContext)`、`setServletConfig(ServletConfig servletConfig)` 等方法，用于装配 `WebApplicationContext`。代码如下：
 
 ```java
 // ConfigurableWebApplicationContext.java
@@ -145,7 +141,7 @@ StudentService studentService = (StudentService) ac.getBean("studentService");
 
 下图是 ClassPathXmlApplicationContext 的结构类图：
 
-![dde0bf4ae9014ec73c80f4c45045850a](/assets/images/learning/spring/springsourcecode/applicationcontext-interface-architecture-analysis/dde0bf4ae9014ec73c80f4c45045850a.jpeg)
+![ClassPathXmlApplicationContext结构类图](/assets/images/learning/spring/springsourcecode/applicationcontext-interface-architecture-analysis/dde0bf4ae9014ec73c80f4c45045850a.jpeg)
 
 ClassPathXmlApplicationContext 的类图
 
@@ -218,9 +214,7 @@ public final String getMessage(String code, @Nullable Object[] args, @Nullable S
 }
 ```
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">具体的实现这里就不分析了，有兴趣的小伙伴可以自己去深入研究。</font>
-```
+- 具体的实现这里就不分析了，有兴趣的小伙伴可以自己去深入研究。
 
 ## **3.2 ApplicationEventPublisher**
 
@@ -322,9 +316,7 @@ protected ConfigurableEnvironment createEnvironment() {
 
 ```
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">StandardEnvironment 是一个适用于非 WEB 应用的 Environment。</font>
-```
+- `StandardEnvironment` 是一个适用于非 WEB 应用的 Environment。
 
 ## **3.5 Lifecycle**
 
@@ -453,6 +445,6 @@ public void setBeanName(String name) {
 
 最后我们再来领略下图的风采：
 
-![dde0bf4ae9014ec73c80f4c45045850a](assets/images/learning/spring/springsourcecode/2020-05-22-applicationcontext-interface-architecture-analysis/dde0bf4ae9014ec73c80f4c45045850a.jpeg)
+![ClassPathXmlApplicationContext类图](assets/images/learning/spring/springsourcecode/2020-05-22-applicationcontext-interface-architecture-analysis/dde0bf4ae9014ec73c80f4c45045850a.jpeg)
 
 ClassPathXmlApplicationContext 的类图

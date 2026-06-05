@@ -27,12 +27,9 @@ updated: 2025-03-12 18:26
 </dependency>
 ```
 
-```java
+```scala
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.
-{
-    Seconds, StreamingContext;
-}
+import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 object NetworkWordCount {
     def main(args: Array[String]) {
@@ -52,7 +49,7 @@ object NetworkWordCount {
 
 使用本地模式启动 Spark 程序，然后使用 nc -lk 9999 打开端口并输入测试数据：
 
-```plain text
+```shell
 [root@hadoop001 ~]#  nc -lk 9999
 hello world hello spark hive hive hadoop
 storm storm flink azkaban
@@ -60,19 +57,17 @@ storm storm flink azkaban
 
 此时控制台输出如下，可以看到已经接收到数据并按行进行了词频统计。
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-basic-operations/f6e4fd2b85e7b89eec5b2f51337da469.png)
-
-![](assets/images/learning/bigdata/sparkstreaming/2020-06-03-spark-streaming-basic-operations/f6e4fd2b85e7b89eec5b2f51337da469.png)
+![词频统计结果](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-basic-operations/f6e4fd2b85e7b89eec5b2f51337da469.png)
 
 下面针对示例代码进行讲解：
 
-### 3.1 StreamingContext
+### 1.1 StreamingContext
 
 Spark Streaming 编程的入口类是 StreamingContext，在创建时候需要指明 sparkConf 和 batchDuration(批次时间)，Spark 流处理本质是将流数据拆分为一个个批次，然后进行微批处理，batchDuration 就是批次拆分的时间间隔。这个时间可以根据业务需求和服务器性能进行指定，如果业务要求低延迟并且服务器性能也允许，则这个时间可以指定得很短。
 
 这里需要注意的是：示例代码使用的是本地模式，配置为 local[2]，这里不能配置为 local[1]。这是因为对于流数据的处理，Spark 必须有一个独立的 Executor 来接收数据，然后再由其他的 Executors 来处理，所以为了保证数据能够被处理，至少要有 2 个 Executors。这里我们的程序只有一个数据流，在并行读取多个数据流的时候，也需要保证有足够的 Executors 来接收和处理数据。
 
-### 3.2 数据源
+### 1.2 数据源
 
 在示例代码中使用的是 socketTextStream 来创建基于 Socket 的数据流，实际上 Spark 还支持多种数据源，分为以下两类：
 
@@ -83,7 +78,7 @@ Spark Streaming 编程的入口类是 StreamingContext，在创建时候需要�
 
 在基本数据源中，Spark 支持监听 HDFS 上指定目录，当有新文件加入时，会获取其文件内容作为输入流。创建方式如下：
 
-```java
+```scala
 // 对于文本文件，指明监听目录即可
 streamingContext.textFileStream(dataDirectory)
 // 对于其他文件，需要指明目录，以及键的类型、值的类型、和输入格式
@@ -94,7 +89,7 @@ streamingContext.fileStream[KeyClass, ValueClass, InputFormatClass](dataDirector
 
 关于高级数据源的整合单独整理至：[Spark Streaming 整合 Flume](https://github.com/heibaiying/BigData-Notes/blob/master/notes/Spark_Streaming%E6%95%B4%E5%90%88Flume.md) 和 [Spark Streaming 整合 Kafka](https://github.com/heibaiying/BigData-Notes/blob/master/notes/Spark_Streaming%E6%95%B4%E5%90%88Kafka.md)
 
-### 3.3 服务的启动与停止
+### 1.3 服务的启动与停止
 
 在示例代码中，使用 streamingContext.start() 代表启动服务，此时还要使用 streamingContext.awaitTermination() 使服务处于等待和可用的状态，直到发生异常或者手动使用 streamingContext.stop() 进行终止。
 
@@ -104,13 +99,13 @@ streamingContext.fileStream[KeyClass, ValueClass, InputFormatClass](dataDirector
 
 DStream 是 Spark Streaming 提供的基本抽象。它表示连续的数据流。在内部，DStream 由一系列连续的 RDD 表示。所以从本质上而言，应用于 DStream 的任何操作都会转换为底层 RDD 上的操作。例如，在示例代码中 flatMap 算子的操作实际上是作用在每个 RDDs 上 (如下图)。因为这个原因，所以 DStream 能够支持 RDD 大部分的*transformation*算子。
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-basic-operations/bc1a23ac4f5c8fd55f0a6cdd9a7c72af.png)
+![DStream 与 RDDs 关系图](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-basic-operations/bc1a23ac4f5c8fd55f0a6cdd9a7c72af.png)
 
 ### 2.2 updateStateByKey
 
 除了能够支持 RDD 的算子外，DStream 还有部分独有的*transformation*算子，这当中比较常用的是 updateStateByKey。文章开头的词频统计程序，只能统计每一次输入文本中单词出现的数量，想要统计所有历史输入中单词出现的数量，可以使用 updateStateByKey 算子。代码如下：
 
-```java
+```scala
 object NetworkWordCountV2 {
     def main(args: Array[String]) {
         /*
@@ -155,7 +150,7 @@ object NetworkWordCountV2 {
 
 在监听端口输入如下测试数据：
 
-```plain text
+```shell
 [root@hadoop001 ~]#  nc -lk 9999
 hello world hello spark hive hive hadoop
 storm storm flink azkaban
@@ -165,11 +160,11 @@ storm storm flink azkaban
 
 此时控制台输出如下，所有输入都被进行了词频累计：
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-basic-operations/776010c3cdfe78da6c728d17cee0567f.png)
+![词频累计结果](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-basic-operations/776010c3cdfe78da6c728d17cee0567f.png)
 
 同时在输出日志中还可以看到检查点操作的相关信息：
 
-```plain text
+```text
 # 保存检查点信息
 19/05/27 16:21:05 INFO CheckpointWriter: Saving checkpoint for time 1558945265000 ms
 to file 'hdfs://hadoop001:8020/spark-streaming/checkpoint-1558945265000'
@@ -209,13 +204,10 @@ Spark Streaming 支持以下输出操作：
 
 具体实现代码如下:
 
-```java
+```scala
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.DStream
-import org.apache.spark.streaming.
-{
-    Seconds, StreamingContext;
-}
+import org.apache.spark.streaming.{Seconds, StreamingContext}
 import redis.clients.jedis.Jedis
 
 object NetworkWordCountToRedis {
@@ -282,7 +274,7 @@ public class JedisPoolUtil {
 
 这里将上面保存到 Redis 的代码单独抽取出来，并去除异常判断的部分。精简后的代码如下：
 
-```java
+```scala
 pairs.foreachRDD { rdd =>
 rdd.foreachPartition { partitionOfRecords =>
 val jedis = JedisPoolUtil.getConnection
@@ -295,7 +287,7 @@ jedis.close()
 
 这里可以看到一共使用了三次循环，分别是循环 RDD，循环分区，循环每条记录，上面我们的代码是在循环分区的时候获取连接，也就是为每一个分区获取一个连接。但是这里大家可能会有疑问：为什么不在循环 RDD 的时候，为每一个 RDD 获取一个连接，这样所需要的连接数会更少。实际上这是不可行的，如果按照这种情况进行改写，如下：
 
-```java
+```scala
 pairs.foreachRDD { rdd =>
 val jedis = JedisPoolUtil.getConnection
 rdd.foreachPartition { partitionOfRecords =>
@@ -314,7 +306,7 @@ jedis.close()
 
 在监听端口输入如下测试数据：
 
-```plain text
+```shell
 [root@hadoop001 ~]#  nc -lk 9999
 hello world hello spark hive hive hadoop
 storm storm flink azkaban
@@ -324,7 +316,7 @@ storm storm flink azkaban
 
 使用 Redis Manager 查看写入结果 (如下图),可以看到与使用 updateStateByKey 算子得到的计算结果相同。
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-basic-operations/a02958779fd07b25ba432b31923865fe.png)
+![Redis 查看词频统计结果](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-basic-operations/a02958779fd07b25ba432b31923865fe.png)
 
 本片文章所有源码见本仓库：[spark-streaming-basis](https://github.com/heibaiying/BigData-Notes/tree/master/code/spark/spark-streaming-basis)
 

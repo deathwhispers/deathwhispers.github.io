@@ -49,7 +49,7 @@ HTTP的生命周期通过 Request 来界定，也就是一个 Request 一个 Res
 
 首先我们来看个典型的 Websocket 握手
 
-```plain text
+```http
 GET /chat HTTP/1.1
 Host: server.example.com
 Upgrade: websocket
@@ -62,14 +62,14 @@ Origin: http://example.com
 
 熟悉HTTP的童鞋可能发现了，这段类似HTTP协议的握手请求中，多了几个东西。我会顺便讲解下作用.
 
-```plain text
+```http
 Upgrade: websocket
 Connection: Upgrade
 ```
 
 这个就是Websocket的核心了，告诉 Apache 、 Nginx 等服务器：注意啦，我发起的是Websocket协议，快点帮我找到对应的助理处理~不是那个老土的HTTP。
 
-```plain text
+```http
 Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==
 Sec-WebSocket-Protocol: chat, superchat
 Sec-WebSocket-Version: 13
@@ -83,7 +83,7 @@ Sec-WebSocket-Version: 13
 
 然后服务器会返回下列东西，表示已经接受到请求， 成功建立Websocket啦！
 
-```plain text
+```http
 HTTP/1.1 101 Switching Protocols
 Upgrade: websocket
 Connection: Upgrade
@@ -93,7 +93,7 @@ Sec-WebSocket-Protocol: chat
 
 这里开始就是HTTP最后负责的区域了，告诉客户，我已经成功切换协议啦~
 
-```plain text
+```http
 Upgrade: websocket
 Connection: Upgrade
 ```
@@ -174,7 +174,7 @@ ajax轮询 需要服务器有很快的处理速度和资源。（速度）long p
 
 但是可以通过上面说的 long poll 和 ajax 轮询 来 模拟出类似的效果
 
-```plain text
+```http
 客户端：啦啦啦，有没有新信息(Request)
 服务端：没有（Response）
 客户端：啦啦啦，有没有新信息(Request)
@@ -187,13 +187,13 @@ ajax轮询 需要服务器有很快的处理速度和资源。（速度）long p
 服务端：。。。。。没。。。。没。。。没有（Response） —- loop
 ```
 
-```plain text
+```http
 客户端：啦啦啦，有没有新信息，没有的话就等有了才返回给我吧（Request）
 服务端：额。。 等待到有消息的时候。。来 给你（Response）
 客户端：啦啦啦，有没有新信息，没有的话就等有了才返回给我吧（Request） -loop
 ```
 
-```plain text
+```http
 客户端：啦啦啦啦，有新信息么？
 服务端：月线正忙，请稍后再试（503 Server Unavailable）
 客户端：。。。。好吧，啦啦啦，有新信息么？
@@ -202,7 +202,7 @@ ajax轮询 需要服务器有很快的处理速度和资源。（速度）long p
 客户端：然后服务端在一旁忙的要死：冰箱，我要更多的冰箱！更多。。更多。。（我错了。。这又是梗。。）
 ```
 
-```plain text
+```http
 客户端：啦啦啦，我要建立Websocket协议，需要的服务：chat，Websocket协议版本：17（HTTP Request）
 服务端：ok，确认，已升级为Websocket协议（HTTP Protocols Switched）
 客户端：麻烦你有信息的时候推送给我噢。。

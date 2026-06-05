@@ -19,7 +19,7 @@ updated: 2025-03-12 18:26
 
 ### 1.1 数据准备
 
-```plain text
+```scala
 // 需要导入 spark sql 内置的函数包
 import org.apache.spark.sql.functions._
 
@@ -34,14 +34,14 @@ empDF.show()
 
 ### 1.2 count
 
-```plain text
+```scala
 // 计算员工人数
 empDF.select(count("ename")).show()
 ```
 
 ### 1.3 countDistinct
 
-```plain text
+```scala
 // 计算姓名不重复的员工人数
 empDF.select(countDistinct("deptno")).show()
 ```
@@ -50,7 +50,7 @@ empDF.select(countDistinct("deptno")).show()
 
 通常在使用大型数据集时，你可能关注的只是近似值而不是准确值，这时可以使用 approx_count_distinct 函数，并可以使用第二个参数指定最大允许误差。
 
-```plain text
+```scala
 empDF.select(approx_count_distinct ("ename",0.1)).show()
 ```
 
@@ -58,7 +58,7 @@ empDF.select(approx_count_distinct ("ename",0.1)).show()
 
 获取 DataFrame 中指定列的第一个值或者最后一个值。
 
-```plain text
+```scala
 empDF.select(first("ename"),last("job")).show()
 ```
 
@@ -66,7 +66,7 @@ empDF.select(first("ename"),last("job")).show()
 
 获取 DataFrame 中指定列的最小值或者最大值。
 
-```plain text
+```scala
 empDF.select(min("sal"),max("sal")).show()
 ```
 
@@ -74,7 +74,7 @@ empDF.select(min("sal"),max("sal")).show()
 
 求和以及求指定列所有不相同的值的和。
 
-```plain text
+```scala
 empDF.select(sum("sal")).show()
 empDF.select(sumDistinct("sal")).show()
 ```
@@ -83,7 +83,7 @@ empDF.select(sumDistinct("sal")).show()
 
 内置的求平均数的函数。
 
-```plain text
+```scala
 empDF.select(avg("sal")).show()
 ```
 
@@ -91,7 +91,7 @@ empDF.select(avg("sal")).show()
 
 Spark SQL 中还支持多种数学聚合函数，用于通常的数学计算，以下是一些常用的例子：
 
-```plain text
+```scala
 // 1.计算总体方差、均方差、总体标准差、样本标准差
 empDF.select(var_pop("sal"), var_samp("sal"), stddev_pop("sal"), stddev_samp("sal")).show()
 
@@ -104,7 +104,7 @@ empDF.select(corr("empno", "sal"), covar_samp("empno", "sal"),covar_pop("empno",
 
 ### 1.10 聚合数据到集合
 
-```plain text
+```scala
 scala>  empDF.agg(collect_set("job"), collect_list("ename")).show()
 
 输出：
@@ -119,7 +119,7 @@ scala>  empDF.agg(collect_set("job"), collect_list("ename")).show()
 
 ### 2.1 简单分组
 
-```plain text
+```scala
 empDF.groupBy("deptno", "job").count().show()
 //等价 SQL
 spark.sql("SELECT deptno, job, count(*) FROM emp GROUP BY deptno, job").show()
@@ -142,7 +142,7 @@ spark.sql("SELECT deptno, job, count(*) FROM emp GROUP BY deptno, job").show()
 
 ### 2.2 分组聚合
 
-```plain text
+```scala
 empDF.groupBy("deptno").agg(count("ename").alias("人数"), sum("sal").alias("总工资")).show()
 // 等价语法
 empDF.groupBy("deptno").agg("ename"->"count","sal"->"sum").show()
@@ -170,7 +170,7 @@ Scala 提供了两种自定义聚合函数的方法，分别如下：
 
 ### 3.1 有类型的自定义函数
 
-```plain text
+```scala
 import org.apache.spark.sql.expressions.Aggregator
 import org.apache.spark.sql.{Encoder, Encoders, SparkSession, functions}
 
@@ -236,7 +236,7 @@ object SparkSqlApp {
 
 自定义聚合函数需要实现的方法比较多，这里以绘图的方式来演示其执行流程，以及每个方法的作用：
 
-![](/assets/images/learning/bigdata/sparkSQL/spark-sql-aggregations/b3dfa9f6d7078d6f6d6bd948035c9f89.png)
+![自定义聚合函数执行流程](/assets/images/learning/bigdata/sparkSQL/spark-sql-aggregations/b3dfa9f6d7078d6f6d6bd948035c9f89.png)
 
 关于 zero,reduce,merge,finish 方法的作用在上图都有说明，这里解释一下中间类型和输出类型的编码转换，这个写法比较固定，基本上就是两种情况：
 
@@ -251,7 +251,7 @@ scalaFloat
 scalaShort
 等，示例如下：
 
-```plain text
+```scala
 override def bufferEncoder: Encoder[SumAndCount] = Encoders.product
 override def outputEncoder: Encoder[Double] = Encoders.scalaDouble
 ```
@@ -260,7 +260,7 @@ override def outputEncoder: Encoder[Double] = Encoders.scalaDouble
 
 理解了有类型的自定义聚合函数后，无类型的定义方式也基本相同，代码如下：
 
-```plain text
+```scala
 import org.apache.spark.sql.expressions.{MutableAggregationBuffer, UserDefinedAggregateFunction}
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{Row, SparkSession}

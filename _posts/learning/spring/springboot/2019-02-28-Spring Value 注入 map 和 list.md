@@ -19,21 +19,18 @@ week: 2019-W09
 **EL表达式+JSON写法**
 
 ```java
-@Value("# {
-    '${scio.cloud.list;
-}
-'.split(',')}")
+@Value("#{'${scio.cloud.list}'.split(',')}")
 private List<String> list;
 
 @Value("#{${scio.cloud.maps}}")
 private Map<String,String> maps;
-
 ```
 
 yml文件
 
 ```yaml
-scio.cloud.list: topic1,topic2,topic3scio.cloud.maps: "{key1: 'value1', key2: 'value2'}"
+scio.cloud.list: topic1,topic2,topic3
+scio.cloud.maps: "{key1: 'value1', key2: 'value2'}"
 ```
 
 ---
@@ -67,5 +64,15 @@ public class ScioCloudConfig {
 yml常规
 
 ```yaml
-scio:  cloud    list:      - topic1      - topic2      - topic3scio:  cloud:    maps:      key1: 'value1'      key2: 'value2'
+scio:
+  cloud:
+    list:
+      - topic1
+      - topic2
+      - topic3
+scio:
+  cloud:
+    maps:
+      key1: 'value1'
+      key2: 'value2'
 ```

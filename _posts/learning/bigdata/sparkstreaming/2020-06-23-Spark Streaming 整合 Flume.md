@@ -27,7 +27,7 @@ Apache Flume 是一个分布式，高可用的数据收集系统，可以从不�
 
 新建配置 netcat-memory-avro.properties，使用 tail 命令监听文件内容变化，然后将新的文件内容通过 avro sink 发送到 hadoop001 这台服务器的 8888 端口：
 
-```plain text
+```properties
 #指定agent的sources,sinks,channels
 a1.sources = s1
 a1.sinks = k1
@@ -56,7 +56,7 @@ a1.channels.c1.transactionCapacity = 100
 
 项目采用 Maven 工程进行构建，主要依赖为 spark-streaming 和 spark-streaming-flume。
 
-```plain text
+```xml
 <properties>
     <scala.version>2.11</scala.version>
     <spark.version>2.4.0</spark.version>
@@ -82,7 +82,7 @@ a1.channels.c1.transactionCapacity = 100
 
 调用 FlumeUtils 工具类的 createStream 方法，对 hadoop001 的 8888 端口进行监听，获取到流数据并进行打印：
 
-```plain text
+```scala
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.flume.FlumeUtils
@@ -109,7 +109,7 @@ object PushBasedWordCount {
 
 这里我采用的是第三种方式：使用 maven-shade-plugin 插件进行 ALL IN ONE 打包，把所有依赖的 Jar 一并打入最终包中。需要注意的是 spark-streaming 包在 Spark 安装目录的 jars 目录中已经提供，所以不需要打入。插件配置如下：
 
-```plain text
+```xml
 <build>
     <plugins>
         <plugin>
@@ -202,13 +202,13 @@ object PushBasedWordCount {
 
 使用 mvn clean package 命令打包后会生产以下两个 Jar 包，提交 非 original 开头的 Jar 即可。
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-integration-with-flume/2be6ed5b085a9d7598354eb90953b676.png)
+![Maven 打包结果](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-integration-with-flume/2be6ed5b085a9d7598354eb90953b676.png)
 
 ### 2.5 启动服务和提交作业
 
 启动 Flume 服务：
 
-```plain text
+```shell
 flume-ng agent \
 --conf conf \
 --conf-file /usr/app/apache-flume-1.6.0-cdh5.15.2-bin/examples/netcat-memory-avro.properties \
@@ -217,7 +217,7 @@ flume-ng agent \
 
 提交 Spark Streaming 作业：
 
-```plain text
+```shell
 spark-submit \
 --class com.heibaiying.flume.PushBasedWordCount \
 --master local[4] \
@@ -228,11 +228,11 @@ spark-submit \
 
 这里使用 echo 命令模拟日志产生的场景，往日志文件中追加数据，然后查看程序的输出：
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-integration-with-flume/db76b33f3a6a56b20ee934c364dd2f4c.png)
+![echo 命令模拟日志](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-integration-with-flume/db76b33f3a6a56b20ee934c364dd2f4c.png)
 
 Spark Streaming 程序成功接收到数据并打印输出：
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-integration-with-flume/c523150c95dcf36c83e4c0b114f2945d.png)
+![Spark Streaming 接收数据](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-integration-with-flume/c523150c95dcf36c83e4c0b114f2945d.png)
 
 ### 2.7 注意事项
 
@@ -240,7 +240,7 @@ Spark Streaming 程序成功接收到数据并打印输出：
 
 这里需要注意的，不论你先启动 Spark 程序还是 Flume 程序，由于两者的启动都需要一定的时间，此时先启动的程序会短暂地抛出端口拒绝连接的异常，此时不需要进行任何操作，等待两个程序都启动完成即可。
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-integration-with-flume/80808c9b9d1db759f784f5abc6ec7e71.png)
+![端口拒绝连接异常](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-integration-with-flume/80808c9b9d1db759f784f5abc6ec7e71.png)
 
 ### 2. 版本一致
 
@@ -254,7 +254,7 @@ Spark Streaming 程序成功接收到数据并打印输出：
 
 新建 Flume 配置文件 netcat-memory-sparkSink.properties，配置和上面基本一致，只是把 a1.sinks.k1.type 的属性修改为 org.apache.spark.streaming.flume.sink.SparkSink，即采用 Spark 接收器。
 
-```plain text
+```properties
 #指定agent的sources,sinks,channels
 a1.sources = s1
 a1.sinks = k1
@@ -283,7 +283,7 @@ a1.channels.c1.transactionCapacity = 100
 
 使用拉取式方法需要额外添加以下两个依赖：
 
-```plain text
+```xml
 <dependency>
     <groupId>org.scala-lang</groupId>
     <artifactId>scala-library</artifactId>
@@ -302,7 +302,7 @@ a1.channels.c1.transactionCapacity = 100
 
 这里和上面推送式方法的代码基本相同，只是将调用方法改为 createPollingStream。
 
-```plain text
+```scala
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.flume.FlumeUtils
@@ -329,7 +329,7 @@ object PullBasedWordCount {
 
 启动 Flume 进行日志收集：
 
-```plain text
+```shell
 flume-ng agent \
 --conf conf \
 --conf-file /usr/app/apache-flume-1.6.0-cdh5.15.2-bin/examples/netcat-memory-sparkSink.properties \
@@ -338,7 +338,7 @@ flume-ng agent \
 
 提交 Spark Streaming 作业：
 
-```plain text
+```shell
 spark-submit \
 --class com.heibaiying.flume.PullBasedWordCount \
 --master local[4] \

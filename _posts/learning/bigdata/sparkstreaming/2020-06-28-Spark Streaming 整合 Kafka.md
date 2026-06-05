@@ -37,7 +37,7 @@ Spark 针对 Kafka 的不同版本，提供了两套整合方案：spark-streami
 
 项目采用 Maven 进行构建，主要依赖如下：
 
-```plain text
+```xml
 <properties>
     <scala.version>2.12</scala.version>
 </properties>
@@ -64,7 +64,7 @@ Spark 针对 Kafka 的不同版本，提供了两套整合方案：spark-streami
 
 通过调用 KafkaUtils 对象的 createDirectStream 方法来创建输入流，完整代码如下：
 
-```plain text
+```scala
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
@@ -127,7 +127,7 @@ object KafkaDirectStream {
 
 这里获得的输入流中每一个 Record 实际上是 ConsumerRecord<K, V> 的实例，其包含了 Record 的所有可用信息，源码如下：
 
-```plain text
+```java
 public class ConsumerRecord<K, V> {
 
     public static final long NO_TIMESTAMP = RecordBatch.NO_TIMESTAMP;
@@ -212,7 +212,7 @@ Spark Streaming 中提供了如下三种位置策略，用于指定 Kafka 主题
 - **PreferFixed**
 : 可以指定主题分区与特定主机的映射关系，显示地将分区分配到特定的主机，其构造器如下：
 
-```plain text
+```scala
 @Experimental
 def PreferFixed(hostMap: collection.Map[TopicPartition, String]): LocationStrategy =
   new PreferFixed(new ju.HashMap[TopicPartition, String](hostMap.asJava))
@@ -226,7 +226,7 @@ def PreferFixed(hostMap: ju.Map[TopicPartition, String]): LocationStrategy =
 
 Spark Streaming 提供了两种主题订阅方式，分别为 Subscribe 和 SubscribePattern。后者可以使用正则匹配订阅主题的名称。其构造器分别如下：
 
-```plain text
+```scala
 /**
   * @param 需要订阅的主题的集合
   * @param Kafka 消费者参数
@@ -269,7 +269,7 @@ def SubscribePattern[K, V](
 
 Kafka 的运行依赖于 zookeeper，需要预先启动，可以启动 Kafka 内置的 zookeeper，也可以启动自己安装的：
 
-```plain text
+```shell
 # zookeeper启动命令
 bin/zkServer.sh start
 
@@ -279,13 +279,13 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 
 启动单节点 kafka 用于测试：
 
-```plain text
+```shell
 # bin/kafka-server-start.sh config/server.properties
 ```
 
 ### 2. 创建topic
 
-```plain text
+```shell
 # 创建用于测试主题
 bin/kafka-topics.sh --create \
                     --bootstrap-server hadoop001:9092 \
@@ -301,7 +301,7 @@ bin/kafka-topics.sh --create \
 
 这里创建一个 Kafka 生产者，用于发送测试数据：
 
-```plain text
+```shell
 bin/kafka-console-producer.sh --broker-list hadoop001:9092 --topic spark-streaming-topic
 ```
 
@@ -311,7 +311,7 @@ bin/kafka-console-producer.sh --broker-list hadoop001:9092 --topic spark-streami
 
 从控制台输出中可以看到数据流已经被成功接收，由于采用 kafka-console-producer.sh 发送的数据默认是没有 key 的，所以 key 值为 null。同时从输出中也可以看到在程序中指定的 groupId 和程序自动分配的 clientId。
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-integration-with-kafka/2d6daedf94591d8c2f7fa7967c743b07.png)
+![Spark Streaming 整合 Kafka 运行结果](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-integration-with-kafka/2d6daedf94591d8c2f7fa7967c743b07.png)
 
 ## 参考资料
 

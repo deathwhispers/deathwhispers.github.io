@@ -70,7 +70,7 @@ Spring AOP 是基于 Spring IoC 机制来实现的，所以建议对 IoC 的源�
 
 FROM 《Spring 源码深度解析》
 
-![d7ae7f154c77ea133cf13b1edf38647e](/assets/images/learning/spring/springsourcecode/spring-aop-source-code-simple-intro/d7ae7f154c77ea133cf13b1edf38647e.png)
+![Spring AOP核心流程图](/assets/images/learning/spring/springsourcecode/spring-aop-source-code-simple-intro/d7ae7f154c77ea133cf13b1edf38647e.png)
 
 核心流程
 
@@ -118,7 +118,7 @@ AopNamespaceHandler ，对 <aop:/> 命名空间的处理器。
 
 AutoProxyCreator 整体类图如下：
 
-![907debfe7438e8f8cdec7a7c262e4d49](/assets/images/learning/spring/springsourcecode/spring-aop-source-code-simple-intro/907debfe7438e8f8cdec7a7c262e4d49.png)
+![AutoProxyCreator类图](/assets/images/learning/spring/springsourcecode/spring-aop-source-code-simple-intro/907debfe7438e8f8cdec7a7c262e4d49.png)
 
 AutoProxyCreator 类图
 

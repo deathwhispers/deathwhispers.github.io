@@ -280,7 +280,7 @@ public void listFiles() throws Exception {
 
 FileStatus 中包含了文件的基本信息，比如文件路径，是否是文件夹，修改时间，访问时间，所有者，所属组，文件权限，是否是符号链接等，输出内容示例如下：
 
-```plain text
+```text
 FileStatus{
   path=hdfs://192.168.0.106:8020/hdfs-api/test;
   isDirectory=true;
@@ -309,7 +309,7 @@ public void listFilesRecursive() throws Exception {
 
 和上面输出类似，只是多了文本大小，副本系数，块大小信息。
 
-```plain text
+```text
 LocatedFileStatus{
 path=hdfs://192.168.0.106:8020/hbase/hbase.version;
 isDirectory=false;
@@ -340,7 +340,7 @@ public void getFileBlockLocations() throws Exception {
 
 块输出信息有三个值，分别是文件的起始偏移量 (offset)，文件大小 (length)，块所在的主机名 (hosts)。
 
-```plain text
+```text
 0,57028557,hadoop001
 ```
 

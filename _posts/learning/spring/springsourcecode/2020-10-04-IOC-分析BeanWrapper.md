@@ -25,11 +25,11 @@ updated: 2020-10-04 18:00
 
 在实例化 Bean 阶段，我们从 BeanDefinition 得到的并不是我们最终想要的 Bean 实例，而是 BeanWrapper 实例，如下：
 
-![dfd73f60540dd579297a1f9df9f95fe8](/assets/images/learning/spring/springsourcecode/ioc-analyze-beanwrapper/dfd73f60540dd579297a1f9df9f95fe8.jpeg)
+![BeanWrapper实例化过程](/assets/images/learning/spring/springsourcecode/ioc-analyze-beanwrapper/dfd73f60540dd579297a1f9df9f95fe8.jpeg)
 
 所以这里 BeanWrapper 是一个从 BeanDefinition 到 Bean 直接的**中间产物**，我们可以称它为"低级 bean"。在一般情况下，我们不会在实际项目中用到它。BeanWrapper 是 Spring 框架中重要的组件类，它就相当于一个代理类，Spring 委托 BeanWrapper 完成 Bean 属性的填充工作。在 Bean 实例被 InstantiationStrategy 创建出来后，Spring 容器会将 Bean 实例通过 BeanWrapper 包裹起来，是通过如如下代码实现：
 
-![3a5c719e69c1113dcc8cdc7ff124929d](/assets/images/learning/spring/springsourcecode/ioc-analyze-beanwrapper/3a5c719e69c1113dcc8cdc7ff124929d.jpeg)
+![BeanWrapper包裹Bean实例](/assets/images/learning/spring/springsourcecode/ioc-analyze-beanwrapper/3a5c719e69c1113dcc8cdc7ff124929d.jpeg)
 
 - beanInstance
 就是我们实例出来的 bean 实例，通过构造一个 BeanWrapper 实例对象进行包裹，如下：
@@ -51,7 +51,7 @@ protected AbstractNestablePropertyAccessor(Object object) {
 
 下面小编就 BeanWrapper 来进行分析说明，先看整体的结构：
 
-![fea787ac555caf4dab31fb3bc889dc8d](/assets/images/learning/spring/springsourcecode/ioc-analyze-beanwrapper/fea787ac555caf4dab31fb3bc889dc8d.png)
+![BeanWrapper体系结构图](/assets/images/learning/spring/springsourcecode/ioc-analyze-beanwrapper/fea787ac555caf4dab31fb3bc889dc8d.png)
 
 2018101210001
 

@@ -24,7 +24,7 @@ updated: 2022-05-28 18:33
 
 本文涉及**类图**如下：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-telnet/37dbaee64f8936ddb6491d1f6333c70e.png "类图")
+![类图](/assets/images/learning/dubbo/dubbo-nio-server-telnet/37dbaee64f8936ddb6491d1f6333c70e.png)
 
 从**用途**上，上述类可以分成三种：
 
@@ -35,7 +35,7 @@ updated: 2022-05-28 18:33
 
 **流程**如下图：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-telnet/6d2e180817562ec8ed90c91b023e8655.png "流程")
+![流程](/assets/images/learning/dubbo/dubbo-nio-server-telnet/6d2e180817562ec8ed90c91b023e8655.png)
 
 下面我们来看看具体的代码实现。
 
@@ -327,7 +327,7 @@ private static String toString(byte[] message, Charset charset) throws Unsupport
 
 建议多调试，这样会更好理解。如下是 TelnetCodec 的被**调用栈**：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-telnet/451135e7bff1a90e6f3a8af2271c0255.png "调用")
+![调用栈](/assets/images/learning/dubbo/dubbo-nio-server-telnet/451135e7bff1a90e6f3a8af2271c0255.png)
 
 **编码**
 
@@ -442,7 +442,7 @@ public class TelnetHandlerAdapter extends ChannelHandlerAdapter implements Telne
 
 - 第 8 至 10 行：处理 telnet 提示语，默认为 `"dubbo"`，可通过 `<dubbo:protocol prompt="xxx" />` 配置。提示语的效果，如下图所示红框部分：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-telnet/65652f1c5d9036c374460952567f7c88.png "提示语")
+![提示语效果](/assets/images/learning/dubbo/dubbo-nio-server-telnet/65652f1c5d9036c374460952567f7c88.png)
 
 - 第 11 至 26 行：拆除 telnet 命令和参数**两**部分。
 - 第 28 至 38 行：查找到对应的 TelnetHandler 对象，执行命令，返回结果。
@@ -484,7 +484,7 @@ public void received(Channel channel, Object message) throws RemotingException {
 
 在 command 包下，我们可以看到多种 TelnetHandler 命令的实现类，如下图所示：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-telnet/327f32f0c38e35290219ee5802d94389.png "command")
+![command命令实现类](/assets/images/learning/dubbo/dubbo-nio-server-telnet/327f32f0c38e35290219ee5802d94389.png)
 
 - ClearTelnetHandler
 - ExitTelnetHandler

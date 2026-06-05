@@ -48,13 +48,13 @@ bridge 模式是 Docker 默认的网络设置，此模式会为每一个容器�
 
 当 Docker server 启动时，会在主机上创建一个名为 docker0 的虚拟网桥，此主机上启动的 Docker 容器会连接到这个虚拟网桥上。虚拟网桥的工作方式和物理交换机类似，这样主机上的所有容器就通过交换机连在了一个二层网络中。接下来就要为容器分配 IP 了，Docker 会从[RFC1918](http://tools.ietf.org/html/rfc1918)所定义的私有 IP 网段中，选择一个和宿主机不同的 IP 地址和子网分配给 docker0，连接到 docker0 的容器就从这个子网中选择一个未占用的 IP 使用。如一般 Docker 会使用 172.17.0.0/16 这个网段，并将 172.17.42.1/16 分配给 docker0 网桥（在主机上使用 ifconfig 命令是可以看到 docker0 的，可以认为它是网桥的管理接口，在宿主机上作为一块虚拟网卡使用）。单机环境下的网络拓扑如下，主机地址为 10.10.101.105/24。
 
-![](../../../Program%20Files/Typora/assets/Untitled/dadb1978cc8539adbd8eb730833000bb.png)
+![Docker bridge 模式网络拓扑图](../../../Program%20Files/Typora/assets/Untitled/dadb1978cc8539adbd8eb730833000bb.png)
 
 Docker 完成以上网络配置的过程大致是这样的：
 
 1. 在主机上创建一对虚拟网卡 veth pair 设备。veth 设备总是成对出现的，它们组成了一个数据的通道，数据从一个设备进入，就会从另一个设备出来。因此，veth 设备常用来连接两个网络设备。
 2. Docker 将 veth pair 设备的一端放在新创建的容器中，并命名为 eth0。另一端放在主机中，以 veth65f9 这样类似的名字命名，并将这个网络设备加入到 docker0 网桥中，可以通过 brctl show 命令查看。
-![](../../../Program%20Files/Typora/assets/Untitled/ffbd28216bc41412976bdc448450b77f.png)
+![brctl show 命令输出](../../../Program%20Files/Typora/assets/Untitled/ffbd28216bc41412976bdc448450b77f.png)
 3. 从 docker0 子网中分配一个 IP 给容器使用，并设置 docker0 的 IP 地址为容器的默认网关。
 
 网络拓扑介绍完后，接着介绍一下 bridge 模式下容器是如何通信的。
@@ -65,7 +65,7 @@ Docker 完成以上网络配置的过程大致是这样的：
 
 容器也可以与外部通信，我们看一下主机上的 Iptable 规则，可以看到这么一条
 
-```plain text
+```text
 -A POSTROUTING -s 172.17.0.0/16 ! -o docker0 -j MASQUERADE
 ```
 
@@ -73,13 +73,13 @@ Docker 完成以上网络配置的过程大致是这样的：
 
 那么，外面的机器是如何访问 Docker 容器的服务呢？我们首先用下面命令创建一个含有 web 应用的容器，将容器的 80 端口映射到主机的 80 端口。
 
-```plain text
+```shell
 docker run -d --name web -p 80:80 fmzhen/simpleweb
 ```
 
 然后查看 Iptable 规则的变化，发现多了这样一条规则：
 
-```plain text
+```text
 -A DOCKER ! -i docker0 -p tcp -m tcp --dport 80 -j DNAT --to-destination 172.17.0.5:80
 ```
 
@@ -99,7 +99,7 @@ pipework 是由 Docker 的工程师 Jérôme Petazzoni 开发的一个 Docker �
 
 下面我们来操作一下，我主机 A 地址为 10.10.101.105/24, 网关为 10.10.101.254, 需要给 Docker 容器的地址配置为 10.10.101.150/24。在主机 A 上做如下操作：
 
-```plain text
+```shell
 #安装 pipework
 git clone https://github.com/jpetazzo/pipework
 cp ~/pipework/pipework /usr/local/bin/
@@ -123,9 +123,7 @@ ip addr add 10.10.101.105/24 dev br0; \
 
 那么容器到底发生了哪些变化呢？我们 docker attach 到 test1 上，发现容器中多了一块 eth1 的网卡，并且配置了 10.10.101.150/24 的 IP，而且默认路由也改为了 10.10.101.254。这些都是 pipework 帮我们配置的。通过查看源代码，可以发现 pipework br0 test1 10.10.101.150/24@10.10.101.254 是由以下命令完成的（这里只列出了具体执行操作的代码）。
 
-复制代码
-
-```plain text
+```shell
 #创建 br0 网桥
 #若 ovs 开头，则创建 OVS 网桥 ovs-vsctl add-br ovs*
 brctl addbr $IFNAME
@@ -163,7 +161,7 @@ pipework 不仅可以使用 Linux bridge 连接 Docker 容器，还可以与 Ope
 
 为了演示隔离效果，我们将 4 个容器放在了同一个 IP 网段中。但实际他们是二层隔离的两个网络，有不同的广播域。
 
-```plain text
+```shell
 #在主机 A 上创建 4 个 Docker 容器，test1、test2、test3、test4
 docker run -itd --name test1 ubuntu /bin/bash
 docker run -itd --name test2 ubuntu /bin/bash
@@ -181,7 +179,7 @@ pipework ovs0 test4 192.168.0.4/24 @200
 
 由于 OpenVswitch 本身支持 VLAN 功能，所以这里 pipework 所做的工作和之前介绍的基本一样，只不过将 Linux bridge 替换成了 OpenVswitch，在将 veth pair 的一端加入 ovs0 网桥时，指定了 tag。底层操作如下：
 
-```plain text
+```shell
 ovs-vsctl add-port ovs0 veth* tag=100
 ```
 
@@ -189,7 +187,7 @@ ovs-vsctl add-port ovs0 veth* tag=100
 
 上面介绍完了单主机上 VLAN 的隔离，下面我们将情况延伸到多主机的情况。有了前面两个例子做铺垫，这个也就不难了。为了实现这个目的，我们把宿主机上的网卡桥接到各自的 OVS 网桥上，然后再为容器配置 IP 和 VLAN 就可以了。我们实验环境如下，主机 A 和 B 各有一块网卡 eth0，IP 地址分别为 10.10.101.105/24、10.10.101.106/24。在主机 A 上创建两个容器 test1、test2，分别在 VLAN 100 和 VLAN 200 上。在主机 B 上创建 test3、test4，分别在 VLAN 100 和 VLAN 200 上。最终，test1 可以和 test3 通信，test2 可以和 test4 通信。
 
-```plain text
+```shell
 #在主机 A 上
 #创建 Docker 容器
 docker run -itd --name test1 ubuntu /bin/bash
@@ -221,7 +219,7 @@ ip addr add 10.10.101.106/24 dev ovs0; \
 
 完成上面的步骤后，主机 A 上的 test1 和主机 B 上的 test3 容器就划分到了一个 VLAN 中，并且与主机 A 上的 test2 和主机 B 上的 test4 隔离（主机 eth0 网卡需要设置为混杂模式，连接主机的交换机端口应设置为 trunk 模式，即允许 VLAN 100 和 VLAN 200 的包通过）。拓扑图如下所示（省去了 Docker 默认的 eth0 网卡和主机上的 docker0 网桥）：
 
-![](../../../Program%20Files/Typora/assets/Untitled/09970e980fbfe1d060a9c1570775d989.png)
+![多主机 Docker 容器 VLAN 划分拓扑图](../../../Program%20Files/Typora/assets/Untitled/09970e980fbfe1d060a9c1570775d989.png)
 
 除此之外，pipework 还支持使用macvlan 设备、设置网卡MAC 地址等功能。不过，pipework 有一个缺陷，就是配置的容器在关掉重启后，之前的设置会丢失。
 

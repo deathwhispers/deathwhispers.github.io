@@ -18,7 +18,7 @@ week: 2019-W24
 
 总结：
 
-![f95fb74df31df5925fd9a14f57eac631](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/f95fb74df31df5925fd9a14f57eac631.png)
+![SpringApplication生命周期事件流程图](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/f95fb74df31df5925fd9a14f57eac631.png)
 
 ========================
 
@@ -36,7 +36,7 @@ week: 2019-W24
 
 ## 生命周期事件流程图
 
-![7de8e3c5b020a2a6133d886718fbe5f0](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/7de8e3c5b020a2a6133d886718fbe5f0.png)
+![生命周期事件流程图详细版](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/7de8e3c5b020a2a6133d886718fbe5f0.png)
 
 ---
 
@@ -83,7 +83,7 @@ public abstract class SpringApplicationEvent extends ApplicationEvent {
 
 它是抽象类，扩展自Spring Framwork的ApplicationEvent，确保了事件和应用实体SpringApplication产生关联（当然还有String[] args）。它有如下实现子类（7个）：
 
-![fb3c041df978421ec6568e469dceff27](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/fb3c041df978421ec6568e469dceff27.png)
+![SpringApplicationEvent子类](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/fb3c041df978421ec6568e469dceff27.png)
 
 每个事件都代表着SpringApplication不同生命周期所处的位置，下面分别进行讲解。
 
@@ -108,12 +108,12 @@ webApplicationType
 ApplicationContextInitializer
 上下文初始化器
             -
-![d5af3fb8c6d1cedf3dc7cf1eb8582f3b](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/d5af3fb8c6d1cedf3dc7cf1eb8582f3b.png)
+![ApplicationContextInitializer列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/d5af3fb8c6d1cedf3dc7cf1eb8582f3b.png)
         - 给字段listeners赋值：拿到SPI方式配置的
 ApplicationListener
 应用监听器
             -
-![d5e8fc8b0226ce66530dd4bc198c01fd](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/d5e8fc8b0226ce66530dd4bc198c01fd.png)
+![ApplicationListener列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/d5e8fc8b0226ce66530dd4bc198c01fd.png)
     - 注意：在此阶段(早期阶段)不要过多地使用它的内部状态，因为它可能在生命周期的后期被修改（话外音：使用时需谨慎）
 - 此时，
 SpringApplicationRunListener
@@ -135,7 +135,7 @@ ApplicationStartingEvent
 
 事件：
 
-![d4ca86e89d06350786a4570137482fcc](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/d4ca86e89d06350786a4570137482fcc.png)
+![ApplicationStartingEvent监听器列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/d4ca86e89d06350786a4570137482fcc.png)
 
 1. LoggingApplicationListener
 ：@since 2.0.0。对日志系统抽象
@@ -175,7 +175,7 @@ ApplicationArguments
 ConfigurableEnvironment
 的实现类，并且填入值：Profiles配置和Properties属性，默认内容如下（注意，这只是初始状态，后面还会改变、添加属性源，实际见最后的截图）：
 
-![5611003df0ba4001c71f4017af549b9f](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/5611003df0ba4001c71f4017af549b9f.png)
+![Environment初始状态](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/5611003df0ba4001c71f4017af549b9f.png)
 
 - 发送ApplicationEnvironmentPreparedEvent事件，触发对应的监听器的执行
     - 对环境抽象Enviroment的**填值**
@@ -195,7 +195,7 @@ SpringApplication
 
 默认情况下，有9个监听器监听 ApplicationEnvironmentPreparedEvent 事件：
 
-![c3025ebaf4e5afa92e8ff6e10b9907cf](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/c3025ebaf4e5afa92e8ff6e10b9907cf.png)
+![ApplicationEnvironmentPreparedEvent监听器列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/c3025ebaf4e5afa92e8ff6e10b9907cf.png)
 
 5. BootstrapApplicationListener
 ：来自SC。优先级最高，用于启动/创建Spring Cloud的应用上下文。需要注意的是：到此时SB的上下文
@@ -226,7 +226,7 @@ ConfigFileApplicationListener
 EnvironmentPostProcessor
 ，会参与排序哦
 
-![130438f1ca3da2e23920ea2fa67ac73c](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/130438f1ca3da2e23920ea2fa67ac73c.png)
+![EnvironmentPostProcessor列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/130438f1ca3da2e23920ea2fa67ac73c.png)
 
 - **排好序后**
 ，分别一个个的执行
@@ -299,7 +299,7 @@ spring.factories
 
 总结：此事件节点结束时，Spring Boot的环境抽象Enviroment已经准备完毕，但此时其上下文ApplicationContext还**没有创建**，但是Spring Cloud的应用上下文（引导上下文）已经**全部初始化完毕哦**，所以SC管理的外部化配置也应该都进入到了SB里面。如下图所示（这是基本上算是Enviroment的最终态了）：
 
-![dfcdc7939e1078fb4fba2ac143fb7542](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/dfcdc7939e1078fb4fba2ac143fb7542.png)
+![Environment最终状态](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/dfcdc7939e1078fb4fba2ac143fb7542.png)
 
 小提示：SC配置的优先级是高于SB管理的外部化配置的。例如针对spring.application.name这个属性，若bootstrap里已配置了值，再在application.yaml里配置其实就无效了，因此生产上建议不要写两处。
 
@@ -338,7 +338,7 @@ ConfigurableApplicationContext
 ApplicationContextInitializer
 上下文初始化器，并且排序好后挨个执行它（这个很重要），默认有如下截图这些初始化器此时要执行：
 
-![18f2191040c0116969d194cc0c66394d](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/18f2191040c0116969d194cc0c66394d.png)
+![ApplicationContextInitializer执行列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/18f2191040c0116969d194cc0c66394d.png)
 
 下面对这些初始化器分别做出简单介绍：
 
@@ -427,7 +427,7 @@ debug=true
 
 默认情况下，有2个监听器监听ApplicationContextInitializedEvent事件：
 
-![61c2418d85a0380c1332337bd92ed9ec](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/61c2418d85a0380c1332337bd92ed9ec.png)
+![ApplicationContextInitializedEvent监听器列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/61c2418d85a0380c1332337bd92ed9ec.png)
 
 20. BackgroundPreinitializer
 ：本事件达到时无动作
@@ -477,7 +477,7 @@ BeanDefinitionLoader
 
 默认情况下，有6个监听器监听ApplicationContextInitializedEvent事件：
 
-![3e9433cdc6e43af7f8badc0c68935ac8](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/3e9433cdc6e43af7f8badc0c68935ac8.png)
+![ApplicationPreparedEvent监听器列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/3e9433cdc6e43af7f8badc0c68935ac8.png)
 
 22. CloudFoundryVcapEnvironmentPostProcessor
 ：略
@@ -543,7 +543,7 @@ String… args
 
 默认情况下，有3个监听器监听ApplicationStartedEvent事件：
 
-![422f4f8c25e901af1e3d456fcc0a688e](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/422f4f8c25e901af1e3d456fcc0a688e.png)
+![ApplicationStartedEvent监听器列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/422f4f8c25e901af1e3d456fcc0a688e.png)
 
 28. 前两个不用再解释了吧：本事件达到时无动作
 29. TomcatMetricsBinder
@@ -573,7 +573,7 @@ MeterRegistry
 
 默认情况下，有4个监听器监听ApplicationStartedEvent事件：
 
-![4b88876b85aebf6e254f05f538c79ee2](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/4b88876b85aebf6e254f05f538c79ee2.png)
+![ApplicationReadyEvent监听器列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/4b88876b85aebf6e254f05f538c79ee2.png)
 
 30. SpringApplicationAdminMXBeanRegistrar
 ：当此事件到达时，告诉Admin Spring应用已经ready，可以使用啦。
@@ -614,7 +614,7 @@ ApplicationFailedEvent
 
 默认情况下，有6个监听器监听ApplicationStartedEvent事件：
 
-![0c2750122cf92a2f2bb99c5dfcde42ef](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/0c2750122cf92a2f2bb99c5dfcde42ef.png)
+![ApplicationFailedEvent监听器列表](/assets/images/learning/spring/springboot/spring-boot-startup-lifecycle-events/0c2750122cf92a2f2bb99c5dfcde42ef.png)
 
 33. LoggingApplicationListener
 ：执行

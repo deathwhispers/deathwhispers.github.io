@@ -79,7 +79,7 @@ public interface Resource extends InputStreamSource {
 
 类结构图如下：
 
-![143162657d5f8c7cb7712d0996bf2a38](/assets/images/learning/spring/springsourcecode/ioc-spring-unified-resource-loading-strategy/143162657d5f8c7cb7712d0996bf2a38.jpeg)
+![Resource类结构图](/assets/images/learning/spring/springsourcecode/ioc-spring-unified-resource-loading-strategy/143162657d5f8c7cb7712d0996bf2a38.jpeg)
 
 Resource 类图
 
@@ -268,7 +268,7 @@ Resource#exist()
 
 作为 Spring 统一的资源加载器，它提供了统一的抽象，具体的实现则由相应的子类来负责实现，其类的类结构图如下：
 
-![2446cc9fba90605b691ea250cf340ebb](/assets/images/learning/spring/springsourcecode/ioc-spring-unified-resource-loading-strategy/2446cc9fba90605b691ea250cf340ebb.png)
+![ResourceLoader类结构图](/assets/images/learning/spring/springsourcecode/ioc-spring-unified-resource-loading-strategy/2446cc9fba90605b691ea250cf340ebb.png)
 
 ResourceLoader 类图
 
@@ -444,7 +444,7 @@ instanceof  UrlResource));
 
 运行结果：
 
-```plain text
+```text
 fileResource1 is FileSystemResource:false
 fileResource2 is ClassPathResource:true
 urlResource1 is UrlResource:true
@@ -697,7 +697,7 @@ IOException {
 
 ```
 
-```plain text
+```text
 - <font style="color:rgb(51, 51, 51);">看到这里是不是就已经一目了然了？如果当前父类加载器不为</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">null</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">，则通过父类向上迭代获取资源，否则调用</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">#getBootstrapResources()</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">。这里是不是特别熟悉，(</font>_<font style="color:rgb(51, 51, 51);">^▽^</font>_<font style="color:rgb(51, 51, 51);">)。</font>
 ```
 

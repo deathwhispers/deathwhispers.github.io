@@ -40,7 +40,7 @@ reader.loadBeanDefinitions(resource); // <4>
 
 整个过程就分为三个步骤：资源定位、装载、注册，如下：
 
-![1e395ffbda4fe58a49897854a7d72ce9](/assets/images/learning/spring/springsourcecode/ioc-load-bean-definition/1e395ffbda4fe58a49897854a7d72ce9.png)
+![IoC容器初始化整体步骤](/assets/images/learning/spring/springsourcecode/ioc-load-bean-definition/1e395ffbda4fe58a49897854a7d72ce9.png)
 
 整体步骤
 

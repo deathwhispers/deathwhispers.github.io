@@ -73,15 +73,11 @@ public KeyGenerator wiselyKeyGenerator() {
                 return null;
             }
             String join = String.join("&", Arrays.stream(params).map(Object::toString).collect(Collectors.toList()));
-            String format = String.format("%s
-            {
-                %s;
-            }
-            ", sb.toString(), join);
+            String format = String.format("%s{%s}", sb.toString(), join);
             // log.info("缓存key：" + format);
             return format;
         }
-    }
+    };
 }
 ```
 
@@ -105,4 +101,4 @@ public String getTokenByGsid(String gsid) {
 
 ## 效果展示
 
-![18ff7c59114b5bed0133b7dbfc453e73](/assets/images/learning/spring/springboot/spring-boot-cacheable-redis-expire-time-solution/18ff7c59114b5bed0133b7dbfc453e73.png)
+![Redis缓存配置效果](/assets/images/learning/spring/springboot/spring-boot-cacheable-redis-expire-time-solution/18ff7c59114b5bed0133b7dbfc453e73.png)

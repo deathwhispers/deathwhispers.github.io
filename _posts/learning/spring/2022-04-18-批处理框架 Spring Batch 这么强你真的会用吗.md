@@ -271,7 +271,7 @@ public interface BlogMapper {
 
 首先我们按照咱们上面的图来看，里面包含内容有：
 
-```plain text
+```text
 JobRepository job的注册/存储器
 JobLauncher job的执行器
 Job job任务，包含一个或多个Step
@@ -794,7 +794,7 @@ public class TestController {
 
 那么基于我们上边的整合，我们已经实现了
 
-```plain text
+```text
 JobRepository job的注册/存储器
 JobLauncher job的执行器
 Job job任务，包含一个或多个Step

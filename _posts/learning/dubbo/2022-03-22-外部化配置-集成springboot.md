@@ -142,7 +142,7 @@ Statistic 统计代码量
 
 当然，考虑到准确性，胖友需要手动 cd 到每个 Maven 项目的 src/main/java 目录下，以达到排除单元测试的代码量。
 
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/48c3e135d89f3d8d12acd270b04d7616.jpg)
+![Shell脚本统计代码量](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/48c3e135d89f3d8d12acd270b04d7616.jpg)
 
 Shell 脚本统计代码量
 
@@ -229,7 +229,7 @@ dubbo-spring-boot-autoconfigure
 
 模块，所有类如下图：
 
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/c0e16da71f0dbc2dde1253629d32b825.jpg)
+![dubbo-spring-boot-autoconfigure模块](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/c0e16da71f0dbc2dde1253629d32b825.jpg)
 
 `dubbo-spring-boot-autoconfigure` 模块
 
@@ -368,7 +368,7 @@ protected static class MultipleDubboConfigConfiguration {
     - 无任何条件，所以会创建。
     - 引入了单个 Dubbo 配置绑定 Bean 的配置。即配置文件如下属性：
 
-```plain text
+```text
 dubbo.application
 dubbo.module
 dubbo.registry
@@ -378,9 +378,8 @@ dubbo.provider
 dubbo.consumer
 ```
 
-```plain text
-    * <font style="color:rgb(51, 51, 51);">~</font>
-```
+```text
+    * ~```
 
 - MultipleDubboConfigConfiguration 对应
 @EnableDubboConfig(multiple = true)
@@ -392,7 +391,7 @@ dubbo.consumer
 ，所以也会创建。
     - 引入了多个 Dubbo 配置绑定 Bean 的配置。即配置文件如下属性：
 
-```plain text
+```text
 dubbo.applications
 dubbo.modules
 dubbo.registries
@@ -402,9 +401,8 @@ dubbo.providers
 dubbo.consumers
 ```
 
-```plain text
-    * <font style="color:rgb(51, 51, 51);">~</font>
-```
+```text
+    * ~```
 
 ## 4.2 RelaxedDubboConfigBinder
 
@@ -444,7 +442,7 @@ public <C extends AbstractConfig> void bind(String prefix, C dubboConfig) {
 处，调用
 ConfigurationPropertySources#from(Iterable<PropertySource<?>> sources)
 方法，转换成 ConfigurationPropertySource 数组。上述两个变量的值，如下图所示：
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/00457575d1609190af094196016846fd.jpg)
+![configurationPropertySources属性](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/00457575d1609190af094196016846fd.jpg)
 `configurationPropertySources` 属性
 - <2>
 处，调用
@@ -477,9 +475,8 @@ private BindHandler getBindHandler() {
 }
 `````
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">关于 BindHandler 类，胖友不用深究，只要知道如下即可。</font><font style="color:rgb(51, 51, 51);">有时候，绑定时可能需要实现额外的逻辑，而BindHandler接口提供了一个很好的方法来实现这一点。 每个BindHandler都可以实现onStart，onSuccess，onFailure和onFinish方法来覆盖行为。</font><font style="color:rgb(51, 51, 51);">Spring Boot提供了一些处理程序，主要用于支持现有的@ConfigurationProperties绑定。 例如，ValidationBindHandler可用于对绑定对象应用Validator验证。</font>
-```
+```text
+- 关于 BindHandler 类，胖友不用深究，只要知道如下即可。</font>有时候，绑定时可能需要实现额外的逻辑，而BindHandler接口提供了一个很好的方法来实现这一点。 每个BindHandler都可以实现onStart，onSuccess，onFailure和onFinish方法来覆盖行为。</font>Spring Boot提供了一些处理程序，主要用于支持现有的@ConfigurationProperties绑定。 例如，ValidationBindHandler可用于对绑定对象应用Validator验证。```
 
 - <3.3>
 处，调用
@@ -487,7 +484,7 @@ Binder#bind(String name, Bindable target, BindHandler handler)
 方法，将配置中，指定前缀（
 prefix
 ）的属性，注入到 AbstractConfig 配置对象中。例如下图：
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/c5b1dbd3c9ffe85ae8c4e9cb0f9ad0c7.jpg)
+![dubboConfig属性](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/c5b1dbd3c9ffe85ae8c4e9cb0f9ad0c7.jpg)
 `dubboConfig` 属性
 
 如下开始，是 env 包下。
@@ -496,7 +493,7 @@ prefix
 
 com.alibaba.boot.dubbo.env.DubboDefaultPropertiesEnvironmentPostProcessor ，实现 EnvironmentPostProcessor、Ordered 接口，生成 Dubbo 默认的配置，添加到 environment 中。而需要生成的 Dubbo 默认的配置如下：
 
-```plain text
+```text
 # 直接复用 spring.application.name
 dubbo.application.name=
 # 默认为 true
@@ -597,9 +594,8 @@ private void setDubboApplicationQosEnableProperty(Map<String, Object> defaultPro
 }
 ``````
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">虽然比较长，但是比较简单。</font>
-```
+```text
+- 虽然比较长，但是比较简单。```
 
 - <2>
 处，有 Dubbo 默认配置，则添加到
@@ -636,9 +632,8 @@ private void addOrReplace(MutablePropertySources propertySources, Map<String, Ob
 }
 ``````
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">分成两种情况，也比较简单。胖友自己瞅瞅~</font>
-```
+```text
+- 分成两种情况，也比较简单。胖友自己瞅瞅~```
 
 如下开始，是 context.event 包下。
 
@@ -828,9 +823,8 @@ public static SortedMap<String, Object> filterDubboProperties(ConfigurableEnviro
 }
 ``````
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">其中，</font><font style="color:rgb(51, 51, 51);">EnvironmentUtils#extractProperties(ConfigurableEnvironment environment)</font><font style="color:rgb(51, 51, 51);"> 方法，获得所有的配置。考虑到篇幅就不赘述，艿艿已经添加注释，点击 </font>[链接](https://github.com/YunaiV/incubator-dubbo-spring-boot-project/blob/master/dubbo-spring-boot-autoconfigure/src/main/java/com/alibaba/boot/dubbo/util/EnvironmentUtils.java)<font style="color:rgb(51, 51, 51);"> 查看。</font>
-```
+```text
+- 其中，</font>EnvironmentUtils#extractProperties(ConfigurableEnvironment environment)</font> 方法，获得所有的配置。考虑到篇幅就不赘述，艿艿已经添加注释，点击 </font>[链接](https://github.com/YunaiV/incubator-dubbo-spring-boot-project/blob/master/dubbo-spring-boot-autoconfigure/src/main/java/com/alibaba/boot/dubbo/util/EnvironmentUtils.java) 查看。```
 
 - <2.2>
 处，调用 Dubbo 的
@@ -978,10 +972,8 @@ private void executeMutually(Runnable runnable) {
 }
 ``````
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">基于 Lock + Condition 实现等待通知。</font>
-- <font style="color:rgb(51, 51, 51);">#executeMutually(Runnable runnable)</font><font style="color:rgb(51, 51, 51);"> 方法，被 </font><font style="color:rgb(51, 51, 51);">executorService</font><font style="color:rgb(51, 51, 51);"> 创建任务所调用。而该任务因为调用 </font><font style="color:rgb(51, 51, 51);">Condition#await()</font><font style="color:rgb(51, 51, 51);"> 方法，阻塞等待。那么此时，JVM 至少有一个该用户线程未运行结束，那么此时 </font>[JVM 关闭的条件](https://blog.csdn.net/hongxingxiaonan/article/details/50528041)<font style="color:rgb(51, 51, 51);"> 不被满足，所以就不会退出。</font>
-```
+```text
+- 基于 Lock + Condition 实现等待通知。- #executeMutually(Runnable runnable)</font> 方法，被 </font>executorService</font> 创建任务所调用。而该任务因为调用 </font>Condition#await()</font> 方法，阻塞等待。那么此时，JVM 至少有一个该用户线程未运行结束，那么此时 </font>[JVM 关闭的条件](https://blog.csdn.net/hongxingxiaonan/article/details/50528041) 不被满足，所以就不会退出。```
 
 ### 4.6.3.2 onApplicationReadyEvent
 
@@ -1020,9 +1012,8 @@ protected void release() {
 }
 ``````
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">通过调用 </font><font style="color:rgb(51, 51, 51);">Condition#signalAll()</font><font style="color:rgb(51, 51, 51);"> 方法，通知 Condition 。从而在 </font>[「4.6.3.1 onApplicationReadyEvent」](http://svip.iocoder.cn/Dubbo/configuration-Externalized/#)<font style="color:rgb(51, 51, 51);"> 中，启动的线程的阻塞，进行停止。</font>
-```
+```text
+- 通过调用 </font>Condition#signalAll()</font> 方法，通知 Condition 。从而在 </font>[「4.6.3.1 onApplicationReadyEvent」](http://svip.iocoder.cn/Dubbo/configuration-Externalized/#) 中，启动的线程的阻塞，进行停止。```
 
 - <2>
 处，调用
@@ -1047,7 +1038,7 @@ dubbo-spring-boot-autoconfigure
 
 模块，所有类如下图：
 
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/427508d71d625be78192e3c6d292df72.jpg)
+![dubbo-spring-boot-actuator模块](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/427508d71d625be78192e3c6d292df72.jpg)
 
 `dubbo-spring-boot-autoconfigure` 模块
 
@@ -1076,7 +1067,7 @@ dubbo-spring-boot-autoconfigure
 
 如果胖友使用的是 Spring Boot 2，有一个坑要注意，因为 [《Spring Boot 2.0 的 Actuator 只暴露 health 和 info》](https://blog.csdn.net/qq_20367813/article/details/79154981) ，所以需要手动在配置文件中，添加要开启的 Dubbo Endpoint 。例如：
 
-```plain text
+```text
 # application.properties
 
 management.endpoints.web.exposure.include=health,info,dubbo,dubboconfigs
@@ -1150,7 +1141,7 @@ public class DubboEndpointsAutoConfiguration {
 "classpath:/META-INF/dubbo-endpoins-default.properties"
 配置文件。代码如下：
 
-```plain text
+```text
 # dubbo-endpoins-default.properties
 
 # Dubbo Endpoints Default Properties is loaded by @PropertySource with low order,
@@ -1344,7 +1335,7 @@ protected void doHealthCheck(Health.Builder builder) throws Exception {
 - 最终返回
 builder
 的结果，如下图：
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/15f333b25b99b7bbdf197c1db5e900b3.jpg)
+![builder结果](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/15f333b25b99b7bbdf197c1db5e900b3.jpg)
 `builder` 结果
 
 ### 5.4.2 resolveStatusCheckerNamesMap
@@ -1488,7 +1479,7 @@ private Map<String, String> resolveStatusCheckerNamesMapFromProviderConfig() {
 `````
 
 - 最终的结果，示例如下图：
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/b977e3d98dd9f134f9ed4b0964479933.jpg)
+![statusCheckerNamesMap属性](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/b977e3d98dd9f134f9ed4b0964479933.jpg)
 `statusCheckerNamesMap` 属性
 
 如下开始，是 endpoint 包下。
@@ -1562,7 +1553,7 @@ private static boolean isSimpleType(Class<?> type) {
 ``````
 
 - 目的是读取 Bean 的基本属性。示例如下图：
-![](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/d3cfc9df3464d815c14942f34fc7b3b0.jpg)
+![beanMetadata结果](/assets/images/learning/dubbo/dubbo-configuration-externalized-springboot/d3cfc9df3464d815c14942f34fc7b3b0.jpg)
 `beanMetadata` 结果
 
 ### 5.6.3 getServiceBeansMap

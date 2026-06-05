@@ -41,7 +41,7 @@ FROM 《Spring 源码深度解析》P16 页
 
 定义从资源文件加载到转换为 Document 的功能。
 
-```plain text
+```text
 java public interface DocumentLoader {      Document loadDocument(         InputSource inputSource, EntityResolver entityResolver,         ErrorHandler errorHandler, int validationMode, boolean namespaceAware)     throws Exception;  }
 ```
 
@@ -147,7 +147,7 @@ ErrorHandler errorHandler)throws ParserConfigurationException {
 }
 ```
 
-```plain text
+```text
 - <font style="color:rgb(51, 51, 51);">在 </font><font style="color:rgb(51, 51, 51);"><x></font><font style="color:rgb(51, 51, 51);"> 处，设置 DocumentBuilder 的 </font>**<font style="color:rgb(51, 51, 51);">EntityResolver</font>**<font style="color:rgb(51, 51, 51);"> 属性。关于它，在 </font>[「2. EntityResolver」](http://svip.iocoder.cn/Spring/IoC-load-Document/#)<font style="color:rgb(51, 51, 51);"> 会详细解析。</font>
 ```
 
@@ -294,13 +294,13 @@ null
     - publicId：null
     - systemId：[http://www.springframework.org/schema/beans/spring-beans.xsd](http://www.springframework.org/schema/beans/spring-beans.xsd)
     -
-![08e5f8a505505def17e84becd4f0dbf9](/assets/images/learning/spring/springsourcecode/ioc-get-document-object/08e5f8a505505def17e84becd4f0dbf9.png)
+![XSD验证模式示例](/assets/images/learning/spring/springsourcecode/ioc-get-document-object/08e5f8a505505def17e84becd4f0dbf9.png)
 XSD 验证模式
 - DTD 验证模式
     - publicId：-//SPRING//DTD BEAN 2.0//EN
     - systemId：[http://www.springframework.org/dtd/spring-beans.dtd](http://www.springframework.org/dtd/spring-beans.dtd)
     -
-![8f77d23019c10f4ac026968ce19067ef](/assets/images/learning/spring/springsourcecode/ioc-get-document-object/8f77d23019c10f4ac026968ce19067ef.png)
+![DTD验证模式示例](/assets/images/learning/spring/springsourcecode/ioc-get-document-object/8f77d23019c10f4ac026968ce19067ef.png)
 DTD 验证模式
 
 ## 2.3 DelegatingEntityResolver
@@ -459,8 +459,8 @@ private Map<String, String> getSchemaMappings() {
 }
 ```
 
-```plain text
-- <font style="color:rgb(0, 0, 0);">映射表如下（</font>**<font style="color:rgb(0, 0, 0);">部分</font>**<font style="color:rgb(0, 0, 0);">）:</font>![](/assets/images/learning/spring/springsourcecode/ioc-get-document-object/4dba22abb6ce4bc1a7721afb2cb53567.png)<font style="color:rgb(153, 153, 153);">映射表</font>
+```text
+- <font style="color:rgb(0, 0, 0);">映射表如下（</font>**<font style="color:rgb(0, 0, 0);">部分</font>**<font style="color:rgb(0, 0, 0);">）:</font>![PluggableSchemaResolver映射表](/assets/images/learning/spring/springsourcecode/ioc-get-document-object/4dba22abb6ce4bc1a7721afb2cb53567.png)<font style="color:rgb(153, 153, 153);">映射表</font>
 ```
 
 - 然后，根据传入的
@@ -563,7 +563,7 @@ public class MyResolver implements EntityResolver {
 
 首先，我们将 "spring-student.xml" 文件中的 XSD 声明的地址改掉，如下：
 
-![882e730ac463e3007c5f3c5cde8380bc](/assets/images/learning/spring/springsourcecode/ioc-get-document-object/882e730ac463e3007c5f3c5cde8380bc.png)
+![spring-student.xml文件XSD声明修改](/assets/images/learning/spring/springsourcecode/ioc-get-document-object/882e730ac463e3007c5f3c5cde8380bc.png)
 
 spring-student.xml
 

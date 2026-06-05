@@ -21,7 +21,7 @@ updated: 2025-03-12 18:26
 
 在流处理之前，数据通常存储在数据库，文件系统或其他形式的存储系统中。应用程序根据需要查询数据或计算数据。这就是传统的静态数据处理架构。Hadoop 采用 HDFS 进行数据存储，采用 MapReduce 进行数据查询或分析，这就是典型的静态数据处理架构。
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-and-stream-processing/697c05f87d458d5da42a37b9dad86769.png)
+![静态数据处理架构](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-and-stream-processing/697c05f87d458d5da42a37b9dad86769.png)
 
 ### 1.2 流处理
 
@@ -31,7 +31,7 @@ updated: 2025-03-12 18:26
 
 接收和发送数据流并执行应用程序或分析逻辑的系统称为**流处理器**。流处理器的基本职责是确保数据有效流动，同时具备可扩展性和容错能力，Storm 和 Flink 就是其代表性的实现。
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-and-stream-processing/a665b7f13976197c17cbaad6d9645295.png)
+![流处理架构](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-and-stream-processing/a665b7f13976197c17cbaad6d9645295.png)
 
 流处理带来了静态数据处理所不具备的众多优点：
 
@@ -56,13 +56,13 @@ Spark Streaming 是 Spark 的一个子模块，用于快速构建可扩展，高
 - 能够和 Spark 其他模块无缝集成，将流处理与批处理完美结合；
 - Spark Streaming 可以从 HDFS，Flume，Kafka，Twitter 和 ZeroMQ 读取数据，也支持自定义数据源。
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-and-stream-processing/24a3ba8f78225f0ad138c0fdd8c09daa.png)
+![Spark Streaming 架构](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-and-stream-processing/24a3ba8f78225f0ad138c0fdd8c09daa.png)
 
 ### 2.2 DStream
 
 Spark Streaming 提供称为离散流 (DStream) 的高级抽象，用于表示连续的数据流。 DStream 可以从来自 Kafka，Flume 和 Kinesis 等数据源的输入数据流创建，也可以由其他 DStream 转化而来。**在内部，DStream 表示为一系列 RDD**。
 
-![](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-and-stream-processing/97be2fa2f5183fc8eaab940195fbc0f0.png)
+![DStream 与 RDD 关系](/assets/images/learning/bigdata/sparkstreaming/spark-streaming-and-stream-processing/97be2fa2f5183fc8eaab940195fbc0f0.png)
 
 ### 2.3 Spark & Storm & Flink
 

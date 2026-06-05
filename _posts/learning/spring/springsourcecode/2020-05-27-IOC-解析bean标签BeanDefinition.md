@@ -123,7 +123,7 @@ public interface AttributeAccessor {
 #getSource()
 方法来获取。代码如下：
 
-```plain text
+```java
 public interface BeanMetadataElement {
 
     @Nullable
@@ -136,7 +136,7 @@ public interface BeanMetadataElement {
 
 BeanDefinition 子关系，结构如下图：
 
-![6abb56b3651c0eee105c510bb9fc6473](/assets/images/learning/spring/springsourcecode/ioc-parse-bean-tag-bean-definition/6abb56b3651c0eee105c510bb9fc6473.png)
+![BeanDefinition子关系类图](/assets/images/learning/spring/springsourcecode/ioc-parse-bean-tag-bean-definition/6abb56b3651c0eee105c510bb9fc6473.png)
 
 类图
 
@@ -197,9 +197,7 @@ ClassLoader classLoader) throws ClassNotFoundException {
 
 ```
 
-```plain text
-- <font style="color:rgb(51, 51, 51);">该方法主要是，创建 GenericBeanDefinition 对象，并设置 </font><font style="color:rgb(51, 51, 51);">parentName</font><font style="color:rgb(51, 51, 51);">、</font><font style="color:rgb(51, 51, 51);">className</font><font style="color:rgb(51, 51, 51);">、</font><font style="color:rgb(51, 51, 51);">beanClass</font><font style="color:rgb(51, 51, 51);"> 属性。</font>
-```
+- 该方法主要是，创建 GenericBeanDefinition 对象，并设置 `parentName`、`className`、`beanClass` 属性。
 
 ## 2.2 parseBeanDefinitionAttributes
 

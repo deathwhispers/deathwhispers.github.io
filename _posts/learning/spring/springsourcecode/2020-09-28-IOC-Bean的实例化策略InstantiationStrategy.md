@@ -206,7 +206,7 @@ String beanName, BeanFactory owner) {
 
 其中，#parseLookupOverrideSubElements(…) 源码如下：
 
-![4cdb7d0fafb164c00feb74680948e785](/assets/images/learning/spring/springsourcecode/ioc-bean-instantiation-strategy-instantiationstrategy/4cdb7d0fafb164c00feb74680948e785.jpeg)
+![parseLookupOverrideSubElements方法源码](/assets/images/learning/spring/springsourcecode/ioc-bean-instantiation-strategy-instantiationstrategy/4cdb7d0fafb164c00feb74680948e785.jpeg)
 
 parseLookupOverrideSubElements
 
@@ -286,7 +286,7 @@ return instance;
 
 ```
 
-```plain text
+```text
 - <font style="color:rgb(51, 51, 51);">在</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);"><x></font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">处，调用</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">#createEnhancedSubclass(RootBeanDefinition beanDefinition)</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">方法，为提供的 BeanDefinition 创建 bean 类的增强子类。代码如下：</font>
 ```
 
@@ -309,7 +309,7 @@ createEnhancedSubclass(RootBeanDefinition beanDefinition) {
 
 ```
 
-```plain text
+```text
     * <font style="color:rgb(51, 51, 51);">CGLIB 的标准 API 的使用。</font>
 - <font style="color:rgb(51, 51, 51);"><y></font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">处，获取子类增强</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">subclass</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">后，如果 Constructor 实例</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">ctr</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">为空，则调用默认构造函数（</font><font style="color:rgb(51, 51, 51);">BeanUtils#instantiateClass(subclass)</font><font style="color:rgb(51, 51, 51);">）来实例化类，否则则根据构造函数类型获取具体的构造器，调用</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">Constructor#newInstance(args)</font><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">方法来实例化类。</font>
 ```
@@ -378,7 +378,7 @@ static final Class<?>[] CALLBACK_TYPES = new Class<?>[] {
 
 ```
 
-```plain text
+```text
 - <font style="color:rgb(51, 51, 51);">这里又定义了两个熟悉的拦截器 ：LookupOverrideMethodInterceptor 和 ReplaceOverrideMethodInterceptor，两个拦截器分别对应两个不同的 callback 业务。详细解析，见</font><font style="color:rgb(51, 51, 51);"> </font>[<font style="color:rgb(0, 0, 0);">「4.2 LookupOverrideMethodInterceptor」</font>](http://svip.iocoder.cn/Spring/IoC-InstantiationStrategy/#)<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">和</font><font style="color:rgb(51, 51, 51);"> </font>[<font style="color:rgb(0, 0, 0);">「4.3 ReplaceOverrideMethodInterceptor」</font>](http://svip.iocoder.cn/Spring/IoC-InstantiationStrategy/#)<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">中。</font>
 ```
 

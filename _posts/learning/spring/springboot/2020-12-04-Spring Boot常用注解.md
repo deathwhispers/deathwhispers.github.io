@@ -56,8 +56,8 @@ public class Application {
 
 public static void main(String[] args) {
 
-```plain text
- SpringApplication.run(Application.class, args);
+```text
+SpringApplication.run(Application.class, args);
 ```
 
 }
@@ -72,8 +72,8 @@ public static void main(String[] args) {
 
 public String test(){
 
-```plain text
- <font style="color:rgb(0, 0, 255);">return</font>"ok";
+```text
+return "ok";
 ```
 
 }
@@ -218,7 +218,7 @@ String a =request.getParameter("a")。
 
 2.@Column 标注的常用属性是name，用于设置映射数据库表的列名。此外，该标注还包含其它多个属性，如：unique、nullable、length、precision等。具体如下：
 
-![51e409b11aa51c150090697429a953ed](/assets/images/learning/spring/springboot/spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
+![Column注解属性说明](/assets/images/learning/spring/springboot/spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
 
 1name属性：name属性定义了被标注字段在数据库表中所对应字段的名称
 
@@ -250,7 +250,7 @@ String a =request.getParameter("a")。
 
 4.precision和scale属性只在BigDecimal类型中有效
 
-![51e409b11aa51c150090697429a953ed](assets/images/learning/spring/springboot/2025-11-28-spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
+![Column标注属性说明](/assets/images/learning/spring/springboot/spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
 
 3.@Column 标注的columnDefinition属性: 表示该字段在数据库中的实际类型.通常 ORM 框架可以根据属性类型自动判断数据库中字段的类型,但是对于Date类型仍无法确定数据库中字段类型究竟是DATE,TIME还是TIMESTAMP.此外,String的默认映射类型为VARCHAR,如果要将 String 类型映射到特定数据库的 BLOB 或TEXT字段类型.
 
@@ -262,7 +262,7 @@ String a =request.getParameter("a")。
 
 扩展：
 
-![51e409b11aa51c150090697429a953ed](assets/images/learning/spring/springboot/2025-11-28-spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
+![Lombok注解扩展说明](/assets/images/learning/spring/springboot/spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
 
 1 @Data：注解在类上；提供类所有属性的 getting 和 setting 方法，此外还提供了equals、canEqual、hashCode、toString 方法
 
@@ -308,7 +308,7 @@ String a =request.getParameter("a")。
 
 22 @val:注解在属性上，如果注解了，就是设置为final类型，可查看源码的注释知道
 
-![51e409b11aa51c150090697429a953ed](assets/images/learning/spring/springboot/2025-11-28-spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
+![Lombok注解说明](/assets/images/learning/spring/springboot/spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
 
 ### @PreUpdate和@PrePersist
 
@@ -336,7 +336,7 @@ String a =request.getParameter("a")。
 
 ## 实体Bean生命周期的回调事件
 
-![51e409b11aa51c150090697429a953ed](assets/images/learning/spring/springboot/2025-11-28-spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
+![实体Bean生命周期回调事件说明](/assets/images/learning/spring/springboot/spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
 
 方法的标注： @PrePersist @PostPersist @PreRemove @PostRemove @PreUpdate @PostUpdate @PostLoad 。
 
@@ -378,9 +378,9 @@ pre 表示在状态切换前触发，post 则表示在切换后触发。
 
 @javax.persistence.PostRemove：删除后。
 
-![51e409b11aa51c150090697429a953ed](assets/images/learning/spring/springboot/2025-11-28-spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
+![JPA生命周期注解说明](/assets/images/learning/spring/springboot/spring-boot-common-annotations/51e409b11aa51c150090697429a953ed.gif)
 
-![b7b34fa359d55af63f8d2257b52bb9ce](/assets/images/learning/spring/springboot/spring-boot-common-annotations/b7b34fa359d55af63f8d2257b52bb9ce.jpg)
+![JPA实体生命周期事件流程图](/assets/images/learning/spring/springboot/spring-boot-common-annotations/b7b34fa359d55af63f8d2257b52bb9ce.jpg)
 
 **1）数据库查询**
 

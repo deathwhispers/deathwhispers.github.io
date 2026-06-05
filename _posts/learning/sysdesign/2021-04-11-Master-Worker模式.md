@@ -25,18 +25,18 @@ Master进程负责接收和分配任务，Worker负责处理子任务。当各�
 
 其好处是能将一个大任务分解若干个小任务，并行执行，从而提高系统的吞吐量。
 
-![](/assets/images/learning/sysdesign/master-worker-pattern/8723ac595edd1de7f232714af5322c03.png)
+![Master-Worker模式架构图](/assets/images/learning/sysdesign/master-worker-pattern/8723ac595edd1de7f232714af5322c03.png)
 
-![](/assets/images/learning/sysdesign/master-worker-pattern/3b75d5ccc0c986fa369ba0c336d0af95.png)
+![Master-Worker模式流程图](/assets/images/learning/sysdesign/master-worker-pattern/3b75d5ccc0c986fa369ba0c336d0af95.png)
 
 示例demo：
 
-![](/assets/images/learning/sysdesign/master-worker-pattern/bfc6d86460a47bd884309f946e43b8a1.png)
+![Master-Worker模式示例1](/assets/images/learning/sysdesign/master-worker-pattern/bfc6d86460a47bd884309f946e43b8a1.png)
 
-![](/assets/images/learning/sysdesign/master-worker-pattern/96c943d8396680e58ecf045e0ff4f9bb.png)
+![Master-Worker模式示例2](/assets/images/learning/sysdesign/master-worker-pattern/96c943d8396680e58ecf045e0ff4f9bb.png)
 
-![](/assets/images/learning/sysdesign/master-worker-pattern/94575b7e77416252fef7b38d96ecf109.png)
+![Master-Worker模式示例3](/assets/images/learning/sysdesign/master-worker-pattern/94575b7e77416252fef7b38d96ecf109.png)
 
-![](/assets/images/learning/sysdesign/master-worker-pattern/2659e06494105036934a43df867a8684.png)
+![Master-Worker模式示例4](/assets/images/learning/sysdesign/master-worker-pattern/2659e06494105036934a43df867a8684.png)
 
-![](/assets/images/learning/sysdesign/master-worker-pattern/339a6c06fc99df547cb4c902ab73d1ef.png)
+![Master-Worker模式示例5](/assets/images/learning/sysdesign/master-worker-pattern/339a6c06fc99df547cb4c902ab73d1ef.png)

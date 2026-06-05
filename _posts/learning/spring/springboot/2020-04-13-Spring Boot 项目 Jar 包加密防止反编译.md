@@ -75,7 +75,7 @@ java -javaagent:xxx-encrypted.jar -jar xxx-encrypted.jar
 
 有密码启动
 
-```plain text
+```text
 java -javaagent:xxx-encrypted.jar='-pwd=密码' -jar xxx-encrypted.jar
 ```
 
@@ -87,17 +87,17 @@ java -javaagent:xxx-encrypted.jar='-pwd=密码' -jar xxx-encrypted.jar
 
 启动过程中解密class,完全内存解密,不留下任何解密后的文件
 
-![b461e4637b5c6dead4e4be3560941867](/assets/images/learning/spring/springboot/spring-boot-jar-encrypt/b461e4637b5c6dead4e4be3560941867.jpeg)
+![反编译效果](/assets/images/learning/spring/springboot/spring-boot-jar-encrypt/b461e4637b5c6dead4e4be3560941867.jpeg)
 
 yml配置文件留下空白
 
-![527b5e62a48c86ac2034b0fe1206ba8f](/assets/images/learning/spring/springboot/spring-boot-jar-encrypt/527b5e62a48c86ac2034b0fe1206ba8f.jpeg)
+![yml配置文件加密效果](/assets/images/learning/spring/springboot/spring-boot-jar-encrypt/527b5e62a48c86ac2034b0fe1206ba8f.jpeg)
 
 ## [6 绑定机器启动](https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng%3D%3D&mid=2247487551&idx=1&sn=18f64ba49f3f0f9d8be9d1fdef8857d9&scene=21#wechat_redirect)
 
 下载到**classfinal-fatjar-1.2.1.jar** [2]依赖，在当前依赖下cmd执行java -jar classfinal-fatjar-1.2.1.jar -C命令，会自动生成一串机器码
 
-![62aef516a3ae31b3bcd03944c6b1f23d](/assets/images/learning/spring/springboot/spring-boot-jar-encrypt/62aef516a3ae31b3bcd03944c6b1f23d.jpeg)
+![机器码生成结果](/assets/images/learning/spring/springboot/spring-boot-jar-encrypt/62aef516a3ae31b3bcd03944c6b1f23d.jpeg)
 
 将此生成好的机器码，放到maven插件中的code里面即可。这样，打包好的项目只能在生成机器码的机器运行，其他机器则启动不了项目。
 

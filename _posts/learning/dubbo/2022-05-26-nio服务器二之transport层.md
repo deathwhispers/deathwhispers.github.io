@@ -24,7 +24,7 @@ updated: 2022-05-26 18:33
 
 涉及的类图如下：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-transport/773e08aa9257ced848b427d8f982ea06.png "类图")
+![类图](/assets/images/learning/dubbo/dubbo-nio-server-transport/773e08aa9257ced848b427d8f982ea06.png)
 
 - 白色部分，为通用接口。
 - 蓝色部分，为 `transport` 包下的类。
@@ -506,7 +506,7 @@ public static URL setThreadName(URL url, String defaultName) {
 
 **子类类图**
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-transport/bffacd2603a103238426b398ed38afd9.png "类图")
+![Client子类类图](/assets/images/learning/dubbo/dubbo-nio-server-transport/bffacd2603a103238426b398ed38afd9.png)
 
 ## 3.2 ClientDelegate
 
@@ -590,7 +590,7 @@ public AbstractServer(URL url, ChannelHandler handler) throws RemotingException 
 
 - 第 24 至 36 行：从 URL 中，加载 `localAddress`、`bindAddress`、`accepts`、`idleTimeout` 配置项。比较难理解的，可能是两个地址属性，如下是比例提供的一个例子：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-transport/2fdd09a2501dea83c3aa5de34cf4d482.png "例子")
+![地址配置示例](/assets/images/learning/dubbo/dubbo-nio-server-transport/2fdd09a2501dea83c3aa5de34cf4d482.png)
 
     - 配置项可在 [#reset(url)](https://github.com/YunaiV/dubbo/blob/31b3f1e868ed2d62c97a26b5cd233a921ce2205a/dubbo-remoting/dubbo-remoting-api/src/main/java/com/alibaba/dubbo/remoting/transport/AbstractServer.java#L80-L129) 方法中，重置属性。
 - 第 38 至 47 行：调用 `#doOpen()` 方法，开启服务器。
@@ -651,7 +651,7 @@ public void send(Object message, boolean sent) throws RemotingException {
 
 **子类类图**
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-transport/9f1105bb5b20d5b0830f89e5575ba799.png "类图")
+![Server子类类图](/assets/images/learning/dubbo/dubbo-nio-server-transport/9f1105bb5b20d5b0830f89e5575ba799.png)
 
 ## 4.2 ServerDelegate
 
@@ -684,7 +684,7 @@ public void send(Object message, boolean sent) throws RemotingException {
 
 **子类类图**
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-transport/c97c05aca83b5eb2e04929bcbb4b9b44.png "类图")
+![Channel子类类图](/assets/images/learning/dubbo/dubbo-nio-server-transport/c97c05aca83b5eb2e04929bcbb4b9b44.png)
 
 ## 5.2 ChannelDelegate
 
@@ -921,7 +921,7 @@ FROM [《Dubbo 用户指南 —— 线程模型》](http://dubbo.apache.org/zh-c
 
 **子类类图**
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-transport/a683269f616c18e47c202302f7aaaf15.png "类图")
+![Dispatcher子类类图](/assets/images/learning/dubbo/dubbo-nio-server-transport/a683269f616c18e47c202302f7aaaf15.png)
 
 ### 8.2.1 AllDispatcher
 
@@ -1049,7 +1049,7 @@ protected static final ExecutorService SHARED_EXECUTOR = Executors.newCachedThre
 
 **子类类图**
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-transport/00752335eee5e78bc61ea1d2c4e24819.png "类图")
+![WrappedChannelHandler子类类图](/assets/images/learning/dubbo/dubbo-nio-server-transport/00752335eee5e78bc61ea1d2c4e24819.png)
 
 # 9. Codec
 
@@ -1095,7 +1095,7 @@ static {
 
 Dubbo 提供了多种序列化方式，此处初始化结果，如下图：
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-transport/b14d716ce7dc08c9c6bb22002d039b06.png "SERIALIZATION 集合")
+![序列化方式集合](/assets/images/learning/dubbo/dubbo-nio-server-transport/b14d716ce7dc08c9c6bb22002d039b06.png)
 
 **查找 Serialization 对象**
 
@@ -1129,7 +1129,7 @@ com.alibaba.dubbo.remoting.transport.AbstractCodec，实现 Codec**2** 接口，
 
 **子类类图**
 
-![](/assets/images/learning/dubbo/dubbo-nio-server-transport/250514e16a70e81b3b14644c447ec4de.png "类图")
+![Codec子类类图](/assets/images/learning/dubbo/dubbo-nio-server-transport/250514e16a70e81b3b14644c447ec4de.png)
 
 编解码器的实现，通过**继承**的方式，获得更多的功能。每一个 Codec2 类实现对不同消息的编解码。通过**协议头**来判断，具体使用哪个编解码逻辑。听起来有点绕，我们来看一段简化 ExchangeCodec 的 #decode(...) 例子：
 

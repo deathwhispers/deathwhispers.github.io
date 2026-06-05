@@ -316,9 +316,7 @@ routers
 非空，调用
 #setRouters(routers)
 方法，设置路由规则。
-- 第 33 至 41 行：合并配置规则，到 [《精尽 Dubbo 源码解析 —— 集群容错（六）之 Configurator 实现》](http://svip.iocoder.cn/Dubbo/cluster-6-impl-configurator?self=)[「4.1.2 mergeUrl」](http://svip.iocoder.cn/Dubbo/cluster-3-impl-directory/#)
-directoryUrl
-中，形成
+- 第 33 至 41 行：合并配置规则，到 directoryUrl 中，形成详见 [《精尽 Dubbo 源码解析 —— 集群容错（六）之 Configurator 实现》](http://svip.iocoder.cn/Dubbo/cluster-6-impl-configurator?self=) 的 [「4.1.2 mergeUrl」](http://svip.iocoder.cn/Dubbo/cluster-3-impl-directory/#)。
 overrideDirectoryUrl
 变量。详细解析，见
 的
@@ -809,11 +807,7 @@ methodInvokerMap
 ---
 
 ```java
-- <font style="color:rgb(51, 51, 51);">通过这样的方式，调用到的服务提供者的 </font><font style="color:rgb(51, 51, 51);">DemoServiceImpl#hello01(name)</font><font style="color:rgb(51, 51, 51);"> 方法。</font>
-- <font style="color:rgb(51, 51, 51);">如果使用该</font>**<font style="color:rgb(51, 51, 51);">特性</font>**<font style="color:rgb(51, 51, 51);">，注意避免出现</font>**<font style="color:rgb(51, 51, 51);">无关</font>**<font style="color:rgb(51, 51, 51);">的几个方法，例如 </font><font style="color:rgb(51, 51, 51);">#hello(name)</font><font style="color:rgb(51, 51, 51);"> 和 </font><font style="color:rgb(51, 51, 51);">#hello01(name)</font><font style="color:rgb(51, 51, 51);"> 是毫无关系的两个方法，而我真的想调用 </font><font style="color:rgb(51, 51, 51);">#hello(name)</font><font style="color:rgb(51, 51, 51);"> 方法，结果调用到了 </font><font style="color:rgb(51, 51, 51);">#hello01(name)</font><font style="color:rgb(51, 51, 51);"> 方法。</font>
-- <font style="color:rgb(51, 51, 51);">如下是 Dubbo Commiter </font>**<font style="color:rgb(51, 51, 51);">诣极</font>**<font style="color:rgb(51, 51, 51);"> 的解惑，非常感谢。</font><font style="color:rgb(51, 51, 51);">动态的方法名本身就是接口中已经定义的</font><font style="color:rgb(51, 51, 51);">举个例子吧借口定义了 method, method1,method2， 如果我发起rpc调用method(1, 2, 3), 这个时候会去查找方法method1的invokers， 如果我这个时候发起rpc method(2, 1, 3), 这个时候会去查找方法method2的invokers， 然后调用invokers的method方法</font>
-    * <font style="color:rgb(51, 51, 51);">另外，经过沟通，【第 19 行】的 </font><font style="color:rgb(51, 51, 51);">"."</font><font style="color:rgb(51, 51, 51);"> 是个 BUG ，方法里不能包含该字符，因此，笔者改成了【第 20 行】，去掉了 </font><font style="color:rgb(51, 51, 51);">"."</font><font style="color:rgb(51, 51, 51);"> 进行测试。</font>
-```
+- 通过这样的方式，调用到的服务提供者的 </font>DemoServiceImpl#hello01(name)</font> 方法。- 如果使用该</font>**特性</font>**，注意避免出现</font>**无关</font>**的几个方法，例如 </font>#hello(name)</font> 和 </font>#hello01(name)</font> 是毫无关系的两个方法，而我真的想调用 </font>#hello(name)</font> 方法，结果调用到了 </font>#hello01(name)</font> 方法。- 如下是 Dubbo Commiter </font>**诣极</font>** 的解惑，非常感谢。</font>动态的方法名本身就是接口中已经定义的</font>举个例子吧借口定义了 method, method1,method2， 如果我发起rpc调用method(1, 2, 3), 这个时候会去查找方法method1的invokers， 如果我这个时候发起rpc method(2, 1, 3), 这个时候会去查找方法method2的invokers， 然后调用invokers的method方法    * 另外，经过沟通，【第 19 行】的 </font>"."</font> 是个 BUG ，方法里不能包含该字符，因此，笔者改成了【第 20 行】，去掉了 </font>"."</font> 进行测试。```
 
 - 第二种，根据**方法名**
 获得 Invoker 集合。一般情况下，都能匹配到。
@@ -880,9 +874,7 @@ cluster=available
 ---
 
 ```java
-    * <font style="color:rgb(51, 51, 51);">即在 </font><font style="color:rgb(51, 51, 51);">"registry"</font><font style="color:rgb(51, 51, 51);"> 配置项中，将自己的 zk 集群放在前面。</font>
-    * <font style="color:rgb(51, 51, 51);">当然，大多数情况下，很少会出现一个机房服务提供者全挂，zk 集群还存活着。</font>
-```
+    * 即在 </font>"registry"</font> 配置项中，将自己的 zk 集群放在前面。    * 当然，大多数情况下，很少会出现一个机房服务提供者全挂，zk 集群还存活着。```
 
 # 6. ClusterUtils
 

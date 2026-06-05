@@ -38,7 +38,7 @@ Spring 环境 & 属性由四个部分组成：PropertySource、PropertyResolver�
 
 下面是整个体系的结构图：
 
-![0f22156c0d3d902cf4cf196c2b94aaa5](/assets/images/learning/spring/springsourcecode/environment-propertysource-propertyresolver-profile/0f22156c0d3d902cf4cf196c2b94aaa5.jpeg)
+![环境与属性整体类图](/assets/images/learning/spring/springsourcecode/environment-propertysource-propertyresolver-profile/0f22156c0d3d902cf4cf196c2b94aaa5.jpeg)
 
 整体类图
 
@@ -50,7 +50,7 @@ Spring 环境 & 属性由四个部分组成：PropertySource、PropertyResolver�
 
 > 属性解析器，用于解析任何基础源的属性的接口
 
-```plain text
+```text
 java // PropertyResolver.java  public interface PropertyResolver {      // 是否包含某个属性     boolean containsProperty(String key);      // 获取属性值 如果找不到返回null     @Nullable     String getProperty(String key);     // 获取属性值，如果找不到返回默认值     String getProperty(String key, String defaultValue);     // 获取指定类型的属性值，找不到返回null     @Nullable     <T> T getProperty(String key, Class<T> targetType);     // 获取指定类型的属性值，找不到返回默认值     <T> T getProperty(String key, Class<T> targetType, T defaultValue);      // 获取属性值，找不到抛出异常IllegalStateException     String getRequiredProperty(String key) throws IllegalStateException;     // 获取指定类型的属性值，找不到抛出异常IllegalStateException     <T> T getRequiredProperty(String key, Class<T> targetType) throws IllegalStateException;      // 替换文本中的占位符（${key}）到属性值，找不到不解析     String resolvePlaceholders(String text);     // 替换文本中的占位符（${key}）到属性值，找不到抛出异常IllegalArgumentException     String resolveRequiredPlaceholders(String text) throws IllegalArgumentException;  }
 ```
 
@@ -58,7 +58,7 @@ java // PropertyResolver.java  public interface PropertyResolver {      // 是�
 
 从 API 上面我们就知道属性解析器 PropertyResolver 的作用了。下面是一个简单的运用。
 
-```plain text
+```text
 java PropertyResolver propertyResolver = new PropertySourcesPropertyResolver(propertySources);  System.out.println(propertyResolver.getProperty("name")); System.out.println(propertyResolver.getProperty("name", "chenssy")); System.out.println(propertyResolver.resolvePlaceholders("my name is  ${name}"));
 ```
 
@@ -78,7 +78,7 @@ java PropertyResolver propertyResolver = new PropertySourcesPropertyResolver(pro
 
 通俗点说就是 ConfigurablePropertyResolver 提供属性值类型转换所需要的 ConversionService。代码如下：
 
-```plain text
+```text
 java // ConfigurablePropertyResolver.java  public interface ConfigurablePropertyResolver extends PropertyResolver {      // 返回执行类型转换时使用的 ConfigurableConversionService     ConfigurableConversionService getConversionService();     // 设置 ConfigurableConversionService     void setConversionService(ConfigurableConversionService conversionService);      // 设置占位符前缀     void setPlaceholderPrefix(String placeholderPrefix);     // 设置占位符后缀     void setPlaceholderSuffix(String placeholderSuffix);     // 设置占位符与默认值之间的分隔符     void setValueSeparator(@Nullable String valueSeparator);      // 设置当遇到嵌套在给定属性值内的不可解析的占位符时是否抛出异常     // 当属性值包含不可解析的占位符时，getProperty(String)及其变体的实现必须检查此处设置的值以确定正确的行为。     void setIgnoreUnresolvableNestedPlaceholders(boolean ignoreUnresolvableNestedPlaceholders);      // 指定必须存在哪些属性，以便由validateRequiredProperties（）验证     void setRequiredProperties(String... requiredProperties);      // 验证setRequiredProperties指定的每个属性是否存在并解析为非null值     void validateRequiredProperties() throws MissingRequiredPropertiesException;  }
 ```
 
@@ -96,7 +96,7 @@ java // ConfigurablePropertyResolver.java  public interface ConfigurableProperty
 
 AbstractPropertyResolver 作为基类它仅仅只是设置了一些解析属性文件所需要配置或者转换器，如 #setConversionService(…)、#setPlaceholderPrefix(…)、#setValueSeparator(…) 。其实这些方法的实现都比较简单，都是设置或者获取 AbstractPropertyResolver 所提供的属性，代码如下：
 
-```plain text
+```text
 java // AbstractPropertyResolver.java  // 类型转换去 private volatile ConfigurableConversionService conversionService; // 占位符 private PropertyPlaceholderHelper nonStrictHelper; // private PropertyPlaceholderHelper strictHelper; // 设置是否抛出异常 private boolean ignoreUnresolvableNestedPlaceholders = false; // 占位符前缀 private String placeholderPrefix = SystemPropertyUtils.PLACEHOLDER_PREFIX; // 占位符后缀 private String placeholderSuffix = SystemPropertyUtils.PLACEHOLDER_SUFFIX; // 与默认值的分割 private String valueSeparator = SystemPropertyUtils.VALUE_SEPARATOR; // 必须要有的字段值 private final Set<String> requiredProperties = new LinkedHashSet<>();
 ```
 
@@ -104,7 +104,7 @@ java // AbstractPropertyResolver.java  // 类型转换去 private volatile Confi
 
 这些属性都是 ConfigurablePropertyResolver 接口所提供方法需要的属性，他所提供的方法都是设置和读取这些值，如下几个方法：
 
-```plain text
+```text
 java // AbstractPropertyResolver.java  public ConfigurableConversionService getConversionService() {     // 需要提供独立的DefaultConversionService，而不是PropertySourcesPropertyResolver 使用的共享DefaultConversionService。     ConfigurableConversionService cs = this.conversionService;     if (cs == null) {         synchronized (this) {             cs = this.conversionService;             if (cs == null) {                 cs = new DefaultConversionService();                 this.conversionService = cs;             }         }     }     return cs; }  @Override public void setConversionService(ConfigurableConversionService conversionService) { Assert.notNull(conversionService, "ConversionService must not be null"); this.conversionService = conversionService; }  public void setPlaceholderPrefix(String placeholderPrefix) {     Assert.notNull(placeholderPrefix, "'placeholderPrefix' must not be null");     this.placeholderPrefix = placeholderPrefix; }  public void setPlaceholderSuffix(String placeholderSuffix) { Assert.notNull(placeholderSuffix, "'placeholderSuffix' must not be null"); this.placeholderSuffix = placeholderSuffix; }
 ```
 
@@ -112,7 +112,7 @@ java // AbstractPropertyResolver.java  public ConfigurableConversionService getC
 
 而对属性的访问，则委托给子类 PropertySourcesPropertyResolver 实现。
 
-```plain text
+```text
 java // AbstractPropertyResolver.java  public String getProperty(String key) { return getProperty(key, String.class); }  public String getProperty(String key, String defaultValue) {     String value = getProperty(key);     return (value != null ? value : defaultValue); }  public <T> T getProperty(String key, Class<T> targetType, T defaultValue) {     T value = getProperty(key, targetType);     return (value != null ? value : defaultValue); }  public String getRequiredProperty(String key) throws IllegalStateException {     String value = getProperty(key);     if (value == null) {         throw new IllegalStateException("Required key '" + key + "' not found");     }     return value; }  public <T> T getRequiredProperty(String key, Class<T> valueType) throws IllegalStateException { T value = getProperty(key, valueType); if (value == null) {     throw new IllegalStateException("Required key '" + key + "' not found"); } return value; }
 ```
 
@@ -124,7 +124,7 @@ PropertyResolver 的实现者，他对一组 PropertySources 提供属性解析�
 
 它仅有一个成员变量：PropertySources 。该成员变量内部存储着一组 PropertySource，表示 key-value 键值对的源的抽象基类，即一个 PropertySource 对象则是一个 key-value 键值对。PropertySource 的代码如下：
 
-```plain text
+```text
 java // PropertySource.java  public abstract class PropertySource<T> {      protected final Log logger = LogFactory.getLog(getClass());      protected final String name;     protected final T source;      // ...  }
 ```
 
@@ -143,7 +143,7 @@ PropertySourcesPropertyResolver 对外公开的 #getProperty(…) 方法，都�
 
 源码如下：
 
-```plain text
+```text
 java // PropertySourcesPropertyResolver.java  @Nullable protected <T> T getProperty(String key, Class<T> targetValueType, boolean resolveNestedPlaceholders) {     if (this.propertySources != null) {         // 遍历 propertySources 数组         for (PropertySource<?> propertySource : this.propertySources) {             if (logger.isTraceEnabled()) {                 logger.trace("Searching for key '" + key + "' in PropertySource '" +                              propertySource.getName() + "'");             }             // 获得 key 对应的 value 值             Object value = propertySource.getProperty(key);             if (value != null) {                 // 如果解决嵌套占位符，解析占位符                 if (resolveNestedPlaceholders && value instanceof String) {                     value = resolveNestedPlaceholders((String) value);                 }                 // 如果未找到 key 对应的值，则打印日志                 logKeyFound(key, propertySource, value);                 // value 的类型转换                 return convertValueIfNecessary(value, targetValueType);             }         }     }     if (logger.isTraceEnabled()) {         logger.trace("Could not find key '" + key + "' in any property source");     }     return null; }
 ```
 
@@ -169,7 +169,7 @@ value
 
 #resolveNestedPlaceholders(String value) 方法，用于解析给定字符串中的占位符，同时根据 ignoreUnresolvableNestedPlaceholders 的值，来确定是否对不可解析的占位符的处理方法：是忽略还是抛出异常（该值由 #setIgnoreUnresolvableNestedPlaceholders(boolean ignoreUnresolvableNestedPlaceholders) 方法来设置）。代码如下：
 
-```plain text
+```text
 java // AbstractPropertyResolver.java  protected String resolveNestedPlaceholders(String value) { return (this.ignoreUnresolvableNestedPlaceholders ?         resolvePlaceholders(value) : resolveRequiredPlaceholders(value)); }
 ```
 
@@ -187,7 +187,7 @@ true
 #doResolvePlaceholders(String text, PropertyPlaceholderHelper helper)
 方法。该方法接收两个参数：
 
-```plain text
+```text
 java // AbstractPropertyResolver.java  // String 类型的 text：待解析的字符串 // PropertyPlaceholderHelper 类型的 helper：用于解析占位符的工具类。 private String doResolvePlaceholders(String text, PropertyPlaceholderHelper helper) {     return helper.replacePlaceholders(text, this::getPropertyAsRawString); }
 ```
 
@@ -211,7 +211,7 @@ false
 ）。
 - 构造函数如下：
 
-```plain text
+```text
 java // PropertyPlaceholderHelper.java  public PropertyPlaceholderHelper(String placeholderPrefix, String placeholderSuffix,                                  @Nullable String valueSeparator, boolean ignoreUnresolvablePlaceholders) {      Assert.notNull(placeholderPrefix, "'placeholderPrefix' must not be null");     Assert.notNull(placeholderSuffix, "'placeholderSuffix' must not be null");     this.placeholderPrefix = placeholderPrefix;     this.placeholderSuffix = placeholderSuffix;     String simplePrefixForSuffix = wellKnownSimplePrefixes.get(this.placeholderSuffix);     if (simplePrefixForSuffix != null && this.placeholderPrefix.endsWith(simplePrefixForSuffix)) {         this.simplePrefix = simplePrefixForSuffix;     } else {         this.simplePrefix = this.placeholderPrefix;     }     this.valueSeparator = valueSeparator;     this.ignoreUnresolvablePlaceholders = ignoreUnresolvablePlaceholders; }
 ```
 
@@ -238,7 +238,7 @@ false
 
 调用 PropertyPlaceholderHelper 的 #replacePlaceholders(String value, PlaceholderResolver placeholderResolver) 方法，对占位符进行处理，该方法接收两个参数，一个是待解析的字符串 value ，一个是 PlaceholderResolver 类型的 placeholderResolver ，他是定义占位符解析的策略类。代码如下：
 
-```plain text
+```text
 java // PropertyPlaceholderHelper.java  public String replacePlaceholders(String value, PlaceholderResolver placeholderResolver) {     Assert.notNull(value, "'value' must not be null");     return parseStringValue(value, placeholderResolver, new HashSet<>()); }  protected String parseStringValue(String value, PlaceholderResolver placeholderResolver, Set<String> visitedPlaceholders) {     StringBuilder result = new StringBuilder(value);      // 获取前缀 "${" 的索引位置     int startIndex = value.indexOf(this.placeholderPrefix);     while (startIndex != -1) {         // 获取 后缀 "}" 的索引位置         int endIndex = findPlaceholderEndIndex(result, startIndex);         if (endIndex != -1) {             // 截取 "${" 和 "}" 中间的内容，这也就是我们在配置文件中对应的值             String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);             String originalPlaceholder = placeholder;             if (!visitedPlaceholders.add(originalPlaceholder)) {                 throw new IllegalArgumentException(                     "Circular placeholder reference '" + originalPlaceholder + "' in property definitions");             }             // Recursive invocation, parsing placeholders contained in the placeholder key.             // 解析占位符键中包含的占位符，真正的值             placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);             // Now obtain the value for the fully resolved key...             // 从 Properties 中获取 placeHolder 对应的值 propVal             String propVal = placeholderResolver.resolvePlaceholder(placeholder);             // 如果不存在             if (propVal == null && this.valueSeparator != null) {                 // 查询 : 的位置                 int separatorIndex = placeholder.indexOf(this.valueSeparator);                 // 如果存在 :                 if (separatorIndex != -1) {                     // 获取 : 前面部分 actualPlaceholder                     String actualPlaceholder = placeholder.substring(0, separatorIndex);                     // 获取 : 后面部分 defaultValue                     String defaultValue = placeholder.substring(separatorIndex + this.valueSeparator.length());                     // 从 Properties 中获取 actualPlaceholder 对应的值                     propVal = placeholderResolver.resolvePlaceholder(actualPlaceholder);                     // 如果不存在 则返回 defaultValue                     if (propVal == null) {                         propVal = defaultValue;                     }                 }             }             if (propVal != null) {                 // Recursive invocation, parsing placeholders contained in the                 // previously resolved placeholder value.                 propVal = parseStringValue(propVal, placeholderResolver, visitedPlaceholders);                 result.replace(startIndex, endIndex + this.placeholderSuffix.length(), propVal);                 if (logger.isTraceEnabled()) {                     logger.trace("Resolved placeholder '" + placeholder + "'");                 }                 startIndex = result.indexOf(this.placeholderPrefix, startIndex + propVal.length());             } else if (this.ignoreUnresolvablePlaceholders) {                 // Proceed with unprocessed value.                 // 忽略值                 startIndex = result.indexOf(this.placeholderPrefix, endIndex + this.placeholderSuffix.length());             } else {                 throw new IllegalArgumentException("Could not resolve placeholder '" +                         placeholder + "'" + " in value \"" + value + "\"");             }             visitedPlaceholders.remove(originalPlaceholder);         } else {             startIndex = -1;         }     }      // 返回propVal，就是替换之后的值     return result.toString(); }
 ```
 
@@ -308,7 +308,7 @@ Environment extends PropertyResolver {
 
 Environment 体系结构图如下：
 
-![ab5f2dc7cf389534866cc96f1dcf7048](/assets/images/learning/spring/springsourcecode/environment-propertysource-propertyresolver-profile/ab5f2dc7cf389534866cc96f1dcf7048.jpeg)
+![Environment类图](/assets/images/learning/spring/springsourcecode/environment-propertysource-propertyresolver-profile/ab5f2dc7cf389534866cc96f1dcf7048.jpeg)
 
 Environment 类图
 
@@ -356,7 +356,7 @@ Environment 的基础实现
 #customizePropertySources(MutablePropertySources)
 钩子提供属性源。方法的代码如下：
 
-```plain text
+```text
 java // AbstractEnvironment.java  public AbstractEnvironment() {     customizePropertySources(this.propertySources); }  protected void customizePropertySources(MutablePropertySources propertySources) { }
 ```
 
@@ -366,7 +366,7 @@ java // AbstractEnvironment.java  public AbstractEnvironment() {     customizePr
 AbstractEnvironment#getPropertySources()
 方法，进行自定义并对 MutablePropertySources API 进行操作。方法的代码如下：
 
-```plain text
+```text
 java // AbstractEnvironment.java  @Override public MutablePropertySources getPropertySources() {     return this.propertySources; }
 ```
 
@@ -374,7 +374,7 @@ java // AbstractEnvironment.java  @Override public MutablePropertySources getPro
 
 在 AbstractEnvironment 有两对变量，这两对变量维护着激活和默认配置 profile。如下：
 
-```plain text
+```text
 java // AbstractEnvironment.java  public static final String ACTIVE_PROFILES_PROPERTY_NAME = "spring.profiles.active"; private final Set<String> activeProfiles = new LinkedHashSet<>();  public static final String DEFAULT_PROFILES_PROPERTY_NAME = "spring.profiles.default"; private final Set<String> defaultProfiles = new LinkedHashSet<>(getReservedDefaultProfiles());
 ```
 
@@ -388,7 +388,7 @@ java // AbstractEnvironment.java  public static final String ACTIVE_PROFILES_PRO
 
 ### 3.2.1 setActiveProfiles
 
-```plain text
+```text
 java // AbstractEnvironment.java  @Override public void setActiveProfiles(String... profiles) {     Assert.notNull(profiles, "Profile array must not be null");     if (logger.isDebugEnabled()) {         logger.debug("Activating profiles " + Arrays.asList(profiles));     }     synchronized (this.activeProfiles) {         // 清空 activeProfiles         this.activeProfiles.clear();         // 遍历 profiles 数组，添加到 activeProfiles 中         for (String profile : profiles) {             // 校验             validateProfile(profile);             this.activeProfiles.add(profile);         }     } }
 ```
 
@@ -400,13 +400,13 @@ activeProfiles
 #validateProfile(String profile)
 方法，对添加的 profile 进行校验，如下：
 
-```plain text
+```text
 java // AbstractEnvironment.java  protected void validateProfile(String profile) { if (!StringUtils.hasText(profile)) {     throw new IllegalArgumentException("Invalid profile [" + profile + "]: must contain text"); } if (profile.charAt(0) == '!') {     throw new IllegalArgumentException("Invalid profile [" + profile + "]: must not begin with ! operator"); } }
 ```
 
 ---
 
-```plain text
+```text
 - <font style="color:rgb(51, 51, 51);">这个校验过程比较弱，子类可以提供更加严格的校验规则。</font>
 ```
 
@@ -414,7 +414,7 @@ java // AbstractEnvironment.java  protected void validateProfile(String profile)
 
 从 getActiveProfiles() 方法，中我们可以猜出这个方法实现的逻辑：获取 activeProfiles 集合即可。代码如下：
 
-```plain text
+```text
 java // AbstractEnvironment.java  public String[] getActiveProfiles() {     return StringUtils.toStringArray(doGetActiveProfiles()); }
 ```
 
@@ -424,13 +424,13 @@ java // AbstractEnvironment.java  public String[] getActiveProfiles() {     retu
 #doGetActiveProfiles()
 方法，代码实现：
 
-```plain text
+```text
 java // AbstractEnvironment.java  protected Set<String> doGetActiveProfiles() {     synchronized (this.activeProfiles) {         // 如果 activeProfiles 为空，则进行初始化         if (this.activeProfiles.isEmpty()) {             // 获得 ACTIVE_PROFILES_PROPERTY_NAME 对应的 profiles 属性值             String profiles = getProperty(ACTIVE_PROFILES_PROPERTY_NAME);             if (StringUtils.hasText(profiles)) {                 // 设置到 activeProfiles 中                 setActiveProfiles(StringUtils.commaDelimitedListToStringArray(                     StringUtils.trimAllWhitespace(profiles)));             }         }         return this.activeProfiles;     } }
 ```
 
 ---
 
-```plain text
+```text
 - <font style="color:rgb(0, 0, 0);">如果 </font><font style="color:rgb(51, 51, 51);">activeProfiles</font><font style="color:rgb(0, 0, 0);"> 为空，则从 Properties 中获取 </font><font style="color:rgb(51, 51, 51);">spring.profiles.active</font><font style="color:rgb(0, 0, 0);"> 配置，如果不为空，则调用 </font><font style="color:rgb(51, 51, 51);">#setActiveProfiles(String... profiles)</font><font style="color:rgb(0, 0, 0);"> 方法，设置 profile，最后返回。</font>
 ```
 

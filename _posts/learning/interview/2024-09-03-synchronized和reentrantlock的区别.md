@@ -15,7 +15,7 @@ created: 2024-07-26 11:48
 updated: 2024-07-26 11:48
 ---
 
-1. synchronized是一个关键字，ReentrantLo夏促1. synchronized是一个关键字，ReentrantLockw一个类
+1. synchronized是一个关键字，ReentrantLock是一个类
 2. synchronized会自动的加锁与释放锁，ReentrantLock需要手动加锁与释放锁
 3. synchronized的底层是JVM层面的锁，ReentrantLock是API层面的锁
 4. synchronized是非公平锁，ReentrantLock在初始化时，可以选择是公平或非公平锁。

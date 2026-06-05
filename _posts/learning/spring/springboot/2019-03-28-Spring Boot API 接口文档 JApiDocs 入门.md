@@ -16,7 +16,7 @@ updated: 2019-03-28 09:57
 week: 2019-W21
 ---
 
-![8b8ef94463c45fad1bbd047731f3b67d](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/8b8ef94463c45fad1bbd047731f3b67d.png)
+![JApiDocs入门](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/8b8ef94463c45fad1bbd047731f3b67d.png)
 
 ## 2.1 引入依赖
 
@@ -53,7 +53,7 @@ public class TestJApiDocs {
 
 JApiDocs 是通过解析 *Controller* 源码上的 **Java 注释**，所以我们需要在相关的**类**、**方法**、**属性**上，进行添加。示例代码如下图：
 
-![](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/12.png)
+![代码注释示例](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/12.png)
 
 ## 2.4 简单测试
 
@@ -61,17 +61,17 @@ JApiDocs 是通过解析 *Controller* 源码上的 **Java 注释**，所以我�
 
 ① 执行 TestJApiDocs 类，生成 JApiDocs 接口文档。结果如下图所示：
 
-![](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/13.png)
+![生成的接口文档目录](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/13.png)
 
 ② 点击 index.html 文件，查看 HTML 接口文档。如下图所示：
 
-![](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/fc4236f94c65ab07d0fb4b382494def4.png)
+![HTML接口文档](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/fc4236f94c65ab07d0fb4b382494def4.png)
 
 后续，我们可以部署到 Nginx 下，提供给前端小伙伴查看接口文档。
 
 ③ 点击 *-api-docs.md 文件，查看 Markdown 接口文档。如下图所示：
 
-![](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/8cee16f2e70c98dae97ca809d6b1436d.png)
+![Markdown接口文档](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/8cee16f2e70c98dae97ca809d6b1436d.png)
 
 # 3. 高级用法
 
@@ -144,4 +144,4 @@ JApiDocs 自定义了 @ApiDoc 和 @Ignore 注解，用于针对指定接口，�
 
 很多时候，我们会认为 Swagger 使用注解的**侵入性**很强，是因为在参数较多的接口方法上，会写一大片的 @ApiImplicitParam 注解，导致看起来会乱糟糟的。这个其实非常好解决，艿艿推荐对于复杂参数的接口，统一定义 [POJO](https://baike.baidu.com/item/POJO) 类。示例如下：
 
-![](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/bb4b334a11c1edc42f8ca8045e1e312e.png)
+![Swagger参数定义示例](/assets/images/learning/spring/springboot/spring-boot-apidoc-japidocs-getting-started/bb4b334a11c1edc42f8ca8045e1e312e.png)

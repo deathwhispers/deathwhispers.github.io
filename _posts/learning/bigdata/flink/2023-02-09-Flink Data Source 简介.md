@@ -166,7 +166,7 @@ Exception in thread "main" java.lang.IllegalArgumentException: Source: 1 is not 
 
 如果你想要实现具有并行度的输入流，则需要实现 ParallelSourceFunction 或 RichParallelSourceFunction 接口，其与 SourceFunction 的关系如下图：
 
-![](/assets/images/learning/bigdata/flink/flink-datasource-introduction/2aa9a5b0fa361998ce7b8a418b1d3958.png)
+![SourceFunction继承关系图](/assets/images/learning/bigdata/flink/flink-datasource-introduction/2aa9a5b0fa361998ce7b8a418b1d3958.png)
 
 ParallelSourceFunction 直接继承自 ParallelSourceFunction，具有并行度的功能。RichParallelSourceFunction 则继承自 AbstractRichFunction，同时实现了 ParallelSourceFunction 接口，所以其除了具有并行度的功能外，还提供了额外的与生命周期相关的方法，如 open() ，closen() 。
 
@@ -239,7 +239,7 @@ env.execute("Flink Streaming") ;
 
 Kafka 的运行依赖于 zookeeper，需要预先启动，可以启动 Kafka 内置的 zookeeper，也可以启动自己安装的：
 
-```plain text
+```shell
 # zookeeper启动命令
 bin/zkServer.sh start
 
@@ -249,13 +249,13 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 
 启动单节点 kafka 用于测试：
 
-```plain text
+```shell
 # bin/kafka-server-start.sh config/server.properties
 ```
 
 ### 2. 创建 Topic
 
-```plain text
+```shell
 # 创建用于测试主题
 bin/kafka-topics.sh --create \
                     --bootstrap-server hadoop001:9092 \
@@ -271,7 +271,7 @@ bin/kafka-topics.sh --create \
 
 这里 启动一个 Kafka 生产者，用于发送测试数据：
 
-```plain text
+```shell
 bin/kafka-console-producer.sh --broker-list hadoop001:9092 --topic flink-stream-in-topic
 ```
 
@@ -279,11 +279,11 @@ bin/kafka-console-producer.sh --broker-list hadoop001:9092 --topic flink-stream-
 
 在 Producer 上输入任意测试数据，之后观察程序控制台的输出：
 
-![](/assets/images/learning/bigdata/flink/flink-datasource-introduction/fee1bc783b6c52fb1a058bb2eb2f1f65.png)
+![Kafka生产者测试数据](/assets/images/learning/bigdata/flink/flink-datasource-introduction/fee1bc783b6c52fb1a058bb2eb2f1f65.png)
 
 程序控制台的输出如下：
 
-![](/assets/images/learning/bigdata/flink/flink-datasource-introduction/8762655d30a237f6750b5d088f079857.png)
+![程序控制台输出](/assets/images/learning/bigdata/flink/flink-datasource-introduction/8762655d30a237f6750b5d088f079857.png)
 
 可以看到已经成功接收并打印出相关的数据。
 

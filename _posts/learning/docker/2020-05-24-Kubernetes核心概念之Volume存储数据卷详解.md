@@ -32,6 +32,6 @@ apiVersion: v1kind: Pod#类型是Podmetadata:labels:name: redisrole: master#定�
 
 ②创建Pod
 
-```plain text
+```shell
 kubectl create -f emptydir.yaml
 ```

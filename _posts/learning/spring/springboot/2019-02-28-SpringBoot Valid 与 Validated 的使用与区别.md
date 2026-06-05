@@ -107,7 +107,7 @@ Controller
 
 ## JSR303定义的校验类型
 
-```plain text
+```text
 // 空检查
 @Null           // 验证对象是否为null
 @NotNull        // 验证对象是否不为null, 无法查检长度为0的字符串

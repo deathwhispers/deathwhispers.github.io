@@ -30,13 +30,13 @@ writeAsText 用于将计算结果以文本的方式并行地写入到指定文�
 
 使用示例如下：
 
-```plain text
+```shell
 streamSource.writeAsText("D:\\out", FileSystem.WriteMode.OVERWRITE);
 ```
 
 以上写出是以并行的方式写出到多个文件，如果想要将输出结果全部写出到一个文件，需要设置其并行度为 1：
 
-```plain text
+```shell
 streamSource.writeAsText("D:\\out", FileSystem.WriteMode.OVERWRITE).setParallelism(1);
 ```
 
@@ -44,7 +44,7 @@ streamSource.writeAsText("D:\\out", FileSystem.WriteMode.OVERWRITE).setParalleli
 
 writeAsCsv 用于将计算结果以 CSV 的文件格式写出到指定目录，除了路径参数是必选外，该方法还支持传入输出模式，行分隔符，和字段分隔符三个额外的参数，其方法定义如下：
 
-```plain text
+```java
 writeAsCsv(String path, WriteMode writeMode, String rowDelimiter, String fieldDelimiter)
 ```
 
@@ -123,7 +123,7 @@ env.execute("Flink Streaming");
 
 创建用于输出测试的主题：
 
-```plain text
+```shell
 bin/kafka-topics.sh --create \
                     --bootstrap-server hadoop001:9092 \
                     --replication-factor 1 \
@@ -138,7 +138,7 @@ bin/kafka-topics.sh --create \
 
 启动一个 Kafka 消费者，用于查看 Flink 程序的输出情况：
 
-```plain text
+```shell
 bin/kafka-console-consumer.sh --bootstrap-server hadoop001:9092 --topic flink-stream-out-topic
 ```
 
@@ -146,7 +146,7 @@ bin/kafka-console-consumer.sh --bootstrap-server hadoop001:9092 --topic flink-st
 
 在 Kafka 生产者上发送消息到 Flink 程序，观察 Flink 程序转换后的输出情况，具体如下：
 
-![](/assets/images/learning/bigdata/flink/flink-sink-introduction/a13844e2ad4f0b0c83192b4e9d18084e.png)
+![Kafka数据输出结果](/assets/images/learning/bigdata/flink/flink-sink-introduction/a13844e2ad4f0b0c83192b4e9d18084e.png)
 
 可以看到 Kafka 生成者发出的数据已经被 Flink 程序正常接收到，并经过转换后又输出到 Kafka 对应的 Topic 上。
 
@@ -154,7 +154,7 @@ bin/kafka-console-consumer.sh --bootstrap-server hadoop001:9092 --topic flink-st
 
 除了使用内置的第三方连接器外，Flink 还支持使用自定义的 Sink 来满足多样化的输出需求。想要实现自定义的 Sink ，需要直接或者间接实现 SinkFunction 接口。通常情况下，我们都是实现其抽象类 RichSinkFunction，相比于 SinkFunction ，其提供了更多的与生命周期相关的方法。两者间的关系如下：
 
-![](/assets/images/learning/bigdata/flink/flink-sink-introduction/d05791c2f4d853c952bcef204a90ff82.png)
+![SinkFunction继承关系图](/assets/images/learning/bigdata/flink/flink-sink-introduction/d05791c2f4d853c952bcef204a90ff82.png)
 
 这里我们以自定义一个 FlinkToMySQLSink 为例，将计算结果写出到 MySQL 数据库中，具体步骤如下：
 
@@ -224,7 +224,7 @@ env.execute() ;
 
 启动程序，观察数据库写入情况：
 
-![](/assets/images/learning/bigdata/flink/flink-sink-introduction/97981c387a0577986b902fa0ab8b11bb.png)
+![数据库写入结果](/assets/images/learning/bigdata/flink/flink-sink-introduction/97981c387a0577986b902fa0ab8b11bb.png)
 
 数据库成功写入，代表自定义 Sink 整合成功。
 

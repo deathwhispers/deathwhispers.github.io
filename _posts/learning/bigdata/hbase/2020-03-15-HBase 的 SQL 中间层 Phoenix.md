@@ -21,7 +21,7 @@ Phoenix 是 HBase 的开源 SQL 中间层，它允许你使用标准 JDBC 的方
 
 其次 Phoenix 的性能表现也非常优异，Phoenix 查询引擎会将 SQL 查询转换为一个或多个 HBase Scan，通过并行执行来生成标准的 JDBC 结果集。它通过直接使用 HBase API 以及协处理器和自定义过滤器，可以为小型数据查询提供毫秒级的性能，为千万行数据的查询提供秒级的性能。同时 Phoenix 还拥有二级索引等 HBase 不具备的特性，因为以上的优点，所以 Phoenix 成为了 HBase 最优秀的 SQL 中间层。
 
-![](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/c07757faf36d007b41c10fb7d662e06b.png)
+![Phoenix架构图](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/c07757faf36d007b41c10fb7d662e06b.png)
 
 ## 二、Phoenix安装
 
@@ -37,7 +37,7 @@ Phoenix 是 HBase 的开源 SQL 中间层，它允许你使用标准 JDBC 的方
 
 官方针对 Apache 版本和 CDH 版本的 HBase 均提供了安装包，按需下载即可。官方下载地址: http://phoenix.apache.org/download.html
 
-```plain text
+```shell
 # 下载
 wget http://mirror.bit.edu.cn/apache/phoenix/apache-phoenix-4.14.0-cdh5.14.2/bin/apache-phoenix-4.14.0-cdh5.14.2-bin.tar.gz
 # 解压
@@ -50,13 +50,13 @@ tar tar apache-phoenix-4.14.0-cdh5.14.2-bin.tar.gz
 
 这里由于我搭建的是 HBase 伪集群，所以只需要拷贝到当前机器的 HBase 的 lib 目录下。如果是真实集群，则使用 scp 命令分发到所有 Region Servers 机器上。
 
-```plain text
+```shell
 cp /usr/app/apache-phoenix-4.14.0-cdh5.14.2-bin/phoenix-4.14.0-cdh5.14.2-server.jar /usr/app/hbase-1.2.0-cdh5.15.2/lib
 ```
 
 ### 2.3 重启 Region Servers
 
-```plain text
+```shell
 # 停止Hbase
 stop-hbase.sh
 # 启动Hbase
@@ -70,7 +70,7 @@ start-hbase.sh
 - 如果 HBase 采用 Standalone 模式或者伪集群模式搭建，则默认采用内置的 Zookeeper 服务，端口为 2181；
 - 如果是 HBase 是集群模式并采用外置的 Zookeeper 集群，则按照自己的实际情况进行指定。
 
-```plain text
+```shell
 # ./sqlline.py hadoop001:2181
 ```
 
@@ -78,13 +78,13 @@ start-hbase.sh
 
 启动后则进入了 Phoenix 交互式 SQL 命令行，可以使用 !table 或 !tables 查看当前所有表的信息
 
-![](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/1ad0f5acc94ebde69ed82ae40de9c880.png)
+![Phoenix启动结果](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/1ad0f5acc94ebde69ed82ae40de9c880.png)
 
 ## 三、Phoenix 简单使用
 
 ### 3.1 创建表
 
-```plain text
+```sql
 CREATE TABLE IF NOT EXISTS us_population (
       state CHAR(2) NOT NULL,
       city VARCHAR NOT NULL,
@@ -92,17 +92,17 @@ CREATE TABLE IF NOT EXISTS us_population (
       CONSTRAINT my_pk PRIMARY KEY (state, city));
 ```
 
-![](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/5f8dc215cd99e0550cc2f04189c4a1ce.png)
+![Phoenix创建表结果](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/5f8dc215cd99e0550cc2f04189c4a1ce.png)
 
 新建的表会按照特定的规则转换为 HBase 上的表，关于表的信息，可以通过 Hbase Web UI 进行查看：
 
-![](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/882fef03b82674be0ff23aab38bcfc6f.png)
+![HBase Web UI查看表](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/882fef03b82674be0ff23aab38bcfc6f.png)
 
 ### 3.2 插入数据
 
 Phoenix 中插入数据采用的是 UPSERT 而不是 INSERT,因为 Phoenix 并没有更新操作，插入相同主键的数据就视为更新，所以 UPSERT 就相当于 UPDATE+INSERT
 
-```plain text
+```sql
 UPSERT INTO us_population VALUES('NY','New York',8143197);
 UPSERT INTO us_population VALUES('CA','Los Angeles',3844829);
 UPSERT INTO us_population VALUES('IL','Chicago',2842518);
@@ -117,35 +117,35 @@ UPSERT INTO us_population VALUES('CA','San Jose',912332);
 
 ### 3.3 修改数据
 
-```plain text
+```sql
 -- 插入主键相同的数据就视为更新
 UPSERT INTO us_population VALUES('NY','New York',999999);
 ```
 
-![](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/8ace8990df06ec46936f09adf03cad44.png)
+![Phoenix更新数据结果](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/8ace8990df06ec46936f09adf03cad44.png)
 
 ### 3.4 删除数据
 
-```plain text
+```sql
 DELETE FROM us_population WHERE city='Dallas';
 ```
 
-![](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/973885d0d215cf69710cb659d9dbee76.png)
+![Phoenix删除数据结果](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/973885d0d215cf69710cb659d9dbee76.png)
 
 ### 3.5 查询数据
 
-```plain text
+```sql
 SELECT state as "州",count(city) as "市",sum(population) as "热度"
 FROM us_population
 GROUP BY state
 ORDER BY sum(population) DESC;
 ```
 
-![](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/fd536df8fc8a268447c66020fc37ea98.png)
+![Phoenix查询数据结果](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/fd536df8fc8a268447c66020fc37ea98.png)
 
 ### 3.6 退出命令
 
-```plain text
+```shell
 !quit
 ```
 
@@ -172,7 +172,7 @@ ORDER BY sum(population) DESC;
 
 如果是 maven 项目，直接在 maven 中央仓库找到对应的版本，导入依赖即可：
 
-```plain text
+```xml
 <!-- https://mvnrepository.com/artifact/org.apache.phoenix/phoenix-core -->
     <dependency>
       <groupId>org.apache.phoenix</groupId>
@@ -183,7 +183,7 @@ ORDER BY sum(population) DESC;
 
 如果是普通项目，则可以从 Phoenix 解压目录下找到对应的 JAR 包，然后手动引入：
 
-![](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/4dea024c0f6966571155e38996cd6307.png)
+![Phoenix JAR包位置](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/4dea024c0f6966571155e38996cd6307.png)
 
 ### 4.2 简单的Java API实例
 
@@ -223,7 +223,7 @@ public class PhoenixJavaApi {
 
 结果如下：
 
-![](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/056e6d119928a004a5926eefcf78cf80.png)
+![Phoenix Java API执行结果](/assets/images/learning/bigdata/hbase/hbase-phoenix-sql-middle-layer/056e6d119928a004a5926eefcf78cf80.png)
 
 实际的开发中我们通常都是采用第三方框架来操作数据库，如 mybatis，Hibernate，Spring Data 等。关于 Phoenix 与这些框架的整合步骤参见下一篇文章：[Spring/Spring Boot + Mybatis + Phoenix](https://github.com/heibaiying/BigData-Notes/blob/master/notes/Spring+Mybtais+Phoenix%E6%95%B4%E5%90%88.md)
 

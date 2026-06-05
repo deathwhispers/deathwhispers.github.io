@@ -33,7 +33,7 @@ BeanFactoryPostProcessor 的机制，就相当于给了我们在 Bean 实例化�
 
 org.springframework.beans.factory.config.BeanFactoryPostProcessor 接口，定义如下：
 
-```plain text
+```text
 java public interface BeanFactoryPostProcessor {      /**   * 1、Modify the application context's internal bean factory after its standard initialization.   *   * 2、All bean definitions will have been loaded, but no beans will have been instantiated yet. This allows for overriding or adding properties even to eager-initializing beans.   *   * @param beanFactory the bean factory used by the application context   * @throws org.springframework.beans.BeansException in case of errors   */     void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException;  }
 ```
 
@@ -56,7 +56,7 @@ beanFactory
 
 # 2. 示例
 
-```plain text
+```text
 java public class BeanFactoryPostProcessor_1 implements BeanFactoryPostProcessor,Ordered {      @Override     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {         System.out.println("调用 BeanFactoryPostProcessor_1 ...");          System.out.println("容器中有 BeanDefinition 的个数：" + beanFactory.getBeanDefinitionCount());          // 获取指定的 BeanDefinition         BeanDefinition bd = beanFactory.getBeanDefinition("studentService");          MutablePropertyValues pvs = bd.getPropertyValues();          pvs.addPropertyValue("name","chenssy1");         pvs.addPropertyValue("age",15);     }      @Override     public int getOrder() {         return 1;     } }  public class BeanFactoryPostProcessor_2 implements BeanFactoryPostProcessor , Ordered {      @Override     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {         System.out.println("调用 BeanFactoryPostProcessor_2 ...");          // 获取指定的 BeanDefinition         BeanDefinition bd = beanFactory.getBeanDefinition("studentService");          MutablePropertyValues pvs = bd.getPropertyValues();          pvs.addPropertyValue("age",18);     }      @Override     public int getOrder() {         return 2;     } }
 ```
 
@@ -72,7 +72,7 @@ age
 
 XML 配置如下：
 
-```plain text
+```text
 xml <bean id="studentService" class="org.springframework.core.service.StudentService">   <property name="name" value="chenssy"/>   <property name="age" value="10"/> </bean>  <bean class="org.springframework.core.test.BeanFactoryPostProcessor_1"/> <bean class="org.springframework.core.test.BeanFactoryPostProcessor_2"/>
 ```
 
@@ -89,7 +89,7 @@ age
 
 运行代码：
 
-```plain text
+```text
 plain ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");  StudentService studentService = (StudentService) context.getBean("studentService"); System.out.println("student name:" + studentService.getName() + "-- age:" + studentService.getAge());
 ```
 
@@ -97,7 +97,7 @@ plain ApplicationContext context = new ClassPathXmlApplicationContext("spring.xm
 
 运行结果：
 
-```plain text
+```text
 plain 调用 BeanFactoryPostProcessor_1 ... 容器中有 BeanDefinition 的个数：3 调用 BeanFactoryPostProcessor_2 ... student name:chenssy1-- age:18
 ```
 
@@ -109,7 +109,7 @@ plain 调用 BeanFactoryPostProcessor_1 ... 容器中有 BeanDefinition 的个�
 
 在上面测试方法中，我们使用的是 ApplicationContext ，对于 ApplicationContext 来说，使用 BeanFactoryPostProcessor 非常方便，因为他会自动识别配置文件中的 BeanFactoryPostProcessor 并且完成注册和调用，我们只需要简单的配置声明即可。而对于 BeanFactory 容器来说则不行，他和 BeanPostProcessor 一样需要容器主动去进行注册调用，方法如下：
 
-```plain text
+```text
 plain BeanFactoryPostProcessor_1 beanFactoryPostProcessor1 = new BeanFactoryPostProcessor_1(); beanFactoryPostProcessor1.postProcessBeanFactory(factory);
 ```
 

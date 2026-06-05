@@ -19,16 +19,16 @@ updated: 2020-04-07 18:00
 
 下面这张图演示了一个可用的 bean 是如何从 xml 配置文件中演变过来的。
 
-![365d4142eb23822dcaddba6d1f59ccbc](/assets/images/learning/spring/springsourcecode/dead-dive-spring4-understand-spring-ioc-with-this-picture/365d4142eb23822dcaddba6d1f59ccbc.jpeg)
+![Bean的转换过程](/assets/images/learning/spring/springsourcecode/dead-dive-spring4-understand-spring-ioc-with-this-picture/365d4142eb23822dcaddba6d1f59ccbc.jpeg)
 
 # 2. ApplicationContext 的架构图
 
-![dde0bf4ae9014ec73c80f4c45045850a](/assets/images/learning/spring/springsourcecode/dead-dive-spring4-understand-spring-ioc-with-this-picture/dde0bf4ae9014ec73c80f4c45045850a.jpeg)
+![ApplicationContext架构图](/assets/images/learning/spring/springsourcecode/dead-dive-spring4-understand-spring-ioc-with-this-picture/dde0bf4ae9014ec73c80f4c45045850a.jpeg)
 
 # 3. load BeanDefinition 的全流程
 
-![38419d23d29c83a4758f73f85281e076](/assets/images/learning/spring/springsourcecode/dead-dive-spring4-understand-spring-ioc-with-this-picture/38419d23d29c83a4758f73f85281e076.png)
+![load BeanDefinition全流程](/assets/images/learning/spring/springsourcecode/dead-dive-spring4-understand-spring-ioc-with-this-picture/38419d23d29c83a4758f73f85281e076.png)
 
 # 4. get Bean 的全流程
 
-![3a5b28a2d3bd435ca94ea5c8752609d5](/assets/images/learning/spring/springsourcecode/dead-dive-spring4-understand-spring-ioc-with-this-picture/3a5b28a2d3bd435ca94ea5c8752609d5.png)
+![get Bean全流程](/assets/images/learning/spring/springsourcecode/dead-dive-spring4-understand-spring-ioc-with-this-picture/3a5b28a2d3bd435ca94ea5c8752609d5.png)

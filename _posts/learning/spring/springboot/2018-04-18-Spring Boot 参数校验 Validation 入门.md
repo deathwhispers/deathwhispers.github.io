@@ -200,13 +200,13 @@ Bean Validation 提供的 @Valid 注解，因为没有分组校验的属性，�
 - 在类上，添加 @Validated 注解，表示 UserController 是所有接口都需要进行参数校验。
 - 对于 #get(id) 方法，我们在 id 参数上，添加了 @Min 注解，校验 id 必须大于 0 。校验不通过示例如下图：
 
-![e7fd65851475f136210de5050ff420bd](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/e7fd65851475f136210de5050ff420bd.jpg)
+![参数校验失败示例](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/e7fd65851475f136210de5050ff420bd.jpg)
 
 - 对于 #add(addDTO) 方法，我们在 addDTO 参数上，添加了 @Valid 注解，实现对该参数的校验。校验不通过示例如下图：
 
-![1c0491f5b97d513a39c30475d1979d11](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/1c0491f5b97d513a39c30475d1979d11.jpg)
+![用户添加参数校验失败示例](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/1c0491f5b97d513a39c30475d1979d11.jpg)
 
-```plain text
+```text
 - errors 字段，参数错误明细**数组**。每一个数组元素，对应一个参数错误明细。这里，username 违背了长度不满足 [5, 16] 。
 ```
 
@@ -317,7 +317,7 @@ java.lang.IllegalStateException: Cannot find current proxy: Set 'exposeProxy' pr
 - 将每个约束的错误内容提示，拼接起来，使用 ; 分隔。
 - 重新请求 UserController#get(id) 对应的接口，响应结果如下：
 
-![d3ec1b5a4735e371f33021306eb48b59](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/d3ec1b5a4735e371f33021306eb48b59.png)
+![ConstraintViolationException异常处理结果](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/d3ec1b5a4735e371f33021306eb48b59.png)
 
 修改 [GlobalExceptionHandler](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-22/lab-22-validation-01/src/main/java/cn/iocoder/springboot/lab22/validation/core/web/GlobalExceptionHandler.java) 类，增加 #bindExceptionHandler(…) 方法，处理 BindException 异常。代码如下：
 
@@ -326,7 +326,7 @@ java.lang.IllegalStateException: Cannot find current proxy: Set 'exposeProxy' pr
 - 将每个约束的错误内容提示，拼接起来，使用 ; 分隔。
 - 重新请求 UserController#add(addDTO) 对应的接口，响应结果如下：
 
-![81fa0969f0cb07ae43eccceee303cd3a](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/81fa0969f0cb07ae43eccceee303cd3a.png)
+![BindException异常处理结果](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/81fa0969f0cb07ae43eccceee303cd3a.png)
 
 # 5. 自定义约束
 
@@ -396,7 +396,7 @@ java.lang.IllegalStateException: Cannot find current proxy: Set 'exposeProxy' pr
 
 模拟请求该 API 接口，响应结果如下：
 
-![b7ce5d660b9051bf77d32ee438e15986](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/b7ce5d660b9051bf77d32ee438e15986.png)
+![自定义约束校验失败示例](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/b7ce5d660b9051bf77d32ee438e15986.png)
 
 因为我们传入的请求参数 gender 的值为 null ，显然不在 GenderEnum 范围内，所以校验不通过，输出 "性别必须是 [1, 2]" 。
 
@@ -423,11 +423,11 @@ java.lang.IllegalStateException: Cannot find current proxy: Set 'exposeProxy' pr
 
 - 对于 #updateStatusTrue(updateStatusDTO) 方法，我们在 updateStatusDTO 参数上，添加了 @Validated 注解，并且设置校验分组为 Group01 。校验不通过示例如下图：
 
-![71b5a2243617902f4da2328e58ba757b](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/71b5a2243617902f4da2328e58ba757b.jpg)
+![分组校验Group01失败示例](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/71b5a2243617902f4da2328e58ba757b.jpg)
 
 - 对于 #updateStatusFalse(updateStatusDTO) 方法，我们在 updateStatusDTO 参数上，添加了 @Validated 注解，并且设置校验分组为 Group02 。校验不通过示例如下图：
 
-![b57dbdd4f60e30df9d104faa52cab40b](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/b57dbdd4f60e30df9d104faa52cab40b.jpg)
+![分组校验Group02失败示例](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/b57dbdd4f60e30df9d104faa52cab40b.jpg)
 
 所以，使用分组校验，核心在于添加上 @Validated 注解，并设置对应的校验分组。
 
@@ -446,7 +446,7 @@ java.lang.IllegalStateException: Cannot find current proxy: Set 'exposeProxy' pr
 
 org.springframework.validation.beanvalidation.LocalValidatorFactoryBean@48c3205a
 
-```plain text
+```text
 - validator 的类型为 [LocalValidatorFactoryBean](https://github.com/spring-projects/spring-framework/blob/master/spring-context/src/main/java/org/springframework/validation/beanvalidation/LocalValidatorFactoryBean.java) 。LocalValidatorFactoryBean 提供 JSR-303、JSR-349 的支持，同时兼容 Hibernate Validator 。
 - 在 Spring Boot 体系中，使用 [ValidationAutoConfiguration](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/validation/ValidationAutoConfiguration.java) 自动化配置类，默认创建 LocalValidatorFactoryBean 作为 Validator Bean 。
 ```
@@ -457,7 +457,7 @@ org.springframework.validation.beanvalidation.LocalValidatorFactoryBean@48c3205a
 
 username:登录账号不能为空password:密码不能为空
 
-```plain text
+```text
 - 如果校验通过，则返回的 Set<ConstraintViolation<?>> 集合为空。
 ```
 
@@ -513,15 +513,15 @@ UserUpdateDTO.id.NotNull=ユーザー番号は空にできません
 
 - Accept-Language = zh 的情况，响应结果如下：
 
-![620819b83f927d39428044a8beb7e595](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/620819b83f927d39428044a8beb7e595.jpg)
+![国际化中文提示示例](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/620819b83f927d39428044a8beb7e595.jpg)
 
 - Accept-Language = en 的情况，响应结果如下：
 
-![ac7aa78e850c84fd0b9148995620a7a0](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/ac7aa78e850c84fd0b9148995620a7a0.jpg)
+![国际化英文提示示例](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/ac7aa78e850c84fd0b9148995620a7a0.jpg)
 
 - Accept-Language = ja 的情况，响应结果如下：
 
-![21b512a70f231207844ea2c76208614f](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/21b512a70f231207844ea2c76208614f.jpg)
+![国际化日文提示示例](/assets/images/learning/spring/springboot/spring-boot-validation-getting-started/21b512a70f231207844ea2c76208614f.jpg)
 
 至此，我们的 Validator 的 i18n 国际化已经完成了。
 

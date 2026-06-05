@@ -29,7 +29,7 @@ Spring 在 bean 初始化时进行三个检测扩展，也就是说我们可以�
 
 Spring 的 org.springframework.beans.factory.InitializingBean 接口，为 bean 提供了定义初始化方法的方式，它仅包含了一个方法：#afterPropertiesSet() 。代码如下：
 
-```plain text
+```text
 java public interface InitializingBean {      /**      * 该方法在 BeanFactory 设置完了所有属性之后被调用      * 该方法允许 bean 实例设置了所有 bean 属性时执行初始化工作，如果该过程出现了错误则需要抛出异常      *      * Invoked by the containing {@code BeanFactory} after it has set all bean properties      * and satisfied {@link BeanFactoryAware}, {@code ApplicationContextAware} etc.      * <p>This method allows the bean instance to perform validation of its overall      * configuration and final initialization when all bean properties have been set.      * @throws Exception in the event of misconfiguration (such as failure to set an      * essential property) or if initialization fails for any other reason      */     void afterPropertiesSet() throws Exception;  }
 ```
 
@@ -39,7 +39,7 @@ Spring 在完成实例化后，设置完所有属性，进行 "Aware 接口" 和
 
 ## 1.1 示例
 
-```plain text
+```text
 java public class InitializingBeanTest implements InitializingBean {      private String name;      @Override     public void afterPropertiesSet() throws Exception {         System.out.println("InitializingBeanTest initializing...");         this.name = "chenssy 2 号";     }      public String getName() {         return name;     }      public void setName(String name) {         this.name = name;     } }
 ```
 
@@ -47,7 +47,7 @@ java public class InitializingBeanTest implements InitializingBean {      privat
 
 配置项如下：
 
-```plain text
+```text
 xml <bean id="initializingBeanTest" class="org.springframework.core.test.InitializingBeanTest">   <property name="name" value="chenssy 1 号"/> </bean>
 ```
 
@@ -55,7 +55,7 @@ xml <bean id="initializingBeanTest" class="org.springframework.core.test.Initial
 
 测试代码如下：
 
-```plain text
+```text
 java InitializingBeanTest test = (InitializingBeanTest) factory.getBean("initializingBeanTest"); System.out.println("name ：" + test.getName());
 ```
 
@@ -63,7 +63,7 @@ java InitializingBeanTest test = (InitializingBeanTest) factory.getBean("initial
 
 执行结果如下：
 
-![4b96bfb7f25ce1550985b7463d232121](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-initializing-bean-and-init-method/4b96bfb7f25ce1550985b7463d232121.jpeg)
+![InitializingBean执行结果](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-initializing-bean-and-init-method/4b96bfb7f25ce1550985b7463d232121.jpeg)
 
 在这个示例中，改变了 InitializingBeanTest 示例的 name 属性，也就是说 在 #afterPropertiesSet() 方法中，我们是可以改变 bean 的属性的，这相当于 Spring 容器又给我们提供了一种可以改变 bean 实例对象的方法。
 
@@ -71,7 +71,7 @@ java InitializingBeanTest test = (InitializingBeanTest) factory.getBean("initial
 
 上面提到 bean 初始化阶段（ #initializeBean(final String beanName, final Object bean, RootBeanDefinition mbd) 方法）， Spring 容器会主动检查当前 bean 是否已经实现了 InitializingBean 接口，如果实现了，则会掉用其 #afterPropertiesSet() 方法。这个主动检查、调用的动作是由 #invokeInitMethods(String beanName, final Object bean, @Nullable RootBeanDefinition mbd) 方法来完成的。代码如下：
 
-```plain text
+```text
 java // AbstractAutowireCapableBeanFactory.java  protected void invokeInitMethods(String beanName, final Object bean, @Nullable RootBeanDefinition mbd) throws Throwable {     // 首先会检查是否是 InitializingBean ，如果是的话需要调用 afterPropertiesSet()     boolean isInitializingBean = (bean instanceof InitializingBean);     if (isInitializingBean && (mbd == null || !mbd.isExternallyManagedInitMethod("afterPropertiesSet"))) {         if (logger.isTraceEnabled()) {             logger.trace("Invoking afterPropertiesSet() on bean with name '" + beanName + "'");         }         if (System.getSecurityManager() != null) { // 安全模式             try {                 AccessController.doPrivileged((PrivilegedExceptionAction<Object>) () -> {                     // 属性初始化的处理                     ((InitializingBean) bean).afterPropertiesSet();                     return null;                 }, getAccessControlContext());             } catch (PrivilegedActionException pae) {                 throw pae.getException();             }         } else {             // 属性初始化的处理             ((InitializingBean) bean).afterPropertiesSet();         }     }      if (mbd != null && bean.getClass() != NullBean.class) {         // 判断是否指定了 init-method()，         // 如果指定了 init-method()，则再调用制定的init-method         String initMethodName = mbd.getInitMethodName();         if (StringUtils.hasLength(initMethodName) &&             !(isInitializingBean && "afterPropertiesSet".equals(initMethodName)) &&             !mbd.isExternallyManagedInitMethod(initMethodName)) {             // 激活用户自定义的初始化方法             // 利用反射机制执行             invokeCustomInitMethod(beanName, bean, mbd);         }     } }
 ```
 
@@ -94,7 +94,7 @@ init-method
 
 ## 2.1 示例
 
-```plain text
+```text
 java public class InitializingBeanTest {      private String name;      public String getName() {         return name;     }      public void setName(String name) {         this.name = name;     }      public void setOtherName(){         System.out.println("InitializingBeanTest setOtherName...");         this.name = "chenssy 3 号";     } }
 ```
 
@@ -102,7 +102,7 @@ java public class InitializingBeanTest {      private String name;      public S
 
 配置文件如下：
 
-```plain text
+```text
 xml <bean id="initializingBeanTest" class="org.springframework.core.test.InitializingBeanTest"   init-method="setOtherName">   <property name="name" value="chenssy 1 号"/> </bean>
 ```
 
@@ -110,11 +110,11 @@ xml <bean id="initializingBeanTest" class="org.springframework.core.test.Initial
 
 执行结果:
 
-![b42014ec9266892912cfe7da7eddca73](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-initializing-bean-and-init-method/b42014ec9266892912cfe7da7eddca73.jpeg)
+![init-method执行结果](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-initializing-bean-and-init-method/b42014ec9266892912cfe7da7eddca73.jpeg)
 
 完全可以达到和 InitializingBean 一样的效果，而且在代码中我们没有看到丝毫 Spring 侵入的现象。所以通过 init-method 我们可以使用业务对象中定义的任何方法来实现 bean 实例对象的初始化定制化，而不再受制于 InitializingBean的 #afterPropertiesSet() 方法。同时我们可以使用  标签的 default-init-method 属性来统一指定初始化方法，这样就省了需要在每个  标签中都设置 init-method 这样的繁琐工作了。比如在 default-init-method 规定所有初始化操作全部以 initBean() 命名。如下：
 
-![69314ca6b0b46ace994636da2ff473a9](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-initializing-bean-and-init-method/69314ca6b0b46ace994636da2ff473a9.jpeg)
+![default-init-method配置示例](/assets/images/learning/spring/springsourcecode/ioc-deep-dive-into-initializing-bean-and-init-method/69314ca6b0b46ace994636da2ff473a9.jpeg)
 
 # 3. 小结
 

@@ -55,27 +55,27 @@ Bridge 是用来连接两个不同的虚拟网络的，所以在准备实验 bri
 
 具体的创建过程如下。我们通过 ip netns 命令创建 net namespace。首先创建一个 net1：
 
-```plain text
+```shell
 # ip netns add net1
 ```
 
 接下来创建一对儿 veth 出来，设备名分别是 veth1 和 veth1_p。并把其中的一头 veth1 放到这个新的 netns 中。
 
-```plain text
+```shell
 # ip link add veth1 type veth peer name veth1_p
 # ip link set veth1 netns net1
 ```
 
 因为我们打算是用这个 veth1 来通信，所以需要为其配置上 ip，并把它启动起来。
 
-```plain text
+```shell
 # ip netns exec net1 ip addr add 192.168.0.101/24 dev veth1
 # ip netns exec net1 ip link set veth1 up
 ```
 
 查看一下，上述的配置是否成功。
 
-```plain text
+```shell
 # ip netns exec net1 ip link list
 # ip netns exec net1 ifconfig
 ```
@@ -94,7 +94,7 @@ Bridge 是用来连接两个不同的虚拟网络的，所以在准备实验 bri
 
 创建过程如下。创建一个 bridge 设备, 把刚刚创建的两对儿 veth 中剩下的两头"插"到 bridge 上来。
 
-```plain text
+```shell
 # brctl addbr br0
 # ip link set dev veth1_p master br0
 # ip link set dev veth2_p master br0
@@ -103,7 +103,7 @@ Bridge 是用来连接两个不同的虚拟网络的，所以在准备实验 bri
 
 再为 bridge 配置上 IP，并把 bridge 以及插在其上的 veth 启动起来。
 
-```plain text
+```shell
 # ip link set veth1_p up
 # ip link set veth2_p up
 # ip link set br0 up
@@ -111,7 +111,7 @@ Bridge 是用来连接两个不同的虚拟网络的，所以在准备实验 bri
 
 查看一下当前 bridge 的状态，确认刚刚的操作是成功了的。
 
-```plain text
+```shell
 # brctl show
 bridge name     bridge id               STP enabled     interfaces
 br0             8000.4e931ecf02b1       no              veth1_p
@@ -122,7 +122,7 @@ br0             8000.4e931ecf02b1       no              veth1_p
 
 激动人心的时刻就要到了，我们在 net1 里（通过指定 ip netns exec net1 以及 -I veth1），ping 一下 net2 里的 IP（192.168.0.102）试试。
 
-```plain text
+```shell
 # ip netns exec net1 ping 192.168.0.102 -I veth1
 PING 192.168.0.102 (192.168.0.102) from 192.168.0.101 veth1: 56(84) bytes of data.
 64 bytes from 192.168.0.102: icmp_seq=1 ttl=64 time=0.037 ms
@@ -140,7 +140,7 @@ PING 192.168.0.102 (192.168.0.102) from 192.168.0.101 veth1: 56(84) bytes of dat
 
 我们先看下它是如何被创建出来的。内核中创建 bridge 的关键代码在 br_add_bridge 这个函数里。
 
-```plain text
+```shell
 //file:net/bridge/br_if.c
 int br_add_bridge(struct net *net, const char *name)
 {
@@ -166,7 +166,7 @@ int br_add_bridge(struct net *net, const char *name)
 
 带着这两点注意事项，我们进入到 alloc_netdev 的实现中。
 
-```plain text
+```shell
 //file: include/linux/netdevice.h
 #define alloc_netdev(sizeof_priv, name, setup) \
  alloc_netdev_mqs(sizeof_priv, name, setup, 1, 1)
@@ -174,7 +174,7 @@ int br_add_bridge(struct net *net, const char *name)
 
 好吧，竟然是个宏。那就得看 alloc_netdev_mqs 了。
 
-```plain text
+```shell
 //file: net/core/dev.c
 struct net_device *alloc_netdev_mqs(int sizeof_priv, ...，void (*setup)(struct net_device *))
 {
@@ -200,7 +200,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, ...，void (*setup)(struct 
 
 申请完了一家紧接着调用 setup，这实际是外部传入的 br_dev_setup 函数。在这个函数内部进行进一步的初始化。
 
-```plain text
+```shell
 //file: net/bridge/br_device.c
 void br_dev_setup(struct net_device *dev)
 {
@@ -221,7 +221,7 @@ void br_dev_setup(struct net_device *dev)
 
 添加设备会调用到 net/bridge/br_if.c 下面的 br_add_if。
 
-```plain text
+```shell
 //file: net/bridge/br_if.c
 int br_add_if(struct net_bridge *br, struct net_device *dev)
 {
@@ -241,7 +241,7 @@ int br_add_if(struct net_bridge *br, struct net_device *dev)
 
 这个函数中的第二个参数 dev 传入的是要添加的设备。在本文中，就可以认为是 veth 的其中一头。比较关键的是 net_bridge_port 这个结构体，它模拟的是物理交换机上的一个插口。它起到一个连接的作用，把 veth 和 bridge 给连接了起来。见 new_nbp 源码如下：
 
-```plain text
+```shell
 //file: net/bridge/br_if.c
 static struct net_bridge_port *new_nbp(struct net_bridge *br,
            struct net_device *dev)
@@ -263,7 +263,7 @@ static struct net_bridge_port *new_nbp(struct net_bridge *br,
 
 在 br_add_if 中还调用 netdev_rx_handler_register 注册了设备帧接收函数，设置 veth 上的 rx_handler 为 br_handle_frame。**后面在接收包的时候会回调到它**。
 
-```plain text
+```shell
 //file:
 int netdev_rx_handler_register(struct net_device *dev,
           rx_handler_func_t *rx_handler,
@@ -283,7 +283,7 @@ int netdev_rx_handler_register(struct net_device *dev,
 
 我们从 veth1_p 设备的接收看起，所有的设备的接收都一样，都会进入 __netif_receive_skb_core 设备层的关键函数。
 
-```plain text
+```shell
 //file: net/core/dev.c
 static int __netif_receive_skb_core(struct sk_buff *skb, bool pfmemalloc)
 {
@@ -318,7 +318,7 @@ out:
 
 接着来看下网桥是咋工作的吧，进入到 br_handle_frame 中来搜寻。
 
-```plain text
+```shell
 //file: net/bridge/br_input.c
 rx_handler_result_t br_handle_frame(struct sk_buff **pskb)
 {
@@ -332,7 +332,7 @@ forward:
 
 上面我对 br_handle_frame 的逻辑进行了充分的简化，简化后它的核心就是调用 br_handle_frame_finish。同样 br_handle_frame_finish 也有点小复杂。本文中，我们主要想了解的 Docker 场景下 bridge 上的 veth 设备转发。所以根据这个场景，我又对该函数进行了充分的简化。
 
-```plain text
+```shell
 //file: net/bridge/br_input.c
 int br_handle_frame_finish(struct sk_buff *skb)
 {
@@ -356,7 +356,7 @@ int br_handle_frame_finish(struct sk_buff *skb)
 
 在找到要送往的端口后，下一步就是调用 br_forward => __br_forward 进入真正的转发流程。
 
-```plain text
+```shell
 //file: net/bridge/br_forward.c
 static void __br_forward(const struct net_bridge_port *to, struct sk_buff *skb)
 {
@@ -372,7 +372,7 @@ static void __br_forward(const struct net_bridge_port *to, struct sk_buff *skb)
 
 然后调用 br_forward_finish 进入发送流程。在 br_forward_finish 里会依次调用 br_dev_queue_push_xmit、dev_queue_xmit。
 
-```plain text
+```shell
 //file: net/bridge/br_forward.c
 int br_forward_finish(struct sk_buff *skb)
 {

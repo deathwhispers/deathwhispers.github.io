@@ -76,8 +76,8 @@ AIO 模型中通过 AsynchronousSocketChannel 和 AsynchronousServerSocketChanne
 - BIO的各种操作是阻塞的, 而NIO的各种操作是非阻塞的
 - BIO的Socket是单向的, 而NIO的Channel是双向的.
 
-![](/assets/images/learning/interview/interview-bio-nio-aio/13128cdd78c5cc4fb6826a0d4a8af69e.png)
+![BIO NIO AIO性能对比图](/assets/images/learning/interview/interview-bio-nio-aio/13128cdd78c5cc4fb6826a0d4a8af69e.png)
 
 有一点要注意, 虽然图中说NIO的性能一般, 但在绝大多数日常业务场景中, NIO和AIO的性能差距实际没这么大. 在Netty5中, 基于AIO改造和支持, 最后发现, 性能并没有想象中那么强悍, 所以Netty5被废弃, 而是继续保持Netty4为主版本, 使用NIO为主.
 
-![](/assets/images/learning/interview/interview-bio-nio-aio/6de34a3a2497d8f02f416e658234ab64.png)
+![IO模型对比表](/assets/images/learning/interview/interview-bio-nio-aio/6de34a3a2497d8f02f416e658234ab64.png)

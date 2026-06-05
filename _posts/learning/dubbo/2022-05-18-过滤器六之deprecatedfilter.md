@@ -60,7 +60,7 @@ public class DeprecatedFilter implements Filter {
 - 第 14 行：获得方法名。
 - 第 16 至 21 行：打印告警日志。一个服务的方法，**有且仅有**打印一次。例如：
 
-```plain text
+```text
 [14/04/18 11:51:35:035 CST] main ERROR filter.DeprecatedFilter:  [DUBBO] The service method com.alibaba.dubbo.demo.DemoService.say01(String) is DEPRECATED! Declare from dubbo://192.168.3.17:20880/com.alibaba.dubbo.demo.DemoService?accesslog=true&anyhost=true&application=demo-consumer&callbacks=1000&check=false&client=netty4&default.delay=-1&default.retries=0&delay=-1&deprecated=false&dubbo=2.0.0&generic=false&interface=com.alibaba.dubbo.demo.DemoService&methods=sayHello,callbackParam,say03,say04,say01,bye,say02&payload=1000&pid=16820&qos.port=33333&register.ip=192.168.3.17&remote.timestamp=1523720843597&say01.deprecated=true&sayHello.async=true&server=netty4&service.filter=demo&side=consumer&timeout=100000&timestamp=1523721049491, dubbo version: 2.0.0, current host: 192.168.3.17
 ```
 

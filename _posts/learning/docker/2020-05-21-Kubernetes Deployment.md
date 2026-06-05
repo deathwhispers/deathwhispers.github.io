@@ -40,7 +40,7 @@ Deployment为[Pod](http://docs.kubernetes.org.cn/312.html)和[Replica Set](http:
 
 下载示例文件并执行命令：
 
-```plain text
+```shell
 $ kubectl create -f https://kubernetes.io/docs/user-guide/nginx-deployment.yaml --record
 deployment "nginx-deployment" created
 ```
@@ -49,7 +49,7 @@ deployment "nginx-deployment" created
 
 然后立即执行 get 将获得如下结果：
 
-```plain text
+```text
 $ kubectl get deployments
 NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3         0         0            0           1s
@@ -59,7 +59,7 @@ nginx-deployment   3         0         0            0           1s
 
 过几秒后再执行get命令，将获得如下输出：
 
-```plain text
+```text
 $ kubectl get deployments
 NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3         3         3            3           18s
@@ -67,7 +67,7 @@ nginx-deployment   3         3         3            3           18s
 
 我们可以看到Deployment已经创建了3个 replica，所有的 replica 都已经是最新的了（包含最新的pod template），可用的（根据Deployment中的.spec.minReadySeconds声明，处于已就绪状态的pod的最少个数）。执行kubectl get rs和kubectl get pods会显示Replica Set（RS）和Pod已创建。
 
-```plain text
+```text
 $ kubectl get rs
 NAME                          DESIRED   CURRENT   READY   AGE
 nginx-deployment-2035384211   3         3         0       18s
@@ -75,7 +75,7 @@ nginx-deployment-2035384211   3         3         0       18s
 
 您可能会注意到 ReplicaSet 的名字总是-。
 
-```plain text
+```text
 $ kubectl get pods --show-labels
 NAME                                READY     STATUS    RESTARTS   AGE       LABELS
 nginx-deployment-2035384211-7ci7o   1/1       Running   0          18s       app=nginx,pod-template-hash=2035384211
@@ -99,21 +99,21 @@ nginx-deployment-2035384211-qqcnn   1/1       Running   0          18s       app
 
 假如我们现在想要让 nginx pod 使用nginx:1.9.1的镜像来代替原来的nginx:1.7.9的镜像。
 
-```plain text
+```shell
 $ kubectl set image deployment/nginx-deployment nginx=nginx:1.9.1
 deployment "nginx-deployment" image updated
 ```
 
 我们可以使用edit命令来编辑 Deployment，修改 .spec.template.spec.containers[0].image ，将nginx:1.7.9 改写成 nginx:1.9.1。
 
-```plain text
+```shell
 $ kubectl edit deployment/nginx-deployment
 deployment "nginx-deployment" edited
 ```
 
 查看 rollout 的状态，只要执行：
 
-```plain text
+```shell
 $ kubectl rollout status deployment/nginx-deployment
 Waiting for rollout to finish: 2 out of 3 new replicas have been updated...
 deployment "nginx-deployment" successfully rolled out
@@ -121,7 +121,7 @@ deployment "nginx-deployment" successfully rolled out
 
 Rollout 成功后，get Deployment：
 
-```plain text
+```text
 $ kubectl get deployments
 NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3         3         3            3           36s
@@ -133,7 +133,7 @@ CURRENT 的 replica 数表示 Deployment 管理的 replica 数量，AVAILABLE �
 
 我们通过执行kubectl get rs可以看到 Deployment 更新了Pod，通过创建一个新的 ReplicaSet 并扩容了3个 replica，同时将原来的 ReplicaSet 缩容到了0个 replica。
 
-```plain text
+```text
 $ kubectl get rs
 NAME                          DESIRED   CURRENT   READY   AGE
 nginx-deployment-1564180365   3         3         0       6s
@@ -142,7 +142,7 @@ nginx-deployment-2035384211   0         0         0       36s
 
 执行 get pods只会看到当前的新的 pod:
 
-```plain text
+```text
 $ kubectl get pods
 NAME                                READY     STATUS    RESTARTS   AGE
 nginx-deployment-1564180365-khku8   1/1       Running   0          14s
@@ -160,7 +160,7 @@ Deployment 同时也可以确保只创建出超过期望数量的一定数量的
 
 例如，如果您自己看下上面的 Deployment，您会发现，开始创建一个新的 Pod，然后删除一些旧的 Pod 再创建一个新的。当新的Pod创建出来之前不会杀掉旧的Pod。这样能够确保可用的 Pod 数量至少有2个，Pod的总数最多4个。
 
-```plain text
+```text
 $ kubectl describe deployments
 Name:           nginx-deployment
 Namespace:      default
@@ -220,14 +220,14 @@ Events:
 
 假设我们在更新 Deployment 的时候犯了一个拼写错误，将镜像的名字写成了nginx:1.91，而正确的名字应该是nginx:1.9.1：
 
-```plain text
+```shell
 $ kubectl set image deployment/nginx-deployment nginx=nginx:1.91
 deployment "nginx-deployment" image updated
 ```
 
 Rollout 将会卡住。
 
-```plain text
+```shell
 $ kubectl rollout status deployments nginx-deployment
 Waiting for rollout to finish: 2 out of 3 new replicas have been updated...
 ```
@@ -236,7 +236,7 @@ Waiting for rollout to finish: 2 out of 3 new replicas have been updated...
 
 您会看到旧的 replica（nginx-deployment-1564180365 和 nginx-deployment-2035384211）和新的 replica （nginx-deployment-3066724191）数目都是2个。
 
-```plain text
+```text
 $ kubectl get rs
 NAME                          DESIRED   CURRENT   READY   AGE
 nginx-deployment-1564180365   2         2         0       25s
@@ -246,7 +246,7 @@ nginx-deployment-3066724191   2         2         2       6s
 
 看下创建 Pod，您会看到有两个新的 ReplicaSet 创建的 Pod 处于 ImagePullBackOff 状态，循环拉取镜像。
 
-```plain text
+```text
 $ kubectl get pods
 NAME                                READY     STATUS             RESTARTS   AGE
 nginx-deployment-1564180365-70iae   1/1       Running            0          25s
@@ -257,7 +257,7 @@ nginx-deployment-3066724191-eocby   0/1       ImagePullBackOff   0          6s
 
 注意，Deployment controller会自动停止坏的 rollout，并停止扩容新的 ReplicaSet。
 
-```plain text
+```text
 $ kubectl describe deployment
 Name:           nginx-deployment
 Namespace:      default
