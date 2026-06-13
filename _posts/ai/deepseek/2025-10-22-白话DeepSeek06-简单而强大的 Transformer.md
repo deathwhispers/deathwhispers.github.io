@@ -15,7 +15,7 @@ status: published
 
 > 全文总结于 [Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！](https://www.bilibili.com/video/BV1NCgVzoEG9?spm_id_from=333.788.videopod.sections&vd_source=1ce32605a59581a6ec6d48f9eaa72d66&p=3)
 
-# Transformer：抛弃顺序计算的注意力革命
+## Transformer：抛弃顺序计算的注意力革命
 
 Transformer模型自2017年横空出世，迅速成为自然语言处理（NLP）乃至整个AI领域的基石。它的出现，标志着机器对语言理解方式的一次根本性转变。
 

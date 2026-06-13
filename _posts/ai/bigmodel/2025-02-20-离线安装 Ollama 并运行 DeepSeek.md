@@ -16,23 +16,21 @@ created: 2025-02-20 11:35
 updated: 2025-02-20 11:35
 ---
 
-# 背景
+## 背景
 
 本次目标是在麒麟银河操作系统上安装DeepSeek，
 
-# 离线安装 Ollama
+## 离线安装 Ollama
 
 略
 
 可参考 DeepSeek私有化部署
 
-# 离线安装 Open WebUI
+## 离线安装 Open WebUI
 
 ## 离线安装 Python
 
 进入 Python 官网下载符合操作系统版本的安装包
-
-**解压安装包：** 将 Python 安装包和依赖库安装包传输到离线环境中，并解压 Python 安装包：an装步骤
 
 ### 安装步骤
 
@@ -54,7 +52,7 @@ rpm -ivh <package_name>.rpm
 dpkg -i <package_name>.deb
 ```
 
-3. **配置安装：** 进入解压后的 Python 安装包目录，执行以下命令进行配置：Bash
+3. **配置安装：** 进入解压后的 Python 安装包目录，执行以下命令进行配置：
 
 ```bash
 ./configure --prefix=/opt/python3 --with-openssl=/usr/include/openssl
@@ -63,14 +61,14 @@ dpkg -i <package_name>.deb
     - `-prefix` 指定安装目录。
     - `-with-openssl` 指定 OpenSSL 库的路径，如果您的 OpenSSL 安装在其他位置，请修改此路径。
 
-4. **编译和安装：** 执行以下命令进行编译和安装：Bash
+4. **编译和安装：** 执行以下命令进行编译和安装：
 
 ```bash
 make
 sudo make install
 ```
 
-5. **创建软链接：** 为了方便使用，您可以创建软链接：Bash
+5. **创建软链接：** 为了方便使用，您可以创建软链接：
 
 ```bash
 sudo ln -s /opt/python3/bin/python3 /usr/bin/python3
@@ -79,25 +77,24 @@ sudo ln -s /opt/python3/bin/pip3 /usr/bin/pip3
 
 ## 安装 Openssl
 
-6. **下载 OpenSSL 安装包：** 访问 OpenSSL 官网（[https://www.openssl.org/](https://www.openssl.org/)），下载您需要的 OpenSSL
+### 安装步骤
+
+1. **下载 OpenSSL 安装包：** 访问 OpenSSL 官网（[https://www.openssl.org/](https://www.openssl.org/)），下载您需要的 OpenSSL
    版本的 tar.gz 压缩包。请确保下载与您的 Linux 系统架构（如 x86_64、arm64 等）匹配的版本。
-7. **准备安装目录：** 在您希望安装 OpenSSL 的位置创建一个目录，例如 `/opt/openssl`。
-
-### **安装步骤**
-
-8. **解压安装包：** 将下载的 OpenSSL 安装包传输到您的 Linux 服务器，并解压它：
+2. **准备安装目录：** 在您希望安装 OpenSSL 的位置创建一个目录，例如 `/opt/openssl`。
+3. **解压安装包：** 将下载的 OpenSSL 安装包传输到您的 Linux 服务器，并解压它：
 
 ```shell
 tar -zxvf openssl-x.x.x.tar.gz  # 将 x.x.x 替换为实际版本号
 ```
 
-9. **进入解压后的目录：**
+4. **进入解压后的目录：**
 
 ```shell
 cd openssl-x.x.x  # 将 x.x.x 替换为实际版本号
 ```
 
-10. **配置安装：** 运行配置脚本，指定安装目录和其他选项：
+5. **配置安装：** 运行配置脚本，指定安装目录和其他选项：
 
 ```shell
 ./configure --prefix=/opt/openssl shared
@@ -112,7 +109,7 @@ cd openssl-x.x.x  # 将 x.x.x 替换为实际版本号
 - `-disable-xxx`： 禁用 xxx 功能。
   您可以通过 `./configure --help` 命令查看所有可用的配置选项。
 
-11. **编译：** 运行 `make` 命令开始编译：
+6. **编译：** 运行 `make` 命令开始编译：
 
 ```shell
 make
@@ -120,7 +117,7 @@ make
 
 这个过程可能需要一些时间，取决于您的服务器性能。
 
-12. **安装：** 运行 `make install` 命令安装 OpenSSL：
+7. **安装：** 运行 `make install` 命令安装 OpenSSL：
 
 ```shell
 sudo make install
@@ -128,7 +125,7 @@ sudo make install
 
 这将把 OpenSSL 安装到您指定的目录中。
 
-## **配置环境变量（可选）**
+## 配置环境变量（可选）
 
 为了方便使用 OpenSSL，您可以将其添加到系统的环境变量中。编辑 `~/.bashrc` 文件（或 `/etc/profile` 文件，如果您希望对所有用户生效），添加以下行：
 
@@ -143,7 +140,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/openssl/lib
 source ~/.bashrc
 ```
 
-## **验证安装**
+## 验证安装
 
 运行以下命令验证 OpenSSL 是否安装成功：
 
@@ -153,7 +150,7 @@ openssl version
 
 如果显示 OpenSSL 版本号，则表示安装成功。
 
-### **注意事项**
+### 注意事项
 
 - 请确保下载的 OpenSSL 版本与您的 Linux 系统兼容。
 - 如果在配置或编译过程中遇到错误，请仔细阅读错误信息，并根据提示解决。
@@ -161,9 +158,9 @@ openssl version
 
 希望这些步骤能帮助您在 Linux 环境中成功安装 OpenSSL tar.gz 包。
 
-# Ollama 离线导入模型
+## Ollama 离线导入模型
 
-## **从 Safetensors 权重导入微调的适配器**
+## 从 Safetensors 权重导入微调的适配器
 
 首先，创建一个`Modelfile`替换为`FROM`命令指向您用于微调的基本模型，并且`ADAPTER`命令，该命令指向带有 Safetensors 适配器的目录：
 
@@ -199,7 +196,7 @@ Ollama 支持基于多种不同模型架构导入适配器，包括：
 - [Unsloth](https://github.com/unslothai/unsloth)
 - [MLX 系列](https://github.com/ml-explore/mlx)
 
-## **从 Safetensors 权重导入模型**
+## 从 Safetensors 权重导入模型
 
 首先，创建一个`Modelfile`替换为`FROM`命令，该命令指向包含 Safetensors 权重的目录：
 
@@ -230,7 +227,7 @@ Ollama 支持导入多种不同架构的模型，包括：
 
 这包括导入基础模型以及已与基础模型*融合*的任何微调模型。
 
-## **导入基于 GGUF 的模型或适配器**
+## 导入基于 GGUF 的模型或适配器
 
 如果您有基于 GGUF 的模型或适配器，则可以将其导入 Ollama。您可以通过以下方式获取 GGUF 型号或适配器：
 
@@ -262,7 +259,7 @@ ADAPTER /opt/models/file.gguf
 ollama create <my-model>
 ```
 
-## **量化模型**
+## 量化模型
 
 量化模型可以让您更快地运行模型，并且内存消耗更少，但准确性会降低。这允许您在更适度的硬件上运行模型。
 
@@ -286,7 +283,7 @@ writing manifest
 success
 ```
 
-### **支持的量化**
+### 支持的量化
 
 - q4_0
 - q4_1
@@ -294,7 +291,7 @@ success
 - q5_1
 - q8_0
 
-### **K-means 量化**
+### K-means 量化
 
 - q3_K_S
 - q3_K_M
@@ -305,7 +302,7 @@ success
 - q5_K_M
 - q6_K
 
-# **在 ollama.com 上共享模型**
+## 在 ollama.com 上共享模型
 
 您可以通过将您创建的任何模型推送到 [ollama.com](https://ollama.com/) 来共享该模型，以便其他用户可以试用。
 
@@ -338,10 +335,9 @@ ollama push myuser/mymodel
 ollama run myuser/mymodel
 ```
 
-# 参考文献
+## 参考文献
 
-13. [**Ollama内网离线部署大模型**](https://blog.csdn.net/weixin_44455388/article/details/136500870)
-14. [**最全 Ollama 大模型部署指南，非常详细收藏我这一篇就够了！
-    **](https://blog.csdn.net/2401_84204413/article/details/145647836)
-15. [**Ollama 中文文档 | Ollama 官方文档**](https://ollama.cadn.net.cn/#quickstart)
-16. [**Ollama自定义导入DeepSeek-R1-Distill-Qwen-1.5B模型**](https://zhuanlan.zhihu.com/p/23807625841)
+1. [**Ollama内网离线部署大模型**](https://blog.csdn.net/weixin_44455388/article/details/136500870)
+2. [**最全 Ollama 大模型部署指南，非常详细收藏我这一篇就够了！**](https://blog.csdn.net/2401_84204413/article/details/145647836)
+3. [**Ollama 中文文档 | Ollama 官方文档**](https://ollama.cadn.net.cn/#quickstart)
+4. [**Ollama自定义导入DeepSeek-R1-Distill-Qwen-1.5B模型**](https://zhuanlan.zhihu.com/p/23807625841)

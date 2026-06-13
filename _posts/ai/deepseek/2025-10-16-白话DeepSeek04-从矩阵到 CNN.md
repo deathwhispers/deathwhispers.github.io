@@ -15,7 +15,7 @@ status: published
 
 > 全文总结于 [Bilibili UP 主飞天闪客的一小时到 Transformer 系列视频！](https://www.bilibili.com/video/BV1NCgVzoEG9?spm_id_from=333.788.videopod.sections&vd_source=1ce32605a59581a6ec6d48f9eaa72d66&p=3)
 
-# 矩阵表示、卷积与 CNN：从"密集连接"到"局部共享"的直观演绎
+## 矩阵表示、卷积与 CNN：从"密集连接"到"局部共享"的直观演绎
 
 > 本篇目标：
 
@@ -45,7 +45,7 @@ $$
 
 1. **抽象清晰**：便于推导反向传播（链式法则在矩阵形式下更整洁）。
 
-1. **高效并行**：矩阵乘法可以很好利用 BLAS、cuBLAS 等库与 GPU 并行加速，训练与推理更快。
+2. **高效并行**：矩阵乘法可以很好利用 BLAS、cuBLAS 等库与 GPU 并行加速，训练与推理更快。
 
 ![](/assets/images/ai/deepseek/from-matrices-to-cnns/6c8e965d7abf4652.webp)
 
