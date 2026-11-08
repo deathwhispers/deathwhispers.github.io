@@ -30,15 +30,15 @@ collect_targets() {
   fi
 
   {
-    git diff --name-only --diff-filter=ACMR
-    git diff --name-only --cached --diff-filter=ACMR
-    git ls-files --others --exclude-standard
+    git -c core.quotepath=false diff --name-only --diff-filter=ACMR
+    git -c core.quotepath=false diff --name-only --cached --diff-filter=ACMR
+    git -c core.quotepath=false ls-files --others --exclude-standard
 
     if [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
       if [[ -n "${GITHUB_BASE_REF:-}" ]]; then
-        git diff --name-only --diff-filter=ACMR "origin/${GITHUB_BASE_REF}...HEAD" || true
+        git -c core.quotepath=false diff --name-only --diff-filter=ACMR "origin/${GITHUB_BASE_REF}...HEAD" || true
       elif git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
-        git diff --name-only --diff-filter=ACMR HEAD~1..HEAD || true
+        git -c core.quotepath=false diff --name-only --diff-filter=ACMR HEAD~1..HEAD || true
       fi
     fi
   } | awk '/^_posts\/.*\.md$/ {print}' | sort -u
